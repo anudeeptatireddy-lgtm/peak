@@ -17,6 +17,9 @@ export function createCanvas(host: HTMLElement, opts: { cap?: number } = {}): Ca
   const canvas = document.createElement('canvas');
   canvas.setAttribute('aria-hidden', 'true');
   canvas.className = 'scene-canvas';
+  // A canvas in the page inherits font-variation-settings from CSS (the site sets
+  // weight and width on body), which would override ctx.font's weight and stretch.
+  canvas.style.fontVariationSettings = 'normal';
   host.prepend(canvas);
   const ctx = canvas.getContext('2d')!;
   const c: CanvasHandle = {

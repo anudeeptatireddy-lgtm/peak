@@ -21,6 +21,14 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, steps 3.7–3.9: `scramble`, `marbles`, `skid`.**
+- A canvas inside the page inherits CSS `font-variation-settings` (the site sets weight 450 and width 95 on body), which silently overrides the weight and stretch in `ctx.font`. Hidden canvases (used for sampling) aren't affected, which is why `particles` and `marbles` were fine. `engine/canvas.ts` now sets `font-variation-settings: normal` on every scene canvas, and DOM scenes set it on their own wrapper.
+- New DOM scenes size text with container units (`cqw`) so it fits the stage beside the panel; their prompts say `vw`, which is the same thing in a full-screen section.
+- Params can now say they only matter in one mode (`when: { id, is }` in the schema, e.g. `scramble`'s loop pause only with "On a loop"). The phrase-coverage test checks them in that mode.
+- `scramble`: each character is an inline-grid with the real character hidden underneath and the shown one on top, so nothing shifts while it scrambles. Scrambling characters use the accents pushed to 3:1 contrast (PRD §7).
+- `marbles`: phones default to 3.5px marbles (SCENES.md says 6px), because at 6px a seven-letter headline is only three marbles tall on a 390px screen and doesn't read. Marble homes are 1.05 diameters apart. The highlight uses the lighter and the shadow the darker of the background and main text colors, so it works in light and dark worlds. Marbles replace their home-page stand-in.
+- `skid`: the skid is an ease-out-quad slide whose length sets its duration, so it starts at the driving speed; the settle is ease-in-out-cubic. Letters peel out to the right, rightmost first, and come back on scroll up. The inner endless scroll area is now a shared engine helper (`engine/inner-scroll.ts`) used by `velocity` and `skid`.
+
 **2026-10-17, step 3.6: ported scenes on the kits.** `particles` now samples text with the text kit (`offscreen`, `fontString`, `samplePointsUnder`) and draws through `Batch`; `flow` and `ripple` draw through `Batch`. `warp` keeps its own 12 paths (each band has its own width and opacity, which `Batch` doesn't model), and `elastic` and `velocity` are DOM scenes with nothing to share. Proof nothing changed: the prototype parity tests and the prompt tests give the same results as before, and the prompt snapshots are unchanged.
 
 **2026-10-17, steps 3.1–3.5: shared kits.** `src/kits/` holds `easing.ts`, `text.ts`, `physics.ts`, `field.ts` and `render.ts`, tested in `tests/unit/kits.test.ts` (52 tests). Choices:

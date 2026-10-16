@@ -3,7 +3,8 @@
 // data-inner-scroll and the scene provides its own endless scroll area (PRD §8 note).
 
 import { addScrollSource } from '../../engine/scheduler';
-import { createScrollSource, type ScrollSource } from '../../engine/scroll';
+import { innerScroller } from '../../engine/inner-scroll';
+import { createScrollSource } from '../../engine/scroll';
 import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
 import { FIXED } from './constants';
@@ -41,40 +42,6 @@ function rowStyle(i: number, p: Params): Partial<CSSStyleDeclaration> {
     fontVariationSettings: `"wdth" ${p.row3Width}, "wght" ${p.row3Weight}`,
     color: 'var(--accent-text)',
   };
-}
-
-/** An endless inner scroll area: reports an unwrapped position while recentering itself. */
-function innerScroller(host: HTMLElement): { el: HTMLDivElement; source: ScrollSource } {
-  const el = document.createElement('div');
-  Object.assign(el.style, {
-    position: 'absolute',
-    inset: '0',
-    overflowY: 'scroll',
-    scrollbarWidth: 'none',
-    zIndex: '1',
-    touchAction: 'pan-y',
-  });
-  el.setAttribute('aria-hidden', 'true');
-  const spacer = document.createElement('div');
-  spacer.style.height = `${FIXED.INNER_SCREENS * FIXED.PERCENT}%`;
-  el.append(spacer);
-  host.append(el);
-  let wrapped = 0;
-  const recenter = () => {
-    const h = el.clientHeight;
-    if (!h) return;
-    if (el.scrollTop < h * FIXED.RECENTER_LOW) {
-      el.scrollTop += h;
-      wrapped -= h;
-    } else if (el.scrollTop > h * FIXED.RECENTER_HIGH) {
-      el.scrollTop -= h;
-      wrapped += h;
-    }
-  };
-  el.addEventListener('scroll', recenter, { passive: true });
-  requestAnimationFrame(() => (el.scrollTop = el.clientHeight));
-  const source = createScrollSource(el);
-  return { el, source: { velocity: source.velocity, read: () => el.scrollTop + wrapped } };
 }
 
 function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneInstance {
@@ -124,7 +91,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   }
   layout();
 
-  const inner = host.dataset.innerScroll === 'true' ? innerScroller(host) : null;
+  const inner =
+    host.dataset.innerScroll === 'true'
+      ? innerScroller(host, {
+          screens: FIXED.INNER_SCREENS,
+          low: FIXED.RECENTER_LOW,
+          high: FIXED.RECENTER_HIGH,
+        })
+      : null;
   const source = inner ? inner.source : createScrollSource();
   const tune = () =>
     (source.velocity.tuning = {

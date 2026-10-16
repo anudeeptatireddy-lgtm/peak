@@ -10,7 +10,6 @@ export const FIXED = {
   /** The inner scroll area recenters by one screen when within half a screen of either end. */
   RECENTER_LOW: 0.5,
   RECENTER_HIGH: 1.5,
-  PERCENT: 100,
 } as const;
 
 export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
@@ -20,5 +19,4 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
     'Only sizes the invisible scroll area used on scene pages; it recenters itself, so it never shows.',
   RECENTER_LOW: 'Part of the invisible endless scroll area on scene pages; never shows.',
   RECENTER_HIGH: 'Part of the invisible endless scroll area on scene pages; never shows.',
-  PERCENT: 'Converts screens to a CSS percentage.',
 };
