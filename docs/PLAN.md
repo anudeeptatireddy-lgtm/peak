@@ -65,7 +65,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `tokens.css`, `type.css`, `global.css`: the type scale, Anybody font loading with fallbacks, focus ring, buttons (primary/secondary pill), base layout, safe-area padding for notched phones, `.sr-only`.
   - Done when: a `/dev/styleguide` page (excluded from the sitemap and production nav) shows type, buttons, focus states, and swatches for all 16 worlds, and passes an automated contrast check.
 
-- [ ] **1.5 Layout shell** · PRD §5, §17
+- [x] **1.5 Layout shell** · PRD §5, §17
   - Do: `Base.astro`, `Header.astro` (wordmark that stretches with scroll progress; nav: Gallery, Tour, Start here, Words, Drops; mobile menu sheet with focus trap; Pause/Play button; Living colors toggle (wired up in 1.15); Sound toggle placeholder), `Footer.astro` (the five-step journey links, credit, RSS). Placeholder pages for every route in §5, including `/tour`, so links work.
   - Done when: every route loads with zero console errors (e2e), keyboard tab order is logical, the mobile menu opens/closes with Esc and returns focus.
 

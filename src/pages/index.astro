@@ -1,13 +1,12 @@
 ---
-// Placeholder home page. The real home page is built in PLAN step 3.2.
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>peak</title>
-  </head>
-  <body></body>
-</html>
+<Base title="peak">
+  <Placeholder
+    title="See it. Tweak it. Build it with Claude Code."
+    lede="Animations you can play with, plus the exact prompt to make your own."
+    wave={1}
+  />
+</Base>

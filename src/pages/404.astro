@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found" noindex>
+  <section class="lost wrap">
+    <h1 class="display">This page doesn't exist</h1>
+    <p class="body measure">The link might be old, or there's a typo in the address.</p>
+    <div class="links">
+      <a class="btn btn--primary" href="/">
+        Go home
+      </a>
+      <a class="btn btn--secondary" href="/gallery">
+        Browse the gallery
+      </a>
+      <a class="btn btn--secondary" href="/start">
+        Start here
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    display: grid;
+    gap: 1.25rem;
+    align-content: center;
+    min-height: 80vh;
+    min-height: 80svh;
+    padding-top: calc(var(--header-h) + 2rem);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

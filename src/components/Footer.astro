@@ -1,5 +1,71 @@
 ---
-// Placeholder until PLAN step 1.5 builds the real footer.
+// Site footer (PRD §5): the five-step journey, credit, About and RSS.
+const journey = [
+  { href: '/gallery', step: 'Discover', hint: 'Find an animation' },
+  { href: '/words', step: 'Describe', hint: 'Learn the words' },
+  { href: '/start', step: 'Set up', hint: 'Start Claude Code' },
+  { href: '/fix', step: 'Fix', hint: 'When it breaks' },
+  { href: '/ship', step: 'Ship', hint: 'Put it online' },
+];
 ---
 
-<footer class="wrap"></footer>
+<footer class="site-footer wrap">
+  <nav aria-label="Your journey">
+    <ol class="journey" role="list">
+      {journey.map((j) => (
+        <li>
+          <a href={j.href}>
+            <span class="h3">{j.step}</span>
+            <span class="small soft">{j.hint}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="meta small">
+    <p>Made by [YOUR NAME]</p>
+    <a href="/about">About</a>
+    <a href="/rss.xml">RSS</a>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    display: grid;
+    gap: 2rem;
+    padding-top: 3rem;
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+  }
+  .journey {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+    gap: 1rem;
+  }
+  .journey a {
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+    min-height: 44px;
+  }
+  @media (hover: hover) {
+    .journey a:hover .h3 {
+      text-decoration: underline;
+    }
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+  }
+  .meta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

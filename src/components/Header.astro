@@ -1,7 +1,387 @@
 ---
-// Placeholder until PLAN step 1.5 builds the real header.
+// Site header (PRD §5): wordmark that stretches with scroll progress, nav,
+// Pause/Play, Living colors and Sound toggles, a full-screen menu on small
+// screens, and a progress bar underneath.
+const nav = [
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/tour', label: 'Tour' },
+  { href: '/start', label: 'Start here' },
+  { href: '/words', label: 'Words' },
+  { href: '/drops', label: 'Drops' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`);
 ---
 
-<header class="site-header wrap">
-  <a href="/">peak</a>
+<header class="site-header" data-header>
+  <div class="bar wrap">
+    <a class="wordmark" href="/" data-wordmark aria-label="peak, home">
+      peak
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul role="list">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="controls">
+      <button class="btn btn--secondary motion-btn" type="button" data-motion-toggle>
+        Pause motion
+      </button>
+      <button class="toggle wide-only" type="button" data-pref="living" aria-pressed="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="10" r="5"></circle>
+          <circle cx="15" cy="10" r="5"></circle>
+          <circle cx="12" cy="15" r="5"></circle>
+        </svg>
+        <span>Living colors</span>
+      </button>
+      <button class="toggle wide-only" type="button" data-pref="sound" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9h4l5-4v14l-5-4H4z"></path>
+          <path d="M17 9a4 4 0 0 1 0 6"></path>
+        </svg>
+        <span>Sound</span>
+      </button>
+      <button
+        class="menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-open
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 8h16M4 16h16"></path>
+        </svg>
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+  <div class="progress" aria-hidden="true" data-progress></div>
+
+  <div class="sheet" id="site-menu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+    <div class="sheet-inner wrap">
+      <div class="sheet-top">
+        <span class="wordmark" aria-hidden="true">
+          peak
+        </span>
+        <button class="menu-btn" type="button" data-menu-close>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+          <span>Close</span>
+        </button>
+      </div>
+      <nav aria-label="Main">
+        <ul role="list" class="sheet-nav">
+          <li>
+            <a href="/">Home</a>
+          </li>
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div class="sheet-toggles">
+        <button class="toggle" type="button" data-pref="living" aria-pressed="true">
+          <span>Living colors</span>
+        </button>
+        <button class="toggle" type="button" data-pref="sound" aria-pressed="false">
+          <span>Sound</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </header>
+
+<script>
+  import { onPausedChange, togglePaused } from '../engine/motion';
+  import { getPref, onPref, setPref, type PrefKey } from '../state/prefs';
+
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+
+  // Wordmark and progress bar follow page scroll progress.
+  const mark = header.querySelector<HTMLElement>('[data-wordmark]')!;
+  const bar = header.querySelector<HTMLElement>('[data-progress]')!;
+  let queued = false;
+  const paint = () => {
+    queued = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    mark.style.fontVariationSettings = `"wdth" ${(50 + p * 100).toFixed(1)}, "wght" 800`;
+  };
+  const queue = () => {
+    if (!queued) {
+      queued = true;
+      requestAnimationFrame(paint);
+    }
+  };
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  paint();
+
+  // Pause / Play.
+  const motionBtn = header.querySelector<HTMLButtonElement>('[data-motion-toggle]')!;
+  motionBtn.addEventListener('click', togglePaused);
+  onPausedChange((paused) => {
+    motionBtn.textContent = paused ? 'Play motion' : 'Pause motion';
+  });
+
+  // Living colors and Sound toggles (desktop bar and menu sheet stay in sync).
+  for (const key of ['living', 'sound'] as PrefKey[]) {
+    const buttons = header.querySelectorAll<HTMLButtonElement>(`[data-pref="${key}"]`);
+    const sync = (v: boolean) => buttons.forEach((b) => b.setAttribute('aria-pressed', String(v)));
+    sync(getPref(key));
+    onPref(key, sync);
+    buttons.forEach((b) => b.addEventListener('click', () => setPref(key, !getPref(key))));
+  }
+
+  // Full-screen menu with a focus trap; Esc closes and focus returns to the opener.
+  const sheet = header.querySelector<HTMLElement>('#site-menu')!;
+  const openBtn = header.querySelector<HTMLButtonElement>('[data-menu-open]')!;
+  const closeBtn = sheet.querySelector<HTMLButtonElement>('[data-menu-close]')!;
+  const focusables = () =>
+    [...sheet.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')].filter(
+      (el) => el.offsetParent !== null,
+    );
+
+  function open() {
+    sheet.hidden = false;
+    openBtn.setAttribute('aria-expanded', 'true');
+    document.documentElement.classList.add('menu-open');
+    focusables()[0]?.focus();
+  }
+  function close() {
+    if (sheet.hidden) return;
+    sheet.hidden = true;
+    openBtn.setAttribute('aria-expanded', 'false');
+    document.documentElement.classList.remove('menu-open');
+    openBtn.focus();
+  }
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  sheet.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const items = focusables();
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (!first || !last) return;
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+  matchMedia('(min-width: 1100px)').addEventListener('change', (e) => {
+    if (e.matches) close();
+  });
+</script>
+
+<style>
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: var(--header-bg);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: var(--header-h);
+  }
+  .wordmark {
+    font-size: 1.65rem;
+    line-height: 1;
+    font-weight: 800;
+    font-variation-settings:
+      'wdth' 50,
+      'wght' 800;
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.35rem 0;
+    min-width: 5.5ch;
+  }
+  .nav {
+    display: none;
+    margin-left: auto;
+  }
+  .nav ul {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.7rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-variation-settings:
+      'wdth' 95,
+      'wght' 600;
+  }
+  .nav a[aria-current='page'] {
+    text-decoration: underline;
+  }
+  @media (hover: hover) {
+    .nav a:hover {
+      background: var(--line);
+    }
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+  .motion-btn {
+    font-size: 0.9rem;
+  }
+  .toggle,
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    padding: 0 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variation-settings:
+      'wdth' 90,
+      'wght' 600;
+    cursor: pointer;
+  }
+  .toggle[aria-pressed='true'] {
+    border-color: currentColor;
+  }
+  .toggle[aria-pressed='false'] span {
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+  }
+  .toggle svg,
+  .menu-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .wide-only {
+    display: none;
+  }
+  @media (min-width: 1100px) {
+    .nav {
+      display: block;
+    }
+    .controls {
+      margin-left: 0.5rem;
+    }
+    .wide-only {
+      display: inline-flex;
+    }
+    .controls .menu-btn {
+      display: none;
+    }
+  }
+  .progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 2px;
+    background: var(--c1);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  .sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: var(--ground);
+    color: var(--ink);
+    overflow-y: auto;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .sheet[hidden] {
+    display: none;
+  }
+  .sheet-inner {
+    display: grid;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+  .sheet-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-h);
+  }
+  .sheet-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.25rem;
+  }
+  .sheet-nav a {
+    display: block;
+    padding: 0.4rem 0;
+    text-decoration: none;
+    font-size: clamp(2rem, 9vw, 3rem);
+    line-height: 1.1;
+    font-weight: 800;
+    font-variation-settings:
+      'wdth' 125,
+      'wght' 800;
+  }
+  .sheet-nav a[aria-current='page'] {
+    color: var(--accent-text);
+  }
+  .sheet-toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  :global(html.menu-open) {
+    overflow: hidden;
+  }
+</style>

@@ -23,3 +23,6 @@ coverage/
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Local preview config for the Claude desktop app
+.claude/launch.json
