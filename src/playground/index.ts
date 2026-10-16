@@ -330,9 +330,13 @@ export async function initPlayground(): Promise<void> {
   const justPlay = $<HTMLButtonElement>('[data-just-play]');
   const exitBtn = $<HTMLButtonElement>('[data-fidget-exit]');
   let fidget = false;
+  // True only while our own fullscreen is showing, so a late "left fullscreen" event
+  // from an earlier exit can't cancel a fresh Just play.
+  let inFullscreen = false;
   function setFidget(on: boolean): void {
     if (on === fidget) return;
     fidget = on;
+    inFullscreen = false;
     document.documentElement.classList.toggle('fidget', on);
     exitBtn.hidden = !on;
     // Drags start at once in this mode (see engine/pointer.ts), so nothing scrolls.
@@ -348,7 +352,9 @@ export async function initPlayground(): Promise<void> {
   justPlay.addEventListener('click', () => setFidget(true));
   exitBtn.addEventListener('click', () => setFidget(false));
   document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement && fidget) setFidget(false);
+    if (document.fullscreenElement === wrap) inFullscreen = fidget;
+    // The browser's own Esc leaves fullscreen without telling the page: leave Just play too.
+    else if (!document.fullscreenElement && inFullscreen && fidget) setFidget(false);
   });
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement).closest('input, textarea, select, [contenteditable]');
