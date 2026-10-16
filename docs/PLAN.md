@@ -186,11 +186,11 @@ Goal: every later scene gets the playground and prompts for free.
 
 ## Wave 3: Shared kits, then text scenes 4–13
 
-- [ ] **3.1 Easing library** · PRD §16.8
-- [ ] **3.2 Text kit** · PRD §16.8
-- [ ] **3.3 Physics kit** · PRD §16.8
-- [ ] **3.4 Field kit** · PRD §16.8
-- [ ] **3.5 Render kit** · PRD §16.8
+- [x] **3.1 Easing library** · PRD §16.8
+- [x] **3.2 Text kit** · PRD §16.8
+- [x] **3.3 Physics kit** · PRD §16.8
+- [x] **3.4 Field kit** · PRD §16.8
+- [x] **3.5 Render kit** · PRD §16.8
   - Done when (each kit): unit tests for its math and the micro-benchmark spot check in §16.8 pass; no DOM access except the text kit's offscreen canvas.
 - [ ] **3.6 Move the ported scenes onto the kits**
   - Do: where it removes duplicated code, switch the six Wave 1 scenes to the kits, without changing how they look or feel.
