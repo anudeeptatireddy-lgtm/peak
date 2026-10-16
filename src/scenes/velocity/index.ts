@@ -100,7 +100,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   wrap.append(label, rowsEl);
   host.append(wrap);
 
-  const rows: Row[] = FIXED.DIRECTIONS.map((dir, i) => {
+  const rows: Row[] = FIXED.DIRECTIONS.map((dir) => {
     const el = document.createElement('div');
     Object.assign(el.style, { overflow: 'hidden', whiteSpace: 'nowrap' });
     const track = document.createElement('div');

@@ -1,77 +1,700 @@
 ---
-// Scene page. For now: the scene full-screen in its world. The playground,
-// prompt builder and How it works tabs arrive in Wave 2 (PLAN 2.1).
+// Scene page (PRD §9): the live stage, and a panel with three tabs — Tweak,
+// Prompt, How it works. Desktop: a 400px side panel that can collapse. Phones and
+// tablets: the same panel as a bottom sheet. Wired by src/playground/index.ts.
 import Base from '../../layouts/Base.astro';
-import type { SceneMeta } from '../../scenes/types';
+import Controls from '../../components/controls/Controls.astro';
+import type { SceneModule } from '../../scenes/types';
+import { WORLD_DEFS, WORLD_ORDER, getWorld } from '../../theme/worlds';
 
 export function getStaticPaths() {
-  const metas = Object.values(
-    import.meta.glob<{ meta: SceneMeta }>('../../scenes/*/meta.ts', { eager: true }),
-  ).map((m) => m.meta);
-  return metas.map((meta) => ({ params: { slug: meta.slug }, props: { meta } }));
+  const mods = Object.values(
+    import.meta.glob<{ default: SceneModule }>('../../scenes/*/index.ts', { eager: true }),
+  ).map((m) => m.default);
+  return mods.map((mod) => ({ params: { slug: mod.meta.slug }, props: { mod } }));
 }
 
-const { meta } = Astro.props as { meta: SceneMeta };
+const { mod } = Astro.props as { mod: SceneModule };
+const m = mod.meta;
+const termLabel = (t: string) => t.replace(/-/g, ' ');
+// "How it works" sentences mark word-bank terms as **term**; link them.
+const linked = (s: string) =>
+  s.replace(/\*\*([^*]+)\*\*/g, (_, word: string) => {
+    const id = m.terms.find((t) => termLabel(t) === word.toLowerCase() || t === word.toLowerCase());
+    return id ? `<a href="/words#${id}"><strong>${word}</strong></a>` : `<strong>${word}</strong>`;
+  });
 ---
 
-<Base title={meta.title} description={meta.summary} world={meta.world}>
-  <section class="scene-page" aria-labelledby="scene-title">
-    <div class="stage" data-mount={meta.slug} data-inner-scroll="true"></div>
-    <div class="caption wrap">
-      <h1 id="scene-title" class="h2">
-        {meta.title}
-      </h1>
-      <p class="lede">{meta.summary}</p>
+<Base title={m.title} description={m.summary} world={m.world}>
+  <div class="scene-page" data-scene-page data-slug={m.slug} data-world={m.world}>
+    <header class="title-block wrap">
+      <h1 class="display">{m.title}</h1>
+      <p class="body soft">{m.summary}</p>
       <p class="small soft">
-        {meta.difficulty} · about {meta.minutes} min. The sliders and the prompt builder arrive in
-        wave 2 of the build.
+        {m.difficulty} · about {m.minutes} min · {m.useCase}
       </p>
+    </header>
+
+    <div class="workspace">
+      <div class="stage-wrap" data-stage-wrap>
+        <div class="stage" data-stage data-inner-scroll="true" aria-hidden="true"></div>
+        <p class="sr-only">{m.wants}</p>
+        <div class="stage-controls" data-stage-controls>
+          <button class="btn btn--secondary" type="button" data-stage-pause>
+            Pause
+          </button>
+          <button class="btn btn--secondary" type="button" data-just-play>
+            Just play
+          </button>
+          <button class="btn btn--secondary" type="button" data-restart>
+            Restart
+          </button>
+          <button
+            class="btn btn--secondary panel-toggle"
+            type="button"
+            data-panel-toggle
+            aria-expanded="true"
+            aria-controls="panel"
+          >
+            Hide panel
+          </button>
+        </div>
+        <button class="btn btn--primary fidget-exit" type="button" data-fidget-exit hidden>
+          Exit
+        </button>
+      </div>
+
+      <aside class="panel" id="panel" data-panel aria-label="Playground">
+        <div class="sheet-handle" data-sheet-handle aria-hidden="true">
+          <span></span>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Playground">
+          <button
+            role="tab"
+            id="tab-tweak"
+            aria-controls="pane-tweak"
+            aria-selected="true"
+            tabindex="0"
+            data-tab="tweak"
+          >
+            Tweak
+          </button>
+          <button
+            role="tab"
+            id="tab-prompt"
+            aria-controls="pane-prompt"
+            aria-selected="false"
+            tabindex="-1"
+            data-tab="prompt"
+          >
+            Prompt
+          </button>
+          <button
+            role="tab"
+            id="tab-how"
+            aria-controls="pane-how"
+            aria-selected="false"
+            tabindex="-1"
+            data-tab="how"
+          >
+            How it works
+          </button>
+          <button class="btn btn--primary peek-copy" type="button" data-copy-prompt="peek">
+            Copy prompt
+          </button>
+        </div>
+
+        <div class="panes">
+          <section
+            class="pane"
+            id="pane-tweak"
+            role="tabpanel"
+            aria-labelledby="tab-tweak"
+            data-pane="tweak"
+          >
+            <div class="world-picker">
+              <h3 class="small soft" id="worlds-label">
+                World
+              </h3>
+              <div class="swatches" role="radiogroup" aria-labelledby="worlds-label" data-swatches>
+                {WORLD_ORDER.map((id) => {
+                  const t = getWorld(id);
+                  return (
+                    <button
+                      type="button"
+                      role="radio"
+                      class="swatch"
+                      data-world-id={id}
+                      aria-checked={id === m.world ? 'true' : 'false'}
+                      tabindex={id === m.world ? 0 : -1}
+                      aria-label={WORLD_DEFS[id].name}
+                      title={WORLD_DEFS[id].name}
+                      style={`--sw-ground: ${t.ground}; --sw-a: ${t.c1}; --sw-b: ${t.c2}; --sw-c: ${t.c3}`}
+                    >
+                      <span />
+                    </button>
+                  );
+                })}
+                <button
+                  type="button"
+                  role="radio"
+                  class="swatch swatch--custom"
+                  data-world-id="custom"
+                  aria-checked="false"
+                  tabindex="-1"
+                  aria-label="Custom colors"
+                  title="Custom colors"
+                >
+                  <span />
+                </button>
+              </div>
+              <div class="custom-colors" data-custom hidden>
+                <label>
+                  Background <input type="color" data-custom-key="ground" value="#ffe3f1" />
+                </label>
+                <label>
+                  Accent 1 <input type="color" data-custom-key="c1" value="#ff1f8e" />
+                </label>
+                <label>
+                  Accent 2 <input type="color" data-custom-key="c2" value="#1fa9db" />
+                </label>
+                <label>
+                  Accent 3 <input type="color" data-custom-key="c3" value="#ffc21a" />
+                </label>
+              </div>
+              <div class="row">
+                <button class="btn btn--secondary" type="button" data-shuffle-world>
+                  Shuffle world
+                </button>
+                <button
+                  class="switch switch--inline"
+                  type="button"
+                  role="switch"
+                  aria-checked="false"
+                  data-cycle
+                >
+                  <span class="switch-knob" aria-hidden="true"></span>
+                  <span>Cycle worlds</span>
+                </button>
+              </div>
+            </div>
+
+            <Controls params={mod.params} />
+
+            <div class="row actions">
+              <button class="btn btn--secondary" type="button" data-reset>
+                Reset
+              </button>
+              <button class="btn btn--secondary" type="button" data-surprise>
+                Surprise me
+              </button>
+              <button class="btn btn--primary" type="button" data-share>
+                Share my version
+              </button>
+            </div>
+          </section>
+
+          <section
+            class="pane"
+            id="pane-prompt"
+            role="tabpanel"
+            aria-labelledby="tab-prompt"
+            data-pane="prompt"
+            hidden
+          >
+            <fieldset class="opt">
+              <legend class="small soft">Where is this going?</legend>
+              <div class="segmented" role="radiogroup" data-opt="target">
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="new"
+                  aria-checked="true"
+                  tabindex="0"
+                >
+                  New page
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="existing"
+                  aria-checked="false"
+                  tabindex="-1"
+                >
+                  My existing project
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="react"
+                  aria-checked="false"
+                  tabindex="-1"
+                >
+                  React component
+                </button>
+              </div>
+            </fieldset>
+            <fieldset class="opt">
+              <legend class="small soft">How much detail?</legend>
+              <div class="segmented" role="radiogroup" data-opt="detail">
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="detailed"
+                  aria-checked="true"
+                  tabindex="0"
+                >
+                  Detailed
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="quick"
+                  aria-checked="false"
+                  tabindex="-1"
+                >
+                  Quick
+                </button>
+              </div>
+            </fieldset>
+            <fieldset class="opt">
+              <legend class="small soft">Your experience</legend>
+              <div class="segmented" role="radiogroup" data-opt="experience">
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="new"
+                  aria-checked="true"
+                  tabindex="0"
+                >
+                  I'm new to this
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  data-value="experienced"
+                  aria-checked="false"
+                  tabindex="-1"
+                >
+                  I've done this before
+                </button>
+              </div>
+            </fieldset>
+            <div class="row prompt-actions">
+              <button class="btn btn--primary" type="button" data-copy-prompt="tab">
+                Copy prompt
+              </button>
+              <button class="btn btn--secondary" type="button" data-download>
+                Download as PROMPT.md
+              </button>
+              <span class="small soft" data-word-count></span>
+            </div>
+            <pre class="prompt" tabindex="0" aria-label="Your prompt" data-prompt></pre>
+            <h3 class="h3">Next steps</h3>
+            <p class="small soft">
+              Paste these into the same Claude Code session after it builds the first version.
+            </p>
+            <ol class="followups" data-followups></ol>
+            <div class="did-it-work">
+              <h3 class="h3">Did it work?</h3>
+              <div class="row">
+                <button class="btn btn--secondary" type="button" data-feedback="it_worked">
+                  It worked
+                </button>
+                <button class="btn btn--secondary" type="button" data-feedback="it_didnt">
+                  It didn't
+                </button>
+              </div>
+              <p class="small" data-feedback-note hidden></p>
+            </div>
+          </section>
+
+          <section
+            class="pane"
+            id="pane-how"
+            role="tabpanel"
+            aria-labelledby="tab-how"
+            data-pane="how"
+            hidden
+          >
+            <div class="how body">
+              {m.howItWorks.map((s) => (
+                <p set:html={linked(s)} />
+              ))}
+            </div>
+            <h3 class="h3">Words in this scene</h3>
+            <ul class="chips" role="list">
+              {m.terms.map((t) => (
+                <li>
+                  <a class="chip" href={`/words#${t}`}>
+                    {termLabel(t)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <h3 class="h3">What else you could make with this</h3>
+            <ul class="else" role="list">
+              {m.whatElse.map((s) => (
+                <li>{s}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
+      </aside>
     </div>
-  </section>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
 </Base>
 
 <script>
-  import { mountScene } from '../../engine/mount';
-  import { loadScene } from '../../scenes/registry';
-  const stage = document.querySelector<HTMLElement>('[data-mount]')!;
-  loadScene(stage.dataset.mount!).then((mod) => mountScene(stage, mod));
+  import { initPlayground } from '../../playground/index';
+  initPlayground();
 </script>
 
 <style>
   .scene-page {
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top, 0px));
+  }
+  .title-block {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+  }
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .stage-wrap {
     position: relative;
-    height: 100vh;
-    height: 100svh;
-    min-height: 560px;
+    height: calc(100svh - var(--header-h) - 2rem);
+    min-height: 460px;
     overflow: hidden;
+    border-top: 1px solid var(--line);
   }
   .stage {
     position: absolute;
     inset: 0;
   }
-  .scene-page::after {
-    content: '';
+  .stage-controls {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 35%;
-    z-index: 1;
-    background: linear-gradient(to top, var(--ground) 6%, transparent);
-    pointer-events: none;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 5;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem;
   }
-  .caption {
+  .stage-controls .btn {
+    background: var(--header-bg);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    font-size: 0.85rem;
+  }
+  .fidget-exit {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: calc(clamp(1.5rem, 6vh, 3.25rem) + env(safe-area-inset-bottom, 0px));
-    z-index: 2;
-    display: grid;
-    gap: 0.5rem;
-    max-width: calc(34rem + 2 * var(--gutter));
-    pointer-events: none;
+    top: calc(0.75rem + env(safe-area-inset-top, 0px));
+    right: 0.75rem;
+    z-index: 6;
   }
-  .lede {
+  .panel {
+    background: var(--surface);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs [role='tab'] {
+    min-height: 44px;
+    padding: 0 0.8rem;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
     color: var(--ink-soft);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 650;
+    font-variation-settings:
+      'wdth' 90,
+      'wght' 650;
+    cursor: pointer;
+  }
+  .tabs [role='tab'][aria-selected='true'] {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+  .peek-copy {
+    margin-left: auto;
+    display: none;
+    min-height: 36px;
+    font-size: 0.8rem;
+    padding: 0 0.8rem;
+  }
+  .panes {
+    overflow-y: auto;
+    padding: 1rem 1rem 2rem;
+    flex: 1;
+    min-height: 0;
+  }
+  .pane {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 0.35rem;
+    margin: 0.5rem 0 0.75rem;
+  }
+  .swatch {
+    aspect-ratio: 1;
+    min-width: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    padding: 0;
+    cursor: pointer;
+    background:
+      conic-gradient(var(--sw-a) 0 33%, var(--sw-b) 0 66%, var(--sw-c) 0) center / 55% 55% no-repeat,
+      var(--sw-ground);
+  }
+  .swatch--custom {
+    background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+  }
+  .swatch[aria-checked='true'] {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .custom-colors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .custom-colors label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .opt {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .prompt {
+    margin: 0;
+    max-height: 48vh;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: 12px;
+    background: var(--ground);
+    border: 1px solid var(--line);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .followups {
+    display: grid;
+    gap: 0.6rem;
+    padding-left: 1.2rem;
+    margin: 0;
+  }
+  .followups li {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .followups .btn {
+    justify-self: start;
+    min-height: 36px;
+    font-size: 0.8rem;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 0.8rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  .how {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .else {
+    padding-left: 1.2rem;
+    margin: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    transform: translate(-50%, 1rem);
+    z-index: 80;
+    padding: 0.7rem 1.1rem;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--ground);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity var(--dur-ui) var(--ease-out),
+      transform var(--dur-ui) var(--ease-out);
+  }
+  .toast.is-on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* Desktop: stage left, 400px panel right (PRD §9.1). */
+  @media (min-width: 1024px) {
+    .workspace {
+      grid-template-columns: 1fr 400px;
+      height: calc(100svh - var(--header-h) - 2rem);
+      min-height: 560px;
+    }
+    .stage-wrap {
+      height: 100%;
+    }
+    .panel {
+      height: 100%;
+      border-left: 1px solid var(--line);
+      border-top: 1px solid var(--line);
+    }
+    .sheet-handle {
+      display: none;
+    }
+    :global(html.panel-collapsed) .workspace {
+      grid-template-columns: 1fr 0;
+    }
+    :global(html.panel-collapsed) .panel {
+      visibility: hidden;
+    }
+  }
+
+  /* Phones and tablets: the panel is a bottom sheet that peeks 72px. */
+  @media (max-width: 1023.98px) {
+    .panel-toggle {
+      display: none;
+    }
+    .panel {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      height: 90svh;
+      border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
+      transform: translateY(calc(90svh - 72px - env(safe-area-inset-bottom, 0px)));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .panel[data-sheet='half'] {
+      transform: translateY(40svh);
+    }
+    .panel[data-sheet='full'] {
+      transform: translateY(0);
+    }
+    .panel[data-anim] {
+      transition: transform 240ms var(--ease-out);
+    }
+    .panel.is-dragging {
+      transition: none;
+    }
+    .sheet-handle {
+      display: grid;
+      place-items: center;
+      height: 20px;
+      touch-action: none;
+      cursor: grab;
+    }
+    .sheet-handle span {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--line);
+    }
+    .tabs {
+      padding: 0 0.5rem;
+      gap: 0;
+      touch-action: none;
+    }
+    .tabs [role='tab'] {
+      padding: 0 0.55rem;
+      white-space: nowrap;
+    }
+    .peek-copy {
+      display: inline-flex;
+      white-space: nowrap;
+    }
+    /* One swipeable row of swatches on phones (PRD §9.2). */
+    .swatches {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      padding: 4px;
+      margin-inline: -4px;
+      scrollbar-width: none;
+    }
+    .swatch {
+      flex: 0 0 44px;
+      scroll-snap-align: start;
+    }
+    .stage-wrap {
+      height: calc(100svh - var(--header-h) - 72px);
+    }
+  }
+
+  /* Just play (fidget mode, PRD §9.7): only the stage and an Exit button. */
+  :global(html.fidget) .site-header,
+  :global(html.fidget) .title-block,
+  :global(html.fidget) .panel,
+  :global(html.fidget) .stage-controls,
+  :global(html.fidget) .site-footer {
+    display: none !important;
+  }
+  :global(html.fidget) .stage-wrap {
+    position: fixed;
+    inset: 0;
+    height: auto;
+    z-index: 90;
+    background: var(--ground);
+    border: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panel,
+    .toast {
+      transition: none;
+    }
   }
 </style>

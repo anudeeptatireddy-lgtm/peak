@@ -115,7 +115,9 @@ export function createPointer(host: HTMLElement, opts: PointerOptions = {}): Poi
       p.down = true;
       downX = e.clientX;
       downY = e.clientY;
-      if (e.pointerType === 'mouse' || immediate) p.dragging = true;
+      // Just play mode (html.fidget) has no page to scroll, so drags start at once.
+      const fidget = document.documentElement.classList.contains('fidget');
+      if (e.pointerType === 'mouse' || immediate || fidget) p.dragging = true;
       else {
         clearTimeout(holdTimer);
         holdTimer = window.setTimeout(() => {

@@ -1,0 +1,133 @@
+---
+// One control, generated from a param schema (PRD §9.2). Wired up on the client by
+// src/playground/index.ts; the markup works and reads well without it.
+import type { Param } from '../../scenes/types';
+
+interface Props {
+  param: Param;
+}
+const { param: p } = Astro.props;
+const id = `ctl-${p.id}`;
+const helpId = `${id}-help`;
+const display = (v: number) =>
+  p.kind === 'slider' && p.invertDisplay ? Number((p.max + p.min - v).toFixed(4)) : v;
+const unit = p.kind === 'slider' && p.unit ? (p.unit === '×' ? '×' : ` ${p.unit}`) : '';
+const segmented = p.kind === 'select' && p.options.length <= 4;
+---
+
+<div class="ctl" data-param={p.id} data-kind={p.kind}>
+  <div class="ctl-head">
+    {p.kind === 'toggle' ? (
+      <span class="ctl-label" id={`${id}-label`}>
+        {p.label}
+      </span>
+    ) : segmented ? (
+      <span class="ctl-label" id={`${id}-label`}>
+        {p.label}
+      </span>
+    ) : (
+      <label class="ctl-label" for={id}>
+        {p.label}
+      </label>
+    )}
+    {p.kind === 'slider' && (
+      <output class="ctl-value" for={id} data-unit={unit}>
+        {display(p.default)}
+        {unit}
+      </output>
+    )}
+    {p.kind === 'text' && (
+      <span class="ctl-count small soft" data-count hidden>
+        {p.default.length}/{p.maxLength}
+      </span>
+    )}
+    <button
+      class="ctl-info"
+      type="button"
+      aria-expanded="false"
+      aria-controls={helpId}
+      aria-label={`About ${p.label}`}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"></circle>
+        <path d="M12 11v6M12 7.5v.5"></path>
+      </svg>
+    </button>
+  </div>
+  {p.kind === 'slider' && (
+    <input
+      id={id}
+      type="range"
+      min={p.min}
+      max={p.max}
+      step={p.step}
+      value={p.invertDisplay ? p.max + p.min - p.default : p.default}
+      aria-describedby={helpId}
+      data-invert={p.invertDisplay ? '1' : undefined}
+    />
+  )}
+  {p.kind === 'text' && (
+    <input
+      id={id}
+      type="text"
+      maxlength={p.maxLength}
+      value={p.default}
+      autocomplete="off"
+      spellcheck="false"
+      aria-describedby={helpId}
+    />
+  )}
+  {p.kind === 'toggle' && (
+    <button
+      id={id}
+      class="switch"
+      type="button"
+      role="switch"
+      aria-checked={p.default ? 'true' : 'false'}
+      aria-labelledby={`${id}-label`}
+      aria-describedby={helpId}
+    >
+      <span class="switch-knob" aria-hidden="true" />
+      <span class="switch-text">{p.default ? 'On' : 'Off'}</span>
+    </button>
+  )}
+  {p.kind === 'select' && segmented && (
+    <div
+      class="segmented"
+      role="radiogroup"
+      aria-labelledby={`${id}-label`}
+      aria-describedby={helpId}
+    >
+      {p.options.map((o) => (
+        <button
+          type="button"
+          role="radio"
+          data-value={o.value}
+          aria-checked={o.value === p.default ? 'true' : 'false'}
+          tabindex={o.value === p.default ? 0 : -1}
+        >
+          {o.label}
+        </button>
+      ))}
+    </div>
+  )}
+  {p.kind === 'select' && !segmented && (
+    <select id={id} aria-describedby={helpId}>
+      {p.options.map((o) => (
+        <option value={o.value} selected={o.value === p.default}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  )}
+  {p.kind === 'datetime' && <input id={id} type="datetime-local" aria-describedby={helpId} />}
+  <div class="ctl-help small" id={helpId} hidden>
+    <p>{p.help}</p>
+    {p.term && (
+      <p>
+        This is called <a href={`/words#${p.term}`}>{p.term.replace(/-/g, ' ')}</a>. See it in the
+        word bank.
+      </p>
+    )}
+  </div>
+</div>

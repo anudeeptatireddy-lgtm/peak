@@ -1,0 +1,36 @@
+---
+// All of a scene's controls, grouped (PRD §9.2): Look, Motion and Interaction,
+// then everything else in a collapsed Advanced group (PRD §8.5).
+import type { Param } from '../../scenes/types';
+import Control from './Control.astro';
+
+interface Props {
+  params: Param[];
+}
+const { params } = Astro.props;
+const groups = (['Look', 'Motion', 'Interaction'] as const)
+  .map((g) => ({ name: g, items: params.filter((p) => p.group === g) }))
+  .filter((g) => g.items.length);
+const advanced = params.filter((p) => p.group === 'Advanced');
+---
+
+<div class="controls" data-controls>
+  {groups.map((g) => (
+    <section class="ctl-group" aria-label={g.name}>
+      <h3 class="small soft">{g.name}</h3>
+      {g.items.map((p) => (
+        <Control param={p} />
+      ))}
+    </section>
+  ))}
+  {advanced.length > 0 && (
+    <details class="ctl-group ctl-advanced">
+      <summary class="small">
+        Advanced <span class="soft">({advanced.length} more settings)</span>
+      </summary>
+      {advanced.map((p) => (
+        <Control param={p} />
+      ))}
+    </details>
+  )}
+</div>

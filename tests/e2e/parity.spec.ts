@@ -3,7 +3,7 @@
 // viewport, same seeded Math.random, Riso light colors, living colors off, Anybody
 // fully loaded before sampling, and a paused fake clock stepped frame by frame.
 import { expect, test, type Page } from '@playwright/test';
-import { SEED, compare, inkGrid, open, shot } from './parity-helpers';
+import { compare, inkGrid, open, shot } from './parity-helpers';
 
 // Playwright's fake clock drives requestAnimationFrame in Chromium only, so both
 // sizes run in Chromium (the phone size with touch and mobile emulation).
