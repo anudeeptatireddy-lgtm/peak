@@ -2,24 +2,26 @@
 
 Record owner answers, trade-offs, and deviations from the PRD here, newest first. Format: date, decision, why.
 
-## Open questions (PRD §25)
-1. Host (Vercel, Netlify, or GitHub Pages): pending
-2. Analytics on or off, and which provider: pending
-3. Feedback form URL for "It didn't work": pending
-4. About page details (PRD §15): pending
-5. Domain name: pending
+## Open questions (PRD §25), answered by the owner on 2026-10-16
+1. Host: **Vercel**, with the code on GitHub. Every push to `main` deploys.
+2. Analytics: **Vercel Web Analytics** for page views, set up as Vercel's docs describe for a static Astro site. Custom events (PRD §20) only if they are free on the Hobby plan; otherwise `track()` stays a no-op. No cookies, no personal data.
+3. Feedback form: **none yet**. `PUBLIC_FEEDBACK_URL` stays empty; "It didn't" shows "Thanks, noted" and a link to `/fix`.
+4. About page details: the owner will provide them when asked at the About step (PLAN 8.14); placeholders until then.
+5. Domain: **none for now**; the free `vercel.app` address. `PUBLIC_SITE_URL` is set to it once it exists.
 
 ## Waiting on the owner
-From the kit review (2026-10-16), renumbered to the v1.1 waves:
-1. Prompts must never contain "peak" (PLAN 2.8), but `particles` defaults to the word "peak". Needed by step 2.8 (Wave 2).
-2. `countdown` defaults to "7 days from page load", which breaks byte-identical prompts and snapshots (PRD §10.1). Needed by step 7.2 (Wave 7).
-3. Quick prompts must be under 150 words (PRD §10.6), but the "Add to my existing project" block alone is about 60 words. Needed by step 2.9 (Wave 2).
-4. ~~Some `particles` and `flow` defaults differ from the prototype.~~ Resolved in step 1.8 without changing either: see the log entry for step 1.8.
+- About page details (name, one-line bio, what you're looking for, contact link, social links): asked at PLAN 8.14.
 
-From the v1.1 scope update (2026-10-16):
-5. The proposed home order and featured lineup (PRD §6.1). Needed by step 1.16 (Wave 1); easy to change later in `journey.ts`.
+## Earlier questions (all settled)
+1. Prompts must never contain "peak", but `particles` defaults to the word "peak". The owner delegated the remaining calls; decided in step 2.8 (see log).
+2. `countdown`'s default date breaks byte-identical prompts. Decided in step 7.2 (see log).
+3. Quick prompts under 150 words vs the long "existing project" block. Decided in step 2.9 (see log).
+4. Particle and flow defaults vs the prototype: resolved in step 1.8, approved by the owner.
+5. Home order and featured lineup: **approved by the owner** on 2026-10-16.
 
 ## Log
+
+**2026-10-16, owner answers after Wave 1.** Approved: the Wave 1 checkpoint, the home order, the stand-ins, reading particle settings as scales on the prototype's numbers, the accent text color on the third marquee row, the new trail fading in `flow`, and committing straight to `main`. New instructions: deploy to GitHub + Vercel before Wave 2; continue through Waves 2–9 without waiting at checkpoints (only logins, About details and anything that costs money need the owner); at the end of each wave run the full suite, push, wait for the deploy, smoke-test the live site and send a short update; run the PRD §10.8 prompt tests with fresh subagents in empty folders outside the repo; keep the site `noindex` with a disallow-all `robots.txt` until launch. PLAN.md was updated to match: a deploy phase before Wave 2, wave wrap-up boxes instead of owner checkpoints, and the launch steps at the end of Wave 9.
 
 **2026-10-16, step 1.16: home journey.** The home page follows the proposed v1.1 order (open question 5 still waits for the owner's OK; the order lives in `HOME_JOURNEY` in `src/theme/journey.ts`). Eight featured scenes don't exist yet, so their slots show stand-ins in the slot's world (rotating `flow`, `warp`, `ripple`, `particles`), each labeled "Stand-in until … arrives in wave N"; the rail always uses the featured scene's name. The home page caps running scenes at 2 (`setMaxActive(2)`), because the 80px visibility margin can otherwise let three aligned sections run at once. `elastic` and `velocity` sections have no bottom scrim, as in the prototype. Scenes mount when they come within one screen of the viewport. A basic `/scenes/<slug>` page shows each built scene full-screen in its world so the "Tweak it and get the prompt" buttons work before Wave 2 adds the playground. The How it works illustrations are CSS loops that pause with motion and stop under reduced motion.
 

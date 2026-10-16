@@ -4,7 +4,15 @@ This is the order to build peak in (PRD v1.1: 50 scenes, 16 worlds, always-chang
 
 **How to run it in Claude Code:** type `/next`. Claude Code finds the first unchecked step, builds it, runs its checks, ticks the box, commits, and stops so you can look. Type `/next` again for the next step.
 
-**Waves and checkpoints:** the build is split into waves. Each wave ends with a **Checkpoint** box. When `/next` reaches one, it stops and tells you (the owner) what to open and try; the box is ticked only after you reply OK. Nothing in the next wave starts before that.
+**Waves and wrap-ups:** the build is split into waves. Checkpoints 0 and 1 were owner reviews (done). From Wave 2 on, the owner asked Claude Code not to wait (2026-10-16): each wave ends with a **Wrap-up** box instead. When `/next` reaches one, it:
+1. runs the full suite (`npm run check` and `npm run test:e2e`); everything must pass;
+2. pushes to `main`, waits for the Vercel deploy to finish (if it fails: read the build log, fix, push again);
+3. runs the live smoke tests (`npm run test:live`);
+4. sends the owner a short update: what's new, the live link, three things to try on a phone, anything that needs them;
+5. ticks the box and continues with the next wave.
+Only logins, the About page details and anything that costs money wait for the owner.
+
+**Prompt tests (PRD §10.8):** after a wave's scenes are done, each scene's default prompt (Detailed + New page + I'm new) goes to a fresh subagent working in an empty temporary folder outside this repo. Claude Code opens the result in a browser, compares it with the real scene, and logs pass or fail in `docs/PROMPT_TESTS.md`. A failure is fixed in the scene's phrases or meta (never the test) and retested once. To save the owner's usage, each wave tests its Spicy scenes plus at least one easy scene; untested scenes are listed in `docs/PROMPT_TESTS.md`.
 
 Legend: `[ ]` to do · `[x]` done · **Owner** = something only you can decide or do.
 
@@ -21,7 +29,7 @@ Unless a step says otherwise, a scene step is done when:
 6. Schema validator, prompt snapshot and phrase-coverage tests pass (from Wave 2 on; Wave 1 ports get theirs in step 2.10).
 7. Scenes marked ⚠ pass the flash test (PRD §8.2).
 8. Scripting stays within 8ms per frame at defaults on the dev machine (spot-check in DevTools).
-9. It has a row in `docs/PROMPT_TESTS.md` marked "pending" (from step 2.13 on).
+9. It has a row in `docs/PROMPT_TESTS.md` (from step 2.13 on): tested by a fresh subagent, or marked "not tested" with the reason.
 10. If it's one of the 12 featured on the home page (PRD §6.1), it replaces its stand-in there.
 
 ---
@@ -99,7 +107,24 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
   - Do: Build the home page: hero (`particles`), the 11 featured sections in the order from §6.1, then How it works (Matcha, 4 numbered steps with tiny loops) and a Start here call to action (the latest drop row comes in Wave 8). Each section full-viewport with its caption and "Tweak it and get the prompt" button. World order from `journey.ts` config. Slots whose scene isn't built yet show a stand-in (one of the six ported scenes, rotating, in that slot's world). Header, buttons, focus ring, scrims and captions read only from CSS variables; scenes update via `setTheme` (no `getComputedStyle` in frames). Add the world rail (dots per section, active dot larger, click scrolls, hidden under 700px, keyboard and screen-reader labels).
   - Done when: scrolling top to bottom blends through all 12 worlds plus Matcha with no hard cuts; e2e asserts `--ground` changes across sections; only on-screen scenes run (scheduler debug count); e2e screenshots at 7 scroll positions show readable header and captions; an automated contrast check passes at 50 sampled scroll positions.
 
-- [ ] **Checkpoint 1 (Owner):** scroll the home page slowly, then fast, on your laptop and your phone, and watch the colors change: 12 worlds blending on scroll, accents drifting with Living colors on, steady with it off. This is the moment to adjust world colors or the home order (edit `worlds.ts` / `journey.ts`, or ask Claude Code to).
+- [x] **Checkpoint 1 (Owner):** scroll the home page slowly, then fast, on your laptop and your phone, and watch the colors change: 12 worlds blending on scroll, accents drifting with Living colors on, steady with it off. This is the moment to adjust world colors or the home order (edit `worlds.ts` / `journey.ts`, or ask Claude Code to).
+
+---
+
+## Phase D: Deploy (before Wave 2)
+
+- [ ] **D.1 Repo safety and noindex** · PRD §22, §23
+  - Do: confirm `.env*` and secrets are git-ignored and nothing private is tracked; add a `noindex` robots meta tag on every page and a disallow-all `public/robots.txt`. Both come off at launch (step 9.9).
+  - Done when: `git ls-files` shows no secrets; e2e confirms the meta tag on every route and the robots.txt contents.
+- [ ] **D.2 GitHub**
+  - Do: create the public GitHub repo `peak` and push `main`.
+  - Done when: the repo exists and `main` is pushed.
+- [ ] **D.3 Vercel** · PRD §23
+  - Do: following Vercel's official docs for a static Astro site, create the Vercel project from the GitHub repo (build command `astro build`, output `dist`, Node version from `engines`), with automatic deploys on push to `main`. Set `PUBLIC_SITE_URL` to the `vercel.app` address and redeploy. Add `npm run test:live` (Playwright smoke tests against `PEAK_LIVE_URL`).
+  - Done when: the live URL serves the site, a push to `main` deploys by itself, and `npm run test:live` passes.
+- [ ] **D.4 Vercel Web Analytics** · PRD §20
+  - Do: page views as Vercel's docs describe for a static Astro site; custom events only if free on the Hobby plan (otherwise `track()` stays a no-op). No cookies, no personal data.
+  - Done when: the analytics script loads on the live site with no console errors; the decision about custom events is logged with its source.
 
 ---
 
@@ -154,7 +179,7 @@ Goal: every later scene gets the playground and prompts for free.
   - Do: Create `docs/PROMPT_TESTS.md` with a table: scene, date, prompt options, result (pass/fail), what was wrong, fix made. One row per scene for all 50, marked "pending".
   - Done when: the file exists with 50 rows.
 
-- [ ] **Checkpoint 2 (Owner):** on your laptop and phone, open a scene page, tweak it, try Shuffle world and Cycle worlds, and share the link with yourself. Then run the prompt tests for at least `particles` and `elastic`: open a fresh Claude Code session in a new empty folder, paste the Detailed + New page + I'm new prompt at defaults, and log the result in `docs/PROMPT_TESTS.md`. If prompts are failing, fixing them matters more than any later wave.
+- [ ] **Wave 2 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. This wave's prompt tests cover the six Wave 1 scenes (they get prompts in this wave). Things for the owner to try: open a scene page on your phone, tweak it, try Shuffle world and Cycle worlds, and share the link with yourself. If prompts are failing, fixing them matters more than any later wave.
 
 ---
 
@@ -183,7 +208,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **3.15 `kinetic`** · SCENES.md #12
 - [ ] **3.16 `shatter`** · SCENES.md #13
 
-- [ ] **Checkpoint 3 (Owner):** play with each new text scene on desktop and phone (`/dev/scenes` and its scene page); run the prompt test for at least two of them.
+- [ ] **Wave 3 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new text scene on desktop and phone (`/dev/scenes` and its scene page); run the prompt test for at least two of them.
 
 ---
 
@@ -197,7 +222,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **4.6 `rubber`** · SCENES.md #19
 - [ ] **4.7 `fire`** · SCENES.md #20 (⚠ flash test)
 
-- [ ] **Checkpoint 4 (Owner):** play with each new scene on desktop and phone; check that `neon` and `fire` never feel strobe-like; run at least two prompt tests.
+- [ ] **Wave 4 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone; check that `neon` and `fire` never feel strobe-like; run at least two prompt tests.
 
 ---
 
@@ -215,7 +240,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **5.10 `smoke`** · SCENES.md #33
 - [ ] **5.11 `filings`** · SCENES.md #34
 
-- [ ] **Checkpoint 5 (Owner):** play with each new scene on desktop and phone, and scroll the home page again: four more featured slots now show their real scenes.
+- [ ] **Wave 5 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone, and scroll the home page again: four more featured slots now show their real scenes.
 
 ---
 
@@ -232,7 +257,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **6.9 `fold`** · SCENES.md #43 (inner scroller on scene pages, like `velocity`)
 - [ ] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
 
-- [ ] **Checkpoint 6 (Owner):** play with each new scene; scroll the home page: every featured slot should now show its real scene.
+- [ ] **Wave 6 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene; scroll the home page: every featured slot should now show its real scene.
 
 ---
 
@@ -245,7 +270,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **7.5 `jelly`** · SCENES.md #49
 - [ ] **7.6 `loaders`** · SCENES.md #50
 
-- [ ] **Checkpoint 7 (Owner):** play with each new scene on desktop and phone. All 50 scenes now exist.
+- [ ] **Wave 7 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone. All 50 scenes now exist.
 
 ---
 
@@ -280,15 +305,16 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [ ] **8.13 Drops** · PRD §14
   - Done when: `/drops`, `/drops/[slug]`, `/rss.xml` work; the home page shows the latest drop; one launch drop exists.
 - [ ] **8.14 About** · PRD §15
-  - Done when: the page uses the `tilt` card with the owner's name; all placeholders are clearly marked for the owner; nothing invented.
+  - Do: ask the owner in one message for their name, a one-line bio, what they're looking for (internships, freelance, collaborators), a contact link, and social links. Keep working on other steps while waiting. Build the page with the `tilt` card; use their answers, or clearly marked placeholders if they haven't answered yet (list them in `docs/DECISIONS.md`).
+  - Done when: the page uses the `tilt` card with the owner's name (or a marked placeholder); nothing invented.
 - [ ] **8.15 404**
   - Done when: a small playful animation (reuse a scene in preview quality) and links to Home, Gallery, Start here.
 
-- [ ] **Checkpoint 8 (Owner):** browse the gallery and the Tour (try Shuffle and Autoplay) on laptop and phone. Read all three guides as if you'd never used Claude Code and note anything confusing.
+- [ ] **Wave 8 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: browse the gallery and the Tour (try Shuffle and Autoplay) on laptop and phone. Read all three guides as if you'd never used Claude Code and note anything confusing.
 
 ---
 
-## Wave 9: Polish, performance, accessibility, deploy, friend test
+## Wave 9: Polish, performance, accessibility, launch, friend test
 
 - [ ] **9.1 Sound** · PRD §9.8
   - Done when: the header toggle works and is remembered; each scene's hooks play synthesized sounds only after a user gesture; nothing plays when off.
@@ -296,19 +322,21 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
   - Do: keyboard-only walkthrough of every page; screen-reader labels; contrast across all 16 worlds and blends; a flash audit of every ⚠ scene at maximum params; an automated a11y check in e2e on every route (images/controls have accessible names, headings in order, no duplicate ids, focus visible).
   - Done when: all checks pass; findings and fixes logged in `docs/DECISIONS.md`.
 - [ ] **9.3 Performance pass** · PRD §19
-  - Done when: Lighthouse budgets met for home, Tour, one scene page, gallery, and a guide (record scores in `docs/DECISIONS.md`); scene chunks load only where used; per-frame scripting within budget at defaults for all 50 scenes; Tour and gallery running counts within limits on a phone.
+  - Done when: scene chunks load only where used; per-frame scripting within budget at defaults for all 50 scenes; Tour and gallery running counts within limits on a phone.
 - [ ] **9.4 SEO and share images** · PRD §22
-  - Done when: titles, descriptions, canonical URLs, sitemap, robots.txt; OG images generated for all 50 scenes and committed. (Checking a live link preview waits for 9.6.)
+  - Done when: titles, descriptions, canonical URLs and the sitemap use the live address; OG images exist for all 50 scenes, the home page and a generic fallback, generated by a script and committed.
 - [ ] **9.5 Copy review** · PRD §18 (copy voice)
   - Done when: every page's copy is plain, sentence case, and consistent (button names match their toasts); no lorem ipsum; all owner placeholders listed in `docs/DECISIONS.md`.
-- [ ] **9.6 Deploy** · PRD §23
-  - Do: **Owner** decides the host. Then set up the GitHub repo and automatic deploys, set `PUBLIC_SITE_URL` (and `PUBLIC_FEEDBACK_URL` if any).
-  - Done when: the production URL serves the site, e2e smoke tests pass against it, a shared scene link shows its image in a link preview checker, and the owner has approved the deploy.
-- [ ] **9.7 Friend test kit**
+- [ ] **9.6 Friend test kit**
   - Do: Create `docs/TESTING_WITH_FRIENDS.md`: a 60–90 minute session script for someone who has never used Claude Code. Tasks: 1) "Find an animation you'd use for something real in your life." 2) "Make it yours with the sliders." 3) "Get it running on your computer with Claude Code." 4) "Put it online and send me the link." What the owner should do (stay quiet, don't help unless they're stuck for 3+ minutes), what to note (every pause, question, and error), and a notes template per tester. Plus a 5-question follow-up survey.
   - Done when: the file exists and is linked from `README.md`.
-- [ ] **9.8 Launch checklist**
-  - Done when: all 50 prompt tests pass, open questions in `docs/DECISIONS.md` are answered or explicitly deferred, the owner has filled the About page, and the launch drop is published.
+- [ ] **9.7 Launch: open the site to search engines**
+  - Do: remove the `noindex` tag and the disallow rule (robots.txt now allows all and points to the sitemap).
+  - Done when: e2e confirms no `noindex` anywhere and the sitemap and canonical URLs use the live address.
+- [ ] **9.8 Launch: share previews and Lighthouse**
+  - Done when: a link preview of the live home page and one scene page shows the OG image; Lighthouse scores for home, one scene page, gallery, tour, and a guide are recorded in `docs/DECISIONS.md`, and anything below the PRD §19 budgets is fixed.
+- [ ] **9.9 Launch: final deploy and checks**
+  - Done when: pushed, deployed, the full e2e suite passes against the live site (`npm run test:live:full`), open questions are answered or explicitly deferred, the launch drop is published, and the owner has the final report (live link, what's done, prompt tests that didn't pass, placeholders left, anything else they need to do).
 
 - [ ] **Checkpoint 9 (Owner):** run the friend test with 3–5 people. Turn every place someone got stuck into a new step at the bottom of this file, under "What testers taught us".
 
