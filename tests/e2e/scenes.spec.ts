@@ -3,6 +3,7 @@
 // itself, and keeps vertical scrolling available on touch.
 import { readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { collectErrors } from './helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 const SCENES = readdirSync(join(process.cwd(), 'src/scenes'), { withFileTypes: true })
@@ -11,13 +12,6 @@ const SCENES = readdirSync(join(process.cwd(), 'src/scenes'), { withFileTypes: t
   )
   .map((d) => d.name)
   .sort();
-
-function collectErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-  page.on('pageerror', (e) => errors.push(e.message));
-  return errors;
-}
 
 const drewSomething = (page: Page) =>
   page.evaluate(() => {

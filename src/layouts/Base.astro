@@ -6,6 +6,7 @@ import '../styles/global.css';
 import { themeVars } from '../theme/apply';
 import { getWorld, type WorldId } from '../theme/worlds';
 import { INDEXABLE } from '../site';
+import Analytics from '@vercel/analytics/astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -35,6 +36,9 @@ const inlineVars =
         .map(([k, v]) => `${k}: ${v}`)
         .join('; ');
 const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
+// Vercel Web Analytics (page views only, no cookies) loads only on Vercel builds,
+// so local previews and tests never request the analytics script.
+const onVercel = process.env.VERCEL === '1';
 ---
 
 <!doctype html>
@@ -51,6 +55,7 @@ const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap"
     />
+    {onVercel && <Analytics />}
     <slot name="head" />
   </head>
   <body>

@@ -119,7 +119,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 - [x] **D.2 GitHub**
   - Do: create the public GitHub repo `peak` and push `main`.
   - Done when: the repo exists and `main` is pushed.
-- [ ] **D.3 Vercel** · PRD §23
+- [x] **D.3 Vercel** · PRD §23
   - Do: following Vercel's official docs for a static Astro site, create the Vercel project from the GitHub repo (build command `astro build`, output `dist`, Node version from `engines`), with automatic deploys on push to `main`. Set `PUBLIC_SITE_URL` to the `vercel.app` address and redeploy. Add `npm run test:live` (Playwright smoke tests against `PEAK_LIVE_URL`).
   - Done when: the live URL serves the site, a push to `main` deploys by itself, and `npm run test:live` passes.
 - [ ] **D.4 Vercel Web Analytics** · PRD §20

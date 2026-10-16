@@ -1,3 +1,4 @@
+import { collectErrors } from './helpers';
 import { expect, test, type Page } from '@playwright/test';
 
 const cssVar = (page: Page, name: string) =>
@@ -12,9 +13,7 @@ const scrollToSection = async (page: Page, index: number) => {
 };
 
 test('home loads without console errors', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-  page.on('pageerror', (e) => errors.push(e.message));
+  const errors = collectErrors(page);
   await page.goto('/');
   await page.waitForTimeout(1500);
   expect(errors).toEqual([]);

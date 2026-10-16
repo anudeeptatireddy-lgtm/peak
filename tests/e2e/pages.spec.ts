@@ -1,3 +1,4 @@
+import { collectErrors } from './helpers';
 import { expect, test } from '@playwright/test';
 
 const ROUTES = [
@@ -15,11 +16,7 @@ const ROUTES = [
 
 for (const route of ROUTES) {
   test(`${route} loads without console errors`, async ({ page }) => {
-    const errors: string[] = [];
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') errors.push(msg.text());
-    });
-    page.on('pageerror', (err) => errors.push(err.message));
+    const errors = collectErrors(page);
     const response = await page.goto(route);
     expect(response?.ok()).toBe(true);
     await page.waitForLoadState('networkidle');

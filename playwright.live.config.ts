@@ -3,8 +3,7 @@
 // tests run; PEAK_LIVE_FULL=1 runs the whole suite.
 import { defineConfig, devices } from '@playwright/test';
 
-const baseURL =
-  process.env.PEAK_LIVE_URL ?? 'https://peak-anudeep-tatireddy-7900s-projects.vercel.app';
+const baseURL = process.env.PEAK_LIVE_URL ?? 'https://peak-teal.vercel.app';
 const full = !!process.env.PEAK_LIVE_FULL;
 
 export default defineConfig({
