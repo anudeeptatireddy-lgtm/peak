@@ -180,7 +180,7 @@ Goal: every later scene gets the playground and prompts for free.
   - Do: Create `docs/PROMPT_TESTS.md` with a table: scene, date, prompt options, result (pass/fail), what was wrong, fix made. One row per scene for all 50, marked "pending".
   - Done when: the file exists with 50 rows.
 
-- [ ] **Wave 2 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. This wave's prompt tests cover the six Wave 1 scenes (they get prompts in this wave). Things for the owner to try: open a scene page on your phone, tweak it, try Shuffle world and Cycle worlds, and share the link with yourself. If prompts are failing, fixing them matters more than any later wave.
+- [x] **Wave 2 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. This wave's prompt tests cover the six Wave 1 scenes (they get prompts in this wave). Things for the owner to try: open a scene page on your phone, tweak it, try Shuffle world and Cycle worlds, and share the link with yourself. If prompts are failing, fixing them matters more than any later wave.
 
 ---
 
