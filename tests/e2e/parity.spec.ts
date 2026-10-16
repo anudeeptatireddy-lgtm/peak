@@ -2,93 +2,15 @@
 // its section of reference/peak-prototype.html under identical conditions — same
 // viewport, same seeded Math.random, Riso light colors, living colors off, Anybody
 // fully loaded before sampling, and a paused fake clock stepped frame by frame.
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { compare, inkGrid, open, shot } from './parity-helpers';
+import { SCENARIOS, type Pair } from './scenarios';
 
 // Playwright's fake clock drives requestAnimationFrame in Chromium only, so both
 // sizes run in Chromium (the phone size with touch and mobile emulation).
 test.use({ browserName: 'chromium' });
 // Frame-by-frame stepping is slow; give each scene two minutes.
 test.setTimeout(120_000);
-
-type Pair = { proto: Page; ours: Page };
-type Scenario = (
-  pp: Pair,
-  step: (ms: number) => Promise<void>,
-  view: { width: number; height: number },
-) => AsyncGenerator<string>;
-
-const both = async (pp: Pair, fn: (p: Page) => Promise<unknown>) => {
-  for (const p of [pp.proto, pp.ours]) await fn(p);
-};
-
-/** Each scenario yields a name whenever both pages should be screenshotted and compared. */
-const SCENARIOS: Record<string, Scenario> = {
-  async *particles(pp, step, { width, height }) {
-    await step(500);
-    yield 'intro';
-    await step(6000);
-    yield 'settled';
-    const x = Math.round(width * 0.35);
-    const y = Math.round(height * (width < 700 ? 0.4 : 0.43));
-    await both(pp, (p) => p.mouse.move(x, y));
-    await step(400);
-    yield 'cursor';
-    await both(pp, (p) => p.mouse.click(x + 40, y));
-    await step(300);
-    yield 'blast';
-  },
-  async *elastic(pp, step, { width, height }) {
-    await step(1500);
-    yield 'idle-wave';
-    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.45)));
-    await step(700);
-    yield 'hover';
-  },
-  async *velocity(_pp, step) {
-    await step(300);
-    yield 'start';
-    await step(2000);
-    yield 'drift';
-  },
-  async *ripple(pp, step, { width, height }) {
-    // The prototype's very first frame can run before its canvas is sized, so on a
-    // phone its first automatic ring starts at the top-left corner (a prototype race,
-    // see DECISIONS). Compare once that ring has expired (rings live 5 seconds).
-    await step(5300);
-    yield 'auto-ripples';
-    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.5)));
-    await step(300);
-    yield 'cursor';
-    await both(pp, (p) => p.mouse.click(Math.round(width * 0.6), Math.round(height * 0.4)));
-    await step(500);
-    yield 'click';
-  },
-  async *flow(pp, step, { width, height }) {
-    // A flow field never settles, and a loading frame or two can differ between the
-    // pages, so the live field is compared by where its ink is (inkGrid). The
-    // prototype's reduced-motion still frame is blank, so there is nothing to compare
-    // there; ours draws the 70 steps PRD SCENES #22 asks for (see DECISIONS).
-    await step(2000);
-    yield 'signature:trails';
-    await both(pp, (p) => p.mouse.move(Math.round(width * 0.5), Math.round(height * 0.5)));
-    await both(pp, (p) => p.mouse.down());
-    await step(1500);
-    yield 'signature:stir';
-    await both(pp, (p) => p.mouse.up());
-  },
-  async *warp(pp, step, { width, height }) {
-    await step(1000);
-    yield 'cruise';
-    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.3)));
-    await both(pp, (p) => p.mouse.down());
-    await step(1500);
-    yield 'warp';
-    await both(pp, (p) => p.mouse.up());
-    await step(800);
-    yield 'slowing';
-  },
-};
 
 for (const [slug, scenario] of Object.entries(SCENARIOS)) {
   test(`${slug} matches the prototype`, async ({ browser }, info) => {

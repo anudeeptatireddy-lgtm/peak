@@ -1,26 +1,35 @@
 // Prompt parity (owner request, 2026-10-16): the core promise of peak is that a
 // scene's prompt alone rebuilds it. For each scene in docs/prompt-tests/<slug>/, a
 // fresh agent built index.html from PROMPT.md in an empty folder. This test renders
-// that page and our scene side by side under identical conditions and compares.
-import { existsSync, readdirSync } from 'node:fs';
+// that page and our scene side by side under identical conditions, runs the same
+// scripted moments as the prototype parity test, and compares.
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { test, type Page } from '@playwright/test';
-import { compare, open } from './parity-helpers';
+import { expect, test, type Page } from '@playwright/test';
+import { compare, inkGrid, open } from './parity-helpers';
+import { SCENARIOS, type Pair } from './scenarios';
 
 test.use({ browserName: 'chromium' });
 test.setTimeout(120_000);
 
 const DIR = join(process.cwd(), 'docs/prompt-tests');
 const BUILT = existsSync(DIR)
-  ? readdirSync(DIR).filter((d) => existsSync(join(DIR, d, 'index.html')))
+  ? readdirSync(DIR).filter((d) => existsSync(join(DIR, d, 'compare.json')) && d in SCENARIOS)
   : [];
 
-/** Hide everything but canvases, so only the animation itself is compared. */
-const onlyCanvas = (p: Page) =>
-  p.addStyleTag({
-    content:
-      'body * { visibility: hidden !important; } canvas, [data-stage] * { visibility: visible !important; }',
-  });
+/**
+ * What to leave out on the built page: `hide` in docs/prompt-tests/<slug>/compare.json
+ * lists the titles, hints and Play buttons the agent added around the animation.
+ * Only those are hidden (visibility: hidden lets pointer events through to the
+ * scene below), so the page still receives the scripted mouse moves and clicks.
+ * Our stage's own buttons are hidden the same way.
+ */
+function hideSelector(slug: string): string {
+  return (JSON.parse(readFileSync(join(DIR, slug, 'compare.json'), 'utf8')) as { hide: string })
+    .hide;
+}
+const hide = (p: Page, sel: string) =>
+  p.addStyleTag({ content: `${sel} { visibility: hidden !important; }` });
 
 for (const slug of BUILT) {
   test(`${slug}: the prompt alone rebuilds the scene`, async ({ browser }, info) => {
@@ -33,34 +42,27 @@ for (const slug of BUILT) {
     };
     const ctxA = await browser.newContext(opts);
     const ctxB = await browser.newContext({ ...opts, baseURL: info.project.use.baseURL });
-    const theirs = await ctxA.newPage();
-    const ours = await ctxB.newPage();
-    await open(theirs, 'file', slug, join(DIR, slug, 'index.html'));
-    await open(ours, 'peak', slug);
-    for (const p of [theirs, ours]) await onlyCanvas(p);
+    const pp: Pair = { proto: await ctxA.newPage(), ours: await ctxB.newPage() };
+    await open(pp.proto, 'file', slug, join(DIR, slug, 'index.html'));
+    await open(pp.ours, 'peak', slug);
+    await hide(pp.proto, hideSelector(slug));
+    await hide(pp.ours, '[data-stage] button');
     const step = async (ms: number) => {
       for (let t = 0; t < ms; t += 16) {
-        await theirs.clock.runFor(16);
-        await ours.clock.runFor(16);
+        await pp.proto.clock.runFor(16);
+        await pp.ours.clock.runFor(16);
       }
     };
-    const snap = async (name: string) => {
-      const a = await theirs.screenshot({ path: info.outputPath(`prompt-${name}.png`) });
-      const b = await ours.screenshot({ path: info.outputPath(`ours-${name}.png`) });
-      await compare(b, a, info, `${slug}-${name}.png`, 0.02);
-    };
-    await step(500);
-    await snap('intro');
-    await step(6000);
-    await snap('settled');
-    const x = Math.round(viewport.width * 0.35);
-    const y = Math.round(viewport.height * (viewport.width < 700 ? 0.4 : 0.43));
-    for (const p of [theirs, ours]) await p.mouse.move(x, y);
-    await step(400);
-    await snap('cursor');
-    for (const p of [theirs, ours]) await p.mouse.click(x + 40, y);
-    await step(300);
-    await snap('blast');
+    for await (const yielded of SCENARIOS[slug]!(pp, step, viewport)) {
+      const [kind, name] = yielded.includes(':') ? yielded.split(':') : ['pixels', yielded];
+      const theirs = await pp.proto.screenshot({ path: info.outputPath(`prompt-${name}.png`) });
+      const ours = await pp.ours.screenshot({ path: info.outputPath(`ours-${name}.png`) });
+      if (kind === 'signature') {
+        const [a, b] = await Promise.all([inkGrid(pp.proto), inkGrid(pp.ours)]);
+        const diff = a.reduce((sum, v, i) => sum + Math.abs(v - b[i]!), 0) / a.length;
+        expect.soft(diff, `${name}: average ink difference per grid cell`).toBeLessThan(0.02);
+      } else await compare(ours, theirs, info, `${slug}-${name}.png`, 0.02);
+    }
     await ctxA.close();
     await ctxB.close();
   });

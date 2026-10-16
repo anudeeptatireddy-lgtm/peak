@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hyperspace intro</title>
+  <meta name="description" content="A starfield that jumps to light speed when you press and hold.">
+  <meta name="theme-color" content="#F4F2FF">
+
+  <!-- Font: Anybody (variable width 50–150, weight 100–900) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&amp;display=swap">
+
+  <style>
+    /* ---------- Colors ("Riso" palette) ---------- */
+    :root {
+      --bg: #F4F2FF;        /* paper */
+      --ink: #1A1240;       /* main text */
+      --ink-2: #4E4777;     /* secondary text */
+      --pink: #EC1C7F;      /* accent */
+      --blue: #2A47EA;      /* accent */
+      --orange: #FF7A00;    /* accent */
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { background: var(--bg); }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Hero: full-screen starfield ---------- */
+    .hero {
+      position: relative;
+      height: 100vh;      /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      overflow: hidden;
+    }
+
+    .hero canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      /* Let people scroll the page up and down with a finger */
+      touch-action: pan-y pinch-zoom;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hero-copy {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 45%;
+      transform: translateY(-50%);
+      text-align: center;
+      pointer-events: none;   /* presses go through to the canvas */
+      /* soft paper-colored halo keeps text readable over streaks */
+      text-shadow: 0 0 14px var(--bg), 0 0 4px var(--bg);
+    }
+
+    .hero-copy h1 {
+      margin: 0 0 0.3em;
+      font-size: clamp(2.25rem, 8vw, 7.5rem);
+      font-size: clamp(2.25rem, min(8vw, 13svh), 7.5rem);
+      font-weight: 800;
+      font-stretch: 130%;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-copy p {
+      margin: 0 auto;
+      max-width: 34rem;
+      color: var(--ink-2);
+      font-size: clamp(1rem, 2.2vw, 1.25rem);
+      font-weight: 450;
+      font-stretch: 105%;
+    }
+
+    /* ---------- Magnetic pill button ---------- */
+    .magnet {
+      position: absolute;
+      left: 50%;
+      top: 64%;
+      transform: translate(-50%, -50%);
+      min-height: 48px;
+      padding: 0.85em 1.6em;
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--bg);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 650;
+      font-stretch: 115%;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+      cursor: pointer;
+      will-change: transform;
+      -webkit-tap-highlight-color: transparent;
+      transition: box-shadow 160ms ease;
+    }
+
+    .magnet:hover { box-shadow: 4px 4px 0 var(--pink); }
+
+    /* ---------- Play / Pause ---------- */
+    .motion-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      min-height: 44px;
+      padding: 0.5em 1em;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .motion-toggle:hover { background: #E6E2FF; }
+
+    .motion-toggle .icon { width: 14px; height: 14px; fill: currentColor; flex: none; }
+    .motion-toggle .icon-play { display: none; }
+    .motion-toggle[data-paused="true"] .icon-play { display: block; }
+    .motion-toggle[data-paused="true"] .icon-pause { display: none; }
+
+    /* Clear keyboard focus on every button */
+    button:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+    }
+
+    /* ---------- The rest of the page ---------- */
+    .after {
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 96px 16px 128px;
+    }
+
+    .after h2 {
+      margin: 0 0 0.5em;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 750;
+      font-stretch: 120%;
+      line-height: 1.1;
+    }
+
+    .after p { margin: 0; color: var(--ink-2); font-size: 1.125rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+      <!-- Decorative starfield: hidden from screen readers -->
+      <canvas id="stars" aria-hidden="true"></canvas>
+
+      <button class="motion-toggle" id="motion-toggle" type="button">
+        <svg class="icon icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <rect x="3" y="2" width="3.5" height="12" rx="1"></rect>
+          <rect x="9.5" y="2" width="3.5" height="12" rx="1"></rect>
+        </svg>
+        <svg class="icon icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M4 2.6v10.8a.8.8 0 0 0 1.2.7l8.8-5.4a.8.8 0 0 0 0-1.4L5.2 1.9A.8.8 0 0 0 4 2.6z"></path>
+        </svg>
+        <span class="label">Pause motion</span>
+      </button>
+
+      <div class="hero-copy">
+        <h1 id="hero-title">Hyperspace</h1>
+        <p>Press and hold anywhere to jump to light speed. Let go to drift back to cruise.</p>
+      </div>
+
+      <button class="magnet" id="magnet" type="button">Back to the top</button>
+    </section>
+
+    <section class="after" aria-labelledby="after-title">
+      <h2 id="after-title">Back in normal space</h2>
+      <p>This is where the rest of your page goes. Scroll up to fly again, or press and hold on the stars to make the jump.</p>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* ================= Settings (from the brief) ================= */
+    var INK = '#1A1240';
+    var ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
+    var COLORS = [INK].concat(ACCENTS);          // color index 0 = ink, 1..3 = accents
+
+    var REST_SPEED = 0.09;      // depth units per second while cruising
+    var WARP_SPEED = 1.7;       // depth units per second while pressing
+    var EASE_UP = 1.4;          // k while speeding up
+    var EASE_DOWN = 2.2;        // k while slowing down
+    var TOO_CLOSE = 0.03;       // stars nearer than this respawn
+    var OFFSCREEN = 60;         // px beyond the edge before a star respawns
+    var MAX_DT = 0.05;          // seconds
+
+    // Distance bands: far (z > 0.6), middle (z > 0.28), near (the rest)
+    var BAND_WIDTH = [0.9, 1.8, 3];
+    var BAND_ALPHA = [0.45, 0.75, 1];
+
+    var MAGNET_RADIUS = 170;    // px
+    var MAGNET_PULL = 0.32;     // share of the distance toward the mouse
+    var MAGNET_EASE = 12;
+
+    /* ================= Elements ================= */
+    var hero = document.getElementById('hero');
+    var canvas = document.getElementById('stars');
+    var ctx = canvas.getContext('2d');
+    var magnet = document.getElementById('magnet');
+    var toggle = document.getElementById('motion-toggle');
+    var toggleLabel = toggle.querySelector('.label');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    /* ================= State ================= */
+    var W = 0, H = 0, dpr = 1;                 // canvas size in CSS pixels
+    var count = 0;
+    var xs, ys, zs, cs;                        // star x, y, depth, color index
+    var speed = REST_SPEED;
+    var t = 0;                                 // seconds the loop has run (sum of dt)
+    var pointers = new Set();                  // fingers / mouse buttons held on the canvas
+    var lastPointerType = 'mouse';
+    var mouse = { x: 0, y: 0, active: false };
+    var btnX = 0, btnY = 0, lastTransform = '';
+    var rafId = 0, lastTime = null;
+    var userPaused = reduceMotion.matches;     // reduced motion starts paused
+    var heroVisible = true;
+
+    /* ================= Stars ================= */
+    // Math.random() is called in this exact order: x, y, z, color (+1 if accent).
+    function spawn(i, isNew) {
+      xs[i] = Math.random() * 2 - 1;
+      ys[i] = Math.random() * 2 - 1;
+      zs[i] = isNew ? 0.05 + Math.random() * (1 - 0.05)
+                    : 0.9 + Math.random() * (1 - 0.9);
+      cs[i] = Math.random() < 0.72 ? 0 : 1 + Math.floor(Math.random() * 3);
+    }
+
+    function buildStars() {
+      count = W < 700 ? 420 : 900;
+      xs = new Float64Array(count);
+      ys = new Float64Array(count);
+      zs = new Float64Array(count);
+      cs = new Uint8Array(count);
+      for (var i = 0; i < count; i++) spawn(i, true);
+    }
+
+    // Returns true when the size actually changed (and stars were rebuilt).
+    function resize() {
+      var w = canvas.clientWidth;
+      var h = canvas.clientHeight;
+      var ratio = Math.min(2, window.devicePixelRatio || 1);
+      if (w === W && h === H && ratio === dpr && xs) return false;
+      W = w; H = h; dpr = ratio;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      buildStars();
+      return true;
+    }
+
+    /* ================= Drawing ================= */
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);   // draw in CSS pixels
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.clearRect(0, 0, W, H);
+
+      var cx = W / 2;
+      var cy = H * 0.45;
+      var F = 0.55 * Math.max(W, H);
+      var tail = speed * 0.09 + 0.004;
+
+      // 12 batched paths: 3 distance bands x 4 colors
+      var paths = [];
+      for (var p = 0; p < 12; p++) paths.push(new Path2D());
+
+      for (var i = 0; i < count; i++) {
+        var x = xs[i], y = ys[i], z = zs[i];
+        var sx = cx + x / z * F;
+        var sy = cy + y / z * F;
+
+        if (sx < -OFFSCREEN || sx > W + OFFSCREEN || sy < -OFFSCREEN || sy > H + OFFSCREEN) {
+          spawn(i, false);
+          continue;
+        }
+
+        var zt = Math.min(1.2, z + tail);
+        var band = z > 0.6 ? 0 : (z > 0.28 ? 1 : 2);
+        var path = paths[band * 4 + cs[i]];
+        path.moveTo(cx + x / zt * F, cy + y / zt * F);
+        path.lineTo(sx + 0.01, sy);
+      }
+
+      ctx.lineCap = 'round';
+      ctx.globalCompositeOperation = 'multiply';   // inks multiply where they overlap
+      for (var b = 0; b < 3; b++) {
+        ctx.lineWidth = BAND_WIDTH[b];
+        ctx.globalAlpha = BAND_ALPHA[b];
+        for (var c = 0; c < 4; c++) {
+          ctx.strokeStyle = COLORS[c];
+          ctx.stroke(paths[b * 4 + c]);
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // Still frame: the stars with only the resting streak.
+    function drawStill() {
+      speed = REST_SPEED;
+      draw();
+    }
+
+    /* ================= Magnetic button ================= */
+    function moveButton(dt) {
+      var tx = 0, ty = 0;
+      if (mouse.active) {
+        var r = hero.getBoundingClientRect();
+        var dx = mouse.x - (r.left + r.width / 2);
+        var dy = mouse.y - (r.top + r.height * 0.64);
+        if (dx * dx + dy * dy <= MAGNET_RADIUS * MAGNET_RADIUS) {
+          tx = dx * MAGNET_PULL;
+          ty = dy * MAGNET_PULL;
+        }
+      }
+      var a = 1 - Math.exp(-dt * MAGNET_EASE);
+      btnX += (tx - btnX) * a;
+      btnY += (ty - btnY) * a;
+
+      var next = 'translate(-50%, -50%) translate(' + btnX.toFixed(2) + 'px, ' + btnY.toFixed(2) + 'px)';
+      if (next !== lastTransform) {
+        magnet.style.transform = next;
+        lastTransform = next;
+      }
+    }
+
+    /* ================= The one animation loop ================= */
+    function frame(now) {
+      rafId = requestAnimationFrame(frame);
+
+      var dt = lastTime === null ? 0 : (now - lastTime) / 1000;
+      lastTime = now;
+      if (dt > MAX_DT) dt = MAX_DT;
+      if (dt < 0) dt = 0;
+      t += dt;
+
+      // 1) ease the speed toward its target
+      var target = pointers.size > 0 ? WARP_SPEED : REST_SPEED;
+      var k = target > speed ? EASE_UP : EASE_DOWN;
+      speed += (target - speed) * (1 - Math.exp(-dt * k));
+
+      // 2) move every star toward the viewer
+      var dz = speed * dt;
+      for (var i = 0; i < count; i++) {
+        zs[i] -= dz;
+        if (zs[i] < TOO_CLOSE) spawn(i, false);
+      }
+
+      // 3) draw (stars that left the screen respawn here)
+      draw();
+
+      // 4) move the button
+      moveButton(dt);
+    }
+
+    function shouldRun() {
+      return !userPaused && heroVisible && !document.hidden;
+    }
+
+    // Start or stop the loop so it only runs when it can be seen.
+    function syncLoop() {
+      if (shouldRun()) {
+        if (!rafId) {
+          lastTime = null;
+          rafId = requestAnimationFrame(frame);
+        }
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    function setPaused(paused) {
+      userPaused = paused;
+      toggle.setAttribute('data-paused', paused ? 'true' : 'false');
+      toggleLabel.textContent = paused ? 'Play motion' : 'Pause motion';
+      syncLoop();
+    }
+
+    /* ================= Input ================= */
+    // Press and hold on the canvas to warp (mouse, touch or pen).
+    canvas.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      lastPointerType = e.pointerType;
+      pointers.add(e.pointerId);
+    });
+
+    function release(e) { pointers.delete(e.pointerId); }
+    window.addEventListener('pointerup', release);
+    window.addEventListener('pointercancel', release);   // e.g. the finger started scrolling
+    window.addEventListener('blur', function () { pointers.clear(); });
+
+    // Stop the long-press menu from popping up while holding a finger down.
+    canvas.addEventListener('contextmenu', function (e) {
+      if (pointers.size > 0 && lastPointerType !== 'mouse') e.preventDefault();
+    });
+
+    // The button only follows a real mouse, never touch.
+    function trackMouse(e) {
+      if (e.pointerType !== 'mouse') return;
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.active = true;
+    }
+    window.addEventListener('pointermove', trackMouse, { passive: true });
+    window.addEventListener('pointerdown', trackMouse, { passive: true });
+    window.addEventListener('pointerout', function (e) {
+      if (e.pointerType === 'mouse' && !e.relatedTarget) mouse.active = false;  // left the window
+    });
+
+    magnet.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    });
+
+    toggle.addEventListener('click', function () {
+      setPaused(!userPaused);
+    });
+
+    // If the system setting switches to reduced motion, pause.
+    function onMotionPreference(e) { if (e.matches) setPaused(true); }
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onMotionPreference);
+    else if (reduceMotion.addListener) reduceMotion.addListener(onMotionPreference);
+
+    /* ================= Resizing & visibility ================= */
+    function onResize() {
+      if (resize() && !rafId) drawStill();   // keep a still frame when paused
+    }
+    window.addEventListener('resize', onResize);
+    if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero);
+
+    // Pause when the starfield is scrolled off-screen or the tab is hidden.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        heroVisible = entries[entries.length - 1].isIntersecting;
+        syncLoop();
+      }).observe(hero);
+    }
+    document.addEventListener('visibilitychange', syncLoop);
+
+    /* ================= Start ================= */
+    resize();
+    setPaused(userPaused);       // sets the Play/Pause label and starts the loop if allowed
+    if (userPaused) drawStill(); // reduced motion: meaningful still frame
+  })();
+  </script>
+</body>
+</html>

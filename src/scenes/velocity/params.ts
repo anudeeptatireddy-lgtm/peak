@@ -55,7 +55,7 @@ export const params: Param[] = [
     default: 12,
     unit: 'vw',
     phrase: (v: number, all) =>
-      `Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits ${all.offsetY}vh above center via bottom padding), ${all.rowGap}vw apart (between ${all.rowGapMin} and ${all.rowGapMax}rem). Each row: font size clamp(${all.sizeMin}rem, ${v}vw, ${all.sizeMax}rem), line-height ${all.lineHeight}, padding ${all.rowPadding}em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of ${all.wordGap}em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.`,
+      `Three rows stacked in the middle of a full-screen section (100svh, at least 540px, centered with flexbox; the section has a bottom padding of ${all.offsetY}vh, which lifts the stack half that far above center). Each row is exactly as wide as the section, with no extra width past its edges, even while the stack leans. Rows are ${all.rowGap}vw apart (between ${all.rowGapMin} and ${all.rowGapMax}rem). Each row: font size clamp(${all.sizeMin}rem, ${v}vw, ${all.sizeMax}rem), line-height ${all.lineHeight}, padding ${all.rowPadding}em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of ${all.wordGap}em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.`,
   },
   {
     kind: 'slider',
@@ -336,15 +336,15 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'offsetY',
-    label: 'Lift above center',
-    help: 'How far the rows sit above the middle of the screen.',
+    label: 'Space below',
+    help: 'Padding under the rows. Half of it lifts them above the middle of the screen.',
     group: 'Advanced',
     min: 0,
     max: 20,
     step: 0.5,
     default: 8,
     unit: 'vh',
-    phrase: (v: number) => `${v}vh above center.`,
+    phrase: (v: number) => `Bottom padding ${v}vh.`,
     phraseIn: 'size',
   },
   {

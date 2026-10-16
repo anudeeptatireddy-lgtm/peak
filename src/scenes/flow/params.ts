@@ -61,7 +61,7 @@ export const params: Param[] = [
     default: 0.075,
     invertDisplay: true,
     phrase: (v: number, all) =>
-      `Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, ${fmt(v, 3)} × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at ${Number(all.lineOpacity) * 100}% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.`,
+      `Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, ${fmt(v, 3)} × f) (this fades old trails), then update the particles in index order (0, 1, 2, …), not color by color: add each one's step (a line from its old to its new position) to its accent color's path, move it, lower its life by 1 (not by f), and respawn it at once if its life is now below 0 or it is more than 5px off screen. Respawning picks a new random x, y and life, in that order. When every particle has moved, stroke the three paths in accent order at ${Number(all.lineOpacity) * 100}% opacity with round caps, using the blend mode above.`,
   },
   {
     kind: 'slider',

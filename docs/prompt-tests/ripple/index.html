@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ripple</title>
+  <meta name="description" content="A calm grid of dots that ripples in Riso ink colors when you click.">
+  <meta name="theme-color" content="#F4F2FF">
+
+  <!-- The "Anybody" font from Google Fonts. If it can't load (for example offline),
+       the page falls back to your system's sans-serif font. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+
+  <style>
+    /* ---------- Colors and font ("Riso" palette) ---------- */
+    :root {
+      --bg: #F4F2FF;      /* background */
+      --ink: #1A1240;     /* main text */
+      --ink-2: #4E4777;   /* secondary text */
+      --pink: #EC1C7F;    /* accent 1 */
+      --blue: #2A47EA;    /* accent 2 */
+      --orange: #FF7A00;  /* accent 3 */
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --gutter: clamp(16px, 5vw, 64px);
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { margin: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- The full-screen ripple area ---------- */
+    .hero { position: relative; }
+
+    .ripple-canvas {
+      display: block;
+      width: 100%;
+      height: 100vh;          /* fallback for older browsers */
+      height: 100svh;         /* full screen height */
+      min-height: 540px;
+      touch-action: pan-y pinch-zoom; /* lets phones still scroll up and down */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Text sits on top of the canvas. Clicks pass through it to the canvas,
+       except on the button. */
+    .hero-copy {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 var(--gutter) clamp(28px, 7vh, 72px);
+      pointer-events: none;
+      /* a soft halo in the background color keeps text readable over the dots */
+      text-shadow: 0 0 2px var(--bg), 0 0 8px var(--bg), 0 0 18px var(--bg);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      margin: 0 0 0.6rem;
+      color: var(--ink-2);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      font-stretch: 120%;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .inks { display: inline-flex; }
+    .inks i {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+    }
+    .inks i + i { margin-left: -4px; }
+    .inks i:nth-child(1) { background: var(--pink); }
+    .inks i:nth-child(2) { background: var(--blue); }
+    .inks i:nth-child(3) { background: var(--orange); }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3.5rem, 15vw, 9.5rem);
+      font-weight: 800;
+      font-stretch: 150%;
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+    }
+
+    .lede {
+      max-width: 32rem;
+      margin: 1rem 0 0;
+      color: var(--ink-2);
+      font-size: clamp(1rem, 0.7rem + 1.2vw, 1.25rem);
+      font-weight: 450;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .toggle {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55em;
+      min-height: 44px;
+      padding: 0.6em 1.25em 0.6em 1.05em;
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--bg);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 650;
+      font-stretch: 112%;
+      letter-spacing: 0.01em;
+      text-shadow: none;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .toggle:hover { background: var(--blue); }
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+    .toggle svg { width: 16px; height: 16px; flex: none; fill: currentColor; }
+
+    .note {
+      margin: 0;
+      color: var(--ink-2);
+      font-size: 0.9375rem;
+    }
+
+    /* ---------- Small footer below the ripple area ---------- */
+    .foot {
+      padding: 28px var(--gutter) 36px;
+      border-top: 1px solid rgba(26, 18, 64, 0.12);
+      color: var(--ink-2);
+      font-size: 0.9375rem;
+    }
+    .foot p { max-width: 42rem; margin: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toggle { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero" aria-labelledby="title">
+      <!-- The canvas only draws decoration, so screen readers skip it. -->
+      <canvas class="ripple-canvas" id="ripple" aria-hidden="true"></canvas>
+
+      <div class="hero-copy">
+        <p class="eyebrow">
+          <span class="inks" aria-hidden="true"><i></i><i></i><i></i></span>
+          Interactive background
+        </p>
+        <h1 id="title">Ripple</h1>
+        <p class="lede">Click or tap anywhere to send a ring of color through the dots. Move your cursor to nudge them aside.</p>
+        <div class="controls">
+          <button type="button" class="toggle" id="toggle">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path id="toggle-icon" d="M3.5 2.5h3.25v11H3.5zM9.25 2.5h3.25v11H9.25z"/>
+            </svg>
+            <span id="toggle-label">Pause</span>
+          </button>
+          <p class="note" id="motion-note" hidden>Paused because your device asks for reduced motion.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>One canvas, no libraries. Where the pink, blue and orange inks overlap, they multiply like ink on paper.</p>
+  </footer>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ---------- Settings: change these numbers to tweak the effect ----------
+    const ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00']; // pink, blue, orange
+    const REST_COLOR = 'rgba(78, 71, 119, 0.38)';      // #4E4777 at 38%
+
+    const SPACING = 26;          // px between dots
+    const SPACING_SMALL = 20;    // px between dots on screens under 700px wide
+    const SMALL_SCREEN = 700;
+
+    const DOT_RADIUS = 1.3;      // resting dot size
+    const GLOW_RADIUS = 3.6;     // extra size at full glow
+    const GLOW_MIN = 0.08;       // below this a dot is drawn as resting
+    const GLOW_MAX = 1.4;
+
+    const RING_SPEED = 480;      // px per second
+    const RING_WIDTH = 60;       // px
+    const RING_REACH = 2.5;      // only dots with |k| below this feel the ring
+    const RING_PUSH = 20;        // px
+    const RING_FADE = 0.55;      // per second
+    const RING_LIFE = 5;         // seconds
+    const MAX_RINGS = 8;
+
+    const IDLE_AFTER = 3.5;      // seconds without clicks before auto ripples
+    const AUTO_EVERY = 2.6;      // seconds between auto ripples
+
+    const POINTER_RADIUS = 120;  // px
+    const POINTER_PUSH = 22;     // px
+    const POINTER_GLOW = 0.6;
+    const POINTER_COLOR = 1;     // second accent (blue)
+
+    const EASE = 0.25;           // dots move 25% of the way each frame
+    const MAX_DT = 0.05;         // seconds
+    const DPR_CAP = 2;
+    const TAU = Math.PI * 2;
+
+    const PAUSE_ICON = 'M3.5 2.5h3.25v11H3.5zM9.25 2.5h3.25v11H9.25z';
+    const PLAY_ICON = 'M4 2.2v11.6L13.6 8z';
+
+    // ---------- Page elements ----------
+    const canvas = document.getElementById('ripple');
+    const ctx = canvas.getContext('2d');
+    const toggle = document.getElementById('toggle');
+    const toggleLabel = document.getElementById('toggle-label');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const motionNote = document.getElementById('motion-note');
+    const motionQuery = window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+
+    if (!ctx) return;
+
+    // ---------- State ----------
+    let W = 0, H = 0, dpr = 1;   // canvas size in CSS pixels, and pixel ratio
+
+    // One entry per dot, stored in typed arrays for speed.
+    let count = 0;
+    let restX = new Float32Array(0), restY = new Float32Array(0);
+    let posX = new Float32Array(0), posY = new Float32Array(0);
+    let glow = new Float32Array(0);
+    let color = new Int8Array(0);   // -1 = never colored, else accent index
+    let inkLists = [new Int32Array(0), new Int32Array(0), new Int32Array(0)];
+
+    const rings = [];               // { x, y, start, color }
+    let nextColor = 0;
+    const ringReach = new Float64Array(MAX_RINGS);
+    const ringFade = new Float64Array(MAX_RINGS);
+
+    let t = 0;                      // seconds the loop has run
+    let lastNow = null;             // timestamp of the previous frame
+    let rafId = 0;
+    let lastClickT = -Infinity;
+    let lastAutoT = -Infinity;
+
+    const pointer = { x: 0, y: 0, active: false };
+    let fingerDown = false;
+
+    const reduceMotion = !!(motionQuery && motionQuery.matches);
+    let playing = !reduceMotion;
+    let stillMode = reduceMotion;   // showing the reduced-motion still frame
+    let onScreen = true;
+
+    // ---------- Grid ----------
+    function buildGrid() {
+      const spacing = W < SMALL_SCREEN ? SPACING_SMALL : SPACING;
+      const cols = Math.floor(W / spacing) + 1;
+      const rows = Math.floor(H / spacing) + 1;
+      const x0 = (W - (cols - 1) * spacing) / 2;   // center the grid
+      const y0 = (H - (rows - 1) * spacing) / 2;
+
+      count = cols * rows;
+      restX = new Float32Array(count);
+      restY = new Float32Array(count);
+      posX = new Float32Array(count);
+      posY = new Float32Array(count);
+      glow = new Float32Array(count);
+      color = new Int8Array(count).fill(-1);
+      inkLists = [new Int32Array(count), new Int32Array(count), new Int32Array(count)];
+
+      let i = 0;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++, i++) {
+          restX[i] = posX[i] = x0 + c * spacing;
+          restY[i] = posY[i] = y0 + r * spacing;
+        }
+      }
+    }
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      const nextDpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+      if (count > 0 && rect.width === W && rect.height === H && nextDpr === dpr) return;
+
+      W = rect.width;
+      H = rect.height;
+      dpr = nextDpr;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      buildGrid(); // all dots back to rest
+
+      if (rafId) {
+        draw();    // avoid a blank flash until the next frame
+      } else {
+        if (stillMode) setupStillFrame();
+        renderStill();
+      }
+    }
+
+    // ---------- Rings ----------
+    function addRing(x, y, start, colorIndex) {
+      let c = colorIndex;
+      if (c === undefined) {
+        c = nextColor;
+        nextColor = (nextColor + 1) % ACCENTS.length;
+      }
+      rings.push({ x, y, start, color: c });
+      while (rings.length > MAX_RINGS) rings.shift(); // drop the oldest
+    }
+
+    function dropOldRings() {
+      for (let j = rings.length - 1; j >= 0; j--) {
+        if (t - rings[j].start > RING_LIFE) rings.splice(j, 1);
+      }
+    }
+
+    // ---------- Physics: where each dot wants to be, and how bright ----------
+    function update(ease, usePointer) {
+      const n = rings.length;
+      for (let j = 0; j < n; j++) {
+        const age = t - rings[j].start;
+        ringReach[j] = age * RING_SPEED;
+        ringFade[j] = Math.exp(-age * RING_FADE);
+      }
+
+      const withPointer = usePointer && pointer.active;
+      const px = pointer.x, py = pointer.y;
+      const pr2 = POINTER_RADIUS * POINTER_RADIUS;
+
+      for (let i = 0; i < count; i++) {
+        const rx = restX[i], ry = restY[i];
+        let dx = 0, dy = 0, target = 0, best = 0, bestColor = -1;
+
+        for (let j = 0; j < n; j++) {
+          const ring = rings[j];
+          const ox = rx - ring.x, oy = ry - ring.y;
+          const d = Math.sqrt(ox * ox + oy * oy);
+          const k = (d - ringReach[j]) / RING_WIDTH;
+          if (k > -RING_REACH && k < RING_REACH) {
+            const g = Math.exp(-k * k) * ringFade[j];
+            if (d > 0) {
+              const push = Math.sin(k * 2) * g * RING_PUSH / d; // outward from center
+              dx += ox * push;
+              dy += oy * push;
+            }
+            target += g;
+            if (g > best) { best = g; bestColor = ring.color; }
+          }
+        }
+
+        if (withPointer) {
+          const ox = rx - px, oy = ry - py;
+          const d2 = ox * ox + oy * oy;
+          if (d2 < pr2) {
+            const d = Math.sqrt(d2);
+            const s = 1 - d / POINTER_RADIUS;
+            if (d > 0) {
+              const push = s * s * POINTER_PUSH / d; // away from the pointer
+              dx += ox * push;
+              dy += oy * push;
+            }
+            const pg = s * POINTER_GLOW;
+            target += pg;
+            if (pg > best) { best = pg; bestColor = POINTER_COLOR; }
+          }
+        }
+
+        if (bestColor >= 0) color[i] = bestColor; // otherwise keep its old color
+        if (target > GLOW_MAX) target = GLOW_MAX;
+
+        const tx = rx + dx, ty = ry + dy;
+        if (ease) {
+          posX[i] += (tx - posX[i]) * EASE;
+          posY[i] += (ty - posY[i]) * EASE;
+          glow[i] += (target - glow[i]) * EASE;
+        } else {
+          posX[i] = tx;
+          posY[i] = ty;
+          glow[i] = target;
+        }
+      }
+    }
+
+    // ---------- Drawing ----------
+    function draw() {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+
+      // Resting dots: one path, one fill.
+      const inkCounts = [0, 0, 0];
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.beginPath();
+      for (let i = 0; i < count; i++) {
+        const c = color[i];
+        if (glow[i] < GLOW_MIN || c < 0) {
+          const x = posX[i], y = posY[i];
+          ctx.moveTo(x + DOT_RADIUS, y);
+          ctx.arc(x, y, DOT_RADIUS, 0, TAU);
+        } else {
+          inkLists[c][inkCounts[c]++] = i;
+        }
+      }
+      ctx.fillStyle = REST_COLOR;
+      ctx.fill();
+
+      // Glowing dots: one path per ink, multiplied like overprinted ink.
+      ctx.globalCompositeOperation = 'multiply';
+      for (let c = 0; c < ACCENTS.length; c++) {
+        const list = inkLists[c], n = inkCounts[c];
+        if (n === 0) continue;
+        ctx.beginPath();
+        for (let m = 0; m < n; m++) {
+          const i = list[m];
+          const x = posX[i], y = posY[i];
+          const r = DOT_RADIUS + glow[i] * GLOW_RADIUS;
+          ctx.moveTo(x + r, y);
+          ctx.arc(x, y, r, 0, TAU);
+        }
+        ctx.fillStyle = ACCENTS[c];
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // A frozen frame: dots jump straight to where they'd be (no easing).
+    function renderStill() {
+      update(false, false);
+      draw();
+    }
+
+    // Reduced-motion still frame: two rings from the middle of the screen.
+    function setupStillFrame() {
+      rings.length = 0;
+      const cx = W / 2, cy = H * 0.45;
+      addRing(cx, cy, t - 0.9, 0);   // first accent, 0.9s old
+      addRing(cx, cy, t - 0.35, 1);  // second accent, 0.35s old
+      nextColor = 2;
+    }
+
+    // ---------- Animation loop ----------
+    function frame(now) {
+      const dt = lastNow === null ? 0 : Math.min(Math.max((now - lastNow) / 1000, 0), MAX_DT);
+      lastNow = now;
+      t += dt;
+
+      // Automatic ripples when nobody has clicked for a while.
+      if (t - lastClickT >= IDLE_AFTER && t - lastAutoT >= AUTO_EVERY) {
+        lastAutoT = t;
+        const x = W * (0.2 + Math.random() * 0.6);
+        const y = H * (0.2 + Math.random() * 0.5);
+        addRing(x, y, t);
+      }
+
+      dropOldRings();
+      update(true, true);
+      draw();
+      rafId = requestAnimationFrame(frame);
+    }
+
+    // Run only when playing, on screen, and the tab is visible.
+    function sync() {
+      const shouldRun = playing && onScreen && !document.hidden;
+      if (shouldRun && !rafId) {
+        lastNow = null;
+        rafId = requestAnimationFrame(frame);
+      } else if (!shouldRun && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    function setPlaying(next) {
+      playing = next;
+      if (next) {
+        stillMode = false;
+        motionNote.hidden = true;
+      }
+      toggleLabel.textContent = next ? 'Pause' : 'Play';
+      toggleIcon.setAttribute('d', next ? PAUSE_ICON : PLAY_ICON);
+      sync();
+    }
+
+    // ---------- Interaction ----------
+    function localPoint(e) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function setPointer(e) {
+      const p = localPoint(e);
+      pointer.x = p.x;
+      pointer.y = p.y;
+      pointer.active = true;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') fingerDown = true;
+      setPointer(e);
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch' && !fingerDown) return; // a finger only while down
+      setPointer(e);
+    });
+
+    canvas.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch') {
+        fingerDown = false;
+        pointer.active = false;
+      }
+    });
+
+    const pointerOff = () => {
+      fingerDown = false;
+      pointer.active = false;
+    };
+    canvas.addEventListener('pointerleave', pointerOff);
+    canvas.addEventListener('pointercancel', pointerOff);
+
+    // Click or tap (fires on release): start a ring right there.
+    canvas.addEventListener('click', (e) => {
+      const p = localPoint(e);
+      addRing(p.x, p.y, t);   // starts at the previous frame's t
+      lastClickT = t;
+      stillMode = false;
+      if (!rafId) renderStill(); // paused: show it as a still frame
+    });
+
+    toggle.addEventListener('click', () => setPlaying(!playing));
+
+    if (motionQuery) {
+      const onMotionChange = (e) => { if (e.matches) setPlaying(false); };
+      if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+      else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+    }
+
+    // ---------- Start ----------
+    resize();
+    if (reduceMotion) motionNote.hidden = false;
+    setPlaying(playing);
+
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+    window.addEventListener('resize', resize);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        sync();
+      }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', sync);
+  })();
+  </script>
+</body>
+</html>
