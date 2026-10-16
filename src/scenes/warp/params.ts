@@ -1,0 +1,85 @@
+import type { Param } from '../types';
+
+const fmt = (v: number, d = 2) => String(Number(v.toFixed(d)));
+
+export const params: Param[] = [
+  {
+    kind: 'slider',
+    id: 'stars',
+    label: 'Stars',
+    help: 'How many stars. Phones use fewer.',
+    group: 'Look',
+    min: 100,
+    max: 2000,
+    step: 20,
+    default: 900,
+    rebuild: true,
+    phrase: (v: number) =>
+      `Use ${v.toLocaleString('en-US')} stars (${Math.round(v * (420 / 900))} on screens under 700px).`,
+  },
+  {
+    kind: 'slider',
+    id: 'cruise',
+    label: 'Cruise speed',
+    help: 'How fast the stars drift when you are not pressing.',
+    group: 'Motion',
+    key: true,
+    min: 0,
+    max: 0.5,
+    step: 0.01,
+    default: 0.09,
+    phrase: (v: number) => `At rest, stars approach at ${fmt(v)} depth units per second.`,
+  },
+  {
+    kind: 'slider',
+    id: 'warpSpeed',
+    label: 'Warp speed',
+    help: 'How fast the stars fly while you press and hold.',
+    group: 'Motion',
+    term: 'easing',
+    key: true,
+    min: 0.5,
+    max: 4,
+    step: 0.1,
+    default: 1.7,
+    phrase: (v: number) =>
+      `While pressing, the target speed is ${fmt(v, 1)} depth units per second.`,
+  },
+  {
+    kind: 'slider',
+    id: 'streak',
+    label: 'Streak length',
+    help: 'How long the light-speed streaks get.',
+    group: 'Look',
+    min: 0,
+    max: 0.3,
+    step: 0.01,
+    default: 0.09,
+    phrase: (v: number) =>
+      `Each star's streak starts at depth z + speed × ${fmt(v)} (plus a tiny 0.004 so stars are visible at rest).`,
+  },
+  {
+    kind: 'slider',
+    id: 'magnet',
+    label: 'Button pull',
+    help: 'How strongly the button follows the cursor when it is near.',
+    group: 'Interaction',
+    key: true,
+    min: 0,
+    max: 0.8,
+    step: 0.01,
+    default: 0.32,
+    phrase: (v: number) =>
+      `The button moves ${Math.round(v * 100)}% of the way toward the cursor when it's within 170px, easing with 1 − e^(−dt × 12).`,
+  },
+  {
+    kind: 'text',
+    id: 'buttonText',
+    label: 'Button label',
+    help: 'The text on the magnetic button.',
+    group: 'Look',
+    maxLength: 24,
+    default: 'Back to the top',
+    phrase: (v: string) => `The button says "${v}".`,
+  },
+];
