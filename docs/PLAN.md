@@ -81,7 +81,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 
 - [x] **1.8 `particles`** · SCENES.md #1
 - [x] **1.9 `elastic`** · SCENES.md #2
-- [ ] **1.10 `velocity`** · SCENES.md #3 (including the inner scroller for scene pages)
+- [x] **1.10 `velocity`** · SCENES.md #3 (including the inner scroller for scene pages)
 - [ ] **1.11 `ripple`** · SCENES.md #21
 - [ ] **1.12 `flow`** · SCENES.md #22
 - [ ] **1.13 `warp`** · SCENES.md #23
