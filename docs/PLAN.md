@@ -87,7 +87,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 - [x] **1.13 `warp`** · SCENES.md #23
   - Done when (each): the scene definition of done at the top of this file, items 1–5 and 8.
 
-- [ ] **1.14 Journey math** · PRD §6.2, §6.3, §6.4
+- [x] **1.14 Journey math** · PRD §6.2, §6.3, §6.4
   - Do: `src/theme/journey.ts`: given section boundaries, their worlds and the scroll position, return `{ from, to, t }` (35%-of-viewport blend zones, smootherstep) and the blended Theme (OKLab mix, `ensureContrast` on ink, inkSoft, accentText, blend mode from ground L). It must work for any order of worlds (the Tour reuses it).
   - Done when: unit tests cover hold zones and zone edges, and the **contrast guardrail**: every ordered pair of the 16 worlds sampled at t = 0…1 in 0.01 steps meets §6.3 minimums.
 
