@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>peak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+<style>
+:root{
+  --ground:#F4F2FF;
+  --ink:#1A1240;
+  --ink-soft:#4E4777;
+  --c1:#EC1C7F;
+  --c2:#2A47EA;
+  --c3:#FF7A00;
+  --blend:multiply;
+  --header-bg:rgba(244,242,255,.74);
+  --font:"Anybody","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#160E44;
+    --ink:#F4F1FF;
+    --ink-soft:#BDB5EA;
+    --c1:#FF4FA3;
+    --c2:#3EE6D0;
+    --c3:#FFD23F;
+    --blend:lighter;
+    --header-bg:rgba(22,14,68,.72);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#160E44;
+  --ink:#F4F1FF;
+  --ink-soft:#BDB5EA;
+  --c1:#FF4FA3;
+  --c2:#3EE6D0;
+  --c3:#FFD23F;
+  --blend:lighter;
+  --header-bg:rgba(22,14,68,.72);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--font);
+  font-variation-settings:"wdth" 100,"wght" 450;
+  -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+body::before{
+  content:"";position:fixed;inset:0 0 auto;
+  height:env(safe-area-inset-top,0px);z-index:10;
+  background:var(--header-bg);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* header */
+.bar{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  padding-top:env(safe-area-inset-top,0px);
+  background:var(--header-bg);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+}
+.bar-inner{
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.6rem clamp(1rem,4vw,2.5rem);
+}
+.mark{
+  font-size:1.65rem;line-height:1;font-weight:800;
+  font-variation-settings:"wdth" 50,"wght" 800;
+  color:var(--ink);text-decoration:none;
+  padding:.35rem 0;
+}
+.motion-btn{
+  font:inherit;font-size:.95rem;font-weight:600;
+  font-variation-settings:"wdth" 90,"wght" 600;
+  color:var(--ink);background:transparent;
+  border:1.5px solid currentColor;border-radius:999px;
+  padding:.5rem 1.05rem;min-height:44px;cursor:pointer;
+  transition:background-color .2s,color .2s;
+}
+.motion-btn:hover{background:var(--ink);color:var(--ground)}
+.progress{height:2px;background:var(--c1);transform-origin:0 50%;transform:scaleX(0)}
+:focus-visible{outline:3px solid var(--c1);outline-offset:3px;border-radius:4px}
+
+/* scenes */
+.scene{
+  position:relative;
+  height:100vh;height:100svh;min-height:540px;
+  overflow:hidden;touch-action:pan-y;
+  -webkit-user-select:none;user-select:none;
+}
+.scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.scene--canvas::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:40%;z-index:1;
+  background:linear-gradient(to top,var(--ground) 6%,transparent);
+  pointer-events:none;
+}
+.caption{
+  position:absolute;z-index:2;
+  left:clamp(1rem,4vw,2.5rem);right:clamp(1rem,4vw,2.5rem);
+  bottom:clamp(1.5rem,6vh,3.25rem);
+  max-width:34rem;pointer-events:none;
+}
+.caption h2{
+  margin:0 0 .4rem;
+  font-size:clamp(1.5rem,3vw,2.3rem);line-height:1.05;font-weight:800;
+  font-variation-settings:"wdth" 125,"wght" 800;
+}
+.caption p{
+  margin:0;max-width:30em;
+  font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.45;
+  color:var(--ink-soft);
+  font-variation-settings:"wdth" 95,"wght" 450;
+}
+.caption .lede{
+  margin:0 0 .5rem;
+  font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.05;font-weight:700;
+  color:var(--ink);
+  font-variation-settings:"wdth" 112,"wght" 700;
+}
+
+/* elastic letters */
+.scene--type{display:grid;place-items:center}
+.elastic{
+  margin:0 0 6vh;
+  font-size:clamp(4.5rem,21vw,19rem);line-height:.9;
+  white-space:nowrap;color:var(--ink);
+}
+.elastic .ch{
+  display:inline-block;
+  font-variation-settings:"wdth" 100,"wght" 500;
+  will-change:transform;
+}
+
+/* velocity rows */
+.scene--velocity{display:flex;flex-direction:column;justify-content:center;padding-bottom:8vh}
+.rows{display:flex;flex-direction:column;gap:clamp(.2rem,1vw,.7rem);will-change:transform}
+.row{
+  overflow:hidden;white-space:nowrap;
+  font-size:clamp(3rem,12vw,10rem);line-height:1.1;
+  padding:.02em 0;
+}
+.track{display:flex;width:max-content;will-change:transform}
+.seq{display:flex;gap:.32em;padding-right:.32em}
+.row--a{font-weight:900;font-variation-settings:"wdth" 150,"wght" 900}
+.row--b{
+  font-weight:800;font-style:italic;
+  font-variation-settings:"wdth" 70,"wght" 800;
+  color:transparent;-webkit-text-stroke:max(1.5px,.012em) var(--ink);
+}
+.row--c{font-weight:300;font-variation-settings:"wdth" 110,"wght" 300;color:var(--c1)}
+
+/* warp button */
+.magnet{
+  pointer-events:auto;
+  margin-top:1.25rem;
+  font:inherit;font-size:1.05rem;font-weight:700;
+  font-variation-settings:"wdth" 110,"wght" 700;
+  color:var(--ground);background:var(--ink);
+  border:0;border-radius:999px;
+  padding:.9rem 1.6rem;min-height:48px;cursor:pointer;
+  will-change:transform;
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-inner">
+    <a class="mark" href="#top" aria-label="peak, back to the top">peak</a>
+    <button class="motion-btn" id="motion" type="button">Pause motion</button>
+  </div>
+  <div class="progress" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="scene scene--canvas" id="top" data-scene="particles" aria-labelledby="t-hero">
+    <canvas aria-hidden="true"></canvas>
+    <div class="caption">
+      <h1 class="lede" id="t-hero">A website that's just animations.</h1>
+      <p>Move through the letters, click to scatter them, then scroll.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--type" data-scene="elastic" aria-labelledby="t-elastic">
+    <p class="elastic" data-word="elastic"><span class="sr-only">elastic</span></p>
+    <div class="caption">
+      <h2 id="t-elastic">Elastic letters</h2>
+      <p>Each letter swells toward your cursor. On a phone, drag sideways across the word.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--velocity" data-scene="velocity" aria-labelledby="t-velocity">
+    <div class="rows" aria-hidden="true">
+      <div class="row row--a" data-dir="1" data-word="smooth"><div class="track"></div></div>
+      <div class="row row--b" data-dir="-1" data-word="buttery"><div class="track"></div></div>
+      <div class="row row--c" data-dir="1" data-word="sixty frames a second"><div class="track"></div></div>
+    </div>
+    <div class="caption">
+      <h2 id="t-velocity">Scroll velocity</h2>
+      <p>Scroll fast, then slow down. The type speeds up and leans into it.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--canvas" data-scene="ripple" aria-labelledby="t-ripple">
+    <canvas aria-hidden="true"></canvas>
+    <div class="caption">
+      <h2 id="t-ripple">Ripple</h2>
+      <p>Tap anywhere to drop a ripple into the grid. Hover to push the dots around.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--canvas" data-scene="flow" aria-labelledby="t-flow">
+    <canvas aria-hidden="true"></canvas>
+    <div class="caption">
+      <h2 id="t-flow">Current</h2>
+      <p>Particles riding a field that never stops shifting. Press and hold to stir it.</p>
+    </div>
+  </section>
+
+  <section class="scene scene--canvas" data-scene="warp" aria-labelledby="t-warp">
+    <canvas aria-hidden="true"></canvas>
+    <div class="caption">
+      <h2 id="t-warp">Warp</h2>
+      <p>Press and hold anywhere to jump to light speed.</p>
+      <button class="magnet" type="button">Back to the top</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const root = document.documentElement;
+  const TAU = Math.PI * 2;
+  const FONT = 'Anybody, "Arial Black", Arial, sans-serif';
+  const mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const mqDark = matchMedia('(prefers-color-scheme: dark)');
+  const now = () => performance.now() / 1000;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const scenes = [];
+  let paused = mqReduce.matches;
+  let fontsLoaded = false;
+  let theme = { ground: '#F4F2FF', ink: '#1A1240', soft: '#4E4777', inks: ['#EC1C7F', '#2A47EA', '#FF7A00'], blend: 'multiply' };
+
+  function readTheme() {
+    const cs = getComputedStyle(root);
+    const g = (n, d) => (cs.getPropertyValue(n) || '').trim() || d;
+    theme = {
+      ground: g('--ground', theme.ground),
+      ink: g('--ink', theme.ink),
+      soft: g('--ink-soft', theme.soft),
+      inks: [g('--c1', theme.inks[0]), g('--c2', theme.inks[1]), g('--c3', theme.inks[2])],
+      blend: g('--blend', 'source-over')
+    };
+    for (const s of scenes) if (s.onTheme) s.onTheme();
+    if (paused) for (const s of scenes) s.still();
+  }
+
+  /* ---------- helpers ---------- */
+  function makeCanvas(el) {
+    const canvas = el.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const c = { canvas, ctx, w: 1, h: 1 };
+    c.fit = () => {
+      const r = el.getBoundingClientRect();
+      c.w = Math.max(1, Math.round(r.width));
+      c.h = Math.max(1, Math.round(r.height));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(c.w * dpr);
+      canvas.height = Math.round(c.h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    return c;
+  }
+
+  function trackPointer(el) {
+    const p = { x: 0, y: 0, active: false, down: false };
+    const pos = e => { const r = el.getBoundingClientRect(); p.x = e.clientX - r.left; p.y = e.clientY - r.top; };
+    el.addEventListener('pointermove', e => { pos(e); p.active = true; });
+    el.addEventListener('pointerdown', e => { pos(e); p.active = true; p.down = true; });
+    window.addEventListener('pointerup', () => { p.down = false; });
+    el.addEventListener('pointerleave', () => { p.active = false; p.down = false; });
+    el.addEventListener('pointercancel', () => { p.active = false; p.down = false; });
+    return p;
+  }
+
+  /* ---------- 1. particle type ---------- */
+  function particleScene(el) {
+    const c = makeCanvas(el), ptr = trackPointer(el);
+    let parts = [], groups = [[], [], []];
+
+    function sample() {
+      const W = c.w, H = c.h, small = W < 700;
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const o = off.getContext('2d', { willReadFrequently: true });
+      let size = Math.min(H * 0.46, W * 0.42);
+      const setFont = () => { o.font = `900 ${size}px ${FONT}`; try { o.fontStretch = 'expanded'; } catch (e) {} };
+      setFont();
+      const maxW = W * (small ? 0.92 : 0.82);
+      const tw = o.measureText('peak').width;
+      if (tw > maxW) { size *= maxW / tw; setFont(); }
+      o.textAlign = 'center';
+      o.textBaseline = 'middle';
+      o.fillStyle = '#000';
+      o.fillText('peak', W / 2, H * (small ? 0.4 : 0.43));
+      const data = o.getImageData(0, 0, W, H).data;
+      const max = small ? 1700 : 3800;
+      let gap = Math.max(3, Math.round(size / 80)), pts;
+      do {
+        pts = [];
+        for (let y = 0; y < H; y += gap)
+          for (let x = 0; x < W; x += gap)
+            if (data[(y * W + x) * 4 + 3] > 140) pts.push(x, y);
+      } while (pts.length / 2 > max && ++gap < 14);
+      return { pts, gap };
+    }
+
+    function build() {
+      const { pts, gap } = sample();
+      const n = pts.length / 2, old = parts;
+      parts = new Array(n);
+      groups = [[], [], []];
+      for (let i = 0; i < n; i++) {
+        const o = old[i];
+        const p = {
+          x: o ? o.x : Math.random() * c.w,
+          y: o ? o.y : Math.random() * c.h,
+          vx: o ? o.vx : (Math.random() - 0.5) * 12,
+          vy: o ? o.vy : (Math.random() - 0.5) * 12,
+          tx: pts[2 * i], ty: pts[2 * i + 1],
+          k: 0.02 + Math.random() * 0.035,
+          r: gap * (0.32 + Math.random() * 0.22),
+          ci: o ? o.ci : (Math.random() * 3) | 0
+        };
+        parts[i] = p;
+        groups[p.ci].push(p);
+      }
+    }
+
+    function draw() {
+      const ctx = c.ctx;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, c.w, c.h);
+      ctx.globalCompositeOperation = theme.blend;
+      for (let g = 0; g < 3; g++) {
+        ctx.fillStyle = theme.inks[g];
+        ctx.beginPath();
+        for (const p of groups[g]) { ctx.moveTo(p.x + p.r, p.y); ctx.arc(p.x, p.y, p.r, 0, TAU); }
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    el.addEventListener('click', e => {
+      if (paused) return;
+      const r = el.getBoundingClientRect();
+      const cx = e.clientX - r.left, cy = e.clientY - r.top, reach = Math.max(c.w, c.h);
+      for (const p of parts) {
+        const dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1;
+        const s = (14 + Math.random() * 26) * Math.max(0.3, 1 - d / reach);
+        p.vx += dx / d * s + (Math.random() - 0.5) * 6;
+        p.vy += dy / d * s + (Math.random() - 0.5) * 6;
+      }
+    });
+
+    return {
+      resize() { c.fit(); if (fontsLoaded) build(); else { parts = []; groups = [[], [], []]; } },
+      update(dt) {
+        const f = Math.min(dt * 60, 2.5), damp = Math.pow(0.86, f);
+        const R = clamp(c.w * 0.16, 70, 150), R2 = R * R;
+        const px = ptr.x, py = ptr.y, act = ptr.active;
+        for (const p of parts) {
+          let ax = (p.tx - p.x) * p.k, ay = (p.ty - p.y) * p.k;
+          if (act) {
+            const dx = p.x - px, dy = p.y - py, d2 = dx * dx + dy * dy;
+            if (d2 < R2 && d2 > 0.01) {
+              const d = Math.sqrt(d2), q = 1 - d / R, s = q * q * 9;
+              ax += dx / d * s; ay += dy / d * s;
+            }
+          }
+          p.vx = (p.vx + ax * f) * damp;
+          p.vy = (p.vy + ay * f) * damp;
+          p.x += p.vx * f;
+          p.y += p.vy * f;
+        }
+        draw();
+      },
+      still() { for (const p of parts) { p.x = p.tx; p.y = p.ty; p.vx = p.vy = 0; } draw(); }
+    };
+  }
+
+  /* ---------- 2. elastic letters ---------- */
+  function elasticScene(el) {
+    const word = el.querySelector('.elastic');
+    const spans = [...word.dataset.word].map(ch => {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = ch;
+      s.setAttribute('aria-hidden', 'true');
+      word.appendChild(s);
+      return s;
+    });
+    const ptr = trackPointer(el);
+    const inf = spans.map(() => 0.5);
+    const idle = (i, t) => { const v = 0.5 + 0.5 * Math.sin(t * 2.1 - i * 0.85); return v * v; };
+
+    function apply() {
+      spans.forEach((s, i) => {
+        const v = inf[i];
+        const ox = (v * 0.045).toFixed(4), oy = (v * 0.03).toFixed(4);
+        s.style.fontVariationSettings = `"wdth" ${(50 + v * 100).toFixed(1)}, "wght" ${(200 + v * 700).toFixed(0)}`;
+        s.style.textShadow = `${ox}em ${oy}em 0 var(--c1), -${ox}em -${oy}em 0 var(--c2)`;
+        s.style.transform = `translateY(${(-v * 0.05).toFixed(4)}em)`;
+      });
+    }
+
+    return {
+      resize() {},
+      update(dt, t) {
+        const n = spans.length, ease = 1 - Math.exp(-dt * 9);
+        let er, wr, step;
+        if (ptr.active) { er = el.getBoundingClientRect(); wr = word.getBoundingClientRect(); step = wr.width / n; }
+        for (let i = 0; i < n; i++) {
+          let target;
+          if (ptr.active) {
+            const cx = wr.left + step * (i + 0.5), k = (cx - (ptr.x + er.left)) / (step * 1.25);
+            target = Math.exp(-k * k);
+          } else target = idle(i, t);
+          inf[i] += (target - inf[i]) * ease;
+        }
+        apply();
+      },
+      still() { for (let i = 0; i < inf.length; i++) inf[i] = idle(i, 0.4); apply(); }
+    };
+  }
+
+  /* ---------- 3. scroll velocity ---------- */
+  const scroll = { y: window.scrollY, vel: 0, dir: 1 };
+  function tickScroll(dt) {
+    const y = window.scrollY;
+    const raw = clamp((y - scroll.y) / Math.max(dt * 60, 0.25), -140, 140);
+    scroll.y = y;
+    scroll.vel += (raw - scroll.vel) * 0.2;
+    if (Math.abs(raw) > 0.4) scroll.dir = raw > 0 ? 1 : -1;
+  }
+
+  function velocityScene(el) {
+    const wrap = el.querySelector('.rows');
+    const rows = [...el.querySelectorAll('.row')].map(row => ({
+      track: row.querySelector('.track'), dir: +row.dataset.dir, word: row.dataset.word, w: 1, off: Math.random() * 400
+    }));
+
+    function fill() {
+      const vw = el.clientWidth;
+      for (const r of rows) {
+        r.track.textContent = '';
+        const a = document.createElement('span');
+        a.className = 'seq';
+        r.track.appendChild(a);
+        let guard = 0;
+        do {
+          const w = document.createElement('span');
+          w.textContent = r.word;
+          a.appendChild(w);
+        } while (a.offsetWidth < vw && ++guard < 40);
+        r.track.appendChild(a.cloneNode(true));
+        r.w = a.offsetWidth || 1;
+      }
+    }
+
+    function place(move) {
+      const v = scroll.vel;
+      for (const r of rows) {
+        r.off += move * r.dir;
+        const x = ((r.off % r.w) + r.w) % r.w;
+        r.track.style.transform = `translate3d(${(-x).toFixed(2)}px,0,0)`;
+      }
+      wrap.style.transform = `skewX(${clamp(-v * 0.5, -18, 18).toFixed(2)}deg)`;
+    }
+
+    return {
+      resize() { fill(); place(0); },
+      update(dt) { place((1 + Math.abs(scroll.vel) * 0.8) * dt * 60 * scroll.dir); },
+      still() { place(0); }
+    };
+  }
+
+  /* ---------- 4. ripple grid ---------- */
+  function rippleScene(el) {
+    const c = makeCanvas(el), ptr = trackPointer(el);
+    const SPEED = 480, BAND = 60, PUSH = 120;
+    let dots = [], ripples = [], lastUser = -99, nextAuto = 0, nextColor = 0;
+
+    function build() {
+      const gap = c.w < 700 ? 20 : 26;
+      const cols = Math.floor(c.w / gap) + 1, rowsN = Math.floor(c.h / gap) + 1;
+      const ox = (c.w - (cols - 1) * gap) / 2, oy = (c.h - (rowsN - 1) * gap) / 2;
+      dots = [];
+      for (let j = 0; j < rowsN; j++)
+        for (let i = 0; i < cols; i++) {
+          const x = ox + i * gap, y = oy + j * gap;
+          dots.push({ bx: x, by: y, x, y, e: 0, c: -1 });
+        }
+    }
+
+    function drop(x, y, t) {
+      ripples.push({ x, y, t0: t, ci: nextColor++ % 3 });
+      if (ripples.length > 8) ripples.shift();
+    }
+
+    el.addEventListener('click', e => {
+      if (paused) return;
+      const r = el.getBoundingClientRect(), t = now();
+      drop(e.clientX - r.left, e.clientY - r.top, t);
+      lastUser = t;
+    });
+
+    function step(t, smooth, auto) {
+      ripples = ripples.filter(r => t - r.t0 < 5);
+      if (auto && t - lastUser > 3.5 && t > nextAuto) {
+        drop(c.w * (0.2 + Math.random() * 0.6), c.h * (0.2 + Math.random() * 0.5), t);
+        nextAuto = t + 2.6;
+      }
+      const a = smooth ? 0.25 : 1;
+      for (const d of dots) {
+        let ox = 0, oy = 0, e = 0, best = 0, bc = -1;
+        for (const r of ripples) {
+          const age = t - r.t0, rx = d.bx - r.x, ry = d.by - r.y;
+          const dist = Math.sqrt(rx * rx + ry * ry) || 1, k = (dist - age * SPEED) / BAND;
+          if (k > -2.5 && k < 2.5) {
+            const g = Math.exp(-k * k) * Math.exp(-age * 0.55), disp = Math.sin(k * 2) * g * 20;
+            ox += rx / dist * disp; oy += ry / dist * disp; e += g;
+            if (g > best) { best = g; bc = r.ci; }
+          }
+        }
+        if (ptr.active) {
+          const px = d.bx - ptr.x, py = d.by - ptr.y, d2 = px * px + py * py;
+          if (d2 < PUSH * PUSH) {
+            const dd = Math.sqrt(d2) || 1, s = 1 - dd / PUSH;
+            ox += px / dd * s * s * 22; oy += py / dd * s * s * 22;
+            e += s * 0.6;
+            if (s * 0.6 > best) bc = 1;
+          }
+        }
+        d.x += (d.bx + ox - d.x) * a;
+        d.y += (d.by + oy - d.y) * a;
+        d.e += (Math.min(e, 1.4) - d.e) * a;
+        if (bc >= 0) d.c = bc;
+      }
+      draw();
+    }
+
+    function draw() {
+      const ctx = c.ctx;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, c.w, c.h);
+      ctx.globalAlpha = 0.38;
+      ctx.fillStyle = theme.soft;
+      ctx.beginPath();
+      for (const d of dots) if (d.e < 0.08 || d.c < 0) { ctx.moveTo(d.x + 1.3, d.y); ctx.arc(d.x, d.y, 1.3, 0, TAU); }
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = theme.blend;
+      for (let g = 0; g < 3; g++) {
+        ctx.fillStyle = theme.inks[g];
+        ctx.beginPath();
+        for (const d of dots) if (d.e >= 0.08 && d.c === g) {
+          const r = 1.3 + d.e * 3.6;
+          ctx.moveTo(d.x + r, d.y); ctx.arc(d.x, d.y, r, 0, TAU);
+        }
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    return {
+      resize() { c.fit(); build(); },
+      update() { step(now(), true, true); },
+      still() {
+        const keep = ripples;
+        ripples = [{ x: c.w / 2, y: c.h * 0.45, t0: -0.9, ci: 0 }, { x: c.w / 2, y: c.h * 0.45, t0: -0.35, ci: 1 }];
+        step(0, false, false);
+        ripples = keep;
+      }
+    };
+  }
+
+  /* ---------- 5. flow field ---------- */
+  function flowScene(el) {
+    const c = makeCanvas(el), ptr = trackPointer(el);
+    let P = [];
+    const spawn = p => { p.x = Math.random() * c.w; p.y = Math.random() * c.h; p.life = 40 + Math.random() * 220; return p; };
+    const field = (x, y, t) => {
+      const s = 0.0026;
+      return Math.sin(x * s + t * 0.23) * 1.9 + Math.cos(y * s * 1.4 - t * 0.17) * 1.6 + Math.sin((x - y) * s * 0.6 + t * 0.11) * 1.3;
+    };
+
+    function paintGround() {
+      const ctx = c.ctx;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = theme.ground;
+      ctx.fillRect(0, 0, c.w, c.h);
+    }
+
+    function build() {
+      const n = Math.round(clamp(c.w * c.h / 620, 500, 2200));
+      P = [];
+      for (let i = 0; i < n; i++) P.push(spawn({ ci: i % 3 }));
+      paintGround();
+    }
+
+    function step(t, f) {
+      const ctx = c.ctx;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = Math.min(1, 0.075 * f);
+      ctx.fillStyle = theme.ground;
+      ctx.fillRect(0, 0, c.w, c.h);
+      ctx.globalAlpha = 0.9;
+      ctx.globalCompositeOperation = theme.blend;
+      ctx.lineWidth = 1.4;
+      ctx.lineCap = 'round';
+      const paths = [new Path2D(), new Path2D(), new Path2D()];
+      const R = clamp(Math.min(c.w, c.h) * 0.35, 140, 280), stir = ptr.down && ptr.active;
+      for (const p of P) {
+        const a = field(p.x, p.y, t);
+        let vx = Math.cos(a) * 1.7, vy = Math.sin(a) * 1.7;
+        if (stir) {
+          const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy) || 1;
+          if (d < R) {
+            const s = 1 - d / R;
+            vx += (-dy / d * 7 - dx / d * 1.2) * s;
+            vy += (dx / d * 7 - dy / d * 1.2) * s;
+          }
+        }
+        const nx = p.x + vx * f, ny = p.y + vy * f;
+        paths[p.ci].moveTo(p.x, p.y);
+        paths[p.ci].lineTo(nx, ny);
+        p.x = nx; p.y = ny;
+        if (--p.life < 0 || nx < -5 || ny < -5 || nx > c.w + 5 || ny > c.h + 5) spawn(p);
+      }
+      for (let g = 0; g < 3; g++) { ctx.strokeStyle = theme.inks[g]; ctx.stroke(paths[g]); }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+
+    return {
+      resize() { c.fit(); build(); },
+      update(dt, t) { step(t, Math.min(dt * 60, 2.5)); },
+      still() { paintGround(); for (let i = 0; i < 70; i++) step(i / 60, 1); },
+      onTheme() { paintGround(); }
+    };
+  }
+
+  /* ---------- 6. warp ---------- */
+  function warpScene(el) {
+    const c = makeCanvas(el), ptr = trackPointer(el), btn = el.querySelector('.magnet');
+    let stars = [], speed = 0.09, mx = 0, my = 0, rest = { x: 0, y: 0 };
+    const reset = (s, far) => {
+      s.x = Math.random() * 2 - 1;
+      s.y = Math.random() * 2 - 1;
+      s.z = far ? 0.9 + Math.random() * 0.1 : 0.05 + Math.random() * 0.95;
+      s.ci = Math.random() < 0.72 ? -1 : (Math.random() * 3) | 0;
+      return s;
+    };
+
+    function build() {
+      const n = c.w < 700 ? 420 : 900;
+      stars = [];
+      for (let i = 0; i < n; i++) stars.push(reset({}, false));
+      btn.style.transform = '';
+      mx = my = 0;
+      const er = el.getBoundingClientRect(), br = btn.getBoundingClientRect();
+      rest = { x: br.left - er.left + br.width / 2, y: br.top - er.top + br.height / 2 };
+    }
+
+    const widths = [0.9, 1.8, 3], alphas = [0.45, 0.75, 1];
+    function draw(trail) {
+      const ctx = c.ctx, cx = c.w / 2, cy = c.h * 0.45, f = Math.max(c.w, c.h) * 0.55;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, c.w, c.h);
+      ctx.globalCompositeOperation = theme.blend;
+      ctx.lineCap = 'round';
+      const paths = Array.from({ length: 12 }, () => new Path2D());
+      for (const s of stars) {
+        const sx = cx + s.x / s.z * f, sy = cy + s.y / s.z * f;
+        if (sx < -60 || sx > c.w + 60 || sy < -60 || sy > c.h + 60) { reset(s, true); continue; }
+        const tz = Math.min(1.2, s.z + trail), tx = cx + s.x / tz * f, ty = cy + s.y / tz * f;
+        const b = s.z > 0.6 ? 0 : s.z > 0.28 ? 1 : 2, i = (s.ci + 1) * 3 + b;
+        paths[i].moveTo(tx, ty);
+        paths[i].lineTo(sx + 0.01, sy);
+      }
+      for (let i = 0; i < 12; i++) {
+        const ci = Math.floor(i / 3) - 1, b = i % 3;
+        ctx.strokeStyle = ci < 0 ? theme.ink : theme.inks[ci];
+        ctx.globalAlpha = alphas[b];
+        ctx.lineWidth = widths[b];
+        ctx.stroke(paths[i]);
+      }
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: mqReduce.matches ? 'auto' : 'smooth' }));
+
+    return {
+      resize() { c.fit(); build(); },
+      update(dt) {
+        const target = ptr.down && ptr.active ? 1.7 : 0.09;
+        speed += (target - speed) * (1 - Math.exp(-dt * (target > speed ? 1.4 : 2.2)));
+        for (const s of stars) { s.z -= speed * dt; if (s.z < 0.03) reset(s, true); }
+        draw(speed * 0.09 + 0.004);
+        let tx = 0, ty = 0;
+        if (ptr.active) {
+          const dx = ptr.x - rest.x, dy = ptr.y - rest.y;
+          if (Math.hypot(dx, dy) < 170) { tx = dx * 0.32; ty = dy * 0.32; }
+        }
+        const e = 1 - Math.exp(-dt * 12);
+        mx += (tx - mx) * e;
+        my += (ty - my) * e;
+        btn.style.transform = `translate(${mx.toFixed(2)}px, ${my.toFixed(2)}px)`;
+      },
+      still() { draw(0.004); }
+    };
+  }
+
+  /* ---------- wiring ---------- */
+  const factories = { particles: particleScene, elastic: elasticScene, velocity: velocityScene, ripple: rippleScene, flow: flowScene, warp: warpScene };
+  document.querySelectorAll('[data-scene]').forEach(el => {
+    const s = factories[el.dataset.scene](el);
+    s.el = el;
+    s.visible = false;
+    el.__scene = s;
+    scenes.push(s);
+  });
+  readTheme();
+
+  let raf = 0, last = 0, clock = 0;
+  function frame(ts) {
+    const dt = Math.min(0.05, Math.max(0, (ts - last) / 1000));
+    last = ts;
+    clock += dt;
+    tickScroll(dt);
+    for (const s of scenes) if (s.visible) s.update(dt, clock);
+    raf = requestAnimationFrame(frame);
+  }
+  function start() { if (raf) return; last = performance.now(); scroll.y = window.scrollY; raf = requestAnimationFrame(frame); }
+  function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) e.target.__scene.visible = e.isIntersecting;
+  }, { rootMargin: '80px 0px' });
+
+  const pending = new Set();
+  let rz = 0;
+  const ro = new ResizeObserver(entries => {
+    for (const e of entries) pending.add(e.target.__scene);
+    if (!rz) rz = requestAnimationFrame(() => {
+      rz = 0;
+      for (const s of pending) { s.resize(); if (paused) s.still(); }
+      pending.clear();
+    });
+  });
+  scenes.forEach(s => { io.observe(s.el); ro.observe(s.el); });
+
+  const fontsReady = Promise.race([
+    document.fonts
+      ? Promise.all([document.fonts.load('900 120px Anybody'), document.fonts.load('italic 800 120px Anybody')]).then(() => document.fonts.ready)
+      : Promise.resolve(),
+    new Promise(r => setTimeout(r, 2500))
+  ]).catch(() => {});
+  fontsReady.then(() => {
+    fontsLoaded = true;
+    for (const s of scenes) { s.resize(); if (paused) s.still(); }
+  });
+
+  // header: progress bar and a wordmark that stretches as you scroll
+  const mark = document.querySelector('.mark'), bar = document.querySelector('.progress');
+  function onScroll() {
+    const max = Math.max(1, root.scrollHeight - window.innerHeight);
+    const p = clamp(window.scrollY / max, 0, 1);
+    bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    mark.style.fontVariationSettings = `"wdth" ${(50 + p * 100).toFixed(1)}, "wght" 800`;
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // motion toggle
+  const motionBtn = document.getElementById('motion');
+  function setPaused(v) {
+    paused = v;
+    motionBtn.textContent = v ? 'Play motion' : 'Pause motion';
+    if (v) stop(); else start();
+  }
+  motionBtn.addEventListener('click', () => setPaused(!paused));
+  mqReduce.addEventListener && mqReduce.addEventListener('change', e => setPaused(e.matches));
+  setPaused(paused);
+
+  // theme changes from the system or the viewer
+  const rethemed = () => requestAnimationFrame(readTheme);
+  mqDark.addEventListener && mqDark.addEventListener('change', rethemed);
+  new MutationObserver(rethemed).observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+})();
+</script>
+</body>
+</html>

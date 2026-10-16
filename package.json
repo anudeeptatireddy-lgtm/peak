@@ -1,0 +1,32 @@
+{
+  "name": "peak",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "format": "prettier --write .",
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
+    "check": "astro check && tsc --noEmit && prettier --check . && npm run test"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "8.0.2",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@playwright/test": "1.63.0",
+    "prettier": "3.9.9",
+    "prettier-plugin-astro": "1.1.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}

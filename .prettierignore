@@ -1,0 +1,13 @@
+# Owner-provided docs and the read-only prototype keep their own formatting.
+CLAUDE.md
+docs/
+reference/
+.claude/
+
+# Generated
+node_modules/
+dist/
+.astro/
+package-lock.json
+playwright-report/
+test-results/
