@@ -1,0 +1,108 @@
+import type { Param } from '../types';
+
+const fmt = (v: number, d = 2) => String(Number(v.toFixed(d)));
+
+export const params: Param[] = [
+  {
+    kind: 'slider',
+    id: 'spacing',
+    label: 'Dot spacing',
+    help: 'Distance between dots. Smaller means more dots.',
+    group: 'Look',
+    min: 12,
+    max: 48,
+    step: 1,
+    default: 26,
+    unit: 'px',
+    rebuild: true,
+    phrase: (v: number) =>
+      `Dots sit on a square grid ${v}px apart (${Math.round(v * (20 / 26))}px on screens under 700px), centered on the screen.`,
+  },
+  {
+    kind: 'slider',
+    id: 'speed',
+    label: 'Ring speed',
+    help: 'How fast each ripple ring grows.',
+    group: 'Motion',
+    key: true,
+    min: 100,
+    max: 1200,
+    step: 10,
+    default: 480,
+    unit: 'px/s',
+    phrase: (v: number) => `Each ring grows outward at ${v}px per second.`,
+  },
+  {
+    kind: 'slider',
+    id: 'ringWidth',
+    label: 'Ring width',
+    help: 'How thick each ripple ring is.',
+    group: 'Look',
+    min: 20,
+    max: 160,
+    step: 2,
+    default: 60,
+    unit: 'px',
+    phrase: (v: number) => `The ring is about ${v}px thick (the width of its bell-shaped profile).`,
+  },
+  {
+    kind: 'slider',
+    id: 'push',
+    label: 'Ring push',
+    help: 'How far the ring pushes dots as it passes.',
+    group: 'Motion',
+    key: true,
+    min: 0,
+    max: 60,
+    step: 1,
+    default: 20,
+    unit: 'px',
+    phrase: (v: number) => `As the ring passes, dots move up to ${v}px outward and back.`,
+  },
+  {
+    kind: 'slider',
+    id: 'fade',
+    label: 'Fade speed',
+    help: 'How quickly a ripple dies out.',
+    group: 'Motion',
+    term: 'easing',
+    min: 0.1,
+    max: 2,
+    step: 0.05,
+    default: 0.55,
+    phrase: (v: number) => `A ring's strength fades as e^(−age × ${fmt(v)}), with age in seconds.`,
+  },
+  {
+    kind: 'slider',
+    id: 'autoEvery',
+    label: 'Auto ripple every',
+    help: 'How often a ripple starts by itself when nobody is clicking. 0 turns it off.',
+    group: 'Interaction',
+    key: true,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    default: 2.6,
+    unit: 's',
+    phrase: (v: number) =>
+      v === 0
+        ? 'Ripples only start when someone clicks.'
+        : `After 3.5 seconds without clicks, start a ripple at a random spot every ${fmt(v, 1)} seconds.`,
+  },
+  {
+    kind: 'slider',
+    id: 'cursorRadius',
+    label: 'Cursor reach',
+    help: 'How far from the cursor dots get pushed. 0 turns it off.',
+    group: 'Interaction',
+    min: 0,
+    max: 300,
+    step: 5,
+    default: 120,
+    unit: 'px',
+    phrase: (v: number) =>
+      v === 0
+        ? 'The cursor does not push the dots.'
+        : `The cursor pushes dots within ${v}px away by up to 22px, and they glow a little.`,
+  },
+];
