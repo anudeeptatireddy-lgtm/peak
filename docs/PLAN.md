@@ -69,7 +69,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `Base.astro`, `Header.astro` (wordmark that stretches with scroll progress; nav: Gallery, Tour, Start here, Words, Drops; mobile menu sheet with focus trap; Pause/Play button; Living colors toggle (wired up in 1.15); Sound toggle placeholder), `Footer.astro` (the five-step journey links, credit, RSS). Placeholder pages for every route in §5, including `/tour`, so links work.
   - Done when: every route loads with zero console errors (e2e), keyboard tab order is logical, the mobile menu opens/closes with Esc and returns focus.
 
-- [ ] **1.6 Engine** · PRD §16.4, §17
+- [x] **1.6 Engine** · PRD §16.4, §17
   - Do: `scheduler.ts` (single rAF, register/unregister, visibility via IntersectionObserver, dt clamp, skips frames where no time has passed, stops when idle), `canvas.ts`, `pointer.ts` (including press-and-hold drag start, PRD §8.3), `scroll.ts` (window or inner scroller), `motion.ts` (global pause, reduced-motion start state, live updates, `still()` on pause), font-ready helper. Port behavior from `reference/peak-prototype.html` where it exists.
   - Done when: unit tests cover dt clamping, zero-dt frames, and scroll velocity smoothing; an e2e test with reduced motion emulated confirms the scheduler doesn't start until Play is pressed.
 

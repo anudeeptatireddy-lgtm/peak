@@ -21,6 +21,8 @@ From the v1.1 scope update (2026-10-16):
 
 ## Log
 
+**2026-10-16, step 1.6: engine.** One rAF loop in `src/engine/scheduler.ts`; frames where no time has passed are skipped (the bug that hid the first scene in the riso demo). The loop stops whenever nothing visible is running. Scroll sources are only ticked while some scene runs. `setMaxActive(n)` caps running scenes (gallery 4, Tour 2) by visibility. The ResizeObserver lives in the scene mount helper (step 1.7) rather than the canvas helper, so one observer drives `resize()` for canvas and DOM scenes alike. Touch drags that need free movement start after a 250ms press-and-hold; once started, the page stops scrolling under the finger. The dev servers (`astro dev`, `astro preview`) move themselves into the background when an AI agent runs them; `npx astro dev stop` stops a backgrounded one.
+
 **2026-10-16, step 1.2: worlds as data.** All 16 worlds live in `src/theme/worlds.ts`; Riso's dark palette is a second variant of the same world (`getWorld('riso', 'dark')`), so `WorldId` stays as in PRD §16.5. The internal "inspired by" notes avoid brand names too (Dreamhouse's says "Pink plastic dollhouse"). `accentText` and `focus` are both c1 pushed to 3:1 on the ground.
 
 **2026-10-16, step 0.3 and Checkpoint 0.**

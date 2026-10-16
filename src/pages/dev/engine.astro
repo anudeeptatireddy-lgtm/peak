@@ -1,0 +1,39 @@
+---
+// Dev-only page for scheduler tests (PLAN 1.6).
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Engine test" noindex>
+  <div class="box wrap" data-box>
+    <p class="body">
+      Updates: <span data-updates>0</span> · Stills: <span data-stills>0</span>
+    </p>
+  </div>
+  <script>
+    import { register } from '../../engine/scheduler';
+    const box = document.querySelector<HTMLElement>('[data-box]')!;
+    const u = box.querySelector<HTMLElement>('[data-updates]')!;
+    const s = box.querySelector<HTMLElement>('[data-stills]')!;
+    const w = window as unknown as { __updates: number; __stills: number };
+    w.__updates = 0;
+    w.__stills = 0;
+    const reg = register(box, {
+      update() {
+        w.__updates++;
+        u.textContent = String(w.__updates);
+      },
+      still() {
+        w.__stills++;
+        s.textContent = String(w.__stills);
+      },
+    });
+    reg.ready();
+  </script>
+</Base>
+
+<style>
+  .box {
+    min-height: 60vh;
+    padding-top: calc(var(--header-h) + 2rem);
+  }
+</style>
