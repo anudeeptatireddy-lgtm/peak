@@ -79,7 +79,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
 
 For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html` and its entry in `docs/SCENES.md`, then create `src/scenes/<slug>/` with `meta.ts`, `params.ts` (defaults equal to the prototype's constants), `prompt.ts` (phrases and follow-ups; full prompts come in Wave 2, but write phrases now), and `index.ts`. Add the scene to `/dev/scenes`, a page that renders any scene full-screen with a raw debug panel of its params (built in 1.8).
 
-- [ ] **1.8 `particles`** · SCENES.md #1
+- [x] **1.8 `particles`** · SCENES.md #1
 - [ ] **1.9 `elastic`** · SCENES.md #2
 - [ ] **1.10 `velocity`** · SCENES.md #3 (including the inner scroller for scene pages)
 - [ ] **1.11 `ripple`** · SCENES.md #21

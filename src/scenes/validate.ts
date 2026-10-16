@@ -65,7 +65,11 @@ export function validateScene(mod: SceneModule): string[] {
     }
     need(!!phrase.trim(), `${where}: phrase is empty`);
     need(!BAD_TEXT.test(phrase), `${where}: phrase contains undefined/NaN`);
-    need(!phrase.includes(p.id) || p.id.length < 4, `${where}: phrase mentions its internal id`);
+    // camelCase ids are internal names; plain words like "stiffness" are fine in prose.
+    need(
+      !/[A-Z]/.test(p.id) || !phrase.includes(p.id),
+      `${where}: phrase mentions its internal id`,
+    );
   }
 
   const ups = mod.followUps(all);

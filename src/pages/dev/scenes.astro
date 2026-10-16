@@ -1,0 +1,226 @@
+---
+// Dev-only scene viewer (PLAN 1.8): any scene full-screen with a raw debug panel
+// of its params. /dev/scenes lists them; /dev/scenes?s=<slug>&w=<world> shows one.
+import Base from '../../layouts/Base.astro';
+import { SCENE_SLUGS } from '../../scenes/registry';
+import { WORLD_ORDER, WORLD_DEFS } from '../../theme/worlds';
+---
+
+<Base title="Scenes" noindex chrome={false}>
+  <div class="dev" data-dev>
+    <nav class="index wrap" data-index>
+      <h1 class="display">Scenes</h1>
+      <ul role="list">
+        {SCENE_SLUGS.map((slug) => (
+          <li>
+            <a href={`/dev/scenes?s=${slug}`}>{slug}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="stage" data-stage hidden></div>
+    <aside class="panel" data-panel hidden>
+      <div class="row">
+        <a href="/dev/scenes" class="small">
+          All scenes
+        </a>
+        <button class="btn btn--secondary" type="button" data-pause>
+          Pause
+        </button>
+        <button class="btn btn--secondary" type="button" data-restart>
+          Restart
+        </button>
+      </div>
+      <label class="field small">
+        World
+        <select data-world>
+          {WORLD_ORDER.map((id) => (
+            <option value={id}>{WORLD_DEFS[id].name}</option>
+          ))}
+          <option value="riso-dark">Riso (dark)</option>
+        </select>
+      </label>
+      <form data-params></form>
+      <p class="small soft" data-info></p>
+    </aside>
+  </div>
+</Base>
+
+<script>
+  import { isPaused, onPausedChange, togglePaused } from '../../engine/motion';
+  import { mountScene, type MountedScene } from '../../engine/mount';
+  import { debugInfo } from '../../engine/scheduler';
+  import { hasScene, loadScene } from '../../scenes/registry';
+  import type { Param, SceneModule } from '../../scenes/types';
+  import { setTheme } from '../../theme/store';
+  import { getWorld, isWorldId } from '../../theme/worlds';
+
+  const qs = new URLSearchParams(location.search);
+  const slug = qs.get('s');
+  const root = document.querySelector<HTMLElement>('[data-dev]')!;
+  const stage = root.querySelector<HTMLElement>('[data-stage]')!;
+  const panel = root.querySelector<HTMLElement>('[data-panel]')!;
+
+  if (slug && hasScene(slug)) {
+    root.querySelector<HTMLElement>('[data-index]')!.hidden = true;
+    stage.hidden = false;
+    panel.hidden = false;
+    start(await loadScene(slug));
+  }
+
+  function applyWorld(value: string) {
+    if (value === 'riso-dark') setTheme(getWorld('riso', 'dark'));
+    else if (isWorldId(value)) setTheme(getWorld(value));
+  }
+
+  function start(mod: SceneModule) {
+    const worldSel = panel.querySelector<HTMLSelectElement>('[data-world]')!;
+    const w = qs.get('w') ?? mod.meta.world;
+    worldSel.value = isWorldId(w) || w === 'riso-dark' ? w : mod.meta.world;
+    applyWorld(worldSel.value);
+    worldSel.addEventListener('change', () => applyWorld(worldSel.value));
+
+    let mounted: MountedScene = mountScene(stage, mod);
+    const form = panel.querySelector<HTMLFormElement>('[data-params]')!;
+    form.replaceChildren(...mod.params.map((p) => control(p, () => mounted)));
+
+    const pauseBtn = panel.querySelector<HTMLButtonElement>('[data-pause]')!;
+    pauseBtn.addEventListener('click', togglePaused);
+    onPausedChange((v) => (pauseBtn.textContent = v ? 'Play' : 'Pause'));
+    panel
+      .querySelector<HTMLButtonElement>('[data-restart]')!
+      .addEventListener('click', () => mounted.instance.restart());
+
+    const info = panel.querySelector<HTMLElement>('[data-info]')!;
+    setInterval(() => {
+      const d = debugInfo();
+      info.textContent = `loop ${d.loop ? 'on' : 'off'} · running ${d.running} · frames ${d.frames}${isPaused() ? ' · paused' : ''}`;
+    }, 500);
+
+    // For the listener-leak test (scene definition of done, item 4).
+    (window as unknown as { __peakDev: object }).__peakDev = {
+      remount(times: number) {
+        for (let i = 0; i < times; i++) {
+          const params = mounted.params;
+          mounted.destroy();
+          mounted = mountScene(stage, mod, { params });
+        }
+      },
+      destroy() {
+        mounted.destroy();
+      },
+    };
+  }
+
+  function control(p: Param, get: () => MountedScene): HTMLElement {
+    const label = document.createElement('label');
+    label.className = 'field small';
+    const name = document.createElement('span');
+    const value = document.createElement('output');
+    name.textContent = p.label;
+    label.append(name, value);
+    const set = (v: unknown) => get().setParams({ [p.id]: v });
+    let input: HTMLInputElement | HTMLSelectElement;
+    if (p.kind === 'slider') {
+      const i = document.createElement('input');
+      i.type = 'range';
+      i.min = String(p.min);
+      i.max = String(p.max);
+      i.step = String(p.step);
+      i.value = String(p.default);
+      value.textContent = `${p.default}${p.unit ?? ''}`;
+      i.addEventListener('input', () => {
+        value.textContent = `${i.value}${p.unit ?? ''}`;
+        set(Number(i.value));
+      });
+      input = i;
+    } else if (p.kind === 'toggle') {
+      const i = document.createElement('input');
+      i.type = 'checkbox';
+      i.checked = p.default;
+      i.addEventListener('change', () => set(i.checked));
+      input = i;
+    } else if (p.kind === 'select') {
+      const s = document.createElement('select');
+      for (const o of p.options) s.add(new Option(o.label, o.value, false, o.value === p.default));
+      s.addEventListener('change', () => set(s.value));
+      input = s;
+    } else {
+      const i = document.createElement('input');
+      i.type = p.kind === 'datetime' ? 'datetime-local' : 'text';
+      if (p.kind === 'text') {
+        i.maxLength = p.maxLength;
+        i.value = p.default;
+      } else i.value = p.default().slice(0, 16);
+      i.addEventListener('input', () => set(i.value));
+      input = i;
+    }
+    input.name = p.id;
+    label.append(input);
+    return label;
+  }
+</script>
+
+<style>
+  .index {
+    padding-top: 3rem;
+    display: grid;
+    gap: 1rem;
+  }
+  .index ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: 1.25rem;
+  }
+  .stage {
+    position: fixed;
+    inset: 0;
+  }
+  .panel {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    width: min(320px, calc(100vw - 1.5rem));
+    overflow-y: auto;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radius-panel);
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    z-index: 10;
+  }
+  @media (max-width: 700px) {
+    .panel {
+      top: auto;
+      height: 40vh;
+    }
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  :global(.field) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 0.5rem;
+  }
+  :global(.field input),
+  :global(.field select) {
+    grid-column: 1 / -1;
+    font: inherit;
+    min-height: 32px;
+  }
+  form {
+    display: grid;
+    gap: 0.75rem;
+  }
+</style>

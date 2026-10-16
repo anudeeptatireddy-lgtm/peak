@@ -14,12 +14,14 @@ From the kit review (2026-10-16), renumbered to the v1.1 waves:
 1. Prompts must never contain "peak" (PLAN 2.8), but `particles` defaults to the word "peak". Needed by step 2.8 (Wave 2).
 2. `countdown` defaults to "7 days from page load", which breaks byte-identical prompts and snapshots (PRD §10.1). Needed by step 7.2 (Wave 7).
 3. Quick prompts must be under 150 words (PRD §10.6), but the "Add to my existing project" block alone is about 60 words. Needed by step 2.9 (Wave 2).
-4. Some `particles` and `flow` defaults in SCENES.md differ from the prototype (stiffness spread, cursor reach, click blast, dot size, minimum particle count). Which one wins? Needed by steps 1.8 and 1.12 (Wave 1).
+4. ~~Some `particles` and `flow` defaults differ from the prototype.~~ Resolved in step 1.8 without changing either: see the log entry for step 1.8.
 
 From the v1.1 scope update (2026-10-16):
 5. The proposed home order and featured lineup (PRD §6.1). Needed by step 1.16 (Wave 1); easy to change later in `journey.ts`.
 
 ## Log
+
+**2026-10-16, step 1.8: `particles`.** Open question 4 resolved by reading the PRD's particle settings as scales on the prototype's own formulas, so the defaults reproduce the prototype exactly: snap-back strength is the center of each dot's random stiffness (default 0.0375, randomized ±47% = the prototype's 0.02–0.055); cursor reach is the maximum (the prototype's 16% of screen width, clamped to 70–150px); click blast is the strongest kick (the prototype's 14–40 range = 35–100% of 40); dot size multiplies the prototype's 0.32–0.54 × spacing; density uses 45% under 700px (the prototype's 1700 ≈ 3800 × 0.45). The same approach will keep `flow` at the prototype's 500-particle floor. Touch drags don't push dots (PRD: "drag does nothing"). `/dev/scenes` shows any scene with a raw params panel, and `tests/e2e/scenes.spec.ts` runs the browser checks from the scene definition of done for every registered scene (console errors, still frame under reduced motion, `touch-action: pan-y`, and listener counts after 20 remounts via the Chrome DevTools Protocol).
 
 **2026-10-16, step 1.7: scene types and registry.** `src/scenes/types.ts` follows PRD §16.3 exactly (plus a `SoundHooks` interface it references). The registry uses Vite's lazy `import.meta.glob` over `src/scenes/*/index.ts`, so adding a scene folder registers it and each scene stays its own chunk. The validator checks schemas, phrases (no `undefined`/`NaN`, no internal ids), terms and 3–5 follow-ups. Flash rate caps (PLAN 1.7) are checked by each ⚠ scene's flash test instead of the generic validator, since rate params differ per scene. `src/engine/mount.ts` wires a scene to the scheduler, theme store, ResizeObserver and font loading, and undoes all of it in `destroy()`.
 
