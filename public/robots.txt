@@ -1,0 +1,3 @@
+# The site is still being built. This opens up at launch (PLAN 9.7).
+User-agent: *
+Disallow: /

@@ -113,7 +113,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 
 ## Phase D: Deploy (before Wave 2)
 
-- [ ] **D.1 Repo safety and noindex** · PRD §22, §23
+- [x] **D.1 Repo safety and noindex** · PRD §22, §23
   - Do: confirm `.env*` and secrets are git-ignored and nothing private is tracked; add a `noindex` robots meta tag on every page and a disallow-all `public/robots.txt`. Both come off at launch (step 9.9).
   - Done when: `git ls-files` shows no secrets; e2e confirms the meta tag on every route and the robots.txt contents.
 - [ ] **D.2 GitHub**

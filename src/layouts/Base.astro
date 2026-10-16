@@ -5,6 +5,7 @@
 import '../styles/global.css';
 import { themeVars } from '../theme/apply';
 import { getWorld, type WorldId } from '../theme/worlds';
+import { INDEXABLE } from '../site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -43,7 +44,7 @@ const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {(noindex || !INDEXABLE) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -26,3 +26,6 @@ coverage/
 
 # Local preview config for the Claude desktop app
 .claude/launch.json
+
+# Vercel CLI project link
+.vercel/
