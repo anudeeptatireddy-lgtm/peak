@@ -11,7 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "format": "prettier --write .",
-    "test": "vitest run --passWithNoTests",
+    "test": "vitest run",
     "test:e2e": "playwright test",
     "check": "astro check && tsc --noEmit && prettier --check . && npm run test"
   },

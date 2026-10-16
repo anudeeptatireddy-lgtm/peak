@@ -37,11 +37,11 @@ Unless a step says otherwise, a scene step is done when:
   - Do: `git init` if needed, a `.gitignore` (node_modules, dist, .astro, test results, `.env`), `.env.example` with `PUBLIC_SITE_URL` and `PUBLIC_FEEDBACK_URL`, a short `README.md` (what peak is, how to run it, link to docs). Keep `docs/DECISIONS.md` as it is. Add the folders new in PRD v1.1 §16.2 (`src/kits/`) with placeholders.
   - Done when: first commit exists and `npm run check` passes.
 
-- [ ] **0.3 Test harness smoke tests**
+- [x] **0.3 Test harness smoke tests**
   - Do: One trivial Vitest test and one Playwright test that loads `/` and asserts zero console errors. Configure Playwright to run against `astro preview`, with a desktop project (1280×800) and a mobile project (390×844, touch).
   - Done when: `npm run check` and `npm run test:e2e` both pass.
 
-- [ ] **Checkpoint 0 (Owner):** run `npm run dev` and confirm the page opens. Answer the open questions in `docs/DECISIONS.md` when you can (the ones marked "Needed by" say which wave they block).
+- [x] **Checkpoint 0 (Owner):** run `npm run dev` and confirm the page opens. Answer the open questions in `docs/DECISIONS.md` when you can (the ones marked "Needed by" say which wave they block).
 
 ---
 

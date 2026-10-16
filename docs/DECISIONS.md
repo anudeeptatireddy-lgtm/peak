@@ -21,6 +21,12 @@ From the v1.1 scope update (2026-10-16):
 
 ## Log
 
+**2026-10-16, step 0.3 and Checkpoint 0.**
+- Playwright runs against `astro preview` on port 4329 with two projects: `desktop` (Chromium, 1280×800) and `mobile` (WebKit, iPhone 13 profile at 390×844, touch). Chromium and WebKit were installed with `npx playwright install chromium webkit`.
+- Astro 7's preview server moves itself into the background when it detects an AI agent, which made Playwright think it had crashed. The test server command adds `--ignore-lock`, which keeps it in the foreground.
+- `test` is back to plain `vitest run` now that a unit test exists.
+- Checkpoint 0 ticked: the owner said "Keep going. Don't stop" after reviewing the v1.1 docs, and the dev server was confirmed to serve the page in step 0.1.
+
 **2026-10-16, step 0.2: repo hygiene.** Git repository created on branch `main`. No global git identity was set on this Mac, so the repo-local identity uses the owner's name and school email. `.gitignore` also keeps `.env*` files out of git (except `.env.example`).
 
 **2026-10-16, scope update to PRD v1.1 (owner message).** peak now launches with 50 scenes (about 20 text effects), 16 color worlds, always-changing color (home journey of 12, a Tour page, living colors, Shuffle and Cycle worlds on scene pages, cycling in prompts, a patchwork gallery) and shared kits. The owner's message wins over the v1.0 PRD; these v1.0 rules changed:
