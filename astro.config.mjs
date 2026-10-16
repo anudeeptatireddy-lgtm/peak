@@ -9,5 +9,5 @@ const site = process.env.PUBLIC_SITE_URL || undefined;
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [mdx(), sitemap()],
+  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/dev/') })],
 });

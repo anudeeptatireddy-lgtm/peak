@@ -57,7 +57,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `src/theme/worlds.ts` with all 16 worlds (the 8 from v1.0 including Riso light and dark, plus Aurora, Lava Lamp, Vapor Mall, Blueprint, Golden Hour, Cherry Cola, Newsprint, Toxic). Compute derived tokens (`accentText`, `focus`, `line`, `headerBg`, `blend`).
   - Done when: unit tests check every world's ink and inkSoft ≥ 4.5:1 on ground and surface, `accentText` ≥ 3:1, and that no public name contains the whole words "Barbie" or "Dune".
 
-- [ ] **1.3 Theme store and CSS variables** · PRD §16.4, §16.5
+- [x] **1.3 Theme store and CSS variables** · PRD §16.4, §16.5
   - Do: `store.ts` (current Theme, `subscribe`), `apply.ts` (writes `--ground`, `--surface`, `--ink`, `--ink-soft`, `--c1..3`, `--accent-text`, `--focus`, `--line`, `--header-bg` on `:root`, only when changed). Riso follows `prefers-color-scheme` and updates live.
   - Done when: a unit test confirms `apply` skips unchanged values; switching the OS theme on a test page flips Riso without a reload.
 
