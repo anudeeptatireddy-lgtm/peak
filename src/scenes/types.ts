@@ -12,7 +12,8 @@ interface ParamBase {
   label: string;
   /** One or two sentences, shown in the info popover. */
   help: string;
-  group: 'Look' | 'Motion' | 'Interaction';
+  /** Advanced is collapsed by default: everything else that shapes the result (owner, 2026-10-16). */
+  group: 'Look' | 'Motion' | 'Interaction' | 'Advanced';
   /** Word-bank id, e.g. 'damping'. */
   term?: string;
   /** Included in the Quick prompt. */

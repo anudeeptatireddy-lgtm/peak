@@ -1,17 +1,20 @@
 // `particles`: Your name in particles (SCENES.md #1). Ported from
-// reference/peak-prototype.html; defaults reproduce the prototype exactly.
+// reference/peak-prototype.html. Defaults reproduce the prototype exactly, which
+// tests/e2e/parity.spec.ts proves pixel by pixel.
 
 import { createCanvas } from '../../engine/canvas';
+import { fontsReady } from '../../engine/fonts';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
 import type { Theme } from '../../theme/worlds';
+import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
+import { FIXED } from './constants';
 import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
 
-const TAU = Math.PI * 2;
-const FONT = 'Anybody, "Arial Black", Arial, sans-serif';
+const { TAU, SMALL_SCREEN, PREVIEW_SCALE, RGBA } = SHARED;
 
 interface Dot {
   x: number;
@@ -21,39 +24,45 @@ interface Dot {
   tx: number;
   ty: number;
   k: number;
-  rf: number;
+  r: number;
   ci: number;
 }
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
   const ptr = createPointer(host);
   let dots: Dot[] = [];
   let groups: Dot[][] = [[], [], []];
-  let gap = 4;
+  let fontsOk = false;
+  let destroyed = false;
+  // Like the prototype, sample only once the real font is here (or the wait timed out).
+  fontsReady().then(() => {
+    fontsOk = true;
+  });
 
   function sample(): { pts: number[]; gap: number } {
     const W = c.w;
     const H = c.h;
-    const small = W < 700;
+    const small = W < SMALL_SCREEN;
     const off = document.createElement('canvas');
     off.width = W;
     off.height = H;
     const o = off.getContext('2d', { willReadFrequently: true })!;
     const text = String(p.text || ' ');
-    let size = Math.min(H * 0.46, W * 0.42);
+    let size = Math.min(H * n('textHeight'), W * n('textWidth'));
     const setFont = () => {
-      o.font = `900 ${size}px ${FONT}`;
+      o.font = `${n('fontWeight')} ${size}px ${FIXED.FONT}`;
       try {
-        o.fontStretch = 'expanded';
+        o.fontStretch = String(p.fontStretch) as CanvasFontStretch;
       } catch {
         /* older browsers */
       }
     };
     setFont();
-    const maxW = W * (small ? 0.92 : 0.82);
+    const maxW = W * (small ? n('fitWidthSmall') : n('fitWidth'));
     const tw = o.measureText(text).width;
     if (tw > maxW) {
       size *= maxW / tw;
@@ -61,44 +70,51 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     }
     o.textAlign = 'center';
     o.textBaseline = 'middle';
-    o.fillStyle = '#000';
-    o.fillText(text, W / 2, H * (small ? 0.4 : 0.43));
+    o.fillStyle = FIXED.MASK;
+    o.fillText(text, W / 2, H * (small ? n('textYSmall') : n('textY')));
     const data = o.getImageData(0, 0, W, H).data;
-    const density = Number(p.density) * (small ? 0.45 : 1) * (ctx.quality === 'preview' ? 0.4 : 1);
-    let g = Math.max(3, Math.round(size / 80));
+    const max =
+      (small ? n('densitySmall') : n('density')) * (ctx.quality === 'preview' ? PREVIEW_SCALE : 1);
+    const cutoff = n('alphaCutoff');
+    let gap = Math.max(n('minGap'), Math.round(size / n('gapDivisor')));
     let pts: number[];
     do {
       pts = [];
-      for (let y = 0; y < H; y += g)
-        for (let x = 0; x < W; x += g) if (data[(y * W + x) * 4 + 3]! > 140) pts.push(x, y);
-    } while (pts.length / 2 > density && ++g < 14);
+      for (let y = 0; y < H; y += gap)
+        for (let x = 0; x < W; x += gap)
+          if (data[(y * W + x) * RGBA + (RGBA - 1)]! > cutoff) pts.push(x, y);
+    } while (pts.length / 2 > max && ++gap < n('maxGap'));
     off.width = 0;
-    return { pts, gap: g };
+    return { pts, gap };
   }
 
-  function build(scatter: boolean): void {
+  function build(): void {
     const s = sample();
-    gap = s.gap;
-    const n = s.pts.length / 2;
+    const count = s.pts.length / 2;
     const old = dots;
-    const k0 = Number(p.stiffness);
-    dots = new Array(n);
+    const scatter = old.length === 0 && Boolean(p.intro);
+    const kMin = n('stiffness');
+    const kSpread = n('stiffnessSpread');
+    const rMin = n('dotMin');
+    const rSpread = n('dotRange');
+    const v0 = n('introSpeed');
+    dots = new Array(count);
     groups = [[], [], []];
-    for (let i = 0; i < n; i++) {
+    // Same order of Math.random() calls as the prototype, so seeded runs match.
+    for (let i = 0; i < count; i++) {
       const o = old[i];
       const tx = s.pts[2 * i]!;
       const ty = s.pts[2 * i + 1]!;
       const d: Dot = {
         x: o ? o.x : scatter ? Math.random() * c.w : tx,
         y: o ? o.y : scatter ? Math.random() * c.h : ty,
-        vx: o ? o.vx : scatter ? (Math.random() - 0.5) * 12 : 0,
-        vy: o ? o.vy : scatter ? (Math.random() - 0.5) * 12 : 0,
+        vx: o ? o.vx : scatter ? (Math.random() - 0.5) * v0 : 0,
+        vy: o ? o.vy : scatter ? (Math.random() - 0.5) * v0 : 0,
         tx,
         ty,
-        // Prototype: 0.02 + random × 0.035, i.e. 0.0375 ± 46.7%.
-        k: k0 * (0.5333 + Math.random() * 0.9333),
-        rf: 0.32 + Math.random() * 0.22,
-        ci: o ? o.ci : (Math.random() * 3) | 0,
+        k: kMin + Math.random() * kSpread,
+        r: s.gap * (rMin + Math.random() * rSpread),
+        ci: o ? o.ci : (Math.random() * SHARED.INKS) | 0,
       };
       dots[i] = d;
       groups[d.ci]!.push(d);
@@ -106,58 +122,64 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   }
 
   function draw(): void {
-    const ctx2 = c.ctx;
+    const g = c.ctx;
     c.clear();
-    ctx2.globalCompositeOperation = theme.blend;
-    const scale = gap * Number(p.dotSize);
+    g.globalCompositeOperation = theme.blend;
+    const scale = n('dotSize');
     const inks = [theme.c1, theme.c2, theme.c3];
-    for (let g = 0; g < 3; g++) {
-      ctx2.fillStyle = inks[g]!;
-      ctx2.beginPath();
-      for (const d of groups[g]!) {
-        const r = d.rf * scale;
-        ctx2.moveTo(d.x + r, d.y);
-        ctx2.arc(d.x, d.y, r, 0, TAU);
+    for (let k = 0; k < SHARED.INKS; k++) {
+      g.fillStyle = inks[k]!;
+      g.beginPath();
+      for (const d of groups[k]!) {
+        const r = d.r * scale;
+        g.moveTo(d.x + r, d.y);
+        g.arc(d.x, d.y, r, 0, TAU);
       }
-      ctx2.fill();
+      g.fill();
     }
-    ctx2.globalCompositeOperation = 'source-over';
+    g.globalCompositeOperation = 'source-over';
   }
 
   function explode(cx: number, cy: number): void {
     const reach = Math.max(c.w, c.h);
-    const blast = Number(p.explosion);
+    const blast = n('explosion');
+    const lo = n('blastMin');
+    const floor = n('blastFloor');
+    const jitter = n('blastJitter');
     for (const d of dots) {
       const dx = d.x - cx;
       const dy = d.y - cy;
       const dist = Math.hypot(dx, dy) || 1;
-      const s = blast * (0.35 + Math.random() * 0.65) * Math.max(0.3, 1 - dist / reach);
-      d.vx += (dx / dist) * s + (Math.random() - 0.5) * 6;
-      d.vy += (dy / dist) * s + (Math.random() - 0.5) * 6;
+      const s = blast * (lo + Math.random() * (1 - lo)) * Math.max(floor, 1 - dist / reach);
+      d.vx += (dx / dist) * s + (Math.random() - 0.5) * jitter;
+      d.vy += (dy / dist) * s + (Math.random() - 0.5) * jitter;
     }
     ctx.sound.play('pop');
   }
 
-  let built = false;
-
   return {
     resize() {
-      const changed = c.fit();
-      if (changed || !built) {
-        build(!built && Boolean(p.intro) && !ctx.reducedMotion);
-        built = true;
+      c.fit();
+      if (!fontsOk || destroyed) {
+        dots = [];
+        groups = [[], [], []];
+        return;
       }
+      build();
     },
     update(dt) {
       ptr.sync();
       for (const t of ptr.takeTaps()) explode(t.x, t.y);
       const f = frameFactor(dt);
-      const damp = Math.pow(Number(p.bounce), f);
-      const maxR = Number(p.cursorRadius);
-      const R = Math.min(maxR, Math.max(Math.min(70, maxR), c.w * 0.16));
+      const damp = Math.pow(n('bounce'), f);
+      const maxR = n('cursorRadius');
+      const R = Math.min(
+        maxR,
+        Math.max(Math.min(n('cursorRadiusMin'), maxR), c.w * n('cursorReachScale')),
+      );
       const R2 = R * R;
-      const force = Number(p.cursorForce);
-      const act = ptr.active && ptr.pointerType !== 'touch';
+      const force = n('cursorForce');
+      const act = ptr.active;
       const px = ptr.x;
       const py = ptr.y;
       for (const d of dots) {
@@ -167,7 +189,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           const dx = d.x - px;
           const dy = d.y - py;
           const d2 = dx * dx + dy * dy;
-          if (d2 < R2 && d2 > 0.01) {
+          if (d2 < R2 && d2 > FIXED.MIN_PUSH_DIST2) {
             const dist = Math.sqrt(d2);
             const q = 1 - dist / R;
             const s = q * q * force;
@@ -193,23 +215,22 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       draw();
     },
     setParams(next) {
-      const rebuild = next.text !== p.text || next.density !== p.density;
-      const stiffChanged = next.stiffness !== p.stiffness;
+      const changed = params.filter((q) => q.rebuild && next[q.id] !== p[q.id]).length > 0;
+      const stiff = next.stiffness !== p.stiffness || next.stiffnessSpread !== p.stiffnessSpread;
       p = { ...next };
-      if (rebuild && built) build(false);
-      else if (stiffChanged) {
-        const k0 = Number(p.stiffness);
-        for (const d of dots) d.k = k0 * (0.5333 + Math.random() * 0.9333);
-      }
+      if (changed && fontsOk) build();
+      else if (stiff)
+        for (const d of dots) d.k = n('stiffness') + Math.random() * n('stiffnessSpread');
     },
     setTheme(t) {
       theme = t;
     },
     restart() {
       dots = [];
-      build(Boolean(p.intro));
+      if (fontsOk) build();
     },
     destroy() {
+      destroyed = true;
       ptr.destroy();
       c.destroy();
       dots = [];

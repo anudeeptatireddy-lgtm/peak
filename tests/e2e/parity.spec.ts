@@ -8,6 +8,10 @@ import { dirname } from 'node:path';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 const PROTOTYPE = readFileSync('reference/peak-prototype.html', 'utf8');
+
+// Playwright's fake clock drives requestAnimationFrame in Chromium only, so both
+// sizes run in Chromium (the phone size with touch and mobile emulation).
+test.use({ browserName: 'chromium' });
 const SEED = 20261016;
 
 /** The prototype with only one scene's section kept and its header/captions hidden. */
@@ -40,11 +44,13 @@ async function prepare(page: Page) {
   // Hold the font back so both pages draw their first frames before Anybody exists:
   // a scene must wait for the real font instead of sampling a fallback.
   await page.route('https://fonts.gstatic.com/**', async (route) => {
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 3000));
     await route.continue();
   });
   await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+  // Time stands still except during runFor(), so both pages step identical frames.
   await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(1000);
 }
 
 async function open(page: Page, which: 'prototype' | 'peak', slug: string) {
@@ -52,11 +58,15 @@ async function open(page: Page, which: 'prototype' | 'peak', slug: string) {
   if (which === 'prototype') {
     const url = `http://localhost:4329/__prototype/${slug}`;
     await page.route(url, (r) => r.fulfill({ body: prototypeFor(slug), contentType: 'text/html' }));
-    await page.goto(url);
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
   } else {
-    await page.goto(`/dev/parity?s=${slug}`);
+    await page.goto(`/dev/parity?s=${slug}`, { waitUntil: 'domcontentloaded' });
   }
-  await page.clock.runFor(100); // first layout, observers and frames, before the font arrives
+  // goto() returns as soon as the HTML is parsed (the default 'load' would wait for
+  // the held font). Let layout and resize observers fire, then flush the frames
+  // they queue, all before the font is released, so each page builds exactly once.
+  await page.waitForTimeout(1000);
+  await page.clock.runFor(100);
   await page.waitForFunction(() => document.fonts.check('900 120px Anybody'));
   await page.waitForTimeout(300); // let font-ready callbacks build the scene
 }
@@ -78,7 +88,7 @@ async function compare(
   const expected = info.snapshotPath(name);
   mkdirSync(dirname(expected), { recursive: true });
   writeFileSync(expected, theirs);
-  expect(ours).toMatchSnapshot(name, { maxDiffPixelRatio: maxRatio, threshold: 0.2 });
+  expect.soft(ours).toMatchSnapshot(name, { maxDiffPixelRatio: maxRatio, threshold: 0.2 });
 }
 
 test.describe('particles matches the prototype', () => {

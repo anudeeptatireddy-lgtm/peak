@@ -24,7 +24,7 @@ export interface PointerState {
   pointerType: string;
   /** Call once per frame before reading x/y. */
   sync(): void;
-  /** Taps and clicks since the last call, in host coordinates. */
+  /** Clicks and taps (on release) since the last call, in host coordinates. */
   takeTaps(): Tap[];
   setImmediateDrag(on: boolean): void;
   destroy(): void;
@@ -115,7 +115,6 @@ export function createPointer(host: HTMLElement, opts: PointerOptions = {}): Poi
       p.down = true;
       downX = e.clientX;
       downY = e.clientY;
-      taps.push({ cx: e.clientX, cy: e.clientY });
       if (e.pointerType === 'mouse' || immediate) p.dragging = true;
       else {
         clearTimeout(holdTimer);
@@ -145,6 +144,9 @@ export function createPointer(host: HTMLElement, opts: PointerOptions = {}): Poi
     },
     sig,
   );
+  // Taps are clicks, as in the prototype: they fire on release and never when a
+  // touch turns into a scroll.
+  host.addEventListener('click', (e) => taps.push({ cx: e.clientX, cy: e.clientY }), sig);
   // Once a touch drag has started, stop the page from scrolling under it.
   host.addEventListener(
     'touchmove',
