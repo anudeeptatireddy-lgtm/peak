@@ -1,6 +1,7 @@
 // `flow`: Living wallpaper (SCENES.md #22). Ported from reference/peak-prototype.html.
-// Trails fade with destination-out on a transparent canvas instead of painting the
-// ground color, so journey color blends don't wipe them (DECISIONS, step 1.12).
+// Like the prototype, the canvas holds the ground color and trails fade by painting
+// the ground over them (which leaves the faint gray ghost trails). When the ground
+// color changes (a world change or a journey blend) the canvas is repainted.
 
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
@@ -25,6 +26,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const ptr = createPointer(host);
   let parts: P[] = [];
   let time = 0;
+  let paintedGround = '';
 
   const spawn = (q: P): P => {
     q.x = Math.random() * c.w;
@@ -47,13 +49,19 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const n = Math.round(Math.max(Math.min(500, max), Math.min(max, (c.w * c.h) / 620)));
     parts = [];
     for (let i = 0; i < n; i++) parts.push(spawn({ x: 0, y: 0, life: 0, ci: i % 3 }));
-    c.clear();
+    paintGround();
+  }
+
+  function paintGround(): void {
+    c.clear(theme.ground);
+    paintedGround = theme.ground;
   }
 
   function step(t: number, f: number, stirring: boolean): void {
     const g = c.ctx;
-    g.globalCompositeOperation = 'destination-out';
+    g.globalCompositeOperation = 'source-over';
     g.globalAlpha = Math.min(1, Number(p.trail) * f);
+    g.fillStyle = theme.ground;
     g.fillRect(0, 0, c.w, c.h);
     g.globalAlpha = 0.9;
     g.globalCompositeOperation = theme.blend;
@@ -84,7 +92,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       path.lineTo(nx, ny);
       q.x = nx;
       q.y = ny;
-      q.life -= f;
+      // The prototype ages particles by one per frame (not by f).
+      q.life -= 1;
       if (q.life < 0 || nx < -5 || ny < -5 || nx > c.w + 5 || ny > c.h + 5) spawn(q);
     }
     const inks = [theme.c1, theme.c2, theme.c3];
@@ -98,7 +107,9 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
 
   return {
     resize() {
-      if (c.fit() || !parts.length) build();
+      // Like the prototype: every resize re-seeds the particles and repaints the ground.
+      c.fit();
+      build();
     },
     update(dt) {
       time += dt;
@@ -107,8 +118,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       step(time, frameFactor(dt), ptr.down && ptr.active && ptr.dragging);
     },
     still() {
-      c.clear();
-      for (let i = 0; i < 70; i++) step(time + i / 60, 1, false);
+      paintGround();
+      for (let i = 0; i < 70; i++) step(i / 60, 1, false);
     },
     setParams(next) {
       const rebuild = next.count !== p.count;
@@ -117,6 +128,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     },
     setTheme(t) {
       theme = t;
+      if (t.ground !== paintedGround) paintGround();
     },
     restart() {
       build();

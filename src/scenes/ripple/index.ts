@@ -150,14 +150,18 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
 
   return {
     resize() {
-      if (c.fit() || !dots.length) build();
+      // Like the prototype: every resize rebuilds the grid (dots back to rest).
+      c.fit();
+      build();
     },
     update(dt) {
       time += dt;
       ptr.sync();
+      // A click lands between frames: like the prototype, its ring starts at the
+      // previous frame's time, so it is one frame old when first drawn.
       for (const tap of ptr.takeTaps()) {
-        drop(tap.x, tap.y, time);
-        lastUser = time;
+        drop(tap.x, tap.y, time - dt);
+        lastUser = time - dt;
       }
       step(time, true, true);
     },

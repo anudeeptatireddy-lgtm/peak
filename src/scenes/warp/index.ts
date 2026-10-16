@@ -108,7 +108,9 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
 
   return {
     resize() {
-      if (c.fit() || !stars.length) build();
+      // Like the prototype: every resize (including the one when fonts arrive) re-seeds the stars.
+      c.fit();
+      build();
     },
     update(dt) {
       ptr.sync();

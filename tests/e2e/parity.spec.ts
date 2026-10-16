@@ -12,6 +12,8 @@ const PROTOTYPE = readFileSync('reference/peak-prototype.html', 'utf8');
 // Playwright's fake clock drives requestAnimationFrame in Chromium only, so both
 // sizes run in Chromium (the phone size with touch and mobile emulation).
 test.use({ browserName: 'chromium' });
+// Frame-by-frame stepping is slow; give each scene two minutes.
+test.setTimeout(120_000);
 const SEED = 20261016;
 
 /** The prototype with only one scene's section kept and its header/captions hidden. */
@@ -22,14 +24,18 @@ function prototypeFor(slug: string): string {
   );
   return withoutOthers.replace(
     '</style>',
-    '.bar,.caption,.scene--canvas::after{display:none!important}body::before{display:none}</style>',
+    '.bar,.caption,.magnet,.scene--canvas::after{display:none!important}body::before{display:none}</style>',
   );
 }
 
 async function prepare(page: Page) {
   await page.addInitScript((seed: number) => {
-    // mulberry32: the same sequence on both pages.
+    // mulberry32: the same sequence on both pages. __reseed() restarts it, so a
+    // scenario can re-synchronize the two pages at a known moment.
     let a = seed >>> 0;
+    (window as unknown as { __reseed: (s: number) => void }).__reseed = (s) => {
+      a = s >>> 0;
+    };
     Math.random = () => {
       a = (a + 0x6d2b79f5) >>> 0;
       let t = a;
@@ -73,6 +79,31 @@ async function open(page: Page, which: 'prototype' | 'peak', slug: string) {
 
 const section = (page: Page) => page.locator('section').first();
 
+/** How much ink is in each cell of a 24×16 grid over the canvas (0 = background). */
+async function inkGrid(page: Page): Promise<number[]> {
+  return page.evaluate(() => {
+    const src = document.querySelector('section canvas') as HTMLCanvasElement;
+    const cols = 24;
+    const rows = 16;
+    const small = document.createElement('canvas');
+    small.width = cols;
+    small.height = rows;
+    const g = small.getContext('2d')!;
+    g.fillStyle = getComputedStyle(document.body).backgroundColor;
+    g.fillRect(0, 0, cols, rows);
+    g.drawImage(src, 0, 0, cols, rows);
+    const d = g.getImageData(0, 0, cols, rows).data;
+    const bg = getComputedStyle(document.body).backgroundColor.match(/\d+/g)!.map(Number);
+    const out: number[] = [];
+    for (let i = 0; i < d.length; i += 4)
+      out.push(
+        (Math.abs(d[i]! - bg[0]!) + Math.abs(d[i + 1]! - bg[1]!) + Math.abs(d[i + 2]! - bg[2]!)) /
+          765,
+      );
+    return out;
+  });
+}
+
 async function shot(page: Page, info: TestInfo, name: string) {
   return section(page).screenshot({ path: info.outputPath(name), animations: 'disabled' });
 }
@@ -91,53 +122,122 @@ async function compare(
   expect.soft(ours).toMatchSnapshot(name, { maxDiffPixelRatio: maxRatio, threshold: 0.2 });
 }
 
-test.describe('particles matches the prototype', () => {
-  test('swarm-in, settle, cursor hole and click blast', async ({ browser }, info) => {
+type Pair = { proto: Page; ours: Page };
+type Scenario = (
+  pp: Pair,
+  step: (ms: number) => Promise<void>,
+  view: { width: number; height: number },
+) => AsyncGenerator<string>;
+
+const both = async (pp: Pair, fn: (p: Page) => Promise<unknown>) => {
+  for (const p of [pp.proto, pp.ours]) await fn(p);
+};
+
+/** Each scenario yields a name whenever both pages should be screenshotted and compared. */
+const SCENARIOS: Record<string, Scenario> = {
+  async *particles(pp, step, { width, height }) {
+    await step(500);
+    yield 'intro';
+    await step(6000);
+    yield 'settled';
+    const x = Math.round(width * 0.35);
+    const y = Math.round(height * (width < 700 ? 0.4 : 0.43));
+    await both(pp, (p) => p.mouse.move(x, y));
+    await step(400);
+    yield 'cursor';
+    await both(pp, (p) => p.mouse.click(x + 40, y));
+    await step(300);
+    yield 'blast';
+  },
+  async *elastic(pp, step, { width, height }) {
+    await step(1500);
+    yield 'idle-wave';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.45)));
+    await step(700);
+    yield 'hover';
+  },
+  async *velocity(_pp, step) {
+    await step(300);
+    yield 'start';
+    await step(2000);
+    yield 'drift';
+  },
+  async *ripple(pp, step, { width, height }) {
+    // The prototype's very first frame can run before its canvas is sized, so on a
+    // phone its first automatic ring starts at the top-left corner (a prototype race,
+    // see DECISIONS). Compare once that ring has expired (rings live 5 seconds).
+    await step(5300);
+    yield 'auto-ripples';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.5)));
+    await step(300);
+    yield 'cursor';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.6), Math.round(height * 0.4)));
+    await step(500);
+    yield 'click';
+  },
+  async *flow(pp, step, { width, height }) {
+    // A flow field never settles, and a loading frame or two can differ between the
+    // pages, so the live field is compared by where its ink is (inkGrid). The
+    // prototype's reduced-motion still frame is blank, so there is nothing to compare
+    // there; ours draws the 70 steps PRD SCENES #22 asks for (see DECISIONS).
+    await step(2000);
+    yield 'signature:trails';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.5), Math.round(height * 0.5)));
+    await both(pp, (p) => p.mouse.down());
+    await step(1500);
+    yield 'signature:stir';
+    await both(pp, (p) => p.mouse.up());
+  },
+  async *warp(pp, step, { width, height }) {
+    await step(1000);
+    yield 'cruise';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.3)));
+    await both(pp, (p) => p.mouse.down());
+    await step(1500);
+    yield 'warp';
+    await both(pp, (p) => p.mouse.up());
+    await step(800);
+    yield 'slowing';
+  },
+};
+
+for (const [slug, scenario] of Object.entries(SCENARIOS)) {
+  test(`${slug} matches the prototype`, async ({ browser }, info) => {
     const viewport = info.project.use.viewport!;
-    const ctxOpts = {
+    const opts = {
       viewport,
       deviceScaleFactor: 2,
       isMobile: info.project.use.isMobile,
       hasTouch: info.project.use.hasTouch,
     };
-    const ctxA = await browser.newContext(ctxOpts);
-    const ctxB = await browser.newContext({ ...ctxOpts, baseURL: info.project.use.baseURL });
-    const proto = await ctxA.newPage();
-    const ours = await ctxB.newPage();
-    await open(proto, 'prototype', 'particles');
-    await open(ours, 'peak', 'particles');
-
+    const ctxA = await browser.newContext(opts);
+    const ctxB = await browser.newContext({ ...opts, baseURL: info.project.use.baseURL });
+    const pp: Pair = { proto: await ctxA.newPage(), ours: await ctxB.newPage() };
+    await open(pp.proto, 'prototype', slug);
+    await open(pp.ours, 'peak', slug);
+    // The magnetic button's position is a deliberate layout difference (see DECISIONS).
+    await pp.ours.addStyleTag({
+      content: '[data-stage] button { visibility: hidden !important; }',
+    });
+    // Advance both pages in lockstep, one 60Hz frame at a time: one long runFor()
+    // can deliver frames slightly differently to the two pages.
     const step = async (ms: number) => {
-      await proto.clock.runFor(ms);
-      await ours.clock.runFor(ms);
+      for (let t = 0; t < ms; t += 16) {
+        await pp.proto.clock.runFor(16);
+        await pp.ours.clock.runFor(16);
+      }
     };
-
-    await step(500);
-    const introP = await shot(proto, info, 'proto-intro.png');
-    const introO = await shot(ours, info, 'ours-intro.png');
-    await step(6000);
-    const settledP = await shot(proto, info, 'proto-settled.png');
-    const settledO = await shot(ours, info, 'ours-settled.png');
-
-    const { width, height } = viewport;
-    const target = {
-      x: Math.round(width * 0.35),
-      y: Math.round(height * (width < 700 ? 0.4 : 0.43)),
-    };
-    for (const p of [proto, ours]) await p.mouse.move(target.x, target.y);
-    await step(400);
-    const hoverP = await shot(proto, info, 'proto-cursor.png');
-    const hoverO = await shot(ours, info, 'ours-cursor.png');
-    for (const p of [proto, ours]) await p.mouse.click(target.x + 40, target.y);
-    await step(300);
-    const blastP = await shot(proto, info, 'proto-blast.png');
-    const blastO = await shot(ours, info, 'ours-blast.png');
-
-    await compare(settledO, settledP, info, 'settled.png', 0.02);
-    await compare(introO, introP, info, 'intro.png', 0.02);
-    await compare(hoverO, hoverP, info, 'cursor.png', 0.02);
-    await compare(blastO, blastP, info, 'blast.png', 0.02);
+    for await (const yielded of scenario(pp, step, viewport)) {
+      const [kind, name] = yielded.includes(':') ? yielded.split(':') : ['pixels', yielded];
+      const theirs = await shot(pp.proto, info, `proto-${name}.png`);
+      const ours = await shot(pp.ours, info, `ours-${name}.png`);
+      if (kind === 'signature') {
+        const [a, b] = await Promise.all([inkGrid(pp.proto), inkGrid(pp.ours)]);
+        const diff = a.reduce((sum, v, i) => sum + Math.abs(v - b[i]!), 0) / a.length;
+        expect.soft(diff, `${name}: average ink difference per grid cell`).toBeLessThan(0.02);
+      } else await compare(ours, theirs, info, `${name}.png`, 0.02);
+    }
     await ctxA.close();
     await ctxB.close();
   });
-});
+}
