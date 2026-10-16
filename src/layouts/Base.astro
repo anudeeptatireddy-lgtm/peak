@@ -62,7 +62,9 @@ const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
     </main>
     {chrome && <Footer />}
     <script>
+      import { onPausedChange } from '../engine/motion';
       import { connectThemeToCss } from '../theme/client';
+      import { startLivingColors } from '../theme/living';
       import { followSystemRiso, setTheme } from '../theme/store';
       import { getWorld, isWorldId } from '../theme/worlds';
 
@@ -70,6 +72,9 @@ const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
       if (mode === 'riso') followSystemRiso();
       else if (isWorldId(mode)) setTheme(getWorld(mode));
       connectThemeToCss();
+      startLivingColors();
+      // Lets CSS loops (How it works illustrations) pause with everything else.
+      onPausedChange((p) => (document.documentElement.dataset.paused = String(p)));
     </script>
   </body>
 </html>

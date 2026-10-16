@@ -91,7 +91,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
   - Do: `src/theme/journey.ts`: given section boundaries, their worlds and the scroll position, return `{ from, to, t }` (35%-of-viewport blend zones, smootherstep) and the blended Theme (OKLab mix, `ensureContrast` on ink, inkSoft, accentText, blend mode from ground L). It must work for any order of worlds (the Tour reuses it).
   - Done when: unit tests cover hold zones and zone edges, and the **contrast guardrail**: every ordered pair of the 16 worlds sampled at t = 0…1 in 0.01 steps meets §6.3 minimums.
 
-- [ ] **1.15 Living colors** · PRD §6.7 (item 3)
+- [x] **1.15 Living colors** · PRD §6.7 (item 3)
   - Do: `src/theme/living.ts`: OKLCH hue drift of c1–c3 (±12°, 30-second loop, phases 0°/120°/240°, gamut-fitted), applied after blending; recomputed at most 20 times a second; CSS variables written only on change. Wire the header toggle (remembered in `localStorage` with try/catch). Stops when motion is paused and under reduced motion.
   - Done when: unit tests confirm drift never exceeds ±12°, text tokens are byte-identical with drift on and off, and outputs are valid sRGB; e2e: `--c1` changes over 3 seconds with the toggle on and stays fixed with it off or when paused.
 
