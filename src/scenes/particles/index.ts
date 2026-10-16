@@ -6,6 +6,8 @@ import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
+import { Batch } from '../../kits/render';
+import { fontString, offscreen, samplePointsUnder } from '../../kits/text';
 import type { Theme } from '../../theme/worlds';
 import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
@@ -14,7 +16,7 @@ import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
 
-const { TAU, SMALL_SCREEN, PREVIEW_SCALE, RGBA } = SHARED;
+const { SMALL_SCREEN, PREVIEW_SCALE } = SHARED;
 
 interface Dot {
   x: number;
@@ -47,14 +49,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const W = c.w;
     const H = c.h;
     const small = W < SMALL_SCREEN;
-    const off = document.createElement('canvas');
-    off.width = W;
-    off.height = H;
-    const o = off.getContext('2d', { willReadFrequently: true })!;
+    const off = offscreen(W, H);
+    const o = off.ctx;
     const text = String(p.text || ' ');
     let size = Math.min(H * n('textHeight'), W * n('textWidth'));
     const setFont = () => {
-      o.font = `${n('fontWeight')} ${size}px ${FIXED.FONT}`;
+      o.font = fontString({ size, weight: n('fontWeight') });
       try {
         o.fontStretch = String(p.letterWidth) as CanvasFontStretch;
       } catch {
@@ -76,16 +76,10 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const max =
       (small ? n('densitySmall') : n('density')) * (ctx.quality === 'preview' ? PREVIEW_SCALE : 1);
     const cutoff = n('alphaCutoff');
-    let gap = Math.max(n('minGap'), Math.round(size / n('gapDivisor')));
-    let pts: number[];
-    do {
-      pts = [];
-      for (let y = 0; y < H; y += gap)
-        for (let x = 0; x < W; x += gap)
-          if (data[(y * W + x) * RGBA + (RGBA - 1)]! > cutoff) pts.push(x, y);
-    } while (pts.length / 2 > max && ++gap < n('maxGap'));
-    off.width = 0;
-    return { pts, gap };
+    const gap = Math.max(n('minGap'), Math.round(size / n('gapDivisor')));
+    const s = samplePointsUnder(data, W, H, gap, cutoff, max, n('maxGap'));
+    off.free();
+    return s;
   }
 
   function build(): void {
@@ -122,22 +116,16 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     }
   }
 
+  const batch = new Batch(SHARED.INKS);
   function draw(): void {
     const g = c.ctx;
     c.clear();
     g.globalCompositeOperation = theme.blend;
     const scale = n('dotSize');
-    const inks = [theme.c1, theme.c2, theme.c3];
-    for (let k = 0; k < SHARED.INKS; k++) {
-      g.fillStyle = inks[k]!;
-      g.beginPath();
-      for (const d of groups[k]!) {
-        const r = d.r * scale;
-        g.moveTo(d.x + r, d.y);
-        g.arc(d.x, d.y, r, 0, TAU);
-      }
-      g.fill();
-    }
+    batch.reset();
+    for (let k = 0; k < SHARED.INKS; k++)
+      for (const d of groups[k]!) batch.dot(k, d.x, d.y, d.r * scale);
+    batch.fill(g, [theme.c1, theme.c2, theme.c3]);
     g.globalCompositeOperation = 'source-over';
   }
 

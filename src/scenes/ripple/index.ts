@@ -3,6 +3,7 @@
 
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
+import { Batch } from '../../kits/render';
 import type { Theme } from '../../theme/worlds';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
 import { SHARED } from '../shared';
@@ -11,7 +12,6 @@ import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
 
-const { TAU } = SHARED;
 const INK_INDEX: Record<string, number> = { first: 0, second: 1, third: 2 };
 
 interface Dot {
@@ -35,6 +35,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const c = createCanvas(host);
   const ptr = createPointer(host);
   let dots: Dot[] = [];
+  const rest = new Batch(1);
+  const glow = new Batch(SHARED.INKS);
   let rings: Ring[] = [];
   let lastUser: number = FIXED.NO_CLICK_YET;
   let nextAuto = 0;
@@ -136,29 +138,14 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const r0 = Number(p.dotSize);
     const grow = Number(p.dotGrowth);
     const lit = Number(p.glowThreshold);
-    g.globalAlpha = Number(p.restOpacity);
-    g.fillStyle = theme.inkSoft;
-    g.beginPath();
+    rest.reset();
+    glow.reset();
     for (const d of dots)
-      if (d.e < lit || d.c < 0) {
-        g.moveTo(d.x + r0, d.y);
-        g.arc(d.x, d.y, r0, 0, TAU);
-      }
-    g.fill();
-    g.globalAlpha = 1;
+      if (d.e < lit || d.c < 0) rest.dot(0, d.x, d.y, r0);
+      else glow.dot(d.c, d.x, d.y, r0 + d.e * grow);
+    rest.fill(g, [theme.inkSoft], Number(p.restOpacity));
     g.globalCompositeOperation = theme.blend;
-    const inks = [theme.c1, theme.c2, theme.c3];
-    for (let k = 0; k < SHARED.INKS; k++) {
-      g.fillStyle = inks[k]!;
-      g.beginPath();
-      for (const d of dots)
-        if (d.e >= lit && d.c === k) {
-          const r = r0 + d.e * grow;
-          g.moveTo(d.x + r, d.y);
-          g.arc(d.x, d.y, r, 0, TAU);
-        }
-      g.fill();
-    }
+    glow.fill(g, [theme.c1, theme.c2, theme.c3]);
     g.globalCompositeOperation = 'source-over';
   }
 

@@ -192,7 +192,7 @@ Goal: every later scene gets the playground and prompts for free.
 - [x] **3.4 Field kit** · PRD §16.8
 - [x] **3.5 Render kit** · PRD §16.8
   - Done when (each kit): unit tests for its math and the micro-benchmark spot check in §16.8 pass; no DOM access except the text kit's offscreen canvas.
-- [ ] **3.6 Move the ported scenes onto the kits**
+- [x] **3.6 Move the ported scenes onto the kits**
   - Do: where it removes duplicated code, switch the six Wave 1 scenes to the kits, without changing how they look or feel.
   - Done when: still frames before and after match closely (visual diff), snapshot tests unchanged, `npm run check` and `npm run test:e2e` pass.
 

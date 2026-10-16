@@ -6,6 +6,7 @@
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
+import { Batch } from '../../kits/render';
 import type { Theme } from '../../theme/worlds';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
 import { SHARED } from '../shared';
@@ -27,6 +28,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const c = createCanvas(host);
   const ptr = createPointer(host);
   let parts: P[] = [];
+  const batch = new Batch(SHARED.INKS);
   let time = 0;
   let paintedGround = '';
 
@@ -67,11 +69,9 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     g.globalAlpha = Math.min(1, Number(p.trail) * f);
     g.fillStyle = theme.ground;
     g.fillRect(0, 0, c.w, c.h);
-    g.globalAlpha = Number(p.lineOpacity);
     g.globalCompositeOperation = theme.blend;
-    g.lineWidth = Number(p.lineWidth);
     g.lineCap = 'round';
-    const paths = [new Path2D(), new Path2D(), new Path2D()];
+    batch.reset();
     const R = Math.max(
       Number(p.stirMin),
       Math.min(Number(p.stirMax), Math.min(c.w, c.h) * Number(p.stirReach)),
@@ -95,9 +95,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       }
       const nx = q.x + vx * f;
       const ny = q.y + vy * f;
-      const path = paths[q.ci]!;
-      path.moveTo(q.x, q.y);
-      path.lineTo(nx, ny);
+      batch.line(q.ci, q.x, q.y, nx, ny);
       q.x = nx;
       q.y = ny;
       // The prototype ages particles by one per frame (not by f).
@@ -105,13 +103,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       const e = FIXED.EDGE;
       if (q.life < 0 || nx < -e || ny < -e || nx > c.w + e || ny > c.h + e) spawn(q);
     }
-    const inks = [theme.c1, theme.c2, theme.c3];
-    for (let k = 0; k < SHARED.INKS; k++) {
-      g.strokeStyle = inks[k]!;
-      g.stroke(paths[k]!);
-    }
+    batch.stroke(g, [theme.c1, theme.c2, theme.c3], Number(p.lineWidth), Number(p.lineOpacity));
     g.globalCompositeOperation = 'source-over';
-    g.globalAlpha = 1;
   }
 
   return {
