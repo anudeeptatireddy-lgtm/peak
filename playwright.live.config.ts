@@ -8,7 +8,9 @@ const full = !!process.env.PEAK_LIVE_FULL;
 
 export default defineConfig({
   testDir: 'tests/e2e',
-  testMatch: full ? undefined : ['pages.spec.ts', 'indexing.spec.ts', 'journey.spec.ts'],
+  testMatch: full
+    ? undefined
+    : ['pages.spec.ts', 'indexing.spec.ts', 'journey.spec.ts', 'playground.spec.ts'],
   fullyParallel: true,
   retries: 1,
   reporter: 'list',
