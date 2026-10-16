@@ -24,17 +24,15 @@ export const meta: SceneMeta = {
   wants:
     'Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.',
   lookLines: [
-    'Row 1: very wide and heavy (Anybody width 150, weight 900) in the main text color.',
-    'Row 2: italic, narrow (width 70, weight 800), outlined only: transparent fill with a thin stroke in the main text color.',
-    'Row 3: light (width 110, weight 300) in the accent text color.',
-    'Rows are about clamp(3rem, 12vw, 10rem) tall and fill the width edge to edge.',
+    'No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.',
   ],
   behaviorLines: [
-    'Each row contains its words repeated until wider than the screen, then that group duplicated once, so it can wrap seamlessly.',
-    'Scroll velocity: each frame take the change in scroll position divided by (dt × 60), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2.',
+    'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).',
+    'Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.',
+    'Reduced-motion still frame: the rows in place, with no lean.',
   ],
   interactionLines: [
-    "Scroll the page (or the stage itself on a page that doesn't scroll much).",
-    'Works the same with touch scrolling.',
+    'Scrolling the page drives the speed, direction and lean, with touch scrolling too.',
+    'If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).',
   ],
 };

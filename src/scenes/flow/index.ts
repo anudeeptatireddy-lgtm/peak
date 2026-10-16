@@ -8,6 +8,8 @@ import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
 import type { Theme } from '../../theme/worlds';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
+import { SHARED } from '../shared';
+import { FIXED } from './constants';
 import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
@@ -31,24 +33,26 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const spawn = (q: P): P => {
     q.x = Math.random() * c.w;
     q.y = Math.random() * c.h;
-    q.life = 40 + Math.random() * 220;
+    q.life = Number(p.lifeMin) + Math.random() * Number(p.lifeRange);
     return q;
   };
 
   const field = (x: number, y: number, t: number) => {
     const s = Number(p.zoom);
+    const n = (id: string) => Number(p[id]);
     return (
-      Math.sin(x * s + t * 0.23) * 1.9 +
-      Math.cos(y * s * 1.4 - t * 0.17) * 1.6 +
-      Math.sin((x - y) * s * 0.6 + t * 0.11) * 1.3
+      Math.sin(x * s + t * n('w1Drift')) * n('w1Strength') +
+      Math.cos(y * s * n('w2Stretch') - t * n('w2Drift')) * n('w2Strength') +
+      Math.sin((x - y) * s * n('w3Scale') + t * n('w3Drift')) * n('w3Strength')
     );
   };
 
   function build(): void {
-    const max = Number(p.count) * (ctx.quality === 'preview' ? 0.35 : 1);
-    const n = Math.round(Math.max(Math.min(500, max), Math.min(max, (c.w * c.h) / 620)));
+    const max = Number(p.count) * (ctx.quality === 'preview' ? SHARED.PREVIEW_SCALE : 1);
+    const floor = Math.min(Number(p.minCount), max);
+    const n = Math.round(Math.max(floor, Math.min(max, (c.w * c.h) / Number(p.areaPerParticle))));
     parts = [];
-    for (let i = 0; i < n; i++) parts.push(spawn({ x: 0, y: 0, life: 0, ci: i % 3 }));
+    for (let i = 0; i < n; i++) parts.push(spawn({ x: 0, y: 0, life: 0, ci: i % SHARED.INKS }));
     paintGround();
   }
 
@@ -63,12 +67,16 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     g.globalAlpha = Math.min(1, Number(p.trail) * f);
     g.fillStyle = theme.ground;
     g.fillRect(0, 0, c.w, c.h);
-    g.globalAlpha = 0.9;
+    g.globalAlpha = Number(p.lineOpacity);
     g.globalCompositeOperation = theme.blend;
     g.lineWidth = Number(p.lineWidth);
     g.lineCap = 'round';
     const paths = [new Path2D(), new Path2D(), new Path2D()];
-    const R = Math.max(140, Math.min(280, Math.min(c.w, c.h) * 0.35));
+    const R = Math.max(
+      Number(p.stirMin),
+      Math.min(Number(p.stirMax), Math.min(c.w, c.h) * Number(p.stirReach)),
+    );
+    const pull = Number(p.stirPull);
     const speed = Number(p.speed);
     const stir = Number(p.stir);
     for (const q of parts) {
@@ -81,8 +89,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
         const d = Math.hypot(dx, dy) || 1;
         if (d < R) {
           const s = 1 - d / R;
-          vx += ((-dy / d) * stir - (dx / d) * 1.2) * s;
-          vy += ((dx / d) * stir - (dy / d) * 1.2) * s;
+          vx += ((-dy / d) * stir - (dx / d) * pull) * s;
+          vy += ((dx / d) * stir - (dy / d) * pull) * s;
         }
       }
       const nx = q.x + vx * f;
@@ -94,10 +102,11 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       q.y = ny;
       // The prototype ages particles by one per frame (not by f).
       q.life -= 1;
-      if (q.life < 0 || nx < -5 || ny < -5 || nx > c.w + 5 || ny > c.h + 5) spawn(q);
+      const e = FIXED.EDGE;
+      if (q.life < 0 || nx < -e || ny < -e || nx > c.w + e || ny > c.h + e) spawn(q);
     }
     const inks = [theme.c1, theme.c2, theme.c3];
-    for (let k = 0; k < 3; k++) {
+    for (let k = 0; k < SHARED.INKS; k++) {
       g.strokeStyle = inks[k]!;
       g.stroke(paths[k]!);
     }
@@ -119,7 +128,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     },
     still() {
       paintGround();
-      for (let i = 0; i < 70; i++) step(i / 60, 1, false);
+      for (let i = 0; i < FIXED.STILL_STEPS; i++) step(i / SHARED.FPS, 1, false);
     },
     setParams(next) {
       const rebuild = next.count !== p.count;

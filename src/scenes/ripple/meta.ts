@@ -24,18 +24,17 @@ export const meta: SceneMeta = {
   wants:
     'A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.',
   lookLines: [
-    'Resting dots are tiny (radius 1.3px) in the secondary text color at 38% opacity.',
-    'Excited dots grow (up to about 5px) and take the color of the ring that excited them, cycling through the three accent colors per ripple.',
-    'Draw one path per color so each color is a single fill.',
+    'The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.',
   ],
   behaviorLines: [
-    'Each ring has a center, a start time and a color. A dot at distance d from the center, when the ring has radius r, gets k = (d − r) / ring width; if |k| < 2.5 it is displaced by sin(2k) × e^(−k²) × e^(−age × fade) × push, outward from the center.',
-    'Dots ease toward their displaced position by 25% per frame, so the grid looks liquid.',
-    'Keep at most 8 rings, and drop rings older than 5 seconds.',
+    'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.',
+    "A click lands between frames: its ring starts at the previous frame's t.",
+    'Rebuild the grid on every resize (all dots back to rest).',
+    'Automatic ring positions call Math.random() for x, then y.',
+    'Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).',
   ],
   interactionLines: [
-    'Click or tap: drop a ripple at that point.',
-    'Mouse: dots within the cursor reach are pushed away.',
-    'Idle: after 3.5 seconds without clicks, a ripple starts at a random spot every few seconds.',
+    'Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.',
+    'pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.',
   ],
 };

@@ -5,11 +5,14 @@ import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import type { Theme } from '../../theme/worlds';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
+import { SHARED } from '../shared';
+import { FIXED } from './constants';
 import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
 
-const TAU = Math.PI * 2;
+const { TAU } = SHARED;
+const INK_INDEX: Record<string, number> = { first: 0, second: 1, third: 2 };
 
 interface Dot {
   bx: number;
@@ -33,14 +36,13 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const ptr = createPointer(host);
   let dots: Dot[] = [];
   let rings: Ring[] = [];
-  let lastUser = -99;
+  let lastUser: number = FIXED.NO_CLICK_YET;
   let nextAuto = 0;
   let nextColor = 0;
   let time = 0;
 
   function build(): void {
-    const base = Number(p.spacing);
-    const gap = c.w < 700 ? Math.round(base * (20 / 26)) : base;
+    const gap = c.w < SHARED.SMALL_SCREEN ? Number(p.spacingSmall) : Number(p.spacing);
     const cols = Math.floor(c.w / gap) + 1;
     const rowsN = Math.floor(c.h / gap) + 1;
     const ox = (c.w - (cols - 1) * gap) / 2;
@@ -55,16 +57,20 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   }
 
   function drop(x: number, y: number, t: number): void {
-    rings.push({ x, y, t0: t, ci: nextColor++ % 3 });
-    if (rings.length > 8) rings.shift();
+    rings.push({ x, y, t0: t, ci: nextColor++ % SHARED.INKS });
+    if (rings.length > Number(p.maxRings)) rings.shift();
     ctx.sound.play('drop');
   }
 
   function step(t: number, smooth: boolean, live: boolean): void {
-    rings = rings.filter((r) => t - r.t0 < 5);
+    rings = rings.filter((r) => t - r.t0 < Number(p.ringLife));
     const every = Number(p.autoEvery);
-    if (live && every > 0 && t - lastUser > 3.5 && t > nextAuto) {
-      drop(c.w * (0.2 + Math.random() * 0.6), c.h * (0.2 + Math.random() * 0.5), t);
+    if (live && every > 0 && t - lastUser > Number(p.idleDelay) && t > nextAuto) {
+      drop(
+        c.w * (Number(p.autoX) + Math.random() * Number(p.autoW)),
+        c.h * (Number(p.autoY) + Math.random() * Number(p.autoH)),
+        t,
+      );
       nextAuto = t + every;
     }
     const speed = Number(p.speed);
@@ -72,7 +78,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const push = Number(p.push);
     const fade = Number(p.fade);
     const reach = Number(p.cursorRadius);
-    const a = smooth ? 0.25 : 1;
+    const a = smooth ? Number(p.smooth) : 1;
+    const waves = Number(p.ringWaves);
+    const cPush = Number(p.cursorPush);
+    const cGlow = Number(p.cursorGlow);
+    const cInk = INK_INDEX[String(p.cursorInk)] ?? 1;
+    const maxGlow = Number(p.maxGlow);
     const act = live && ptr.active && reach > 0;
     for (const d of dots) {
       let ox = 0;
@@ -86,9 +97,9 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
         const ry = d.by - r.y;
         const dist = Math.sqrt(rx * rx + ry * ry) || 1;
         const k = (dist - age * speed) / band;
-        if (k > -2.5 && k < 2.5) {
+        if (k > -FIXED.CUTOFF && k < FIXED.CUTOFF) {
           const g = Math.exp(-k * k) * Math.exp(-age * fade);
-          const disp = Math.sin(k * 2) * g * push;
+          const disp = Math.sin(k * waves) * g * push;
           ox += (rx / dist) * disp;
           oy += (ry / dist) * disp;
           e += g;
@@ -105,15 +116,15 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
         if (d2 < reach * reach) {
           const dd = Math.sqrt(d2) || 1;
           const s = 1 - dd / reach;
-          ox += (px / dd) * s * s * 22;
-          oy += (py / dd) * s * s * 22;
-          e += s * 0.6;
-          if (s * 0.6 > best) bc = 1;
+          ox += (px / dd) * s * s * cPush;
+          oy += (py / dd) * s * s * cPush;
+          e += s * cGlow;
+          if (s * cGlow > best) bc = cInk;
         }
       }
       d.x += (d.bx + ox - d.x) * a;
       d.y += (d.by + oy - d.y) * a;
-      d.e += (Math.min(e, 1.4) - d.e) * a;
+      d.e += (Math.min(e, maxGlow) - d.e) * a;
       if (bc >= 0) d.c = bc;
     }
     draw();
@@ -122,24 +133,27 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   function draw(): void {
     const g = c.ctx;
     c.clear();
-    g.globalAlpha = 0.38;
+    const r0 = Number(p.dotSize);
+    const grow = Number(p.dotGrowth);
+    const lit = Number(p.glowThreshold);
+    g.globalAlpha = Number(p.restOpacity);
     g.fillStyle = theme.inkSoft;
     g.beginPath();
     for (const d of dots)
-      if (d.e < 0.08 || d.c < 0) {
-        g.moveTo(d.x + 1.3, d.y);
-        g.arc(d.x, d.y, 1.3, 0, TAU);
+      if (d.e < lit || d.c < 0) {
+        g.moveTo(d.x + r0, d.y);
+        g.arc(d.x, d.y, r0, 0, TAU);
       }
     g.fill();
     g.globalAlpha = 1;
     g.globalCompositeOperation = theme.blend;
     const inks = [theme.c1, theme.c2, theme.c3];
-    for (let k = 0; k < 3; k++) {
+    for (let k = 0; k < SHARED.INKS; k++) {
       g.fillStyle = inks[k]!;
       g.beginPath();
       for (const d of dots)
-        if (d.e >= 0.08 && d.c === k) {
-          const r = 1.3 + d.e * 3.6;
+        if (d.e >= lit && d.c === k) {
+          const r = r0 + d.e * grow;
           g.moveTo(d.x + r, d.y);
           g.arc(d.x, d.y, r, 0, TAU);
         }
@@ -169,8 +183,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       ptr.takeTaps();
       const keep = rings;
       rings = [
-        { x: c.w / 2, y: c.h * 0.45, t0: -0.9, ci: 0 },
-        { x: c.w / 2, y: c.h * 0.45, t0: -0.35, ci: 1 },
+        { x: c.w / 2, y: c.h * FIXED.STILL_Y, t0: -FIXED.STILL_AGE_A, ci: 0 },
+        { x: c.w / 2, y: c.h * FIXED.STILL_Y, t0: -FIXED.STILL_AGE_B, ci: 1 },
       ];
       step(0, false, false);
       rings = keep;
@@ -185,7 +199,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     },
     restart() {
       rings = [];
-      lastUser = -99;
+      lastUser = FIXED.NO_CLICK_YET;
       nextAuto = 0;
     },
     destroy() {

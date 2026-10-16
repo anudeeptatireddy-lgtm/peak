@@ -1,0 +1,2059 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Stretchy headline
+
+## What I want
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: the headline is real text in the page, on the background color.
+
+## How it moves
+- The headline is "elastic": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(4.5rem, 21vw, 19rem), line-height 0.9, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted 6vh above the middle (a bottom margin of 6vh on the line).
+- Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is 50 + v × 100 (from 50 to 150).
+- Its weight ("wght" axis) is round(200 + v × 700) (from 200 to 900). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.
+- Each letter has two hard shadows (no blur): text-shadow: 0.045·v em 0.03·v em 0 [first accent], −0.045·v em −0.03·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−0.05·v em).
+- While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × 1.25).
+- When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × 2.1 − i × 0.85))², where t is the seconds the animation has been running.
+- Every frame each letter's influence moves toward its target by 1 − e^(−dt × 9) of the remaining distance (dt in seconds). Influence starts at 0.5.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.
+
+## How people interact
+- pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.
+- On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`elastic prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Stretchy headline
+
+A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "elastic"
+- Widest width: 150
+- Boldest weight: 900
+- How many letters react: 1.25
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Living wallpaper
+
+## What I want
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) filled with the background color. Use round(clamp(width × height ÷ 620, 500, 2200)) particles, a third in each accent color (particle i gets accent i mod 3). Each particle spawns at a random spot (random × width, random × height) with a life of 40 + random × 220 frames (call Math.random() in that order: x, y, life).
+- Every frame each particle moves (cos(angle), sin(angle)) × 1.7 × f pixels, where f = min(dt × 60, 2.5) and angle is the current at its position.
+- The current's angle at (x, y), with t = seconds the animation has run and s = 0.0026: sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3.
+- Never clear the canvas. Each frame, first paint the background color over everything at opacity min(1, 0.075 × f) (this fades old trails), then draw each particle's step as a line from its old to its new position at 90% opacity with round caps, one path per accent color, using the blend mode above. Each frame every particle's life drops by 1 (not by f); when it runs out, or the particle is more than 5px off screen, it respawns.
+- While a mouse button or finger is held down on the canvas, a particle within R = clamp(shorter side × 0.35, 140, 280) px of the pointer gets extra velocity ((−dy/d) × 7 − (dx/d) × 1.2, (dx/d) × 7 − (dy/d) × 1.2) × (1 − d/R), where (dx, dy) is from the pointer to the particle and d its length: an orbit with a slight pull inward.
+- Trails are 1.4px thick with round ends.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).
+- Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.
+
+## How people interact
+- Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flow prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Living wallpaper
+
+A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Current speed: 1.7
+- Swirl size: 0.0026
+- Trail length: 0.075
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Your name in particles
+
+## What I want
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas covering the whole viewport (100svh tall, at least 540px), on the page background. The canvas itself is transparent and is cleared every frame.
+- Size the canvas for devicePixelRatio (capped at 2) and do all drawing and sampling math in CSS pixels.
+- Each dot is a filled circle in one of the three accent colors, picked at random per dot. Draw all dots of one color as a single path and fill it once, color by color in the order of the three accents, using the blend mode above.
+
+## How it moves
+- The word is "peak".
+- Use at most 3,800 dots on screens 700px wide or more.
+- Each dot is a filled circle whose radius is a random value between 0.32 and 0.54 times the grid spacing, picked once per dot.
+- Each dot is tied to its home by a spring. Its stiffness is 0.02 + random × 0.035, picked once per dot, so dots arrive at different times. Each frame: velocity += (home − position) × stiffness × f.
+- Damping: after adding the forces, multiply each dot's velocity by 0.86^f every frame, then move it by velocity × f (closer to 1 is bouncier and slower to settle).
+- Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −6 and +6 on each axis, so they swarm into the word.
+- The cursor's reach R is 16% of the screen width, but at least 70px and at most 150px.
+- While the pointer is over the canvas (mouse, or a finger while it touches), a dot at distance d < R from it gets pushed straight away from it by (1 − d / R)² × 9 per frame (times f).
+- On click (on release, so a touch that turns into a scroll never triggers it), every dot gets a kick away from the click point: strength = 40 × (0.35 + random × 0.65) × max(0.3, 1 − distance / the larger screen side), plus a random jitter between −3 and +3 on each axis.
+- Use at most 1,700 dots on screens under 700px wide.
+- Font size starts at min(screen height × 0.46, screen width × 0.42).
+- If the measured word is wider than 82% of the screen width (92% under 700px), scale the font size down so it fits exactly.
+- The word is centered horizontally, with its vertical middle (textBaseline "middle") at 43% of the screen height (40% under 700px).
+- Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight 900, with ctx.fontStretch = "expanded" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.
+- Sample the hidden canvas on a square grid: the spacing starts at max(3, round(font size / 80)) px; keep a grid point when its pixel's alpha is above 140. While there are more points than the dot limit, increase the spacing by 1px and sample again, up to 14px.
+- Every frame: f = min(dt × 60, 2.5), where dt is the seconds since the last frame (clamped to 0.05). For each dot: acceleration = (home − position) × its stiffness, plus the cursor push; velocity = (velocity + acceleration × f) × damping^f; position += velocity × f.
+- Whenever the canvas is resized (and once the font has loaded), sample the word again: dot number i gets home number i. Existing dots keep their position, velocity and color and glide to their new homes; only dots beyond the old count are new. Every dot picks a new stiffness and radius on each rebuild.
+- To make the result exactly reproducible: collect grid points row by row (top to bottom, left to right in each row), and when building each dot call Math.random() in exactly this order: x position, y position, x velocity, y velocity (these four only for new dots), then stiffness, then radius, then color (color only for new dots).
+- Reduced-motion still frame: every dot sits exactly at its home.
+
+## How people interact
+- Listen for pointer events on the canvas: pointermove and pointerdown update the pointer position and mark it active; pointerleave and pointercancel mark it inactive.
+- A click (on release) explodes the word. On touch, a tap explodes it and a finger pushes dots while it is down; vertical swipes still scroll the page (touch-action: pan-y on the canvas).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`particles prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Your name in particles
+
+A full-screen intro where my word is made of thousands of small dots. When the page loads, the dots swarm in from all over the screen and settle into the letters. Moving my cursor pushes dots out of the way, and clicking makes them explode outward and then pull back into the word.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Your word: "peak"
+- Snap-back strength: 0.02
+- Bounciness: 0.86
+- Click blast: 40
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Ripple background
+
+## What I want
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The canvas is transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px) holds a square grid of dots 26px apart (20px on screens under 700px wide): floor(width / spacing) + 1 columns and floor(height / spacing) + 1 rows, centered on the screen. Each dot remembers its rest position.
+- Draw resting dots (glow under 0.08, or never touched by a ring) as circles of radius 1.3px in the secondary text color at 38% opacity, all in one path. Glowing dots get radius 1.3 + glow × 3.6px in their ring's color, one path per accent color, using the blend mode above.
+- For each ring and each dot: k = (distance from the ring's center − age × ring speed) ÷ 60. If |k| < 2.5: g = e^(−k²) × e^(−age × fade), the dot is displaced outward from the ring's center by sin(k × 2) × g × push, and its glow target grows by g. The ring with the largest g colors the dot.
+- A ring has a center, a start time and a color (the three accents in turn). It grows at 480px per second. Keep at most 8 rings (drop the oldest) and remove rings older than 5 seconds.
+- Ring push is 20px.
+- Ring fade is 0.55 per second (in e^(−age × fade)).
+- When nobody has clicked for 3.5 seconds, start a ripple every 2.6 seconds (the first one right away) at a random spot: x = width × (0.2 + random × 0.6), y = height × (0.2 + random × 0.5).
+- While the pointer is over the canvas, a dot whose rest position is within 120px of it is pushed away by s² × 22px (s = 1 − distance / 120), its glow target grows by s × 0.6, and if that is its strongest effect it takes the second accent color.
+- Each frame, every dot eases 25% of the way to its rest position plus its displacement, and its glow eases 25% of the way to min(glow target, 1.4). Its color index updates whenever something colors it, and stays otherwise.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Ring start times and ages use t.
+- A click lands between frames: its ring starts at the previous frame's t.
+- Rebuild the grid on every resize (all dots back to rest).
+- Automatic ring positions call Math.random() for x, then y.
+- Reduced-motion still frame: two rings from (width / 2, 45% of the height), 0.9s and 0.35s old, in the first and second accent, with no easing (dots jump straight to their displaced position and glow).
+
+## How people interact
+- Click or tap (on release): a ring at that point, which also counts as the latest click for the automatic ripples.
+- pointermove and pointerdown on the canvas make the pointer active (a finger only while it is down); pointerleave and pointercancel make it inactive.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`ripple prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Ripple background
+
+A calm, full-screen grid of small dots. When I click, a ring ripples out from that spot, pushing the dots outward and lighting them up in color as it passes. My cursor pushes nearby dots away. When nobody is interacting, ripples start by themselves every few seconds.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Ring speed: 480px/s
+- Ring push: 20px
+- Auto ripple every: 2.6s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+## What I want
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+## Look
+- Colors ("Doomsday" palette): background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- No canvas: three rows of real text. The rows are decorative (aria-hidden); a visually hidden paragraph holds the three phrases for screen readers.
+
+## How it moves
+- Row 1 repeats "smooth" at font width 150 and weight 900, upright, in the main text color.
+- Row 2 repeats "buttery" at font width 70 and weight 800, italic, outlined only: transparent fill with -webkit-text-stroke max(1.5px, 0.012em) in the main text color.
+- Row 3 repeats "sixty frames a second" at font width 110 and weight 300, upright, in the first accent color (darkened if needed so it has at least 3:1 contrast on the background).
+- Three full-width rows stacked in the middle of a full-screen section (100svh, at least 540px; the stack sits 8vh above center via bottom padding), 1vw apart (between 0.2 and 0.7rem). Each row: font size clamp(3rem, 12vw, 10rem), line-height 1.1, padding 0.02em top and bottom, overflow hidden, no wrapping. Inside each row, repeat the row's word in a flex group with gaps of 0.32em (and the same padding at the end) until the group is at least as wide as the screen, then put a copy of that group right after it.
+- Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
+- Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
+- The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
+- Reduced-motion still frame: the rows in place, with no lean.
+
+## How people interact
+- Scrolling the page drives the speed, direction and lean, with touch scrolling too.
+- If the page itself barely scrolls (a short page), give the section its own scroll area instead: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velocity prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Scroll-reactive marquee
+
+Three rows of huge repeating text that drift in alternating directions. When I scroll, they speed up, reverse direction when I scroll back up, and lean into the motion, then relax when I stop.
+
+Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1F, #FF9F1C, #B5E61D. Font: "Anybody" from Google Fonts.
+- Row 1: "smooth"
+- Drift speed: 1
+- Scroll boost: 0.8
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Hyperspace intro
+
+## What I want
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use 900 stars (420 on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: 0.05 + random × (1 − 0.05); a star that respawns: 0.9 + random × (1 − 0.9)), then color: if random < 0.72 it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.
+- Speed starts at 0.09 and eases toward its target every frame: speed += (target − speed) × (1 − e^(−dt × k)), with k = 1.4 while speeding up and 2.2 while slowing down. The target is 0.09 at rest. Each frame every star's z drops by speed × dt; below 0.03 it respawns.
+- While pressing, the target speed is 1.7 depth units per second.
+- Project a star to the screen at (center x + x / z × F, center y + y / z × F), where the center is (width / 2, height × 0.45) and F = 0.55 × the larger screen side. A star more than 60px off screen respawns (in the draw step). Draw it as a line from its position at depth min(1.2, z + speed × 0.09 + 0.004) to its current position (+0.01px in x so a zero-length line still shows), round caps. Stars with z > 0.6 are far (width 0.9px, opacity 0.45); z > 0.28 middle (width 1.8px, opacity 0.75); the rest near (width 3px, opacity 1). Batch lines into 12 paths (4 colors × 3 distance bands), stroked with the blend mode above.
+- A pill-shaped button in the main text color with the background color for its label sits centered horizontally, 64% down the canvas. When the mouse is within 170px of the button's resting center, its target offset is 32% of the distance toward the mouse (otherwise 0), and its offset eases toward the target by 1 − e^(−dt × 12) each frame (transform: translate).
+- The button says "Back to the top".
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.
+- Reduced-motion still frame: the stars drawn with only the resting streak.
+
+## How people interact
+- Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.
+- The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`warp prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Hyperspace intro
+
+A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Cruise speed: 0.09
+- Warp speed: 1.7
+- Button pull: 0.32
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;

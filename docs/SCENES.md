@@ -10,6 +10,8 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 
 **Flashing.** Scenes marked ⚠ flash or flicker and must follow the safety rule in PRD §8.2: never more than 3 flashes per second, and no large or full-screen flashes.
 
+**Settings.** Entries list each scene's main params. Every scene also has a collapsed **Advanced** group holding every other number that shapes it (PRD §8.5), with defaults equal to its source's constants; the full list lives in `src/scenes/<slug>/params.ts`.
+
 **Phones.** Unless an entry says otherwise, drags that need free movement start only after a short press-and-hold (PRD §8.4), so a normal swipe still scrolls the page.
 
 ## Contents
@@ -77,7 +79,7 @@ Every world hosts three scenes except Glacier and Neon Arcade, which host four, 
 - **Use case:** a portfolio or personal-page intro. **World:** Dreamhouse. **Technique:** particle system sampled from text, springs, repulsion, impulse.
 - **What happens:** A word made of thousands of dots. On load the dots swarm in from random positions. The cursor carves a hole through the letters. A click explodes the dots outward; springs pull them back.
 - **Interactions:** move, click/tap.
-- **Params:** `text` Your word: 1–12 chars ("peak"). `density` How many dots: 1000–6000 (3800, auto-scaled ×0.45 under 700px). `dotSize` Dot size: 0.5–1.5 × grid gap (1.0). `stiffness` Snap-back strength: 0.005–0.1 (0.035; each dot randomizes ±40%). `bounce` Bounciness: 0.70–0.97 (0.86; this is the per-frame damping multiplier). `cursorRadius` Cursor reach: 40–300px (150). `cursorForce` Cursor push: 0–20 (9). `explosion` Click blast: 0–80 (40). `intro` Swarm in on load: on/off (on).
+- **Params:** `text` Your word: 1–12 chars ("peak"). `density` How many dots: 1000–6000 (3800; Advanced `densitySmall` 1700 under 700px). `dotSize` Dot size: 0.5–1.5× (1.0; radius = grid gap × (0.32 + random × 0.22) × this). `stiffness` Snap-back strength (slowest dots): 0.005–0.1 (0.02; each dot adds random × 0.035, Advanced `stiffnessSpread`). `bounce` Bounciness: 0.70–0.97 (0.86; this is the per-frame damping multiplier). `cursorRadius` Cursor reach: 40–300px (150; the reach is 16% of the width, at least 70px, at most this). `cursorForce` Cursor push: 0–20 (9). `explosion` Click blast: 0–80 (40). `intro` Swarm in on load: on/off (on).
 - **Still:** dots resting on their targets.
 - **Mobile:** tap explodes; drag does nothing (keeps scroll working).
 - **Tags:** Portfolio, Headlines. Difficulty: Medium. Time: ~20 min.

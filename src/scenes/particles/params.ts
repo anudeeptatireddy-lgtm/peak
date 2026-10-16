@@ -92,8 +92,8 @@ export const params: Param[] = [
     default: true,
     phrase: (v: boolean, all) =>
       v
-        ? `On the first build, start every dot at a random spot on the screen with a random velocity between −${fmt(Number(all.introSpeed) / 2, 1)} and +${fmt(Number(all.introSpeed) / 2, 1)} on each axis, so they swarm into the word.`
-        : 'On the first build, start every dot already in place in the word.',
+        ? `Every new dot (all of them on the first build, and any extra dots after a resize) starts at a random spot on the screen with a random velocity between −${fmt(Number(all.introSpeed) / 2, 1)} and +${fmt(Number(all.introSpeed) / 2, 1)} on each axis, so they swarm into the word.`
+        : 'New dots start already in place in the word.',
   },
   /* ---------- Interaction ---------- */
   {
@@ -170,6 +170,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'textWidth',
+    phraseIn: 'textHeight',
     label: 'Word width cap',
     help: 'Caps the starting font size by the screen width.',
     group: 'Advanced',
@@ -198,6 +199,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'fitWidthSmall',
+    phraseIn: 'fitWidth',
     label: 'Fit within (small screens)',
     help: 'The same limit on screens under 700px wide.',
     group: 'Advanced',
@@ -226,6 +228,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'textYSmall',
+    phraseIn: 'textY',
     label: 'Vertical position (small screens)',
     help: 'The same position on screens under 700px wide.',
     group: 'Advanced',
@@ -250,11 +253,12 @@ export const params: Param[] = [
     default: 900,
     rebuild: true,
     phrase: (v: number, all) =>
-      `Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight ${v}, with ctx.fontStretch = "${String(all.fontStretch)}" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.`,
+      `Draw the word once on a hidden canvas the size of the screen (in CSS pixels, not device pixels) in Anybody at weight ${v}, with ctx.fontStretch = "${String(all.letterWidth)}" (set it again every time you set ctx.font), filled in black, textAlign "center". Load the font from Google Fonts and wait for it (document.fonts.load, giving up after 2.5 seconds) before sampling; draw nothing until then.`,
   },
   {
     kind: 'select',
-    id: 'fontStretch',
+    id: 'letterWidth',
+    phraseIn: 'fontWeight',
     label: 'Letter width',
     help: 'How wide the sampled letters are (Anybody width axis).',
     group: 'Advanced',
@@ -286,6 +290,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'minGap',
+    phraseIn: 'gapDivisor',
     label: 'Smallest grid spacing',
     help: 'The grid spacing never starts below this, in pixels.',
     group: 'Advanced',
@@ -299,6 +304,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'maxGap',
+    phraseIn: 'gapDivisor',
     label: 'Largest grid spacing',
     help: 'The grid stops growing at this spacing, in pixels.',
     group: 'Advanced',
@@ -312,6 +318,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'alphaCutoff',
+    phraseIn: 'gapDivisor',
     label: 'Edge cutoff',
     help: 'How solid a pixel of the hidden word must be to get a dot (0–255).',
     group: 'Advanced',
@@ -325,6 +332,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'dotMin',
+    phraseIn: 'dotSize',
     label: 'Smallest dot',
     help: 'The smallest dot radius, as a share of the grid spacing.',
     group: 'Advanced',
@@ -339,6 +347,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'dotRange',
+    phraseIn: 'dotSize',
     label: 'Dot size variety',
     help: 'How much bigger than the smallest dot a dot can be, as a share of the grid spacing.',
     group: 'Advanced',
@@ -353,6 +362,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'stiffnessSpread',
+    phraseIn: 'stiffness',
     label: 'Snap-back variety',
     help: 'Extra stiffness picked at random per dot, so dots arrive at different times.',
     group: 'Advanced',
@@ -365,6 +375,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'introSpeed',
+    phraseIn: 'intro',
     label: 'Swarm-in speed',
     help: 'The range of starting speeds when the dots swarm in.',
     group: 'Advanced',
@@ -377,6 +388,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'cursorRadiusMin',
+    phraseIn: 'cursorRadius',
     label: 'Smallest cursor reach',
     help: 'The cursor reach never drops below this on narrow screens, in pixels.',
     group: 'Advanced',
@@ -390,6 +402,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'cursorReachScale',
+    phraseIn: 'cursorRadius',
     label: 'Cursor reach scale',
     help: 'The cursor reach as a share of the screen width, before limits.',
     group: 'Advanced',
@@ -402,6 +415,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'blastMin',
+    phraseIn: 'explosion',
     label: 'Weakest blast',
     help: 'The weakest random kick, as a share of the click blast.',
     group: 'Advanced',
@@ -414,6 +428,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'blastFloor',
+    phraseIn: 'explosion',
     label: 'Far blast strength',
     help: 'How strong the blast still is at the far edge of the screen, as a share.',
     group: 'Advanced',
@@ -427,6 +442,7 @@ export const params: Param[] = [
   {
     kind: 'slider',
     id: 'blastJitter',
+    phraseIn: 'explosion',
     label: 'Blast jitter',
     help: 'Random sideways scatter added to every dot in a blast.',
     group: 'Advanced',

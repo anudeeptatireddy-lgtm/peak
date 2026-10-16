@@ -21,7 +21,8 @@ Legend: `[ ]` to do · `[x]` done · **Owner** = something only you can decide o
 ## Definition of done for every scene step
 
 Unless a step says otherwise, a scene step is done when:
-1. It matches its entry in `docs/SCENES.md` and the scene definition of done in PRD §8.4. Ported scenes look and feel the same as their source (`reference/peak-prototype.html` or `reference/riso-demo.html`) side by side at defaults.
+1. It matches its entry in `docs/SCENES.md` and the scene definition of done in PRD §8.4. Ported scenes pass the parity test against their source (`tests/e2e/parity.spec.ts`, PRD §8.6).
+1b. Every number that shapes it is a param or a reasoned `FIXED` constant (PRD §8.5, `tests/unit/constants.test.ts`).
 2. Every param visibly changes the scene on `/dev/scenes`, and has a label, help text and prompt phrase.
 3. `still()` draws a meaningful frame; pause and reduced motion work.
 4. `destroy()` leaves nothing behind (e2e: mount and destroy 20 times, listener count back to baseline, no console errors).
@@ -156,12 +157,12 @@ Goal: every later scene gets the playground and prompts for free.
 - [ ] **2.7 Fidget mode** · PRD §9.7
   - Done when: Just play hides UI and enters fullscreen where supported; drags start immediately (no press-and-hold); Esc, the exit button, and `F` work; focus returns to the Just play button.
 
-- [ ] **2.8 Builder core** · PRD §10.1, §10.2, §10.3, §10.5
+- [x] **2.8 Builder core** · PRD §10.1, §10.2, §10.3, §10.5
   - **Owner first:** answer open question 1 in `docs/DECISIONS.md` (the word "peak" in prompts).
   - Do: `src/prompt/builder.ts` and `blocks.ts`: assemble the Detailed prompt from scene meta, theme, params (phrases), target block, rules, experience block. Pure function, no DOM.
   - Done when: snapshot tests for every built scene × 3 targets × 2 experience levels at defaults; the output never contains repository paths or internal param ids, and follows the owner's answer on "peak" (test).
 
-- [ ] **2.9 Quick prompt** · PRD §10.6
+- [x] **2.9 Quick prompt** · PRD §10.6
   - **Owner first:** answer open question 3 (Quick prompt length).
   - Done when: snapshots for every built scene; Quick prompts meet the agreed word limit (test); only `key: true` params appear.
 

@@ -20,6 +20,11 @@ interface ParamBase {
   key?: boolean;
   /** Changing it rebuilds the scene (debounced). */
   rebuild?: boolean;
+  /**
+   * When another param's phrase already states this value, its id. The prompt then
+   * skips this param's own line, so every number is said exactly once.
+   */
+  phraseIn?: string;
   /** One plain sentence for the prompt (PRD §10.4). */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   phrase: (value: any, all: Params) => string;

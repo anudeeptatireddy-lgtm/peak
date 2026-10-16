@@ -23,18 +23,13 @@ export const meta: SceneMeta = {
   ],
   wants:
     'A huge headline where each letter swells wider and bolder as my cursor gets close, with a slightly misprinted two-color shadow. When I am not touching it, a slow wave rolls through the letters.',
-  lookLines: [
-    'The word is set very large (up to about a fifth of the screen width) in Anybody, centered, one line, in the main text color.',
-    'Each letter is its own inline-block span so it can change width and weight on its own.',
-    'Each letter has two hard shadows in the first two accent colors, offset in opposite directions like a misprint, growing with the letter.',
-  ],
+  lookLines: ['No canvas: the headline is real text in the page, on the background color.'],
   behaviorLines: [
-    'Each letter has an influence value from 0 to 1 that drives its width, weight, shadow offset and a small lift.',
-    "When the cursor is over the word, a letter's target is exp(−k²), where k is its distance from the cursor in letter widths divided by the reach.",
-    'When idle, letter i targets (0.5 + 0.5 × sin(time × wave speed − i × 0.85))².',
+    'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).',
+    'Reduced-motion still frame: every letter at the idle-wave value for t = 0.4.',
   ],
   interactionLines: [
-    'Mouse: move across the word.',
-    'Touch: drag sideways across the word; vertical swipes still scroll the page.',
+    'pointermove and pointerdown on the section set the pointer position and make it active; pointerleave and pointercancel make it inactive, and so does lifting a finger.',
+    'On touch, drag sideways across the word; vertical swipes still scroll the page (touch-action: pan-y on the section).',
   ],
 };

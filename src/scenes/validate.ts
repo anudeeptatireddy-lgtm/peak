@@ -34,6 +34,11 @@ export function validateScene(mod: SceneModule): string[] {
     need(!!p.label.trim(), `${where}: missing label`);
     need(!!p.help.trim(), `${where}: missing help text`);
     if (p.term) need(isWordId(p.term), `${where}: unknown term ${p.term}`);
+    if (p.phraseIn)
+      need(
+        mod.params.some((q) => q.id === p.phraseIn && !q.phraseIn),
+        `${where}: phraseIn must name another param that has its own line`,
+      );
     switch (p.kind) {
       case 'slider':
         need(p.min < p.max, `${where}: min must be below max`);

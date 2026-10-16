@@ -21,6 +21,13 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, prompt builder (steps 2.8–2.9, done early for the hero work) and the sharper point of peak.**
+- Earlier question 1 decided: the rule "prompts never contain peak" means a prompt never refers to this site or repository. The visitor's own text is quoted as given, even if it is the word "peak" (the `particles` default). The test swaps every text param for another word and then checks that "peak" appears nowhere.
+- Earlier question 3 decided: Quick prompts list key params plus anything the visitor changed as short "Label: value" lines, with a one-line target, so every Quick prompt stays under 150 words for all three targets (tested).
+- Detailed prompts state every value exactly once: params whose value is already part of another param's sentence set `phraseIn` (a small addition to the PRD §16.3 param type) and get no line of their own. Particles' Detailed prompt went from about 1,240 words to about 1,040.
+- Part 2 (owner, 2026-10-16): every number in the six built scenes is now a param (with an Advanced group) or a `FIXED` constant with a written reason; `tests/unit/constants.test.ts` fails on any other number in scene code. `ScrollVelocity` takes its tuning from `velocity`'s params. PRD §0, §8.5, §8.6, §9.2, §10.4, §10.6 and §16.3 and SCENES.md were updated; the home headline is now "Don't describe it. Tweak it, copy it, build it."
+- Particles' new dots (first build or extra dots after a resize) always swarm in when the intro is on, exactly like the prototype.
+
 **2026-10-17, parity for the other five ported scenes.** `tests/e2e/parity.spec.ts` now runs a scripted scenario per scene against the prototype at 1280×800 and 390×844 (2% bar), all passing three runs in a row:
 - `elastic` (idle wave, hover) and `velocity` (start, 2s drift): matched without code changes once both pages step frames in lockstep (one long fast-forward of the fake clock delivered frames slightly differently to the two pages).
 - `warp` (cruise, warp, slowing): fixed. The prototype re-seeds its stars on every resize, including the one when the font arrives; ours only rebuilt when the size changed. It now rebuilds on every resize. The magnetic button is hidden in both pages during the comparison: ours sits centered in the stage, the prototype's sits in its caption (a deliberate layout difference, because on the home page the caption belongs to the page).

@@ -23,21 +23,14 @@ export const meta: SceneMeta = {
   ],
   wants:
     'A full-screen starfield drifting toward me. When I press and hold, it accelerates into light-speed streaks and slows back down when I let go. A button follows my cursor a little when I get near it, like a magnet.',
-  lookLines: [
-    'Most stars (about 72%) are in the main text color; the rest use the three accent colors.',
-    'Stars come in three sizes by distance: far (0.9px, 45% opacity), middle (1.8px, 75%) and near (3px, full).',
-    'The vanishing point is the center of the screen, slightly above middle (45% down).',
-    'A pill-shaped button in the main text color with the background color for its label.',
-  ],
+  lookLines: ['Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.'],
   behaviorLines: [
-    'Stars have x and y between −1 and 1 and a depth z between 0.05 and 1. Screen position = center + (x / z, y / z) × 55% of the larger screen side.',
-    'Each frame z decreases by speed × dt. Below 0.03 (or off screen), the star respawns far away at z 0.9–1.',
-    'Speed eases toward its target: speed += (target − speed) × (1 − e^(−dt × 1.4)) when speeding up, and 2.2 instead of 1.4 when slowing down.',
-    "The streak is a line from the star's position at depth z + speed × streak length to its current position.",
+    'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).',
+    'Each frame, in this order: ease the speed, move every star (respawning any that got too close), draw (respawning any that left the screen), then move the button.',
+    'Reduced-motion still frame: the stars drawn with only the resting streak.',
   ],
   interactionLines: [
-    'Press and hold anywhere (mouse or touch) to warp.',
-    'The button drifts toward the cursor when it comes within 170px of it, by the pull fraction of the distance.',
-    'Clicking the button scrolls back to the top of the page.',
+    'Press and hold anywhere on the canvas (mouse or touch) to warp; letting go slows back to cruise.',
+    'The button follows the mouse only, not touch. Clicking it scrolls back to the top of the page (smoothly, unless reduced motion is on).',
   ],
 };

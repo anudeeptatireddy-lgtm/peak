@@ -4,7 +4,9 @@
 
 import { addScrollSource } from '../../engine/scheduler';
 import { createScrollSource, type ScrollSource } from '../../engine/scroll';
+import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
+import { FIXED } from './constants';
 import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
@@ -17,21 +19,29 @@ interface Row {
   off: number;
 }
 
-const ROW_STYLES: Partial<CSSStyleDeclaration>[] = [
-  { fontWeight: '900', fontVariationSettings: '"wdth" 150, "wght" 900', color: 'var(--ink)' },
-  {
-    fontWeight: '800',
-    fontStyle: 'italic',
-    fontVariationSettings: '"wdth" 70, "wght" 800',
-    color: 'transparent',
-    webkitTextStroke: 'max(1.5px, 0.012em) var(--ink)',
-  },
-  {
-    fontWeight: '300',
-    fontVariationSettings: '"wdth" 110, "wght" 300',
+function rowStyle(i: number, p: Params): Partial<CSSStyleDeclaration> {
+  if (i === 0)
+    return {
+      fontWeight: String(p.row1Weight),
+      fontStyle: 'normal',
+      fontVariationSettings: `"wdth" ${p.row1Width}, "wght" ${p.row1Weight}`,
+      color: 'var(--ink)',
+    };
+  if (i === 1)
+    return {
+      fontWeight: String(p.row2Weight),
+      fontStyle: 'italic',
+      fontVariationSettings: `"wdth" ${p.row2Width}, "wght" ${p.row2Weight}`,
+      color: 'transparent',
+      webkitTextStroke: `max(${p.strokeMin}px, ${p.stroke}em) var(--ink)`,
+    };
+  return {
+    fontWeight: String(p.row3Weight),
+    fontStyle: 'normal',
+    fontVariationSettings: `"wdth" ${p.row3Width}, "wght" ${p.row3Weight}`,
     color: 'var(--accent-text)',
-  },
-];
+  };
+}
 
 /** An endless inner scroll area: reports an unwrapped position while recentering itself. */
 function innerScroller(host: HTMLElement): { el: HTMLDivElement; source: ScrollSource } {
@@ -46,17 +56,17 @@ function innerScroller(host: HTMLElement): { el: HTMLDivElement; source: ScrollS
   });
   el.setAttribute('aria-hidden', 'true');
   const spacer = document.createElement('div');
-  spacer.style.height = '300%';
+  spacer.style.height = `${FIXED.INNER_SCREENS * FIXED.PERCENT}%`;
   el.append(spacer);
   host.append(el);
   let wrapped = 0;
   const recenter = () => {
     const h = el.clientHeight;
     if (!h) return;
-    if (el.scrollTop < h * 0.5) {
+    if (el.scrollTop < h * FIXED.RECENTER_LOW) {
       el.scrollTop += h;
       wrapped -= h;
-    } else if (el.scrollTop > h * 1.5) {
+    } else if (el.scrollTop > h * FIXED.RECENTER_HIGH) {
       el.scrollTop -= h;
       wrapped += h;
     }
@@ -76,7 +86,6 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingBottom: '8vh',
     pointerEvents: 'none',
   });
   const rowsEl = document.createElement('div');
@@ -84,7 +93,6 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   Object.assign(rowsEl.style, {
     display: 'flex',
     flexDirection: 'column',
-    gap: 'clamp(0.2rem, 1vw, 0.7rem)',
     willChange: 'transform',
   });
   const label = document.createElement('p');
@@ -92,26 +100,39 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   wrap.append(label, rowsEl);
   host.append(wrap);
 
-  const dirs: (1 | -1)[] = [1, -1, 1];
-  const rows: Row[] = dirs.map((dir, i) => {
+  const rows: Row[] = FIXED.DIRECTIONS.map((dir, i) => {
     const el = document.createElement('div');
-    Object.assign(el.style, {
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      fontSize: 'clamp(3rem, 12vw, 10rem)',
-      lineHeight: '1.1',
-      padding: '0.02em 0',
-      ...ROW_STYLES[i],
-    });
+    Object.assign(el.style, { overflow: 'hidden', whiteSpace: 'nowrap' });
     const track = document.createElement('div');
     Object.assign(track.style, { display: 'flex', width: 'max-content', willChange: 'transform' });
     el.append(track);
     rowsEl.append(el);
-    return { el, track, dir, w: 1, off: Math.random() * 400 };
+    return { el, track, dir, w: 1, off: Math.random() * Number(p.startOffset) };
   });
+
+  function layout(): void {
+    wrap.style.paddingBottom = `${p.offsetY}vh`;
+    rowsEl.style.gap = `clamp(${p.rowGapMin}rem, ${p.rowGap}vw, ${p.rowGapMax}rem)`;
+    rows.forEach((r, i) =>
+      Object.assign(r.el.style, {
+        fontSize: `clamp(${p.sizeMin}rem, ${p.size}vw, ${p.sizeMax}rem)`,
+        lineHeight: String(p.lineHeight),
+        padding: `${p.rowPadding}em 0`,
+        ...rowStyle(i, p),
+      }),
+    );
+  }
+  layout();
 
   const inner = host.dataset.innerScroll === 'true' ? innerScroller(host) : null;
   const source = inner ? inner.source : createScrollSource();
+  const tune = () =>
+    (source.velocity.tuning = {
+      maxSpeed: Number(p.maxScroll),
+      smoothing: Number(p.scrollSmoothing),
+      dirThreshold: Number(p.dirThreshold),
+    });
+  tune();
   const removeSource = addScrollSource(source);
   const words = () => [String(p.line1), String(p.line2), String(p.line3)];
 
@@ -121,14 +142,18 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     rows.forEach((r, i) => {
       r.track.replaceChildren();
       const seq = document.createElement('span');
-      Object.assign(seq.style, { display: 'flex', gap: '0.32em', paddingRight: '0.32em' });
+      Object.assign(seq.style, {
+        display: 'flex',
+        gap: `${p.wordGap}em`,
+        paddingRight: `${p.wordGap}em`,
+      });
       r.track.append(seq);
       let guard = 0;
       do {
         const w = document.createElement('span');
         w.textContent = words()[i] || ' ';
         seq.append(w);
-      } while (seq.offsetWidth < vw && ++guard < 40);
+      } while (seq.offsetWidth < vw && ++guard < FIXED.MAX_REPEATS);
       r.track.append(seq.cloneNode(true));
       r.w = seq.offsetWidth || 1;
     });
@@ -155,7 +180,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     update(dt) {
       const v = source.velocity;
       const speed = Number(p.baseSpeed) * (1 + Math.abs(v.vel) * Number(p.boost));
-      place(speed * dt * 60 * v.dir, true);
+      place(speed * dt * SHARED.FPS * v.dir, true);
     },
     still() {
       place(0, false);
@@ -163,13 +188,15 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     setParams(next) {
       const refill = next.line1 !== p.line1 || next.line2 !== p.line2 || next.line3 !== p.line3;
       p = { ...next };
+      layout();
+      tune();
       if (refill) fill();
     },
     setTheme() {
       /* colors come from CSS variables */
     },
     restart() {
-      for (const r of rows) r.off = Math.random() * 400;
+      for (const r of rows) r.off = Math.random() * Number(p.startOffset);
       source.velocity.reset(source.read());
     },
     destroy() {

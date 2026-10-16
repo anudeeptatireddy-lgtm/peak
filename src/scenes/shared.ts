@@ -12,6 +12,10 @@ export const SHARED = {
   INKS: 3,
   /** Canvas pixels are RGBA: four bytes each. */
   RGBA: 4,
+  /** Speeds are written in pixels per frame at 60 frames per second (PRD §16.4). */
+  FPS: 60,
+  /** Converts a share (0–1) to a CSS percentage. */
+  PERCENT: 100,
 } as const;
 
 export const SHARED_REASONS: Record<keyof typeof SHARED, string> = {
@@ -20,4 +24,6 @@ export const SHARED_REASONS: Record<keyof typeof SHARED, string> = {
   TAU: 'Mathematical constant.',
   INKS: 'The palette structure: every world has exactly three accent colors.',
   RGBA: 'The canvas pixel format.',
+  FPS: 'The unit speeds are written in (per 60Hz frame), so scenes run the same at 120Hz.',
+  PERCENT: 'Unit conversion only.',
 };

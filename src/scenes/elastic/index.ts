@@ -2,6 +2,7 @@
 
 import { createPointer } from '../../engine/pointer';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
+import { FIXED } from './constants';
 import { meta } from './meta';
 import { params } from './params';
 import { followUps } from './prompt';
@@ -19,13 +20,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     pointerEvents: 'none',
   });
   const word = document.createElement('p');
-  Object.assign(word.style, {
-    margin: '0 0 6vh',
-    fontSize: 'clamp(4.5rem, 21vw, 19rem)',
-    lineHeight: '0.9',
-    whiteSpace: 'nowrap',
-    color: 'var(--ink)',
-  });
+  Object.assign(word.style, { whiteSpace: 'nowrap', color: 'var(--ink)' });
+  const layout = () =>
+    Object.assign(word.style, {
+      margin: `0 0 ${p.offsetY}vh`,
+      fontSize: `clamp(${p.sizeMin}rem, ${p.size}vw, ${p.sizeMax}rem)`,
+      lineHeight: String(p.lineHeight),
+    });
+  layout();
   wrap.append(word);
   host.append(wrap);
 
@@ -51,7 +53,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   }
 
   const idle = (i: number, t: number) => {
-    const v = 0.5 + 0.5 * Math.sin(t * Number(p.waveSpeed) - i * 0.85);
+    const v = 0.5 + 0.5 * Math.sin(t * Number(p.waveSpeed) - i * Number(p.wavePhase));
     return Number(p.waveSpeed) === 0 ? 0.5 : v * v;
   };
 
@@ -61,15 +63,17 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     const gMin = Number(p.weightMin);
     const gMax = Number(p.weightMax);
     const mis = Number(p.misprint);
+    const misY = Number(p.misprintY);
+    const lift = Number(p.lift);
     spans.forEach((s, i) => {
       const v = inf[i]!;
       const wght = Math.round(gMin + v * (gMax - gMin));
       const ox = (v * mis).toFixed(4);
-      const oy = (v * mis * 0.667).toFixed(4);
+      const oy = (v * misY).toFixed(4);
       s.style.fontWeight = String(wght);
       s.style.fontVariationSettings = `"wdth" ${(wMin + v * (wMax - wMin)).toFixed(1)}, "wght" ${wght}`;
       s.style.textShadow = `${ox}em ${oy}em 0 var(--c1), -${ox}em -${oy}em 0 var(--c2)`;
-      s.style.transform = `translateY(${(-v * 0.05).toFixed(4)}em)`;
+      s.style.transform = `translateY(${(-v * lift).toFixed(4)}em)`;
     });
   }
 
@@ -102,13 +106,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       apply();
     },
     still() {
-      for (let i = 0; i < inf.length; i++) inf[i] = idle(i, 0.4);
+      for (let i = 0; i < inf.length; i++) inf[i] = idle(i, FIXED.STILL_TIME);
       apply();
     },
     setParams(next) {
       const rebuild = next.text !== p.text;
       p = { ...next };
       if (rebuild) build();
+      layout();
       apply();
     },
     setTheme() {

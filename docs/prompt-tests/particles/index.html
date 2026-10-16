@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>peak</title>
+
+  <!-- The "Anybody" font from Google Fonts (variable width 50–150, weight 100–900) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+
+  <style>
+    /* "Riso" palette */
+    :root {
+      --bg: #F4F2FF;
+      --text: #1A1240;
+      --text-2: #4E4777;
+      --pink: #EC1C7F;
+      --blue: #2A47EA;
+      --orange: #FF7A00;
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Full-screen intro: one screen tall, never shorter than 540px */
+    .intro {
+      position: relative;
+      height: 100vh;   /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* The dots canvas: transparent, covers the whole intro.
+       pan-y lets a vertical swipe still scroll the page on touch screens. */
+    .intro canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Bottom bar with the hint and the Play/Pause button */
+    .hud {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px max(16px, 3vw) max(16px, env(safe-area-inset-bottom));
+      pointer-events: none; /* let the canvas under the empty space get the pointer */
+    }
+
+    .hint {
+      margin: 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--bg); /* solid backing keeps the text readable over flying dots */
+      color: var(--text-2);
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .hint-touch { display: none; }
+    @media (hover: none) and (pointer: coarse) {
+      .hint-mouse { display: none; }
+      .hint-touch { display: inline; }
+    }
+
+    .toggle {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 18px;
+      border: 2px solid var(--text);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .toggle:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .toggle svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .toggle .icon-play { display: none; }
+    .toggle[data-state="paused"] .icon-play { display: block; }
+    .toggle[data-state="paused"] .icon-pause { display: none; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 420px) {
+      .hint { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="intro" aria-labelledby="title">
+      <!-- The real word for screen readers; the dots are decoration -->
+      <h1 id="title" class="sr-only">peak</h1>
+
+      <canvas id="dots" aria-hidden="true"></canvas>
+
+      <div class="hud">
+        <p class="hint">
+          <span class="hint-mouse">Move your cursor to push the dots. Click to scatter them.</span>
+          <span class="hint-touch">Touch to push the dots. Tap to scatter them.</span>
+        </p>
+        <button type="button" class="toggle" id="toggle" data-state="playing">
+          <svg class="icon-pause" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1"/><rect x="8.5" y="1" width="3.5" height="12" rx="1"/></svg>
+          <svg class="icon-play" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11a.8.8 0 0 0 1.2.7l9-5.5a.8.8 0 0 0 0-1.4l-9-5.5A.8.8 0 0 0 3 1.5z"/></svg>
+          <span class="toggle-label">Pause</span><span class="sr-only"> animation</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ---------- Settings ----------
+    const WORD = 'peak';
+    const COLORS = ['#EC1C7F', '#2A47EA', '#FF7A00']; // drawn in this order
+    const FONT_FAMILY = '"Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+    const TAU = Math.PI * 2;
+
+    // ---------- Elements ----------
+    const canvas = document.getElementById('dots');
+    const ctx = canvas.getContext('2d');
+    const toggle = document.getElementById('toggle');
+    const toggleLabel = toggle.querySelector('.toggle-label');
+
+    // Hidden canvas used only to draw the word once and read its pixels
+    const textCanvas = document.createElement('canvas');
+    const tctx = textCanvas.getContext('2d', { willReadFrequently: true });
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // ---------- State ----------
+    let W = 0, H = 0, dpr = 1;  // canvas size in CSS pixels, and pixel ratio
+    let reach = 100;            // cursor reach R
+    let dots = [];
+    let built = false;          // has the word been sampled at least once?
+    let fontReady = false;
+    let playing = !reducedMotion.matches; // reduced motion: start paused
+    let onScreen = true;
+    let rafId = 0;
+    let last = 0;
+    const pointer = { x: 0, y: 0, active: false };
+
+    // ---------- Sizing ----------
+    // Returns true when the canvas size (or pixel ratio) changed.
+    function measure() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      if (!w || !h) return false;
+      if (w === W && h === H && ratio === dpr) return false;
+      W = w;
+      H = h;
+      dpr = ratio;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      reach = Math.min(150, Math.max(70, W * 0.16));
+      return true;
+    }
+
+    // ---------- Finding the dot homes ----------
+    function setFont(c, size) {
+      c.font = `900 ${size}px ${FONT_FAMILY}`;
+      c.fontStretch = 'expanded'; // must be set again after every ctx.font
+    }
+
+    // Walk a square grid row by row (top to bottom, left to right)
+    // and keep the points that land inside the letters.
+    function sampleGrid(data, gap) {
+      const pts = [];
+      for (let y = 0; y < H; y += gap) {
+        const row = y * W;
+        for (let x = 0; x < W; x += gap) {
+          if (data[(row + x) * 4 + 3] > 140) pts.push(x, y);
+        }
+      }
+      return pts;
+    }
+
+    function findHomes() {
+      const narrow = W < 700;
+      const limit = narrow ? 1700 : 3800;
+
+      textCanvas.width = W;   // CSS pixels, not device pixels
+      textCanvas.height = H;  // (resizing also clears it)
+
+      let size = Math.min(H * 0.46, W * 0.42);
+      setFont(tctx, size);
+      const maxWidth = W * (narrow ? 0.92 : 0.82);
+      const measured = tctx.measureText(WORD).width;
+      if (measured > maxWidth) {
+        size *= maxWidth / measured;
+        setFont(tctx, size);
+      }
+
+      tctx.textAlign = 'center';
+      tctx.textBaseline = 'middle';
+      tctx.fillStyle = '#000';
+      tctx.fillText(WORD, W / 2, H * (narrow ? 0.40 : 0.43));
+
+      const data = tctx.getImageData(0, 0, W, H).data;
+      let gap = Math.max(3, Math.round(size / 80));
+      let pts = sampleGrid(data, gap);
+      while (pts.length / 2 > limit && gap < 14) {
+        gap++;
+        pts = sampleGrid(data, gap);
+      }
+
+      let count = pts.length / 2;
+      if (count > limit) {
+        // Still too many at 14px (huge screens): keep an even spread of points.
+        const kept = [];
+        for (let i = 0; i < limit; i++) {
+          const j = Math.floor(i * count / limit);
+          kept.push(pts[2 * j], pts[2 * j + 1]);
+        }
+        pts = kept;
+        count = limit;
+      }
+      return { pts, count, gap };
+    }
+
+    // Dot i gets home i. Existing dots keep position, velocity and color.
+    // Random calls per dot, in order: x, y, vx, vy (new dots, first build only),
+    // then stiffness, radius, then color (new dots only).
+    function rebuild() {
+      if (!W || !H) return;
+      const { pts, count, gap } = findHomes();
+      const swarm = !built;
+      const old = dots.length;
+      const next = new Array(count);
+
+      for (let i = 0; i < count; i++) {
+        const hx = pts[2 * i];
+        const hy = pts[2 * i + 1];
+        const isNew = i >= old;
+        let d;
+        if (isNew) {
+          d = { x: hx, y: hy, vx: 0, vy: 0, hx, hy, k: 0, r: 0, color: 0 };
+          if (swarm) {
+            d.x = Math.random() * W;
+            d.y = Math.random() * H;
+            d.vx = Math.random() * 12 - 6;
+            d.vy = Math.random() * 12 - 6;
+          }
+        } else {
+          d = dots[i];
+        }
+        d.hx = hx;
+        d.hy = hy;
+        d.k = 0.02 + Math.random() * 0.035;
+        d.r = (0.32 + Math.random() * 0.22) * gap;
+        if (isNew) d.color = Math.floor(Math.random() * 3);
+        next[i] = d;
+      }
+
+      dots = next;
+      built = true;
+
+      // When not animating, show a still frame with every dot at home.
+      if (!playing) {
+        settle();
+        draw();
+      }
+    }
+
+    function settle() {
+      for (const d of dots) {
+        d.x = d.hx;
+        d.y = d.hy;
+        d.vx = 0;
+        d.vy = 0;
+      }
+    }
+
+    // ---------- Physics ----------
+    function step(f) {
+      const damp = Math.pow(0.86, f);
+      const R = reach;
+      const R2 = R * R;
+      const push = pointer.active;
+      const px = pointer.x;
+      const py = pointer.y;
+
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        // Spring toward home
+        let ax = (d.hx - d.x) * d.k;
+        let ay = (d.hy - d.y) * d.k;
+
+        // Cursor pushes nearby dots straight away from it
+        if (push) {
+          const dx = d.x - px;
+          const dy = d.y - py;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < R2 && d2 > 1e-6) {
+            const dist = Math.sqrt(d2);
+            const t = 1 - dist / R;
+            const s = (t * t * 9) / dist;
+            ax += dx * s;
+            ay += dy * s;
+          }
+        }
+
+        d.vx = (d.vx + ax * f) * damp;
+        d.vy = (d.vy + ay * f) * damp;
+        d.x += d.vx * f;
+        d.y += d.vy * f;
+      }
+    }
+
+    function explode(cx, cy) {
+      const side = Math.max(W, H);
+      for (const d of dots) {
+        const dx = d.x - cx;
+        const dy = d.y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const strength = 40 * (0.35 + Math.random() * 0.65) * Math.max(0.3, 1 - dist / side);
+        const ux = dist > 1e-6 ? dx / dist : 0;
+        const uy = dist > 1e-6 ? dy / dist : -1;
+        d.vx += ux * strength + (Math.random() * 6 - 3);
+        d.vy += uy * strength + (Math.random() * 6 - 3);
+      }
+    }
+
+    // ---------- Drawing ----------
+    // One path per color, filled once, with "multiply" so overlaps look like ink.
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'multiply';
+      for (let c = 0; c < COLORS.length; c++) {
+        ctx.beginPath();
+        for (let i = 0; i < dots.length; i++) {
+          const d = dots[i];
+          if (d.color !== c) continue;
+          ctx.moveTo(d.x + d.r, d.y);
+          ctx.arc(d.x, d.y, d.r, 0, TAU);
+        }
+        ctx.fillStyle = COLORS[c];
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // ---------- Animation loop ----------
+    function frame(now) {
+      rafId = requestAnimationFrame(frame);
+      const dt = last ? Math.min(Math.max((now - last) / 1000, 0), 0.05) : 1 / 60;
+      last = now;
+      const f = Math.min(dt * 60, 2.5);
+      step(f);
+      draw();
+    }
+
+    // Run only when ready, playing, visible on screen and the tab is visible.
+    function updateLoop() {
+      const run = built && playing && onScreen && !document.hidden;
+      if (run && !rafId) {
+        last = 0;
+        rafId = requestAnimationFrame(frame);
+      } else if (!run && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    function setPlaying(value) {
+      playing = value;
+      toggle.dataset.state = value ? 'playing' : 'paused';
+      toggleLabel.textContent = value ? 'Pause' : 'Play';
+      updateLoop();
+    }
+
+    // ---------- Pointer ----------
+    function setPointer(e) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left;
+      pointer.y = e.clientY - rect.top;
+    }
+
+    canvas.addEventListener('pointermove', (e) => { setPointer(e); pointer.active = true; });
+    canvas.addEventListener('pointerdown', (e) => { setPointer(e); pointer.active = true; });
+    canvas.addEventListener('pointerleave', () => { pointer.active = false; });
+    canvas.addEventListener('pointercancel', () => { pointer.active = false; });
+    canvas.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse') pointer.active = false; // finger lifted
+    });
+
+    // "click" fires on release, and not when a touch turned into a scroll.
+    canvas.addEventListener('click', (e) => {
+      if (!built || !playing) return;
+      const rect = canvas.getBoundingClientRect();
+      explode(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    toggle.addEventListener('click', () => setPlaying(!playing));
+
+    // If the person turns on "reduce motion" while the page is open, stop and settle.
+    const onMotionChange = (e) => {
+      if (!e.matches) return;
+      setPlaying(false);
+      if (built) { settle(); draw(); }
+    };
+    if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', onMotionChange);
+    else if (reducedMotion.addListener) reducedMotion.addListener(onMotionChange);
+
+    // ---------- Resize, visibility ----------
+    function handleResize() {
+      if (measure() && fontReady) rebuild();
+    }
+    if ('ResizeObserver' in window) new ResizeObserver(handleResize).observe(canvas);
+    window.addEventListener('resize', handleResize); // also catches pixel-ratio changes
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        updateLoop();
+      }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', updateLoop);
+
+    // ---------- Start ----------
+    setPlaying(playing); // sync the button with the starting state
+    measure();
+
+    // Wait for the font (give up after 2.5 seconds), then build the word.
+    function waitForFont() {
+      const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
+      if (!document.fonts || !document.fonts.load) return Promise.resolve();
+      const load = document.fonts.load('900 100px "Anybody"', WORD).catch(() => {});
+      return Promise.race([load, timeout]);
+    }
+
+    waitForFont().then(() => {
+      fontReady = true;
+      measure();
+      rebuild();
+      updateLoop();
+    });
+  })();
+  </script>
+</body>
+</html>

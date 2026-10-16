@@ -7,6 +7,8 @@ Companion files: `CLAUDE.md` (how to work), `docs/SCENES.md` (the 50 scenes), `d
 
 ## §0 TL;DR
 
+**The point of peak:** anyone can tweak any animation's physics, colors and text until it looks exactly right, then copy one precise prompt, so Claude Code builds it right the first time instead of the visitor burning tokens trying to describe motion in words.
+
 peak is a website where people **see an animation they love, tweak it with sliders, copy a ready-made prompt, and build their own version with Claude Code.** It also teaches the words that make prompts work, walks first-timers through setting up Claude Code, helps them fix things when they break, and shows them how to put their page online.
 
 peak launches with 50 animations, about 20 of them text and headline effects. As you scroll the home page, the whole site travels through color "worlds" (16 in all, from candy pink and desert spice to aurora, lava lamp and newsprint). Each animation lives in its own world, the colors blend smoothly from one world to the next, and inside each world the accent colors slowly drift so nothing ever looks frozen. A Tour page plays all 50 back to back.
@@ -100,7 +102,7 @@ This is the signature experience. As the visitor scrolls, the entire site (backg
 
 | Section | World | Content |
 |---|---|---|
-| Hero | Dreamhouse | Particle text scene (`particles`) spelling "peak". Headline (h1): "See it. Tweak it. Build it with Claude Code." Subline: "Animations you can play with, plus the exact prompt to make your own." Buttons: "Browse the gallery" and "I've never used Claude Code". |
+| Hero | Dreamhouse | Particle text scene (`particles`) spelling "peak". Headline (h1): "Don't describe it. Tweak it, copy it, build it." Subline: "Animations you can play with, plus the exact prompt to make your own." Buttons: "Browse the gallery" and "I've never used Claude Code". |
 | Featured 1 | Spice Dunes | `elastic` scene |
 | Featured 2 | Doomsday | `velocity` scene |
 | Featured 3 | Lava Lamp | `lava` scene |
@@ -242,6 +244,15 @@ Applies to `neon`, `lightning`, `glitch`, `fireworks`, `fire`, `moire` and `tunn
 - Stages use `touch-action: pan-y`, so vertical swipes always scroll the page. Sideways drags can drive a scene directly.
 - Drags that need free movement (grabbing letters, cloth, drawing) start only after the finger stays still for about 250ms (press and hold), so a normal swipe still scrolls. In Just play mode (§9.7) drags start immediately.
 
+### §8.5 Every number is a setting (owner, 2026-10-16)
+- Every number that shapes how a scene moves or looks is a param (a slider, toggle or select). The most important ones sit in Look, Motion and Interaction; the rest go in a collapsed **Advanced** group. Defaults equal the source's constants for ported scenes.
+- The only numbers allowed in a scene's code are 0, 1, 2 and 0.5 (structural), digits passed to `toFixed()`, params, and the scene's `FIXED` constants, each with a written reason (for example a divide-by-zero guard, a still-frame composition, or the shared phone breakpoint). `tests/unit/constants.test.ts` enforces this.
+- Nothing that changes the result stays hard-coded in a scene's behavior lines: the numbers live in param phrases.
+
+### §8.6 Proven parity
+- Ported scenes match their source pixel for pixel under identical conditions (`tests/e2e/parity.spec.ts`: same seed, viewport, frames and colors; under 2% of pixels differ at 1280×800 and 390×844).
+- Every scene's prompt is proven to rebuild it: a fresh agent in an empty folder builds from the prompt alone, and `tests/e2e/prompt-parity.spec.ts` compares its page with the scene the same way (`docs/PROMPT_TESTS.md`).
+
 ### §8.4 Scene definition of done
 A scene is done only when it has: the module interface (§16.3), a params schema with labels and plain-language help text for each param, a prompt phrase for every param (§10.4), 3–5 follow-up prompts, a "How it works" explanation (3–5 short sentences, §9.5), linked word-bank terms, a still frame, `destroy()` that removes all listeners and stops all work, mobile behavior (§8.3), passing tests (§21), and a row in `docs/PROMPT_TESTS.md`. Scenes marked ⚠ also pass the flash test (§8.2). If the scene is one of the 12 featured on the home page (§6.1), it replaces its stand-in there.
 
@@ -260,7 +271,7 @@ The scene page is where "I like that" becomes a prompt.
 - Controls are **generated from the params schema** (§16.3). Never hand-build per-scene controls.
 - Control types: slider (with a live value readout and unit), two-thumb range (for min/max pairs) or two linked sliders, text input (with a character counter at 80% of the limit), toggle, select (segmented control when ≤ 4 options), datetime.
 - Every control has a label in plain language and an info button that shows its help text plus the linked word-bank term ("This is called **damping**. See it in the word bank.").
-- Group controls under small headings ("Look", "Motion", "Interaction") as defined in the schema.
+- Group controls under small headings ("Look", "Motion", "Interaction") as defined in the schema, plus a collapsed "Advanced" group holding every other number that shapes the scene (§8.5).
 - **World picker:** 16 swatches (the worlds in §7; two rows of 8 on desktop, one swipeable row on phones). Selecting one re-themes the stage and the page with a 400ms OKLab crossfade (instant under reduced motion). A "Custom colors" option reveals three color inputs for c1–c3 plus ground; ink is derived automatically with `ensureContrast`.
 - **Shuffle world** and the **Cycle worlds** toggle sit next to the picker (§6.7).
 - Buttons: **Reset** (back to defaults), **Surprise me** (randomize within each param's range, keeping text params), **Share my version** (copies the URL, §9.6).
@@ -352,7 +363,7 @@ The prompt builder is the core of peak. It turns the current scene, world, and p
 - **React component:** "Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example."
 
 ### §10.4 Param phrases
-Every param has a `phrase(value, allParams)` function returning one sentence. Rules: lead with the plain meaning, then the number; mention the direction of the effect; never use internal ids. Examples:
+Every param has a `phrase(value, allParams)` function returning one sentence. Rules: lead with the plain meaning, then the number; mention the direction of the effect; never use internal ids. **Every number is stated exactly once:** when one param's phrase already states another's value (for example a formula that uses both), the other param sets `phraseIn` and gets no line of its own. The Detailed prompt therefore includes every value, changed or not, so the result matches what the visitor saw without follow-up questions. Where randomness is involved, the scene's behavior lines spell out the order of random draws so a seeded run reproduces it exactly. Examples:
 - `stiffness` 0.05 → "Each dot is tied to its home by a spring with stiffness 0.05 (higher snaps back faster; 0.035 feels natural)."
 - `bounce` 0.92 → "Damping: multiply each dot's velocity by 0.92 every frame (closer to 1 means bouncier and slower to settle)."
 - `text` "MAYA" → "The word is \"MAYA\", set in Anybody at weight 900, as large as fits within 82% of the screen width."
@@ -362,7 +373,7 @@ Every param has a `phrase(value, allParams)` function returning one sentence. Ru
 - **I've done this before:** "Keep the explanation short: list the files and the key parameters I can tweak."
 
 ### §10.6 Quick prompt
-For "Quick" detail: only the title line, "What I want", a one-line palette, the 3–4 most important params (schema marks them `key: true`), "Where this goes", and the line "Keep it smooth, accessible, and respectful of reduced motion." Target under 150 words.
+For "Quick" detail: only the title line, "What I want", a one-line palette, the most important params (schema marks them `key: true`) plus every param the visitor changed, each as a short "Label: value" line, a one-line "Where this goes", and the line "Keep it smooth, accessible, and respectful of reduced motion." It's for people who want to spend fewer tokens: under 150 words (tested).
 
 ### §10.7 Follow-up prompts
 Each scene ships 3–5 follow-ups, written to be pasted into the same Claude Code session after the first build. They may interpolate params. Examples for `particles`: "Make the dots change color depending on how fast they're moving." "Replace the dots with small emoji of my choice: ✨." "Add a soft pop sound when the dots explode, using the Web Audio API, off until I click once." "Make the word change every 5 seconds between: {text}, HELLO, BYE."
@@ -518,10 +529,11 @@ interface ParamBase {
   id: string;            // stable, used in URLs
   label: string;         // plain language, shown in UI
   help: string;          // one or two sentences, shown in the info popover
-  group: 'Look' | 'Motion' | 'Interaction';
+  group: 'Look' | 'Motion' | 'Interaction' | 'Advanced'; // Advanced is collapsed (§8.5)
   term?: string;         // word-bank id, e.g. 'damping'
   key?: boolean;         // included in the Quick prompt
   rebuild?: boolean;     // changing it rebuilds the scene (debounced)
+  phraseIn?: string;     // another param whose phrase already states this value (§10.4)
   phrase: (value: any, all: Params) => string; // §10.4
 }
 export type Param =

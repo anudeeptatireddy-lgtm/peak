@@ -23,18 +23,13 @@ export const meta: SceneMeta = {
   ],
   wants:
     'A full-screen living wallpaper: thousands of tiny particles drift along an invisible, slowly shifting current and leave soft fading trails. When I press and hold, a whirlpool forms around my cursor or finger and stirs them.',
-  lookLines: [
-    'Particles are short line segments in the three accent colors (one third each), drawn at 90% opacity.',
-    'Each frame, fade the previous frame a little instead of clearing it, so movement leaves trails.',
-    'Draw one path per color per frame.',
-  ],
+  lookLines: ['Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.'],
   behaviorLines: [
-    "The current's angle at (x, y) and time t is sin(x × s + t × 0.23) × 1.9 + cos(y × s × 1.4 − t × 0.17) × 1.6 + sin((x − y) × s × 0.6 + t × 0.11) × 1.3, where s is the swirl size.",
-    'Each particle lives 40–260 frames, then respawns at a random spot; it also respawns when it leaves the screen.',
-    'Use about one particle per 620 square pixels of screen, between 500 and the particle count.',
+    'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).',
+    'Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).',
+    'Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.',
   ],
   interactionLines: [
-    'Press and hold (mouse or touch): particles within the stir radius orbit around the pointer and get pulled in slightly.',
-    'Touch: a normal swipe still scrolls; press and hold to stir.',
+    'Stir with a mouse button held down. On touch, the stir starts once a finger has been held still for a quarter of a second, so normal swipes still scroll the page (touch-action: pan-y; once stirring, stop the page from scrolling).',
   ],
 };

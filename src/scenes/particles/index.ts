@@ -56,7 +56,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const setFont = () => {
       o.font = `${n('fontWeight')} ${size}px ${FIXED.FONT}`;
       try {
-        o.fontStretch = String(p.fontStretch) as CanvasFontStretch;
+        o.fontStretch = String(p.letterWidth) as CanvasFontStretch;
       } catch {
         /* older browsers */
       }
@@ -92,7 +92,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const s = sample();
     const count = s.pts.length / 2;
     const old = dots;
-    const scatter = old.length === 0 && Boolean(p.intro);
+    // Like the prototype, every new dot (first build, or extra dots after a resize) swarms in.
+    const scatter = Boolean(p.intro);
     const kMin = n('stiffness');
     const kSpread = n('stiffnessSpread');
     const rMin = n('dotMin');

@@ -1,5 +1,8 @@
 import type { Param } from '../types';
 
+// Every number that shapes this scene is a param (owner, 2026-10-16). Defaults are
+// the exact constants of reference/peak-prototype.html; the parity test proves it.
+
 const fmt = (v: number, d = 3) => String(Number(v.toFixed(d)));
 
 export const params: Param[] = [
@@ -13,8 +16,22 @@ export const params: Param[] = [
     default: 'elastic',
     key: true,
     rebuild: true,
-    phrase: (v: string) =>
-      `The headline is "${v}", one span per letter, as large as clamp(4.5rem, 21vw, 19rem).`,
+    phrase: (v: string, all) =>
+      `The headline is "${v}": one inline-block span per letter (marked aria-hidden, with the whole word in a visually hidden span for screen readers), in a single line, font size clamp(${all.sizeMin}rem, ${all.size}vw, ${all.sizeMax}rem), line-height ${all.lineHeight}, in the main text color, centered in a full-screen section (100svh, at least 540px) and lifted ${all.offsetY}vh above the middle (a bottom margin of ${all.offsetY}vh on the line).`,
+  },
+  {
+    kind: 'slider',
+    id: 'size',
+    label: 'Word size',
+    help: 'How big the word is, as a share of the screen width.',
+    group: 'Look',
+    min: 10,
+    max: 30,
+    step: 0.5,
+    default: 21,
+    unit: 'vw',
+    phrase: (v: number) => `The preferred font size is ${v}vw.`,
+    phraseIn: 'text',
   },
   {
     kind: 'slider',
@@ -27,8 +44,8 @@ export const params: Param[] = [
     max: 100,
     step: 1,
     default: 50,
-    phrase: (v: number) =>
-      `Far from the cursor, letters shrink to font width ${v} (the "wdth" axis).`,
+    phrase: (v: number, all) =>
+      `Each letter has an influence value v from 0 to 1. Its font width ("wdth" axis) is ${v} + v × ${Number(all.widthMax) - v} (from ${v} to ${all.widthMax}).`,
   },
   {
     kind: 'slider',
@@ -42,7 +59,8 @@ export const params: Param[] = [
     max: 150,
     step: 1,
     default: 150,
-    phrase: (v: number) => `Right under the cursor, letters stretch to font width ${v}.`,
+    phrase: (v: number) => `At full influence a letter is ${v} wide.`,
+    phraseIn: 'widthMin',
   },
   {
     kind: 'slider',
@@ -54,7 +72,8 @@ export const params: Param[] = [
     max: 500,
     step: 10,
     default: 200,
-    phrase: (v: number) => `Far from the cursor, letters thin down to weight ${v}.`,
+    phrase: (v: number, all) =>
+      `Its weight ("wght" axis) is round(${v} + v × ${Number(all.weightMax) - v}) (from ${v} to ${all.weightMax}). Set font-variation-settings to "wdth" (one decimal), "wght" (whole number) on each letter every frame, and set font-weight to the same weight.`,
   },
   {
     kind: 'slider',
@@ -67,7 +86,22 @@ export const params: Param[] = [
     max: 900,
     step: 10,
     default: 900,
-    phrase: (v: number) => `Right under the cursor, letters thicken to weight ${v}.`,
+    phrase: (v: number) => `At full influence a letter weighs ${v}.`,
+    phraseIn: 'weightMin',
+  },
+  {
+    kind: 'slider',
+    id: 'misprint',
+    label: 'Misprint offset',
+    help: 'How far sideways the two colored shadows drift from each letter at full swell.',
+    group: 'Look',
+    min: 0,
+    max: 0.1,
+    step: 0.005,
+    default: 0.045,
+    unit: 'em',
+    phrase: (v: number, all) =>
+      `Each letter has two hard shadows (no blur): text-shadow: ${fmt(v)}·v em ${fmt(Number(all.misprintY))}·v em 0 [first accent], −${fmt(v)}·v em −${fmt(Number(all.misprintY))}·v em 0 [second accent] (offsets rounded to 4 decimals), and lifts by translateY(−${fmt(Number(all.lift))}·v em).`,
   },
   {
     kind: 'slider',
@@ -81,7 +115,7 @@ export const params: Param[] = [
     step: 0.05,
     default: 1.25,
     phrase: (v: number) =>
-      `The swell spreads about ${fmt(v, 2)} letter widths to each side of the cursor (a bell-shaped falloff).`,
+      `While the pointer is over the section, measure the word's box each frame and split its width evenly between the letters (step = word width ÷ letter count). Letter i's target is e^(−k²) with k = (word left + step × (i + 0.5) − pointer x) ÷ (step × ${fmt(v, 2)}).`,
   },
   {
     kind: 'slider',
@@ -93,24 +127,10 @@ export const params: Param[] = [
     max: 5,
     step: 0.1,
     default: 2.1,
-    phrase: (v: number) =>
+    phrase: (v: number, all) =>
       v === 0
-        ? 'When idle, the letters rest at half width and half weight.'
-        : `When idle, a wave rolls through the letters at speed ${fmt(v, 1)} (radians per second), each letter 0.85 behind the one before.`,
-  },
-  {
-    kind: 'slider',
-    id: 'misprint',
-    label: 'Misprint offset',
-    help: 'How far the two colored shadows drift from each letter at full swell.',
-    group: 'Look',
-    min: 0,
-    max: 0.1,
-    step: 0.005,
-    default: 0.045,
-    unit: 'em',
-    phrase: (v: number) =>
-      `At full swell, the two accent shadows sit ${fmt(v)}em sideways and ${fmt(v * 0.667)}em vertically from the letter, in opposite directions.`,
+        ? 'When the pointer is away, every letter targets 0.5.'
+        : `When the pointer is away, letter i targets (0.5 + 0.5 × sin(t × ${fmt(v, 1)} − i × ${fmt(Number(all.wavePhase), 2)}))², where t is the seconds the animation has been running.`,
   },
   {
     kind: 'slider',
@@ -124,6 +144,102 @@ export const params: Param[] = [
     step: 0.5,
     default: 9,
     phrase: (v: number) =>
-      `Each frame, letters move toward their target by 1 − e^(−dt × ${fmt(v, 1)}) of the remaining distance (higher is snappier).`,
+      `Every frame each letter's influence moves toward its target by 1 − e^(−dt × ${fmt(v, 1)}) of the remaining distance (dt in seconds). Influence starts at 0.5.`,
+  },
+  {
+    kind: 'slider',
+    id: 'sizeMin',
+    label: 'Smallest word size',
+    help: 'The font size never goes below this, in rem.',
+    group: 'Advanced',
+    min: 2,
+    max: 8,
+    step: 0.5,
+    default: 4.5,
+    unit: 'rem',
+    phrase: (v: number) => `The font size is at least ${v}rem.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'sizeMax',
+    label: 'Largest word size',
+    help: 'The font size never goes above this, in rem.',
+    group: 'Advanced',
+    min: 8,
+    max: 30,
+    step: 0.5,
+    default: 19,
+    unit: 'rem',
+    phrase: (v: number) => `The font size is at most ${v}rem.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'lineHeight',
+    label: 'Line height',
+    help: 'The line height of the word.',
+    group: 'Advanced',
+    min: 0.7,
+    max: 1.2,
+    step: 0.05,
+    default: 0.9,
+    phrase: (v: number) => `Line height ${v}.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'offsetY',
+    label: 'Lift above center',
+    help: 'How far the word sits above the middle of the screen.',
+    group: 'Advanced',
+    min: 0,
+    max: 20,
+    step: 0.5,
+    default: 6,
+    unit: 'vh',
+    phrase: (v: number) => `The word sits ${v}vh above center.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'misprintY',
+    label: 'Misprint height',
+    help: 'How far up and down the two colored shadows drift at full swell.',
+    group: 'Advanced',
+    min: 0,
+    max: 0.1,
+    step: 0.005,
+    default: 0.03,
+    unit: 'em',
+    phrase: (v: number) => `The shadows drift ${v}em vertically at full swell.`,
+    phraseIn: 'misprint',
+  },
+  {
+    kind: 'slider',
+    id: 'lift',
+    label: 'Swell lift',
+    help: 'How far a swelling letter rises.',
+    group: 'Advanced',
+    min: 0,
+    max: 0.2,
+    step: 0.005,
+    default: 0.05,
+    unit: 'em',
+    phrase: (v: number) => `A letter at full swell rises ${v}em.`,
+    phraseIn: 'misprint',
+  },
+  {
+    kind: 'slider',
+    id: 'wavePhase',
+    label: 'Wave spacing',
+    help: 'How far behind each letter the idle wave runs.',
+    group: 'Advanced',
+    min: 0,
+    max: 2,
+    step: 0.05,
+    default: 0.85,
+    phrase: (v: number) => `Each letter runs ${v} radians behind the one before.`,
+    phraseIn: 'waveSpeed',
   },
 ];
