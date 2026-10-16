@@ -1,0 +1,47 @@
+/* Design tokens (PRD §18). Colors default to Riso and are overwritten at runtime
+   by the theme store (src/theme/apply.ts). The dark block is the no-JS fallback. */
+
+:root {
+  --ground: #f4f2ff;
+  --surface: #ffffff;
+  --ink: #1a1240;
+  --ink-soft: #4e4777;
+  --c1: #ec1c7f;
+  --c2: #2a47ea;
+  --c3: #ff7a00;
+  --accent-text: #ec1c7f;
+  --focus: #ec1c7f;
+  --line: rgba(26, 18, 64, 0.14);
+  --header-bg: rgba(244, 242, 255, 0.74);
+  --scrim: #f4f2ff;
+  --blend: multiply;
+  color-scheme: light;
+
+  --font: 'Anybody', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --measure: 68ch;
+  --radius-panel: 16px;
+  --radius-sheet: 24px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-ui: 200ms;
+  --header-h: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ground: #160e44;
+    --surface: #21185a;
+    --ink: #f4f1ff;
+    --ink-soft: #bdb5ea;
+    --c1: #ff4fa3;
+    --c2: #3ee6d0;
+    --c3: #ffd23f;
+    --accent-text: #ff4fa3;
+    --focus: #ff4fa3;
+    --line: rgba(244, 241, 255, 0.14);
+    --header-bg: rgba(22, 14, 68, 0.74);
+    --scrim: #160e44;
+    --blend: lighter;
+    color-scheme: dark;
+  }
+}

@@ -1,0 +1,79 @@
+/* Type scale (PRD §18). Anybody only; font-weight is always set alongside
+   font-variation-settings so fallback fonts still look right. */
+
+.display {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.02;
+  font-weight: 800;
+  font-variation-settings:
+    'wdth' 125,
+    'wght' 800;
+  text-wrap: balance;
+}
+
+.hero-line {
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  font-weight: 700;
+  font-variation-settings:
+    'wdth' 112,
+    'wght' 700;
+  text-wrap: balance;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+h2,
+.h2 {
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+  line-height: 1.05;
+  font-weight: 800;
+  font-variation-settings:
+    'wdth' 125,
+    'wght' 800;
+}
+
+h3,
+.h3 {
+  font-size: 1.25rem;
+  line-height: 1.15;
+  font-weight: 750;
+  font-variation-settings:
+    'wdth' 110,
+    'wght' 750;
+}
+
+body,
+.body {
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+  line-height: 1.5;
+  font-weight: 450;
+  font-variation-settings:
+    'wdth' 95,
+    'wght' 450;
+}
+
+.small {
+  font-size: 0.875rem;
+  line-height: 1.35;
+  font-weight: 600;
+  font-variation-settings:
+    'wdth' 90,
+    'wght' 600;
+}
+
+.soft {
+  color: var(--ink-soft);
+}
+
+.accent-text {
+  color: var(--accent-text);
+}
+
+.measure {
+  max-width: var(--measure);
+}

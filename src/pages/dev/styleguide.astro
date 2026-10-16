@@ -1,0 +1,136 @@
+---
+// Dev-only styleguide (PLAN 1.4): type, buttons, focus states and every world.
+// Excluded from the sitemap (astro.config.mjs) and from production navigation.
+import Base from '../../layouts/Base.astro';
+import { themeVars } from '../../theme/apply';
+import { allThemes } from '../../theme/worlds';
+
+const themes = allThemes();
+const styleFor = (t: (typeof themes)[number]) =>
+  Object.entries(themeVars(t))
+    .filter(([k]) => k.startsWith('--'))
+    .map(([k, v]) => `${k}: ${v}`)
+    .join('; ');
+---
+
+<Base title="Styleguide" noindex chrome={false}>
+  <div class="sg wrap">
+    <section>
+      <p class="small soft">Dev page · not linked from the site</p>
+      <h1 class="display">Styleguide</h1>
+    </section>
+
+    <section aria-labelledby="sg-type">
+      <h2 id="sg-type">Type</h2>
+      <p class="display">Display: see it, tweak it</p>
+      <p class="hero-line">Hero line: animations you can play with</p>
+      <p class="h2">Heading 2: stretchy headline</p>
+      <p class="h3">Heading 3: how it works</p>
+      <p class="body measure">
+        Body: each dot is on an invisible spring. That's called a spring with damping. The cursor
+        pushes nearby dots away, and a click gives every dot a kick outward.
+      </p>
+      <p class="small">Small UI text: 0.875rem, width 90, weight 600</p>
+      <p class="soft">Secondary text uses the soft ink color.</p>
+      <p class="accent-text h3">Accent text (display sizes only)</p>
+    </section>
+
+    <section aria-labelledby="sg-buttons">
+      <h2 id="sg-buttons">Buttons and focus</h2>
+      <p class="soft small">Press Tab to see the focus ring.</p>
+      <div class="row">
+        <button class="btn btn--primary" type="button">
+          Copy prompt
+        </button>
+        <button class="btn btn--secondary" type="button">
+          Share my version
+        </button>
+        <button class="btn btn--secondary" type="button" disabled>
+          Disabled
+        </button>
+        <a class="btn btn--secondary" href="#sg-worlds">
+          Link button
+        </a>
+      </div>
+    </section>
+
+    <section aria-labelledby="sg-worlds" id="sg-worlds">
+      <h2 id="sg-worlds-title">Worlds</h2>
+      <ul class="worlds" role="list">
+        {themes.map((t) => (
+          <li class="world" style={styleFor(t)} data-world={`${t.id}-${t.mode}`}>
+            <p class="h3" data-check="4.5">
+              {t.name}
+              {t.id === 'riso' ? ` (${t.mode})` : ''}
+            </p>
+            <p class="soft small" data-check="4.5">
+              {t.mode} · ground {t.ground} · blend {t.blend}
+            </p>
+            <p class="accent-text h3" data-check="3">
+              Accent text
+            </p>
+            <div class="chips" aria-hidden="true">
+              <span style="background: var(--c1)" />
+              <span style="background: var(--c2)" />
+              <span style="background: var(--c3)" />
+              <span style="background: var(--surface)" />
+            </div>
+            <div class="row">
+              <button class="btn btn--primary" type="button">
+                Primary
+              </button>
+              <button class="btn btn--secondary" type="button">
+                Secondary
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sg {
+    display: grid;
+    gap: 3rem;
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+  section {
+    display: grid;
+    gap: 1rem;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .worlds {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    gap: 1rem;
+  }
+  .world {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-panel);
+    background: var(--ground);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .chips {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .chips span {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+  }
+</style>

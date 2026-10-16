@@ -1,0 +1,75 @@
+---
+// The document shell every page uses. `world` picks the starting theme:
+// 'riso' follows the system light/dark setting (content pages), a world id pins
+// that world (scene pages), and 'journey' lets the page drive the theme itself.
+import '../styles/global.css';
+import { themeVars } from '../theme/apply';
+import { getWorld, type WorldId } from '../theme/worlds';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  world?: Exclude<WorldId, 'custom'> | 'journey';
+  /** Header and footer. Dev pages can turn them off. */
+  chrome?: boolean;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = 'Animations you can play with, plus the exact prompt to make your own with Claude Code.',
+  world = 'riso',
+  chrome = true,
+  noindex = false,
+} = Astro.props;
+
+// Pinned worlds render their colors inline so the first paint is already right.
+const initialWorld = world === 'journey' ? 'dreamhouse' : world;
+const inlineVars =
+  initialWorld === 'riso'
+    ? undefined
+    : Object.entries(themeVars(getWorld(initialWorld)))
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('; ');
+const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
+---
+
+<!doctype html>
+<html lang="en" style={inlineVars} data-world-mode={world}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap"
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    {chrome && <Header />}
+    <main id="main">
+      <slot />
+    </main>
+    {chrome && <Footer />}
+    <script>
+      import { connectThemeToCss } from '../theme/client';
+      import { followSystemRiso, setTheme } from '../theme/store';
+      import { getWorld, isWorldId } from '../theme/worlds';
+
+      const mode = document.documentElement.dataset.worldMode ?? 'riso';
+      if (mode === 'riso') followSystemRiso();
+      else if (isWorldId(mode)) setTheme(getWorld(mode));
+      connectThemeToCss();
+    </script>
+  </body>
+</html>

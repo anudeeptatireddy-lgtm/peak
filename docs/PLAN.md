@@ -61,7 +61,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `store.ts` (current Theme, `subscribe`), `apply.ts` (writes `--ground`, `--surface`, `--ink`, `--ink-soft`, `--c1..3`, `--accent-text`, `--focus`, `--line`, `--header-bg` on `:root`, only when changed). Riso follows `prefers-color-scheme` and updates live.
   - Done when: a unit test confirms `apply` skips unchanged values; switching the OS theme on a test page flips Riso without a reload.
 
-- [ ] **1.4 Global styles and type** · PRD §18
+- [x] **1.4 Global styles and type** · PRD §18
   - Do: `tokens.css`, `type.css`, `global.css`: the type scale, Anybody font loading with fallbacks, focus ring, buttons (primary/secondary pill), base layout, safe-area padding for notched phones, `.sr-only`.
   - Done when: a `/dev/styleguide` page (excluded from the sitemap and production nav) shows type, buttons, focus states, and swatches for all 16 worlds, and passes an automated contrast check.
 
