@@ -34,6 +34,11 @@ export function validateScene(mod: SceneModule): string[] {
     need(!!p.label.trim(), `${where}: missing label`);
     need(!!p.help.trim(), `${where}: missing help text`);
     if (p.term) need(isWordId(p.term), `${where}: unknown term ${p.term}`);
+    if (p.when)
+      need(
+        mod.params.some((q) => q.id === p.when!.id),
+        `${where}: when must name another param`,
+      );
     if (p.phraseIn)
       need(
         mod.params.some((q) => q.id === p.phraseIn && !q.phraseIn),

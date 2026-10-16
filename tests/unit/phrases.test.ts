@@ -36,9 +36,11 @@ describe.each(SCENE_SLUGS)('%s phrases', (slug) => {
     const scene = await loadScene(slug);
     const defaults = defaultParams(scene.params);
     const theme = getWorld(scene.meta.world);
-    const base = buildPrompt({ scene, params: defaults, theme });
     for (const p of scene.params) {
-      const params = { ...defaults, [p.id]: otherValue(p, defaults) };
+      // A param that only matters in some modes is tested in that mode.
+      const mode = p.when ? { [p.when.id]: p.when.is[0]! } : {};
+      const base = buildPrompt({ scene, params: { ...defaults, ...mode }, theme });
+      const params = { ...defaults, ...mode, [p.id]: otherValue(p, defaults) };
       const text = buildPrompt({ scene, params, theme });
       expect(text, `${p.id} did not change the prompt`).not.toBe(base);
       const v = params[p.id]!;
@@ -81,7 +83,8 @@ describe.each(SCENE_SLUGS)('%s phrases', (slug) => {
     const defaults = defaultParams(scene.params);
     const theme = getWorld(scene.meta.world);
     for (const p of scene.params) {
-      const params = { ...defaults, [p.id]: otherValue(p, defaults) };
+      const mode = p.when ? { [p.when.id]: p.when.is[0]! } : {};
+      const params = { ...defaults, ...mode, [p.id]: otherValue(p, defaults) };
       const text = buildPrompt({ scene, params, theme, options: { detail: 'quick' } });
       expect(text, p.id).toContain(`${p.label}: `);
     }

@@ -25,6 +25,8 @@ interface ParamBase {
    * skips this param's own line, so every number is said exactly once.
    */
   phraseIn?: string;
+  /** Only matters while another param has one of these values (e.g. a loop pause needs "loop"). */
+  when?: { id: string; is: ParamValue[] };
   /** One plain sentence for the prompt (PRD §10.4). */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   phrase: (value: any, all: Params) => string;
