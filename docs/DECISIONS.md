@@ -21,6 +21,8 @@ From the v1.1 scope update (2026-10-16):
 
 ## Log
 
+**2026-10-16, step 1.2: worlds as data.** All 16 worlds live in `src/theme/worlds.ts`; Riso's dark palette is a second variant of the same world (`getWorld('riso', 'dark')`), so `WorldId` stays as in PRD §16.5. The internal "inspired by" notes avoid brand names too (Dreamhouse's says "Pink plastic dollhouse"). `accentText` and `focus` are both c1 pushed to 3:1 on the ground.
+
 **2026-10-16, step 0.3 and Checkpoint 0.**
 - Playwright runs against `astro preview` on port 4329 with two projects: `desktop` (Chromium, 1280×800) and `mobile` (WebKit, iPhone 13 profile at 390×844, touch). Chromium and WebKit were installed with `npx playwright install chromium webkit`.
 - Astro 7's preview server moves itself into the background when it detects an AI agent, which made Playwright think it had crashed. The test server command adds `--ignore-lock`, which keeps it in the foreground.

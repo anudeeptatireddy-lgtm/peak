@@ -53,7 +53,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `src/theme/color.ts`: hex parse/format, sRGB ↔ linear ↔ OKLab ↔ OKLCH, `mixOklab`, gamut fitting (reduce chroma until in sRGB), relative luminance, `contrast`, `ensureContrast(fg, bg, min)` (move OKLab L away from the background until the minimum is met; fall back to pure black or white).
   - Done when: unit tests cover round-trips (error < 1/255), OKLCH hue rotation keeps L and C, gamut fitting always returns valid sRGB, known contrast values (#000 vs #FFF = 21), and `ensureContrast` reaching 4.5 for every ground from #000 to #FFF in 64 steps.
 
-- [ ] **1.2 Worlds as data** · PRD §7
+- [x] **1.2 Worlds as data** · PRD §7
   - Do: `src/theme/worlds.ts` with all 16 worlds (the 8 from v1.0 including Riso light and dark, plus Aurora, Lava Lamp, Vapor Mall, Blueprint, Golden Hour, Cherry Cola, Newsprint, Toxic). Compute derived tokens (`accentText`, `focus`, `line`, `headerBg`, `blend`).
   - Done when: unit tests check every world's ink and inkSoft ≥ 4.5:1 on ground and surface, `accentText` ≥ 3:1, and that no public name contains the whole words "Barbie" or "Dune".
 
