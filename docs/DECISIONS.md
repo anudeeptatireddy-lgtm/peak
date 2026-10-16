@@ -21,6 +21,24 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-16, hero parity audit (owner request), before any fix.** A new Playwright parity test (`tests/e2e/parity.spec.ts`) renders `reference/peak-prototype.html` (only its particles section, header and caption hidden) and our `particles` scene on `/dev/parity` side by side: 1280×800 and 390×844, the same mulberry32-seeded `Math.random`, Riso light, living colors off, Anybody held back 0.7s so both pages must wait for it, and Playwright's fake clock so both step identical frames. First run, settled frame: **7% of pixels differ at 1280×800, 3% at 390×844** (images in `docs/parity/before/`). Every difference found, checked against the owner's list:
+1. **Font (the visible bug).** Our scene sampled the word as soon as the stage had a size, which on a slow connection is before Anybody arrives, so it drew a fallback font. When the font arrived, the mount helper called `resize()` again, but the scene only rebuilt when the size changed, so the fallback letters stayed for good. The prototype draws nothing until the font is ready (or 2.5s pass) and then samples. On the live site this depends on network speed, which is why it looked fine on a fast connection and wrong on the owner's.
+2. `fontStretch = 'expanded'`: set again after every font change in both. Same.
+3. Size `min(H×0.46, W×0.42)`, fit to 82% of the width (92% under 700px): same.
+4. Vertical position 43% (40% under 700px): same.
+5. Sampling: gap starts at `max(3, round(size/80))`, alpha threshold 140, gap grows until the dots fit, capped at 14: same. **Dot cap under 700px differs: ours was 3,800 × 0.45 = 1,710, the prototype's is 1,700.** That came from reading the settings as scales, and it can change the chosen grid gap.
+6. Dots: round, radius gap × (0.32 + random × 0.22), one random ink each, theme blend mode: same.
+7. Springs: the prototype draws 0.02 + random × 0.035; ours drew 0.0375 × (0.5333 + random × 0.9333). Equal to about 5 decimal places, but not exactly. Also from the scales reading.
+8. Damping 0.86 per frame (frame factor `f`): same.
+9. Cursor reach `clamp(W×0.16, 70, 150)` and push `(1 − d/R)² × 9`: same.
+10. **Touch push differs:** ours ignored touch for the cursor push; the prototype pushes dots while a finger is down (until the browser takes over for scrolling).
+11. **Click blast trigger differs:** ours fired on `pointerdown`, the prototype on `click`. Ours could explode when a phone visitor merely started a scroll on the hero, and fired before release. The blast formula and its random-number order are the same.
+12. Intro: random positions and velocities of ±6 in both. **Ours skipped the scatter under reduced motion**, which consumes the random numbers differently (the still frame snaps to the word either way).
+13. Device pixel ratio capped at 2, canvas filling its section, sampling in CSS pixels: same.
+14. Section height: home sections are min 560px tall vs the prototype's 540px; the same at both test sizes (only differs on screens shorter than 560px).
+15. Header and captions: neither covers the word at either size; the home page's world rail sits at the far right edge, clear of the "k".
+16. Colors: the home hero is in Dreamhouse (by design, PRD §6.1); the parity test uses the prototype's Riso light.
+
 **2026-10-16, steps D.1–D.4: GitHub, Vercel, analytics.**
 - GitHub: public repo https://github.com/anudeeptatireddy-lgtm/peak (created with the logged-in `gh` CLI).
 - Vercel: project `peak` under the `qwertyuiop20` scope, created with the logged-in Vercel CLI (`vercel link`), which also connected the GitHub repo so every push to `main` deploys. Live address: **https://peak-teal.vercel.app**. Per Vercel's docs (vercel.com/docs/frameworks/frontend/astro, checked 2026-10-16), a static Astro site deploys with zero configuration; `vercel.json` still pins the framework, `astro build` and `dist` so the settings live in the repo. `engines.node` is `22.x` to match local Node 22. `PUBLIC_SITE_URL` is set for Production.

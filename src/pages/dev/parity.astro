@@ -1,0 +1,37 @@
+---
+// Dev-only parity stage (tests/e2e/parity.spec.ts): one scene in a section sized
+// exactly like reference/peak-prototype.html's (.scene: 100vh/100svh, min-height
+// 540px), no header or captions, in the prototype's Riso world.
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="Parity" noindex chrome={false}>
+  <section class="parity" data-parity>
+    <div class="stage" data-stage></div>
+  </section>
+</Base>
+
+<script>
+  import { mountScene } from '../../engine/mount';
+  import { hasScene, loadScene } from '../../scenes/registry';
+  const slug = new URLSearchParams(location.search).get('s') ?? '';
+  const stage = document.querySelector<HTMLElement>('[data-stage]')!;
+  if (hasScene(slug)) {
+    const mod = await loadScene(slug);
+    (window as unknown as { __mounted: unknown }).__mounted = mountScene(stage, mod);
+  }
+</script>
+
+<style>
+  .parity {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+  }
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+</style>
