@@ -49,7 +49,7 @@ Unless a step says otherwise, a scene step is done when:
 
 Goal: the home page scrolls through 12 worlds with living colors, using the six prototype scenes.
 
-- [ ] **1.1 Color math** · PRD §6.3, §16.5
+- [x] **1.1 Color math** · PRD §6.3, §16.5
   - Do: `src/theme/color.ts`: hex parse/format, sRGB ↔ linear ↔ OKLab ↔ OKLCH, `mixOklab`, gamut fitting (reduce chroma until in sRGB), relative luminance, `contrast`, `ensureContrast(fg, bg, min)` (move OKLab L away from the background until the minimum is met; fall back to pure black or white).
   - Done when: unit tests cover round-trips (error < 1/255), OKLCH hue rotation keeps L and C, gamut fitting always returns valid sRGB, known contrast values (#000 vs #FFF = 21), and `ensureContrast` reaching 4.5 for every ground from #000 to #FFF in 64 steps.
 
