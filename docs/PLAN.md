@@ -123,7 +123,7 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 - [x] **D.3 Vercel** · PRD §23
   - Do: following Vercel's official docs for a static Astro site, create the Vercel project from the GitHub repo (build command `astro build`, output `dist`, Node version from `engines`), with automatic deploys on push to `main`. Set `PUBLIC_SITE_URL` to the `vercel.app` address and redeploy. Add `npm run test:live` (Playwright smoke tests against `PEAK_LIVE_URL`).
   - Done when: the live URL serves the site, a push to `main` deploys by itself, and `npm run test:live` passes.
-- [ ] **D.4 Vercel Web Analytics** · PRD §20
+- [x] **D.4 Vercel Web Analytics** · PRD §20
   - Do: page views as Vercel's docs describe for a static Astro site; custom events only if free on the Hobby plan (otherwise `track()` stays a no-op). No cookies, no personal data.
   - Done when: the analytics script loads on the live site with no console errors; the decision about custom events is logged with its source.
 

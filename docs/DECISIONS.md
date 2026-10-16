@@ -21,6 +21,8 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, step D.4 done.** Web Analytics is switched on: on the live site the script loads from Vercel's first-party path (`/624c8f3042c800a0/script.js`, 200) and the page view is recorded (`POST …/view`, 200), with no console errors. It sets no cookies. `track()` stays a no-op (custom events aren't on Hobby, see the D.1–D.4 entry). The live smoke tests now also run the scene page playground (`playground.spec.ts`).
+
 **2026-10-17, steps 2.1–2.7 and 2.10–2.13: the scene page playground.** `src/playground/index.ts` wires the page `src/pages/scenes/[slug].astro` renders; controls come only from each scene's schema (`components/controls/`). Choices:
 - Desktop swatches sit in two rows of 9 and 8 (16 worlds plus Custom). On phones they are one swipeable row.
 - Custom colors: the visitor picks ground and three accents. Text colors are pushed to the strongest contrast the ground allows (at least 4.58:1 even on mid-gray, the worst case). Panels stay on the ground color when a lighter or darker panel would cost contrast. Unit test: 20 seeded random palettes plus mid-gray, black and white.
