@@ -21,6 +21,17 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, steps 2.1–2.7 and 2.10–2.13: the scene page playground.** `src/playground/index.ts` wires the page `src/pages/scenes/[slug].astro` renders; controls come only from each scene's schema (`components/controls/`). Choices:
+- Desktop swatches sit in two rows of 9 and 8 (16 worlds plus Custom). On phones they are one swipeable row.
+- Custom colors: the visitor picks ground and three accents. Text colors are pushed to the strongest contrast the ground allows (at least 4.58:1 even on mid-gray, the worst case). Panels stay on the ground color when a lighter or darker panel would cost contrast. Unit test: 20 seeded random palettes plus mid-gray, black and white.
+- Changing custom colors applies at once (no crossfade), so the color picker feels direct.
+- Cycle worlds starts its loop from the current world plus three random others; it pauses with the global Pause. Shuffle world while cycling also picks a new loop.
+- Surprise me randomizes sliders, toggles and selects within their ranges and keeps text and dates.
+- The phone sheet drags from the handle or the tab row; a tap on the handle toggles peek and half; a tab tap opens it to half. It slides only after the first interaction, so phones never see it animate into place on load. Focus is trapped while it's open, with Tab handled in full, because Safari skips buttons by default and focus would otherwise escape.
+- Just play keeps the scene running (no remount, no restarted intro). The pointer helper starts drags at once whenever `html.fidget` is set.
+- Phrase coverage (2.10): changing any setting changes the Detailed prompt and states the new value. Settings folded into another phrase (`phraseIn`) only need to change that phrase. `particles`' dot size scale is now named in the prompt when it isn't 1 (the default prompt is unchanged, so its prompt test still holds).
+- Cycle prompts (2.11): tests check all four palettes, the crossfade and contrast lines, the one extra Quick line, and byte-identical prompts with Cycle off.
+
 **2026-10-17, prompt builder (steps 2.8–2.9, done early for the hero work) and the sharper point of peak.**
 - Earlier question 1 decided: the rule "prompts never contain peak" means a prompt never refers to this site or repository. The visitor's own text is quoted as given, even if it is the word "peak" (the `particles` default). The test swaps every text param for another word and then checks that "peak" appears nowhere.
 - Earlier question 3 decided: Quick prompts list key params plus anything the visitor changed as short "Label: value" lines, with a one-line target, so every Quick prompt stays under 150 words for all three targets (tested).

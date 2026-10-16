@@ -49,7 +49,9 @@ export const params: Param[] = [
     phrase: (v: number, all) => {
       const lo = Number(all.dotMin) * v;
       const hi = (Number(all.dotMin) + Number(all.dotRange)) * v;
-      return `Each dot is a filled circle whose radius is a random value between ${fmt(lo)} and ${fmt(hi)} times the grid spacing, picked once per dot.`;
+      // The scale itself is named only when changed, so the default prompt stays as tested.
+      const scale = v === 1 ? '' : ` (the original sizes scaled by ${fmt(v, 2)})`;
+      return `Each dot is a filled circle whose radius is a random value between ${fmt(lo)} and ${fmt(hi)} times the grid spacing${scale}, picked once per dot.`;
     },
   },
   /* ---------- Motion ---------- */

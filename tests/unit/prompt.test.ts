@@ -49,3 +49,62 @@ describe.each(SCENE_SLUGS)('%s prompt', (slug) => {
     }
   });
 });
+
+// PLAN 2.11, PRD §6.7 item 5: Cycle worlds in prompts.
+describe('Cycle worlds in prompts', () => {
+  const loop = (['dunes', 'abyss', 'toxic', 'vapor'] as const).map((id) => getWorld(id));
+
+  it.each(SCENE_SLUGS)(
+    '%s: lists all four palettes with the crossfade and contrast lines',
+    async (slug) => {
+      const scene = await loadScene(slug);
+      const params = defaultParams(scene.params);
+      const theme = loop[0]!;
+      const text = buildPrompt({ scene, params, theme, cycle: loop });
+      for (const t of loop)
+        for (const hex of [t.ground, t.ink, t.c1, t.c2, t.c3]) expect(text).toContain(hex);
+      expect(text).toMatch(
+        /crossfade the whole page between these palettes, holding each for 8 seconds/,
+      );
+      expect(text).toMatch(/about 1\.5 seconds/);
+      expect(text).toMatch(
+        /readable at every moment of the crossfade \(contrast at least 4\.5:1\)/,
+      );
+      const quick = buildPrompt({
+        scene,
+        params,
+        theme,
+        cycle: loop,
+        options: { detail: 'quick' },
+      });
+      const plainQuick = buildPrompt({ scene, params, theme, options: { detail: 'quick' } });
+      expect(quick.split('\n').length).toBe(plainQuick.split('\n').length + 1);
+      expect(quick).toContain(
+        `Crossfade every 8 seconds between backgrounds ${loop.map((t) => t.ground).join(', ')}.`,
+      );
+      expect(wordCount(quick)).toBeLessThan(150);
+    },
+  );
+
+  it.each(SCENE_SLUGS)('%s: with Cycle off the prompt is byte-identical', async (slug) => {
+    const scene = await loadScene(slug);
+    const params = defaultParams(scene.params);
+    const theme = getWorld(scene.meta.world);
+    for (const detail of DETAILS) {
+      const plain = buildPrompt({ scene, params, theme, options: { detail } });
+      expect(buildPrompt({ scene, params, theme, options: { detail }, cycle: undefined })).toBe(
+        plain,
+      );
+      expect(buildPrompt({ scene, params, theme, options: { detail }, cycle: [] })).toBe(plain);
+    }
+  });
+
+  it('matches its snapshots', async () => {
+    const scene = await loadScene('ripple');
+    const params = defaultParams(scene.params);
+    for (const detail of DETAILS)
+      expect(
+        buildPrompt({ scene, params, theme: loop[0]!, cycle: loop, options: { detail } }),
+      ).toMatchSnapshot(`cycle-${detail}`);
+  });
+});

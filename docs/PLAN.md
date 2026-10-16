@@ -133,28 +133,28 @@ For steps 1.8–1.13: read the scene's section of `reference/peak-prototype.html
 
 Goal: every later scene gets the playground and prompts for free.
 
-- [ ] **2.1 Scene page layout** · PRD §9.1, §9.4
+- [x] **2.1 Scene page layout** · PRD §9.1, §9.4
   - Do: `/scenes/[slug]` (static paths from the registry): title block, stage, desktop side panel with three tabs, collapse button; stage controls (Pause/Play, Just play, Restart).
   - Done when: all six ported scenes render on their pages in their default world; tabs are keyboard-operable (arrow keys between tabs).
 
-- [ ] **2.2 Controls from the schema** · PRD §9.2
+- [x] **2.2 Controls from the schema** · PRD §9.2
   - Do: `components/controls/*` for slider, range pair, text (with counter), toggle, select/segmented, datetime. Groups, labels, info popovers with help text and word-bank links. Debounced rebuild for `rebuild: true` params.
   - Done when: every param of every built scene has a working control; changing values updates the stage live; screen readers announce labels and values.
 
-- [ ] **2.3 World picker and custom colors** · PRD §9.2, §7
+- [x] **2.3 World picker and custom colors** · PRD §9.2, §7
   - Done when: the picker shows 16 swatches (two rows on desktop, one swipeable row on phones); picking a world crossfades the page and stage in 400ms (instant under reduced motion); custom colors derive a readable ink automatically; contrast tests pass for 20 random custom palettes.
 
-- [ ] **2.4 Shuffle world and Cycle worlds** · PRD §6.7 (item 4)
+- [x] **2.4 Shuffle world and Cycle worlds** · PRD §6.7 (item 4)
   - Done when: Shuffle world always picks a different world; Cycle worlds crossfades every 8 seconds (1.5-second crossfade) through a loop of four, pauses with motion, switches instantly under reduced motion, and Shuffle while cycling picks a new loop; e2e: with Cycle on, `--ground` changes within 9 seconds.
 
-- [ ] **2.5 Reset, Surprise me, Share my version** · PRD §9.2, §9.6
+- [x] **2.5 Reset, Surprise me, Share my version** · PRD §9.2, §9.6
   - Do: `src/state/url.ts` encode/decode with validation and clamping (params, `w`, custom colors, `cycle`); `replaceState` debounced; Share uses the Web Share API on phones when available, else the clipboard.
   - Done when: unit tests round-trip every built scene's params and the cycle loop; junk and out-of-range values are clamped or dropped; e2e: change three params and turn on Cycle worlds, copy the share URL, open it in a new page, same state.
 
-- [ ] **2.6 Mobile bottom sheet** · PRD §9.1
+- [x] **2.6 Mobile bottom sheet** · PRD §9.1
   - Done when: at 390×844 the sheet peeks with tab names and Copy prompt, drags to 50% and 90%, closes with a swipe down or Esc, doesn't block the stage's gestures when peeking, traps focus when expanded.
 
-- [ ] **2.7 Fidget mode** · PRD §9.7
+- [x] **2.7 Fidget mode** · PRD §9.7
   - Done when: Just play hides UI and enters fullscreen where supported; drags start immediately (no press-and-hold); Esc, the exit button, and `F` work; focus returns to the Just play button.
 
 - [x] **2.8 Builder core** · PRD §10.1, §10.2, §10.3, §10.5
@@ -166,17 +166,17 @@ Goal: every later scene gets the playground and prompts for free.
   - **Owner first:** answer open question 3 (Quick prompt length).
   - Done when: snapshots for every built scene; Quick prompts meet the agreed word limit (test); only `key: true` params appear.
 
-- [ ] **2.10 Phrase coverage** · PRD §10.4
+- [x] **2.10 Phrase coverage** · PRD §10.4
   - Done when: a test changes each param of each built scene to a non-default value and asserts the prompt text changed and contains the new value; phrases read as plain sentences (no ids, no `undefined`, no `NaN`). This also completes item 6 of the scene definition of done for the six Wave 1 ports.
 
-- [ ] **2.11 Cycle worlds in prompts** · PRD §6.7 (item 5), §10.2
+- [x] **2.11 Cycle worlds in prompts** · PRD §6.7 (item 5), §10.2
   - Done when: with Cycle worlds on, the Detailed prompt lists all four palettes with their hex values plus the crossfade and contrast lines, and the Quick prompt adds its one line; snapshot tests cover it; with Cycle off, prompts are byte-identical to before.
 
-- [ ] **2.12 Prompt tab UI** · PRD §9.3
+- [x] **2.12 Prompt tab UI** · PRD §9.3
   - Do: live prompt block with word count, the three option controls, Copy prompt (Clipboard API with a fallback for older Safari), toast + live-region announcement, Download as PROMPT.md, Next steps follow-ups with copy buttons, Did it work? buttons wired to `track` (§20).
   - Done when: e2e: changing a slider updates the prompt within 100ms; Copy puts the exact visible text on the clipboard; download produces a `.md` file with the same text.
 
-- [ ] **2.13 Prompt test log** · PRD §10.8
+- [x] **2.13 Prompt test log** · PRD §10.8
   - Do: Create `docs/PROMPT_TESTS.md` with a table: scene, date, prompt options, result (pass/fail), what was wrong, fix made. One row per scene for all 50, marked "pending".
   - Done when: the file exists with 50 rows.
 
