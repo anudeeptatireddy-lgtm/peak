@@ -26,7 +26,7 @@ export const meta: SceneMeta = {
   lookLines: ['Size the canvas for devicePixelRatio (capped at 2) and draw in CSS pixels.'],
   behaviorLines: [
     'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).',
-    'Rebuild all particles and repaint the background on every resize; repaint the background whenever the background color changes (this clears the trails).',
+    "Rebuild all particles and repaint the background on every resize and once more when the Anybody font has finished loading (wait for document.fonts.load('900 120px Anybody'), document.fonts.load('italic 800 120px Anybody') and document.fonts.load('400 120px Anybody'), then document.fonts.ready; give up waiting after 2.5 seconds); repaint the background whenever the background color changes (this clears the trails).",
     'Reduced-motion still frame: repaint the background, then run 70 steps with t = step ÷ 60 and f = 1, without the stir.',
   ],
   interactionLines: [

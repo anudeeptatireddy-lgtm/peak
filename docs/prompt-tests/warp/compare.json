@@ -1,1 +1,5 @@
-{ "hide": ".motion-toggle, .hero-copy, .magnet, .after" }
+{
+  "hide": ".copy, .cta-row, .toggle, .after",
+  "expect": "fail",
+  "reason": "Failed its one retest (3–9% while warping). Cause found after: the prompt never said the scene rebuilds once the font loads. Prompt fixed 2026-10-17; awaiting the owner’s OK for another retest."
+}

@@ -29,3 +29,7 @@ coverage/
 
 # Vercel CLI project link
 .vercel/
+
+# Parity "expected" images are rewritten from the reference page on every run
+tests/e2e/parity.spec.ts-snapshots/
+tests/e2e/prompt-parity.spec.ts-snapshots/

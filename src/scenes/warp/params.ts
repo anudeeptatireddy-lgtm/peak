@@ -15,7 +15,7 @@ export const params: Param[] = [
     default: 900,
     rebuild: true,
     phrase: (v: number, all) =>
-      `A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use ${v.toLocaleString('en-US')} stars (${all.starsSmall} on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: ${all.nearest} + random × (1 − ${all.nearest}); a star that respawns: ${all.farDepth} + random × (1 − ${all.farDepth})), then color: if random < ${all.plainShare} it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize.`,
+      `A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Use ${v.toLocaleString('en-US')} stars (${all.starsSmall} on screens under 700px wide). A star has x and y between −1 and 1, a depth z, and a color. To (re)spawn a star call Math.random() in this order: x = random × 2 − 1, y = random × 2 − 1, then z (a new star at start: ${all.nearest} + random × (1 − ${all.nearest}); a star that respawns: ${all.farDepth} + random × (1 − ${all.farDepth})), then color: if random < ${all.plainShare} it uses the main text color, otherwise a second random picks one of the three accents (floor(random × 3)). Rebuild all stars on every resize and once more when the Anybody font has finished loading (wait for document.fonts.load('900 120px Anybody'), document.fonts.load('italic 800 120px Anybody') and document.fonts.load('400 120px Anybody'), then document.fonts.ready; give up waiting after 2.5 seconds).`,
   },
   {
     kind: 'slider',

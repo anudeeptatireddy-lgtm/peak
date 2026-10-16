@@ -3,123 +3,176 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hyperspace intro</title>
-  <meta name="description" content="A starfield that jumps to light speed when you press and hold.">
+  <title>Hyperspace</title>
+  <meta name="description" content="A starfield that drifts toward you and jumps to light speed when you press and hold.">
+  <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#F4F2FF">
 
   <!-- Font: Anybody (variable width 50–150, weight 100–900) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
 
   <style>
-    /* ---------- Colors ("Riso" palette) ---------- */
+    /* ---------- Colors ("Riso" palette) and font ---------- */
     :root {
-      --bg: #F4F2FF;        /* paper */
+      --bg: #F4F2FF;        /* background */
       --ink: #1A1240;       /* main text */
-      --ink-2: #4E4777;     /* secondary text */
-      --pink: #EC1C7F;      /* accent */
-      --blue: #2A47EA;      /* accent */
-      --orange: #FF7A00;    /* accent */
+      --ink-soft: #4E4777;  /* secondary text */
+      --pink: #EC1C7F;      /* accent 1 */
+      --blue: #2A47EA;      /* accent 2 */
+      --orange: #FF7A00;    /* accent 3 */
       --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      color-scheme: light;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
 
-    html { background: var(--bg); }
+    html {
+      background: var(--bg);
+      color: var(--ink);
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--ink);
       font-family: var(--font);
       line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
+      background: var(--bg);
+      color: var(--ink);
     }
 
-    /* ---------- Hero: full-screen starfield ---------- */
+    /* Visible keyboard focus everywhere */
+    :focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    /* ---------- The hyperspace section ---------- */
     .hero {
       position: relative;
-      height: 100vh;      /* fallback for older browsers */
-      height: 100svh;
-      min-height: 540px;
       overflow: hidden;
-    }
-
-    .hero canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      /* Let people scroll the page up and down with a finger */
-      touch-action: pan-y pinch-zoom;
+      background: var(--bg);
       -webkit-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
+    }
+
+    /* Full-screen, transparent canvas: 100svh tall, never shorter than 540px */
+    .starfield {
+      display: block;
+      width: 100%;
+      height: 100vh;    /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      /* Let fingers scroll the page up and down even while touching the stars */
+      touch-action: pan-y;
+      touch-action: pan-y pinch-zoom;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .hero-copy {
+    /* Title block. Clicks and touches pass through it to the canvas. */
+    .copy {
       position: absolute;
+      top: max(76px, 12%);
       left: 16px;
       right: 16px;
-      top: 45%;
-      transform: translateY(-50%);
+      max-width: 46rem;
+      margin-inline: auto;
       text-align: center;
-      pointer-events: none;   /* presses go through to the canvas */
-      /* soft paper-colored halo keeps text readable over streaks */
-      text-shadow: 0 0 14px var(--bg), 0 0 4px var(--bg);
+      pointer-events: none;
+      isolation: isolate;
     }
 
-    .hero-copy h1 {
-      margin: 0 0 0.3em;
-      font-size: clamp(2.25rem, 8vw, 7.5rem);
-      font-size: clamp(2.25rem, min(8vw, 13svh), 7.5rem);
-      font-weight: 800;
-      font-stretch: 130%;
-      line-height: 0.95;
-      letter-spacing: -0.01em;
-    }
-
-    .hero-copy p {
-      margin: 0 auto;
-      max-width: 34rem;
-      color: var(--ink-2);
-      font-size: clamp(1rem, 2.2vw, 1.25rem);
-      font-weight: 450;
-      font-stretch: 105%;
-    }
-
-    /* ---------- Magnetic pill button ---------- */
-    .magnet {
+    /* A soft patch of "paper" behind the words so streaks never hurt legibility */
+    .copy::before {
+      content: "";
       position: absolute;
-      left: 50%;
+      inset: -22% -10%;
+      z-index: -1;
+      background: radial-gradient(closest-side, rgb(244 242 255 / 0.95) 60%, rgb(244 242 255 / 0));
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 0.8125rem;
+      font-weight: 650;
+      font-stretch: 150%;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    h1 {
+      margin: 0.12em 0 0.22em;
+      font-size: clamp(2.5rem, 10vw, 7rem);
+      line-height: 0.95;
+      font-weight: 820;
+      font-stretch: 130%;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      /* A slightly off-register pink layer, like a riso print */
+      text-shadow: 0.04em 0.035em 0 var(--pink);
+    }
+
+    .hint {
+      margin: 0 auto;
+      max-width: 30ch;
+      font-size: clamp(1rem, 2.2vw, 1.1875rem);
+      font-weight: 500;
+      font-stretch: 110%;
+      color: var(--ink-soft);
+      text-wrap: balance;
+    }
+
+    .note {
+      margin: 0.75em auto 0;
+      max-width: 36ch;
+      font-size: 0.9375rem;
+      color: var(--ink-soft);
+    }
+
+    .note[hidden] { display: none; }
+
+    /* Row that holds the magnetic button, centered 64% down the canvas */
+    .cta-row {
+      position: absolute;
+      left: 0;
+      right: 0;
       top: 64%;
-      transform: translate(-50%, -50%);
+      height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .cta {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6em;
       min-height: 48px;
       padding: 0.85em 1.6em;
       border: 0;
       border-radius: 999px;
       background: var(--ink);
       color: var(--bg);
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 650;
-      font-stretch: 115%;
+      font: inherit;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      font-stretch: 120%;
       letter-spacing: 0.01em;
-      white-space: nowrap;
       cursor: pointer;
       will-change: transform;
-      -webkit-tap-highlight-color: transparent;
-      transition: box-shadow 160ms ease;
+      transition: background-color 160ms ease;
     }
 
-    .magnet:hover { box-shadow: 4px 4px 0 var(--pink); }
+    .cta:hover { background: var(--blue); }
+    .cta:focus-visible { outline-offset: 4px; }
+    .cta svg { width: 1em; height: 1em; flex: none; }
 
-    /* ---------- Play / Pause ---------- */
-    .motion-toggle {
+    /* Play / Pause button */
+    .toggle {
       position: absolute;
       top: 16px;
       right: 16px;
@@ -127,352 +180,439 @@
       align-items: center;
       gap: 0.5em;
       min-height: 44px;
-      padding: 0.5em 1em;
+      padding: 0.5em 1.05em;
       border: 2px solid var(--ink);
       border-radius: 999px;
-      background: var(--bg);
+      background: rgb(244 242 255 / 0.92);
       color: var(--ink);
-      font-family: inherit;
+      font: inherit;
       font-size: 0.9375rem;
-      font-weight: 600;
+      font-weight: 650;
+      font-stretch: 115%;
       cursor: pointer;
+      transition: box-shadow 160ms ease;
     }
 
-    .motion-toggle:hover { background: #E6E2FF; }
-
-    .motion-toggle .icon { width: 14px; height: 14px; fill: currentColor; flex: none; }
-    .motion-toggle .icon-play { display: none; }
-    .motion-toggle[data-paused="true"] .icon-play { display: block; }
-    .motion-toggle[data-paused="true"] .icon-pause { display: none; }
-
-    /* Clear keyboard focus on every button */
-    button:focus-visible {
-      outline: 3px solid var(--blue);
-      outline-offset: 4px;
-    }
+    .toggle:hover { box-shadow: 3px 3px 0 var(--orange); }
+    .toggle svg { width: 0.85em; height: 0.85em; flex: none; }
+    .toggle .icon-play { display: none; }
+    .toggle[data-paused="true"] .icon-play { display: block; }
+    .toggle[data-paused="true"] .icon-pause { display: none; }
 
     /* ---------- The rest of the page ---------- */
     .after {
-      max-width: 40rem;
+      max-width: 42rem;
+      min-height: 70vh;
       margin: 0 auto;
-      padding: 96px 16px 128px;
+      padding: clamp(56px, 10vw, 112px) 16px clamp(80px, 14vw, 160px);
     }
+
+    /* Three overlapping ink dots, multiplied like ink on paper */
+    .inks { display: flex; margin-bottom: 1.5rem; }
+    .inks span {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+    }
+    .inks span + span { margin-left: -14px; }
+    .inks span:nth-child(1) { background: var(--pink); }
+    .inks span:nth-child(2) { background: var(--blue); }
+    .inks span:nth-child(3) { background: var(--orange); }
 
     .after h2 {
       margin: 0 0 0.5em;
-      font-size: clamp(1.75rem, 4vw, 2.5rem);
-      font-weight: 750;
-      font-stretch: 120%;
-      line-height: 1.1;
+      font-size: clamp(1.75rem, 5vw, 2.75rem);
+      line-height: 1.05;
+      font-weight: 780;
+      font-stretch: 125%;
     }
 
-    .after p { margin: 0; color: var(--ink-2); font-size: 1.125rem; }
+    .after p {
+      margin: 0 0 1em;
+      max-width: 60ch;
+      font-size: 1.0625rem;
+      color: var(--ink-soft);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cta, .toggle { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <section class="hero" id="hero" aria-labelledby="hero-title">
-      <!-- Decorative starfield: hidden from screen readers -->
-      <canvas id="stars" aria-hidden="true"></canvas>
 
-      <button class="motion-toggle" id="motion-toggle" type="button">
-        <svg class="icon icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <rect x="3" y="2" width="3.5" height="12" rx="1"></rect>
-          <rect x="9.5" y="2" width="3.5" height="12" rx="1"></rect>
+  <header class="hero" id="top">
+    <!-- Decorative, so screen readers skip it -->
+    <canvas class="starfield" id="starfield" aria-hidden="true"></canvas>
+
+    <div class="copy">
+      <p class="eyebrow">Now leaving orbit</p>
+      <h1>Hyperspace</h1>
+      <p class="hint">Press and hold anywhere to jump to light speed.</p>
+      <p class="note" id="motion-note" hidden>The stars are paused because your device asks for less motion. Press Play to start them.</p>
+    </div>
+
+    <div class="cta-row">
+      <button class="cta" id="cta" type="button">
+        <span>Back to the top</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <svg class="icon icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-          <path d="M4 2.6v10.8a.8.8 0 0 0 1.2.7l8.8-5.4a.8.8 0 0 0 0-1.4L5.2 1.9A.8.8 0 0 0 4 2.6z"></path>
-        </svg>
-        <span class="label">Pause motion</span>
       </button>
+    </div>
 
-      <div class="hero-copy">
-        <h1 id="hero-title">Hyperspace</h1>
-        <p>Press and hold anywhere to jump to light speed. Let go to drift back to cruise.</p>
-      </div>
+    <button class="toggle" id="toggle" type="button" aria-label="Pause animation" data-paused="false">
+      <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/>
+        <rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/>
+      </svg>
+      <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+        <path d="M4 2.5v11a.8.8 0 0 0 1.2.7l9-5.5a.8.8 0 0 0 0-1.4l-9-5.5A.8.8 0 0 0 4 2.5Z" fill="currentColor"/>
+      </svg>
+      <span class="toggle-text">Pause</span>
+    </button>
+  </header>
 
-      <button class="magnet" id="magnet" type="button">Back to the top</button>
-    </section>
-
-    <section class="after" aria-labelledby="after-title">
-      <h2 id="after-title">Back in normal space</h2>
-      <p>This is where the rest of your page goes. Scroll up to fly again, or press and hold on the stars to make the jump.</p>
-    </section>
+  <main class="after">
+    <div class="inks" aria-hidden="true"><span></span><span></span><span></span></div>
+    <h2>You’ve dropped out of hyperspace</h2>
+    <p>This is where the rest of your page goes. Scroll up until you can see the “Back to the top” button, then press it to glide home.</p>
+    <p>The stars stop drawing while they are off screen, so your laptop or phone gets a rest down here.</p>
   </main>
 
   <script>
-  (function () {
+  (() => {
     'use strict';
 
-    /* ================= Settings (from the brief) ================= */
-    var INK = '#1A1240';
-    var ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
-    var COLORS = [INK].concat(ACCENTS);          // color index 0 = ink, 1..3 = accents
+    /* ================= Settings (straight from the brief) ================= */
 
-    var REST_SPEED = 0.09;      // depth units per second while cruising
-    var WARP_SPEED = 1.7;       // depth units per second while pressing
-    var EASE_UP = 1.4;          // k while speeding up
-    var EASE_DOWN = 2.2;        // k while slowing down
-    var TOO_CLOSE = 0.03;       // stars nearer than this respawn
-    var OFFSCREEN = 60;         // px beyond the edge before a star respawns
-    var MAX_DT = 0.05;          // seconds
+    // Index 0 is the main text color, then the three accents, in stroke order.
+    const COLORS = ['#1A1240', '#EC1C7F', '#2A47EA', '#FF7A00'];
 
-    // Distance bands: far (z > 0.6), middle (z > 0.28), near (the rest)
-    var BAND_WIDTH = [0.9, 1.8, 3];
-    var BAND_ALPHA = [0.45, 0.75, 1];
+    // Distance bands, drawn far -> middle -> near.
+    const BANDS = [
+      { width: 0.9, alpha: 0.45 }, // far    (z > 0.6)
+      { width: 1.8, alpha: 0.75 }, // middle (z > 0.28)
+      { width: 3,   alpha: 1    }  // near   (the rest)
+    ];
 
-    var MAGNET_RADIUS = 170;    // px
-    var MAGNET_PULL = 0.32;     // share of the distance toward the mouse
-    var MAGNET_EASE = 12;
+    const STARS_LARGE = 900;
+    const STARS_SMALL = 420;      // screens under 700px wide
+    const SMALL_SCREEN = 700;
 
-    /* ================= Elements ================= */
-    var hero = document.getElementById('hero');
-    var canvas = document.getElementById('stars');
-    var ctx = canvas.getContext('2d');
-    var magnet = document.getElementById('magnet');
-    var toggle = document.getElementById('motion-toggle');
-    var toggleLabel = toggle.querySelector('.label');
-    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const MAX_Z = 1;
+    const NEW_STAR_MIN_Z = 0.05;  // stars made at the start
+    const RESPAWN_MIN_Z = 0.9;    // stars that come back far away
+    const TOO_CLOSE_Z = 0.03;
+    const MAIN_COLOR_CHANCE = 0.72;
+
+    const CRUISE_SPEED = 0.09;    // depth units per second at rest
+    const WARP_SPEED = 1.7;       // while pressing
+    const EASE_UP = 1.4;
+    const EASE_DOWN = 2.2;
+
+    const OFFSCREEN_MARGIN = 60;  // px
+    const MAX_DT = 0.05;          // s
+
+    const MAGNET_RADIUS = 170;    // px
+    const MAGNET_PULL = 0.32;
+    const MAGNET_EASE = 12;
+
+    /* ================= Page elements ================= */
+
+    const hero = document.getElementById('top');
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    const cta = document.getElementById('cta');
+    const toggle = document.getElementById('toggle');
+    const toggleText = toggle.querySelector('.toggle-text');
+    const motionNote = document.getElementById('motion-note');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     /* ================= State ================= */
-    var W = 0, H = 0, dpr = 1;                 // canvas size in CSS pixels
-    var count = 0;
-    var xs, ys, zs, cs;                        // star x, y, depth, color index
-    var speed = REST_SPEED;
-    var t = 0;                                 // seconds the loop has run (sum of dt)
-    var pointers = new Set();                  // fingers / mouse buttons held on the canvas
-    var lastPointerType = 'mouse';
-    var mouse = { x: 0, y: 0, active: false };
-    var btnX = 0, btnY = 0, lastTransform = '';
-    var rafId = 0, lastTime = null;
-    var userPaused = reduceMotion.matches;     // reduced motion starts paused
-    var heroVisible = true;
+
+    let reducedMotion = motionQuery.matches;
+
+    let W = 0, H = 0, dpr = 1;    // canvas size in CSS pixels, and pixel ratio
+    let heroLeft = 0, heroTop = 0; // where the canvas sits on the page
+
+    // Stars live in flat arrays: fast to loop over, nothing to garbage-collect.
+    let count = 0;
+    let X = new Float64Array(0);
+    let Y = new Float64Array(0);
+    let Z = new Float64Array(0);
+    let C = new Uint8Array(0);    // color index into COLORS
+
+    let speed = CRUISE_SPEED;
+    let t = 0;                    // seconds the loop has run (sum of dt)
+    let lastTime = null;
+    let rafId = 0;
+
+    const pressing = new Set();   // pointers currently held down on the canvas
+    let lastPointerType = 'mouse';
+    const mouse = { x: 0, y: 0, inside: false };
+
+    let offsetX = 0, offsetY = 0; // the button's magnetic offset
+    let lastTransform = '';
+
+    let userPaused = reducedMotion; // reduced motion: start paused
+    let onScreen = true;
+    let pageVisible = document.visibilityState !== 'hidden';
 
     /* ================= Stars ================= */
-    // Math.random() is called in this exact order: x, y, z, color (+1 if accent).
+
+    // Math.random() is called in this exact order: x, y, z, color (and a
+    // second color roll only when the star uses an accent).
     function spawn(i, isNew) {
-      xs[i] = Math.random() * 2 - 1;
-      ys[i] = Math.random() * 2 - 1;
-      zs[i] = isNew ? 0.05 + Math.random() * (1 - 0.05)
-                    : 0.9 + Math.random() * (1 - 0.9);
-      cs[i] = Math.random() < 0.72 ? 0 : 1 + Math.floor(Math.random() * 3);
+      X[i] = Math.random() * 2 - 1;
+      Y[i] = Math.random() * 2 - 1;
+      const minZ = isNew ? NEW_STAR_MIN_Z : RESPAWN_MIN_Z;
+      Z[i] = minZ + Math.random() * (MAX_Z - minZ);
+      C[i] = Math.random() < MAIN_COLOR_CHANCE ? 0 : 1 + Math.floor(Math.random() * 3);
     }
 
     function buildStars() {
-      count = W < 700 ? 420 : 900;
-      xs = new Float64Array(count);
-      ys = new Float64Array(count);
-      zs = new Float64Array(count);
-      cs = new Uint8Array(count);
-      for (var i = 0; i < count; i++) spawn(i, true);
+      count = W < SMALL_SCREEN ? STARS_SMALL : STARS_LARGE;
+      X = new Float64Array(count);
+      Y = new Float64Array(count);
+      Z = new Float64Array(count);
+      C = new Uint8Array(count);
+      for (let i = 0; i < count; i++) spawn(i, true);
     }
 
-    // Returns true when the size actually changed (and stars were rebuilt).
-    function resize() {
-      var w = canvas.clientWidth;
-      var h = canvas.clientHeight;
-      var ratio = Math.min(2, window.devicePixelRatio || 1);
-      if (w === W && h === H && ratio === dpr && xs) return false;
-      W = w; H = h; dpr = ratio;
-      canvas.width = Math.max(1, Math.round(W * dpr));
-      canvas.height = Math.max(1, Math.round(H * dpr));
-      buildStars();
-      return true;
+    /* ================= Each frame ================= */
+
+    function easeSpeed(dt) {
+      const target = pressing.size > 0 ? WARP_SPEED : CRUISE_SPEED;
+      const k = target > speed ? EASE_UP : EASE_DOWN;
+      speed += (target - speed) * (1 - Math.exp(-dt * k));
     }
 
-    /* ================= Drawing ================= */
+    function moveStars(dt) {
+      const step = speed * dt;
+      for (let i = 0; i < count; i++) {
+        Z[i] -= step;
+        if (Z[i] < TOO_CLOSE_Z) spawn(i, false); // flew past us: send it far away
+      }
+    }
+
     function draw() {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);   // draw in CSS pixels
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = 1;
       ctx.clearRect(0, 0, W, H);
+      if (!count) return;
 
-      var cx = W / 2;
-      var cy = H * 0.45;
-      var F = 0.55 * Math.max(W, H);
-      var tail = speed * 0.09 + 0.004;
+      const cx = W / 2;
+      const cy = H * 0.45;
+      const F = 0.55 * Math.max(W, H);
+      const tailDepth = speed * 0.09 + 0.004;
 
-      // 12 batched paths: 3 distance bands x 4 colors
-      var paths = [];
-      for (var p = 0; p < 12; p++) paths.push(new Path2D());
+      // 12 batches: 4 colors x 3 distance bands (index = color * 3 + band)
+      const paths = [];
+      for (let p = 0; p < 12; p++) paths.push(new Path2D());
 
-      for (var i = 0; i < count; i++) {
-        var x = xs[i], y = ys[i], z = zs[i];
-        var sx = cx + x / z * F;
-        var sy = cy + y / z * F;
+      for (let i = 0; i < count; i++) {
+        const z = Z[i];
+        const x = X[i];
+        const y = Y[i];
+        const px = cx + x / z * F;
+        const py = cy + y / z * F;
 
-        if (sx < -OFFSCREEN || sx > W + OFFSCREEN || sy < -OFFSCREEN || sy > H + OFFSCREEN) {
-          spawn(i, false);
+        if (px < -OFFSCREEN_MARGIN || px > W + OFFSCREEN_MARGIN ||
+            py < -OFFSCREEN_MARGIN || py > H + OFFSCREEN_MARGIN) {
+          spawn(i, false); // left the screen: skip it and send it far away
           continue;
         }
 
-        var zt = Math.min(1.2, z + tail);
-        var band = z > 0.6 ? 0 : (z > 0.28 ? 1 : 2);
-        var path = paths[band * 4 + cs[i]];
+        const zt = Math.min(1.2, z + tailDepth);
+        const band = z > 0.6 ? 0 : z > 0.28 ? 1 : 2;
+        const path = paths[C[i] * 3 + band];
         path.moveTo(cx + x / zt * F, cy + y / zt * F);
-        path.lineTo(sx + 0.01, sy);
+        path.lineTo(px + 0.01, py); // +0.01 so a zero-length streak still shows a dot
       }
 
+      ctx.globalCompositeOperation = 'multiply'; // overlapping inks darken, like riso
       ctx.lineCap = 'round';
-      ctx.globalCompositeOperation = 'multiply';   // inks multiply where they overlap
-      for (var b = 0; b < 3; b++) {
-        ctx.lineWidth = BAND_WIDTH[b];
-        ctx.globalAlpha = BAND_ALPHA[b];
-        for (var c = 0; c < 4; c++) {
-          ctx.strokeStyle = COLORS[c];
-          ctx.stroke(paths[b * 4 + c]);
+      for (let c = 0; c < COLORS.length; c++) {
+        ctx.strokeStyle = COLORS[c];
+        for (let b = 0; b < BANDS.length; b++) {
+          ctx.lineWidth = BANDS[b].width;
+          ctx.globalAlpha = BANDS[b].alpha;
+          ctx.stroke(paths[c * 3 + b]);
         }
       }
       ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
     }
 
-    // Still frame: the stars with only the resting streak.
-    function drawStill() {
-      speed = REST_SPEED;
-      draw();
-    }
-
-    /* ================= Magnetic button ================= */
     function moveButton(dt) {
-      var tx = 0, ty = 0;
-      if (mouse.active) {
-        var r = hero.getBoundingClientRect();
-        var dx = mouse.x - (r.left + r.width / 2);
-        var dy = mouse.y - (r.top + r.height * 0.64);
+      let targetX = 0, targetY = 0;
+      if (mouse.inside) {
+        // The button's resting center, in the same window coordinates as the mouse
+        const restX = heroLeft - window.scrollX + W / 2;
+        const restY = heroTop - window.scrollY + H * 0.64;
+        const dx = mouse.x - restX;
+        const dy = mouse.y - restY;
         if (dx * dx + dy * dy <= MAGNET_RADIUS * MAGNET_RADIUS) {
-          tx = dx * MAGNET_PULL;
-          ty = dy * MAGNET_PULL;
+          targetX = dx * MAGNET_PULL;
+          targetY = dy * MAGNET_PULL;
         }
       }
-      var a = 1 - Math.exp(-dt * MAGNET_EASE);
-      btnX += (tx - btnX) * a;
-      btnY += (ty - btnY) * a;
+      const a = 1 - Math.exp(-dt * MAGNET_EASE);
+      offsetX += (targetX - offsetX) * a;
+      offsetY += (targetY - offsetY) * a;
+      applyButtonOffset();
+    }
 
-      var next = 'translate(-50%, -50%) translate(' + btnX.toFixed(2) + 'px, ' + btnY.toFixed(2) + 'px)';
-      if (next !== lastTransform) {
-        magnet.style.transform = next;
-        lastTransform = next;
+    function applyButtonOffset() {
+      const still = Math.abs(offsetX) < 0.005 && Math.abs(offsetY) < 0.005;
+      const value = still ? '' : 'translate(' + offsetX.toFixed(2) + 'px, ' + offsetY.toFixed(2) + 'px)';
+      if (value !== lastTransform) {
+        cta.style.transform = value;
+        lastTransform = value;
       }
     }
 
-    /* ================= The one animation loop ================= */
+    function resetButton() {
+      offsetX = 0;
+      offsetY = 0;
+      applyButtonOffset();
+    }
+
+    // The one and only requestAnimationFrame loop.
     function frame(now) {
       rafId = requestAnimationFrame(frame);
-
-      var dt = lastTime === null ? 0 : (now - lastTime) / 1000;
+      const dt = lastTime === null ? 0 : Math.min(MAX_DT, Math.max(0, (now - lastTime) / 1000));
       lastTime = now;
-      if (dt > MAX_DT) dt = MAX_DT;
-      if (dt < 0) dt = 0;
       t += dt;
 
-      // 1) ease the speed toward its target
-      var target = pointers.size > 0 ? WARP_SPEED : REST_SPEED;
-      var k = target > speed ? EASE_UP : EASE_DOWN;
-      speed += (target - speed) * (1 - Math.exp(-dt * k));
-
-      // 2) move every star toward the viewer
-      var dz = speed * dt;
-      for (var i = 0; i < count; i++) {
-        zs[i] -= dz;
-        if (zs[i] < TOO_CLOSE) spawn(i, false);
-      }
-
-      // 3) draw (stars that left the screen respawn here)
-      draw();
-
-      // 4) move the button
-      moveButton(dt);
+      easeSpeed(dt);  // 1. ease the speed
+      moveStars(dt);  // 2. move every star (respawn any that got too close)
+      draw();         // 3. draw (respawn any that left the screen)
+      moveButton(dt); // 4. move the button
     }
 
-    function shouldRun() {
-      return !userPaused && heroVisible && !document.hidden;
-    }
+    /* ================= Start / stop ================= */
 
-    // Start or stop the loop so it only runs when it can be seen.
-    function syncLoop() {
-      if (shouldRun()) {
-        if (!rafId) {
-          lastTime = null;
-          rafId = requestAnimationFrame(frame);
-        }
-      } else if (rafId) {
+    function refreshLoop() {
+      const shouldRun = !userPaused && onScreen && pageVisible && W > 0;
+      if (shouldRun && !rafId) {
+        lastTime = null;
+        rafId = requestAnimationFrame(frame);
+      } else if (!shouldRun && rafId) {
         cancelAnimationFrame(rafId);
         rafId = 0;
       }
     }
 
-    function setPaused(paused) {
-      userPaused = paused;
-      toggle.setAttribute('data-paused', paused ? 'true' : 'false');
-      toggleLabel.textContent = paused ? 'Play motion' : 'Pause motion';
-      syncLoop();
+    function renderToggle() {
+      toggle.dataset.paused = String(userPaused);
+      toggleText.textContent = userPaused ? 'Play' : 'Pause';
+      toggle.setAttribute('aria-label', userPaused ? 'Play animation' : 'Pause animation');
+      motionNote.hidden = !(userPaused && reducedMotion);
+    }
+
+    /* ================= Size ================= */
+
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      heroLeft = rect.left + window.scrollX;
+      heroTop = rect.top + window.scrollY;
+
+      const w = rect.width;
+      const h = rect.height;
+      const ratio = Math.min(2, window.devicePixelRatio || 1);
+      if (w === W && h === H && ratio === dpr) return;
+
+      W = w;
+      H = h;
+      dpr = ratio;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+
+      buildStars();
+      if (!rafId) draw(); // paused or off screen: still show a frame
+      refreshLoop();
     }
 
     /* ================= Input ================= */
-    // Press and hold on the canvas to warp (mouse, touch or pen).
-    canvas.addEventListener('pointerdown', function (e) {
+
+    // Press and hold on the canvas (mouse, touch or pen) to warp.
+    canvas.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       lastPointerType = e.pointerType;
-      pointers.add(e.pointerId);
+      pressing.add(e.pointerId);
+      if (e.pointerType === 'mouse') {
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* not supported */ }
+      }
     });
 
-    function release(e) { pointers.delete(e.pointerId); }
+    const release = (e) => { pressing.delete(e.pointerId); };
     window.addEventListener('pointerup', release);
-    window.addEventListener('pointercancel', release);   // e.g. the finger started scrolling
-    window.addEventListener('blur', function () { pointers.clear(); });
+    window.addEventListener('pointercancel', release); // e.g. the finger started scrolling
+    canvas.addEventListener('lostpointercapture', release);
+    window.addEventListener('blur', () => { pressing.clear(); mouse.inside = false; });
 
-    // Stop the long-press menu from popping up while holding a finger down.
-    canvas.addEventListener('contextmenu', function (e) {
-      if (pointers.size > 0 && lastPointerType !== 'mouse') e.preventDefault();
+    // A long press on a touch screen should warp, not open a menu.
+    canvas.addEventListener('contextmenu', (e) => {
+      if (lastPointerType !== 'mouse') e.preventDefault();
     });
 
-    // The button only follows a real mouse, never touch.
-    function trackMouse(e) {
+    // The magnet follows the mouse only (not touch).
+    const trackMouse = (e) => {
       if (e.pointerType !== 'mouse') return;
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      mouse.active = true;
-    }
+      mouse.inside = true;
+    };
     window.addEventListener('pointermove', trackMouse, { passive: true });
     window.addEventListener('pointerdown', trackMouse, { passive: true });
-    window.addEventListener('pointerout', function (e) {
-      if (e.pointerType === 'mouse' && !e.relatedTarget) mouse.active = false;  // left the window
+    document.documentElement.addEventListener('mouseleave', () => { mouse.inside = false; });
+
+    cta.addEventListener('click', () => {
+      window.scrollTo({ top: 0, left: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
     });
 
-    magnet.addEventListener('click', function () {
-      window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+    toggle.addEventListener('click', () => {
+      userPaused = !userPaused;
+      if (userPaused) resetButton();
+      renderToggle();
+      refreshLoop();
     });
 
-    toggle.addEventListener('click', function () {
-      setPaused(!userPaused);
-    });
+    /* ================= Pause when nobody can see it ================= */
 
-    // If the system setting switches to reduced motion, pause.
-    function onMotionPreference(e) { if (e.matches) setPaused(true); }
-    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onMotionPreference);
-    else if (reduceMotion.addListener) reduceMotion.addListener(onMotionPreference);
-
-    /* ================= Resizing & visibility ================= */
-    function onResize() {
-      if (resize() && !rafId) drawStill();   // keep a still frame when paused
-    }
-    window.addEventListener('resize', onResize);
-    if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(hero);
-
-    // Pause when the starfield is scrolled off-screen or the tab is hidden.
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        heroVisible = entries[entries.length - 1].isIntersecting;
-        syncLoop();
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        refreshLoop();
       }).observe(hero);
     }
-    document.addEventListener('visibilitychange', syncLoop);
 
-    /* ================= Start ================= */
-    resize();
-    setPaused(userPaused);       // sets the Play/Pause label and starts the loop if allowed
-    if (userPaused) drawStill(); // reduced motion: meaningful still frame
+    document.addEventListener('visibilitychange', () => {
+      pageVisible = document.visibilityState !== 'hidden';
+      refreshLoop();
+    });
+
+    const onMotionChange = (e) => {
+      reducedMotion = e.matches;
+      if (reducedMotion && !userPaused) {
+        userPaused = true;
+        resetButton();
+      }
+      renderToggle();
+      refreshLoop();
+    };
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+    else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+    window.addEventListener('resize', resize);
+
+    /* ================= Go ================= */
+
+    renderToggle();
+    resize(); // builds the stars, draws the first (resting) frame, starts the loop unless paused
   })();
   </script>
 </body>

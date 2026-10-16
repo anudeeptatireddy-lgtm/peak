@@ -1,1 +1,5 @@
-{ "hide": ".panel, .about" }
+{
+  "hide": ".card",
+  "expect": "fail",
+  "reason": "Failed its one retest (0.06 ink difference). Cause found after: the prompt never said the scene rebuilds once the font loads. Prompt fixed 2026-10-17; awaiting the owner’s OK for another retest."
+}

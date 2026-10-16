@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Scroll Marquee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+  <style>
+    /* ---------- Colours: the "Riso" palette ---------- */
+    :root {
+      --paper: #F4F2FF;    /* background */
+      --ink: #1A1240;      /* main text, 15.8:1 on the paper */
+      --ink-soft: #4E4777; /* secondary text, 7.6:1 on the paper */
+      --pink: #EC1C7F;     /* accent 1, 3.8:1 on the paper: already above 3:1, so no darkening needed */
+      --blue: #2A47EA;     /* accent 2, used for hover and keyboard focus */
+      --orange: #FF7A00;   /* accent 3 */
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      /* The rows reach a little past both screen edges, so leaning never shows an empty corner. */
+      --bleed: 7rem;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+
+    /* Hidden on screen, still read by screen readers. */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      margin: -1px; padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ---------- The full-screen section ---------- */
+    .marquee {
+      position: relative;
+      height: 100vh;      /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 16vh; /* lifts the centred stack 8vh above the middle */
+      overflow: hidden;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.2rem, 1vw, 0.7rem);
+      margin-inline: calc(var(--bleed) * -1);
+      will-change: transform;
+      /* Ink on paper: the text multiplies with whatever is under it, like a Riso print.
+         (There is no canvas here, so this is the CSS version of "multiply".) */
+      mix-blend-mode: multiply;
+    }
+
+    /* ---------- One row of repeating text ---------- */
+    .row {
+      font-size: clamp(3rem, 12vw, 10rem);
+      line-height: 1.1;
+      padding: 0.02em 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+    }
+    .group {
+      display: flex;
+      flex: none;
+      gap: 0.32em;
+      padding-right: 0.32em; /* same space after the last word, so the loop has no seam */
+    }
+
+    .row--1 {
+      font-stretch: 150%;
+      font-weight: 900;
+      color: var(--ink);
+    }
+    .row--2 {
+      font-stretch: 70%;
+      font-weight: 800;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      -webkit-text-stroke: max(1.5px, 0.012em) var(--ink);
+    }
+    .row--3 {
+      font-stretch: 110%;
+      font-weight: 300;
+      color: var(--pink);
+    }
+
+    /* ---------- Invisible scroller (only used when the page itself can't scroll) ---------- */
+    .scroller {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+    .scroller::-webkit-scrollbar { display: none; }
+
+    /* ---------- Hint and Play/Pause button ---------- */
+    .controls {
+      position: absolute;
+      z-index: 2;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 16px max(1.25rem, env(safe-area-inset-bottom));
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem 1.25rem;
+      pointer-events: none; /* scrolling over the empty strip still reaches the scroller */
+    }
+    .hint {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .toggle {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      padding: 0.65rem 1.2rem;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font: 700 1rem/1 var(--font);
+      font-stretch: 115%;
+      cursor: pointer;
+      transition: background-color 150ms, border-color 150ms;
+    }
+    .toggle:hover {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+    .toggle svg {
+      width: 1rem;
+      height: 1rem;
+      fill: currentColor;
+    }
+    .toggle[data-state="playing"] .icon-play,
+    .toggle[data-state="paused"] .icon-pause { display: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toggle { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="marquee" aria-label="Scroll-reactive marquee">
+      <p class="sr-only">smooth. buttery. sixty frames a second.</p>
+
+      <!-- Decorative rows: screen readers skip these and read the paragraph above instead. -->
+      <div class="stack" aria-hidden="true">
+        <div class="row row--1" data-word="smooth">smooth</div>
+        <div class="row row--2" data-word="buttery">buttery</div>
+        <div class="row row--3" data-word="sixty frames a second">sixty frames a second</div>
+      </div>
+
+      <div class="scroller" aria-hidden="true" tabindex="-1" hidden><div class="scroller-space"></div></div>
+
+      <div class="controls">
+        <p class="hint">Scroll to speed it up. Scroll up to reverse it.</p>
+        <button class="toggle" type="button" data-state="playing">
+          <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <rect x="3" y="2" width="3.5" height="12" rx="1"/>
+            <rect x="9.5" y="2" width="3.5" height="12" rx="1"/>
+          </svg>
+          <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M4 2.6v10.8a1 1 0 0 0 1.5.86l8.9-5.4a1 1 0 0 0 0-1.72L5.5 1.74A1 1 0 0 0 4 2.6z"/>
+          </svg>
+          <span class="toggle-label">Pause</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // ---------- Settings from the brief ----------
+      const SCROLL_BOOST = 0.8;        // how much scrolling speeds the rows up
+      const MAX_VELOCITY = 140;        // scroll speed is clamped to ±140
+      const SMOOTHING = 0.2;           // velocity += (raw - velocity) * 0.2
+      const DIRECTION_THRESHOLD = 0.4; // direction only flips when |raw| > 0.4
+      const LEAN_PER_VELOCITY = 0.5;   // degrees of lean per unit of velocity
+      const MAX_LEAN = 18;             // never lean more than 18 degrees
+      const MAX_DT = 0.05;             // seconds
+
+      const section = document.querySelector(".marquee");
+      const stack = section.querySelector(".stack");
+      const scroller = section.querySelector(".scroller");
+      const scrollerSpace = scroller.firstElementChild;
+      const toggle = section.querySelector(".toggle");
+      const toggleLabel = toggle.querySelector(".toggle-label");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      // One entry per row, in order. Rows 1 and 3 move one way (+1), row 2 the other (-1).
+      const rows = Array.from(section.querySelectorAll(".row"), (el, i) => ({
+        el,
+        word: el.dataset.word,
+        direction: i === 1 ? -1 : 1,
+        offset: Math.random() * 400,
+        groupWidth: 1,
+        track: null,
+      }));
+
+      let playing = !reducedMotion.matches; // reduced motion: start paused
+      let onScreen = true;
+      let rafId = 0;
+      let lastTime = 0;
+      let t = 0;               // seconds the loop has run (sum of dt)
+      let velocity = 0;        // smoothed scroll speed
+      let scrollDirection = 1; // +1 scrolling down, -1 scrolling up
+      let lean = 0;            // degrees
+      let lastScroll = 0;
+      let useScroller = false; // true when the page is too short to scroll
+      let jumped = 0;          // total distance the invisible scroller has jumped
+
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+      // ---------- Building the rows ----------
+      // Repeat the word until one group is at least as wide as the screen,
+      // then add an identical copy right after it so the loop is seamless.
+      function buildRow(row) {
+        const track = document.createElement("div");
+        track.className = "track";
+        const group = document.createElement("div");
+        group.className = "group";
+        const addWord = () => {
+          const span = document.createElement("span");
+          span.textContent = row.word;
+          group.appendChild(span);
+        };
+
+        addWord();
+        track.appendChild(group);
+        row.el.replaceChildren(track);
+
+        const needed = Math.max(row.el.clientWidth, window.innerWidth);
+        const oneWord = group.getBoundingClientRect().width; // word + its gap
+        if (oneWord > 0) {
+          const count = Math.ceil(needed / oneWord);
+          for (let i = 1; i < count; i++) addWord();
+        }
+        let width = group.getBoundingClientRect().width;
+        for (let i = 0; width < needed && i < 50; i++) { // safety net for rounding
+          addWord();
+          width = group.getBoundingClientRect().width;
+        }
+
+        track.appendChild(group.cloneNode(true));
+        row.track = track;
+        row.groupWidth = Math.max(width, 1);
+      }
+
+      // ---------- Where the scroll position comes from ----------
+      function readScroll() {
+        return useScroller ? scroller.scrollTop + jumped : window.scrollY;
+      }
+
+      function pickScrollSource() {
+        const pageRange = document.documentElement.scrollHeight - window.innerHeight;
+        useScroller = pageRange < window.innerHeight * 0.25; // the page barely scrolls
+        scroller.hidden = !useScroller;
+        if (useScroller) {
+          const screen = scroller.clientHeight;
+          scrollerSpace.style.height = `${screen * 3}px`; // three screens tall
+          scroller.scrollTop = screen;                     // start on the middle screen
+        }
+        lastScroll = readScroll();
+      }
+
+      // Quietly jump back by one screen whenever we get within half a screen of either end.
+      scroller.addEventListener("scroll", () => {
+        const screen = scroller.clientHeight;
+        const end = scroller.scrollHeight - screen;
+        const before = scroller.scrollTop;
+        if (before < screen * 0.5) scroller.scrollTop = before + screen;
+        else if (before > end - screen * 0.5) scroller.scrollTop = before - screen;
+        else return;
+        jumped += before - scroller.scrollTop; // remember the jump so the reading stays smooth
+      }, { passive: true });
+
+      // ---------- Measuring and drawing ----------
+      function measure() {
+        stack.style.transform = "none"; // measure without the lean
+        rows.forEach(buildRow);
+        pickScrollSource();
+        draw();
+      }
+
+      function draw() {
+        for (const row of rows) {
+          const w = row.groupWidth;
+          const x = ((row.offset % w) + w) % w; // wraps seamlessly
+          row.track.style.transform = `translate3d(${-x}px, 0, 0)`;
+        }
+        stack.style.transform = `skewX(${lean}deg)`;
+      }
+
+      // ---------- The one animation loop ----------
+      function frame(now) {
+        rafId = requestAnimationFrame(frame);
+
+        const dt = lastTime ? Math.min((now - lastTime) / 1000, MAX_DT) : 0;
+        lastTime = now;
+        t += dt;
+        const frames = dt * 60; // 1.0 means one frame at 60 fps
+
+        const scroll = readScroll();
+        const raw = clamp((scroll - lastScroll) / Math.max(frames, 0.25), -MAX_VELOCITY, MAX_VELOCITY);
+        lastScroll = scroll;
+        velocity += (raw - velocity) * SMOOTHING;
+        if (Math.abs(raw) > DIRECTION_THRESHOLD) scrollDirection = Math.sign(raw);
+
+        const step = 1 * (1 + Math.abs(velocity) * SCROLL_BOOST) * frames * scrollDirection;
+        for (const row of rows) row.offset += step * row.direction;
+
+        lean = clamp(-velocity * LEAN_PER_VELOCITY, -MAX_LEAN, MAX_LEAN);
+        draw();
+      }
+
+      // Run only while playing and while the section is on screen.
+      function syncLoop() {
+        const shouldRun = playing && onScreen;
+        if (shouldRun && !rafId) {
+          lastTime = 0;
+          lastScroll = readScroll();
+          rafId = requestAnimationFrame(frame);
+        } else if (!shouldRun && rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+      }
+
+      function setPlaying(next) {
+        playing = next;
+        toggle.dataset.state = playing ? "playing" : "paused";
+        toggleLabel.textContent = playing ? "Pause" : "Play";
+        if (!playing) {
+          // Still frame: rows stay where they are, with no lean.
+          velocity = 0;
+          lean = 0;
+          draw();
+        }
+        syncLoop();
+      }
+
+      // ---------- Wiring it up ----------
+      measure();
+      setPlaying(playing);
+
+      toggle.addEventListener("click", () => setPlaying(!playing));
+      window.addEventListener("resize", measure);
+
+      if (document.fonts) {
+        document.fonts.ready.then(measure);
+        document.fonts.addEventListener("loadingdone", measure);
+      }
+
+      new IntersectionObserver(([entry]) => {
+        onScreen = entry.isIntersecting;
+        syncLoop();
+      }).observe(section);
+
+      reducedMotion.addEventListener("change", (e) => {
+        if (e.matches) setPlaying(false);
+      });
+    })();
+  </script>
+</body>
+</html>

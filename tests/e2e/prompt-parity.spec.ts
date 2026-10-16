@@ -24,15 +24,22 @@ const BUILT = existsSync(DIR)
  * scene below), so the page still receives the scripted mouse moves and clicks.
  * Our stage's own buttons are hidden the same way.
  */
-function hideSelector(slug: string): string {
-  return (JSON.parse(readFileSync(join(DIR, slug, 'compare.json'), 'utf8')) as { hide: string })
-    .hide;
+interface CompareConfig {
+  hide: string;
+  /** A logged failure (docs/PROMPT_TESTS.md) awaiting a retest: runs, and must still fail. */
+  expect?: 'fail';
+  reason?: string;
 }
+const config = (slug: string) =>
+  JSON.parse(readFileSync(join(DIR, slug, 'compare.json'), 'utf8')) as CompareConfig;
 const hide = (p: Page, sel: string) =>
   p.addStyleTag({ content: `${sel} { visibility: hidden !important; }` });
 
 for (const slug of BUILT) {
   test(`${slug}: the prompt alone rebuilds the scene`, async ({ browser }, info) => {
+    const cfg = config(slug);
+    // Known failures stay visible: if the page starts matching, this flips to an error.
+    test.fail(cfg.expect === 'fail', cfg.reason);
     const viewport = info.project.use.viewport!;
     const opts = {
       viewport,
@@ -45,7 +52,7 @@ for (const slug of BUILT) {
     const pp: Pair = { proto: await ctxA.newPage(), ours: await ctxB.newPage() };
     await open(pp.proto, 'file', slug, join(DIR, slug, 'index.html'));
     await open(pp.ours, 'peak', slug);
-    await hide(pp.proto, hideSelector(slug));
+    await hide(pp.proto, cfg.hide);
     await hide(pp.ours, '[data-stage] button');
     const step = async (ms: number) => {
       for (let t = 0; t < ms; t += 16) {
