@@ -1,0 +1,75 @@
+---
+// World rail (PRD §6.5): one dot per home section in that section's world.
+// The active dot is larger. Hidden under 700px.
+import { getWorld, type WorldId } from '../theme/worlds';
+
+interface Props {
+  items: { id: string; label: string; world: Exclude<WorldId, 'custom'> }[];
+}
+const { items } = Astro.props;
+---
+
+<nav class="rail" aria-label="Sections" data-rail>
+  <ol role="list">
+    {items.map((item, i) => {
+      const t = getWorld(item.world);
+      return (
+        <li>
+          <a
+            href={`#${item.id}`}
+            aria-label={`Go to ${item.label}`}
+            data-rail-dot={i}
+            style={`--dot-ground: ${t.ground}; --dot-accent: ${t.c1}`}
+          />
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .rail {
+    position: fixed;
+    right: calc(0.75rem + env(safe-area-inset-right, 0px));
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    display: none;
+  }
+  @media (min-width: 700px) {
+    .rail {
+      display: block;
+    }
+  }
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem;
+    display: grid;
+    gap: 0.1rem;
+    border-radius: 999px;
+    background: var(--header-bg);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  a {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+  }
+  a::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--dot-ground);
+    box-shadow:
+      0 0 0 2px var(--dot-accent),
+      0 0 0 3px var(--line);
+    transition: transform var(--dur-ui) var(--ease-out);
+  }
+  a[aria-current='true']::before {
+    transform: scale(1.6);
+  }
+</style>

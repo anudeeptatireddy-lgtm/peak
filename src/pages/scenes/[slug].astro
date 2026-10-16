@@ -1,0 +1,77 @@
+---
+// Scene page. For now: the scene full-screen in its world. The playground,
+// prompt builder and How it works tabs arrive in Wave 2 (PLAN 2.1).
+import Base from '../../layouts/Base.astro';
+import type { SceneMeta } from '../../scenes/types';
+
+export function getStaticPaths() {
+  const metas = Object.values(
+    import.meta.glob<{ meta: SceneMeta }>('../../scenes/*/meta.ts', { eager: true }),
+  ).map((m) => m.meta);
+  return metas.map((meta) => ({ params: { slug: meta.slug }, props: { meta } }));
+}
+
+const { meta } = Astro.props as { meta: SceneMeta };
+---
+
+<Base title={meta.title} description={meta.summary} world={meta.world}>
+  <section class="scene-page" aria-labelledby="scene-title">
+    <div class="stage" data-mount={meta.slug} data-inner-scroll="true"></div>
+    <div class="caption wrap">
+      <h1 id="scene-title" class="h2">
+        {meta.title}
+      </h1>
+      <p class="lede">{meta.summary}</p>
+      <p class="small soft">
+        {meta.difficulty} · about {meta.minutes} min. The sliders and the prompt builder arrive in
+        wave 2 of the build.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { mountScene } from '../../engine/mount';
+  import { loadScene } from '../../scenes/registry';
+  const stage = document.querySelector<HTMLElement>('[data-mount]')!;
+  loadScene(stage.dataset.mount!).then((mod) => mountScene(stage, mod));
+</script>
+
+<style>
+  .scene-page {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+  .scene-page::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 35%;
+    z-index: 1;
+    background: linear-gradient(to top, var(--ground) 6%, transparent);
+    pointer-events: none;
+  }
+  .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(clamp(1.5rem, 6vh, 3.25rem) + env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    display: grid;
+    gap: 0.5rem;
+    max-width: calc(34rem + 2 * var(--gutter));
+    pointer-events: none;
+  }
+  .lede {
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,174 @@
+---
+// The four steps (PRD §6.1), each with a tiny looping illustration. The loops
+// stop when motion is paused (html[data-paused]) and under reduced motion.
+const steps = [
+  { n: 1, title: 'Find an animation', line: 'Scroll, play, pick the one you want.', art: 'find' },
+  { n: 2, title: 'Tweak it', line: 'Make it yours with plain-language sliders.', art: 'tweak' },
+  { n: 3, title: 'Copy the prompt', line: 'Every setting becomes a sentence.', art: 'copy' },
+  {
+    n: 4,
+    title: 'Paste it into Claude Code',
+    line: 'It builds your version in minutes.',
+    art: 'paste',
+  },
+];
+---
+
+<ol class="steps" role="list">
+  {steps.map((s) => (
+    <li class="step">
+      <div class={`art art--${s.art}`} aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <p class="num small soft">{s.n}</p>
+      <h3>{s.title}</h3>
+      <p class="soft">{s.line}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 2rem 1.5rem;
+  }
+  .step {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+  .art {
+    position: relative;
+    width: 96px;
+    height: 64px;
+    margin-bottom: 0.5rem;
+  }
+  .art span {
+    position: absolute;
+    border-radius: 999px;
+    mix-blend-mode: var(--blend-css, normal);
+  }
+  /* 1: three dots, one pulsing as if picked */
+  .art--find span {
+    width: 22px;
+    height: 22px;
+    top: 21px;
+    background: var(--c1);
+  }
+  .art--find span:nth-child(2) {
+    left: 37px;
+    background: var(--c2);
+    animation: pulse 1.6s var(--ease-out) infinite;
+  }
+  .art--find span:nth-child(3) {
+    left: 74px;
+    background: var(--c3);
+  }
+  /* 2: a slider knob sliding back and forth */
+  .art--tweak span:nth-child(1) {
+    left: 0;
+    right: 0;
+    top: 30px;
+    height: 4px;
+    background: var(--line);
+  }
+  .art--tweak span:nth-child(2) {
+    width: 20px;
+    height: 20px;
+    top: 22px;
+    left: 0;
+    background: var(--c1);
+    animation: slide 2.4s ease-in-out infinite alternate;
+  }
+  .art--tweak span:nth-child(3) {
+    display: none;
+  }
+  /* 3: lines of a prompt filling in */
+  .art--copy span {
+    left: 0;
+    height: 8px;
+    background: var(--c2);
+    transform-origin: left;
+    animation: fill 2.4s var(--ease-out) infinite;
+  }
+  .art--copy span:nth-child(1) {
+    top: 10px;
+    width: 96px;
+  }
+  .art--copy span:nth-child(2) {
+    top: 28px;
+    width: 72px;
+    animation-delay: 0.3s;
+    background: var(--c3);
+  }
+  .art--copy span:nth-child(3) {
+    top: 46px;
+    width: 84px;
+    animation-delay: 0.6s;
+    background: var(--c1);
+  }
+  /* 4: a blinking cursor after a prompt sign */
+  .art--paste span:nth-child(1) {
+    left: 0;
+    top: 24px;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--ink);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+  .art--paste span:nth-child(2) {
+    left: 24px;
+    top: 26px;
+    width: 40px;
+    height: 10px;
+    background: var(--c2);
+  }
+  .art--paste span:nth-child(3) {
+    left: 70px;
+    top: 20px;
+    width: 4px;
+    height: 22px;
+    border-radius: 1px;
+    background: var(--ink);
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes pulse {
+    50% {
+      transform: scale(1.35);
+    }
+  }
+  @keyframes slide {
+    to {
+      left: 76px;
+    }
+  }
+  @keyframes fill {
+    0% {
+      transform: scaleX(0);
+    }
+    40%,
+    100% {
+      transform: scaleX(1);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  :global(html[data-paused='true']) .art span {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .art span {
+      animation: none !important;
+    }
+  }
+</style>

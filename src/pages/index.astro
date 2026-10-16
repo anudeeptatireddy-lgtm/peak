@@ -1,12 +1,288 @@
 ---
+// Home: the world journey (PRD §6). Twelve featured scenes, each in its own
+// world, blending on scroll; then How it works and Start here in Matcha.
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import WorldRail from '../components/WorldRail.astro';
+import { HOME_CLOSING_WORLD, HOME_JOURNEY } from '../theme/journey';
+import type { SceneMeta } from '../scenes/types';
+
+// Which scenes exist yet (each scene folder has a meta.ts).
+const metas = Object.values(
+  import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
+).map((m) => m.meta);
+const bySlug = new Map(metas.map((m) => [m.slug, m]));
+
+// Until a featured scene is built, its slot shows a built scene in the slot's world.
+const ARRIVES: Record<string, number> = {
+  marbles: 3,
+  neon: 4,
+  lightning: 5,
+  flock: 5,
+  cloth: 5,
+  fireworks: 5,
+  lava: 6,
+  glitch: 6,
+};
+const featured = new Set(HOME_JOURNEY.map((s) => s.scene));
+const pool = [
+  ...metas.filter((m) => !featured.has(m.slug)).map((m) => m.slug),
+  ...['ripple', 'particles'].filter((s) => bySlug.has(s)),
+];
+let next = 0;
+const NO_SCRIM = new Set(['elastic', 'velocity']);
+
+const slots = HOME_JOURNEY.map((slot) => {
+  const built = bySlug.get(slot.scene);
+  const mount = built ? slot.scene : pool[next++ % Math.max(1, pool.length)];
+  const standIn = !built && mount ? bySlug.get(mount) : undefined;
+  return {
+    ...slot,
+    featuredTitle: slot.title,
+    id: slot.scene === 'particles' ? 'top' : `s-${slot.scene}`,
+    mount,
+    standIn,
+    title: standIn ? standIn.title : slot.title,
+    line: standIn ? standIn.summary : slot.line,
+    link: mount,
+    scrim: !NO_SCRIM.has(mount ?? ''),
+  };
+});
+const [hero, ...rest] = slots;
+
+const railItems = [
+  ...slots.map((s) => ({ id: s.id, label: s.featuredTitle, world: s.world })),
+  { id: 'how-it-works', label: 'How it works', world: HOME_CLOSING_WORLD },
+];
 ---
 
-<Base title="peak">
-  <Placeholder
-    title="See it. Tweak it. Build it with Claude Code."
-    lede="Animations you can play with, plus the exact prompt to make your own."
-    wave={1}
-  />
+<Base title="peak" world="journey">
+  <WorldRail items={railItems} />
+
+  {hero && (
+    <section
+      class="j has-scrim"
+      id={hero.id}
+      data-journey
+      data-world={hero.world}
+      aria-labelledby="t-hero"
+    >
+      <div class="stage" data-mount={hero.mount} />
+      <div class="caption caption--hero wrap">
+        <h1 class="hero-line" id="t-hero">
+          See it. Tweak it. Build it with Claude Code.
+        </h1>
+        <p class="lede">Animations you can play with, plus the exact prompt to make your own.</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/gallery">
+            Browse the gallery
+          </a>
+          <a class="btn btn--secondary" href="/start">
+            I've never used Claude Code
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {rest.map((s) => (
+    <section
+      class:list={['j', { 'has-scrim': s.scrim }]}
+      id={s.id}
+      data-journey
+      data-world={s.world}
+      aria-labelledby={`t-${s.id}`}
+    >
+      <div class="stage" data-mount={s.mount} />
+      <div class="caption wrap">
+        <h2 id={`t-${s.id}`}>{s.title}</h2>
+        <p class="lede">{s.line}</p>
+        {s.standIn && (
+          <p class="small soft">
+            Stand-in until {s.featuredTitle} arrives in wave {ARRIVES[s.scene] ?? '?'}.
+          </p>
+        )}
+        <div class="actions">
+          <a class="btn btn--secondary" href={`/scenes/${s.link}`}>
+            Tweak it and get the prompt
+          </a>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section
+    class="j j--content wrap"
+    id="how-it-works"
+    data-journey
+    data-world={HOME_CLOSING_WORLD}
+    aria-labelledby="t-how"
+  >
+    <h2 id="t-how">How it works</h2>
+    <HowItWorks />
+  </section>
+
+  <section
+    class="j j--content j--start wrap"
+    id="start-here"
+    data-journey
+    data-world={HOME_CLOSING_WORLD}
+    aria-labelledby="t-start"
+  >
+    <h2 id="t-start" class="sr-only">
+      Start here
+    </h2>
+    <p class="body measure soft">
+      Never used Claude Code? The Start here guide walks you from nothing to your first animated
+      page.
+    </p>
+    <a class="start-link display" href="/start">
+      Start here
+    </a>
+  </section>
 </Base>
+
+<script>
+  import { mountScene } from '../engine/mount';
+  import { setMaxActive } from '../engine/scheduler';
+  import { loadScene, hasScene } from '../scenes/registry';
+  import { journeyState, journeyTheme, type Boundary } from '../theme/journey';
+  import { setTheme } from '../theme/store';
+  import { getWorld, isWorldId } from '../theme/worlds';
+
+  // At most two scenes run at once, even when sections line up at the edges.
+  setMaxActive(2);
+
+  const sections = [...document.querySelectorAll<HTMLElement>('[data-journey]')];
+  const themes = sections.map((s) =>
+    getWorld(isWorldId(s.dataset.world ?? '') ? (s.dataset.world as never) : 'riso'),
+  );
+  const dots = [...document.querySelectorAll<HTMLAnchorElement>('[data-rail-dot]')];
+
+  // Blend colors on scroll (PRD §6.2): recompute only when the scroll position changes.
+  let bounds: Boundary[] = [];
+  let lastKey = '';
+  const measure = () => {
+    bounds = sections.map((s) => {
+      const r = s.getBoundingClientRect();
+      return { top: r.top + window.scrollY, bottom: r.bottom + window.scrollY };
+    });
+    lastKey = '';
+    update();
+  };
+  const update = () => {
+    const st = journeyState(bounds, window.scrollY, window.innerHeight);
+    const key = `${st.from}:${st.to}:${st.t.toFixed(3)}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    setTheme(journeyTheme(themes, st));
+    const active = st.t < 0.5 ? st.from : st.to;
+    dots.forEach((d, i) =>
+      d.setAttribute('aria-current', String(i === Math.min(active, dots.length - 1))),
+    );
+  };
+  addEventListener('scroll', update, { passive: true });
+  new ResizeObserver(measure).observe(document.body);
+  measure();
+
+  // Mount each scene when it comes within a screen of the viewport.
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const stage = e.target as HTMLElement;
+        const slug = stage.dataset.mount ?? '';
+        if (!hasScene(slug)) continue;
+        loadScene(slug).then((mod) => mountScene(stage, mod));
+      }
+    },
+    { rootMargin: '100% 0px' },
+  );
+  document.querySelectorAll<HTMLElement>('[data-mount]').forEach((el) => io.observe(el));
+</script>
+
+<style>
+  .j {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+  .has-scrim::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;
+    z-index: 1;
+    background: linear-gradient(to top, var(--ground) 6%, transparent);
+    pointer-events: none;
+  }
+  .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(clamp(1.5rem, 6vh, 3.25rem) + env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    display: grid;
+    gap: 0.6rem;
+    max-width: calc(34rem + 2 * var(--gutter));
+    pointer-events: none;
+  }
+  .caption .lede {
+    max-width: 30em;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.45;
+    font-weight: 450;
+    font-variation-settings:
+      'wdth' 95,
+      'wght' 450;
+  }
+  .caption--hero {
+    max-width: calc(40rem + 2 * var(--gutter));
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+  }
+  .actions a {
+    pointer-events: auto;
+  }
+  .j--content {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: 2.5rem;
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: 4rem;
+  }
+  .j--start {
+    min-height: 70vh;
+    min-height: 70svh;
+    gap: 1rem;
+  }
+  .start-link {
+    color: var(--accent-text);
+    text-decoration: none;
+    font-size: clamp(3rem, 12vw, 9rem);
+    width: fit-content;
+  }
+  @media (hover: hover) {
+    .start-link:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 0.06em;
+    }
+  }
+</style>
