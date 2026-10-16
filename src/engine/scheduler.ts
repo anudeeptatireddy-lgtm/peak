@@ -102,6 +102,10 @@ function bindPause(): void {
 export interface Registration {
   /** Mark the scene as sized and ready to draw (after its first resize). */
   ready(): void;
+  /** True while the scene is on screen (within the 80px margin). */
+  isVisible(): boolean;
+  /** True when the scene is drawing live frames right now. */
+  isRunning(): boolean;
   unregister(): void;
 }
 
@@ -117,6 +121,8 @@ export function register(el: Element, scene: Tickable): Registration {
       if (entry.visible && (isPaused() || !isActive(entry))) scene.still();
       wake();
     },
+    isVisible: () => entry.visible,
+    isRunning: () => !isPaused() && entry.visible && entry.ready && isActive(entry),
     unregister() {
       entries.delete(entry);
       byEl.delete(el);

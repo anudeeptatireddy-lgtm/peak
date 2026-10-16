@@ -73,7 +73,7 @@ Goal: the home page scrolls through 12 worlds with living colors, using the six 
   - Do: `scheduler.ts` (single rAF, register/unregister, visibility via IntersectionObserver, dt clamp, skips frames where no time has passed, stops when idle), `canvas.ts`, `pointer.ts` (including press-and-hold drag start, PRD §8.3), `scroll.ts` (window or inner scroller), `motion.ts` (global pause, reduced-motion start state, live updates, `still()` on pause), font-ready helper. Port behavior from `reference/peak-prototype.html` where it exists.
   - Done when: unit tests cover dt clamping, zero-dt frames, and scroll velocity smoothing; an e2e test with reduced motion emulated confirms the scheduler doesn't start until Play is pressed.
 
-- [ ] **1.7 Scene types and registry** · PRD §16.3, §8.4
+- [x] **1.7 Scene types and registry** · PRD §16.3, §8.4
   - Do: `src/scenes/types.ts` exactly as §16.3, `registry.ts` (slug → lazy import). A schema validator used by tests: unique ids, defaults within range, help text and phrase present for every param, every `term` exists in the word list (stub list for now), rate params of ⚠ scenes capped (PRD §8.2).
   - Done when: `npm run check` passes with the registry empty.
 
