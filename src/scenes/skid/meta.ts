@@ -29,7 +29,7 @@ export const meta: SceneMeta = {
   ],
   behaviorLines: [
     'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.',
-    'The entrance plays when the page loads, on a click or tap (on release), and when scrolling up brings the letters back. It restarts every letter from the left; old marks and smoke stay until they fade.',
+    'The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.',
     'Lay the letters out again on every resize and once the Anybody font has finished loading.',
     'If the page itself barely scrolls (a short page), give the section its own scroll area: an invisible scroller over it, three screens tall, that quietly jumps back by one screen whenever it gets within half a screen of either end, and read the scroll position from it (adding up the jumps).',
   ],
