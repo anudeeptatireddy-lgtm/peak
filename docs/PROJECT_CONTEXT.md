@@ -175,3 +175,5 @@ Status update since the handoff prompt was written. This replaces section 9, ste
 4. Fix the flaky drop test properly: give the scheduler a test mode with a fixed 1/60s timestep and seeded randomness, so physics runs the same every time. Unskip the drop test and use this mode in all parity tests.
 5. About page: the owner will send details when step 8.14 is reached.
 6. Friend test: later, as planned.
+
+7. Project folder moved on 2026-10-17: it is now ~/peak (was ~/Documents/peak). Open Claude Code in ~/peak.
