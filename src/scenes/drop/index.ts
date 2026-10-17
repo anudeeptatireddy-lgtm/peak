@@ -38,6 +38,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   let rmax = 0;
   let Rp = 0;
   let next = 0;
+  let settled = false;
 
   function make(x: number, y: number): Ball {
     const r = rmin + (rmax - rmin) * Math.random() ** n('skew');
@@ -58,6 +59,88 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     rmin = clamp((mn * n('sizeMin')) / PCT, n('sizeMinLo'), n('sizeMinHi'));
     rmax = clamp((mn * n('sizeMax')) / PCT, n('sizeMaxLo'), n('sizeMaxHi'));
     Rp = clamp((mn * n('shove')) / PCT, n('shoveLo'), n('shoveHi'));
+  }
+
+  function physics(f: number, pushing: boolean): void {
+    const sub = n('substeps');
+    const h = f / sub;
+    const pvx = (ptr.x - ptr.px) / f;
+    const pvy = (ptr.y - ptr.py) / f;
+    const g = n('gravity');
+    const drag = n('airDrag') ** h;
+    const ff = n('floorFriction') ** h;
+    const wb = n('wallBounce');
+    const fb = n('floorBounce');
+    const kick = n('shovePower');
+    const e = 1 + n('ballBounce');
+    for (let s = 0; s < sub; s++) {
+      for (const b of B) {
+        b.vy += g * h;
+        b.vx *= drag;
+        b.x += b.vx * h;
+        b.y += b.vy * h;
+        if (b.x < b.r) {
+          b.x = b.r;
+          b.vx = Math.abs(b.vx) * wb;
+        } else if (b.x > c.w - b.r) {
+          b.x = c.w - b.r;
+          b.vx = -Math.abs(b.vx) * wb;
+        }
+        if (b.y > floor - b.r) {
+          b.y = floor - b.r;
+          b.vy = -Math.abs(b.vy) * fb;
+          b.vx *= ff;
+        }
+        if (pushing) {
+          const dx = b.x - ptr.x;
+          const dy = b.y - ptr.y;
+          const rr = Rp + b.r;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < rr * rr && d2 > FIXED.MIN_PUSH_D2) {
+            const d = Math.sqrt(d2);
+            const nx = dx / d;
+            const ny = dy / d;
+            b.x = ptr.x + nx * rr;
+            b.y = ptr.y + ny * rr;
+            const vn = (b.vx - pvx) * nx + (b.vy - pvy) * ny;
+            if (vn < 0) {
+              b.vx -= kick * vn * nx;
+              b.vy -= kick * vn * ny;
+            }
+          }
+        }
+      }
+      for (let i = 0; i < B.length; i++) {
+        const a = B[i]!;
+        for (let j = i + 1; j < B.length; j++) {
+          const b = B[j]!;
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const rr = a.r + b.r;
+          const d2 = dx * dx + dy * dy;
+          if (d2 >= rr * rr || d2 < FIXED.MIN_D2) continue;
+          const d = Math.sqrt(d2);
+          const nx = dx / d;
+          const ny = dy / d;
+          const ov = rr - d;
+          const ia = 1 / a.m;
+          const ib = 1 / b.m;
+          const it = ia + ib;
+          a.x -= (nx * ov * ia) / it;
+          a.y -= (ny * ov * ia) / it;
+          b.x += (nx * ov * ib) / it;
+          b.y += (ny * ov * ib) / it;
+          const vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+          if (vn < 0) {
+            const jn = -(e * vn) / it;
+            a.vx -= jn * ia * nx;
+            a.vy -= jn * ia * ny;
+            b.vx += jn * ib * nx;
+            b.vy += jn * ib * ny;
+          }
+        }
+      }
+    }
   }
 
   function draw(): void {
@@ -105,90 +188,16 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
         B.push(b);
         if (B.length > n('maxBalls')) B.shift();
       }
-      const sub = n('substeps');
-      const h = f / sub;
-      const pvx = (ptr.x - ptr.px) / f;
-      const pvy = (ptr.y - ptr.py) / f;
-      const pushing = ptr.pointerType === 'mouse' ? ptr.active : ptr.dragging;
-      const g = n('gravity');
-      const drag = n('airDrag') ** h;
-      const ff = n('floorFriction') ** h;
-      const wb = n('wallBounce');
-      const fb = n('floorBounce');
-      const kick = n('shovePower');
-      const e = 1 + n('ballBounce');
-      for (let s = 0; s < sub; s++) {
-        for (const b of B) {
-          b.vy += g * h;
-          b.vx *= drag;
-          b.x += b.vx * h;
-          b.y += b.vy * h;
-          if (b.x < b.r) {
-            b.x = b.r;
-            b.vx = Math.abs(b.vx) * wb;
-          } else if (b.x > c.w - b.r) {
-            b.x = c.w - b.r;
-            b.vx = -Math.abs(b.vx) * wb;
-          }
-          if (b.y > floor - b.r) {
-            b.y = floor - b.r;
-            b.vy = -Math.abs(b.vy) * fb;
-            b.vx *= ff;
-          }
-          if (pushing) {
-            const dx = b.x - ptr.x;
-            const dy = b.y - ptr.y;
-            const rr = Rp + b.r;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < rr * rr && d2 > FIXED.MIN_PUSH_D2) {
-              const d = Math.sqrt(d2);
-              const nx = dx / d;
-              const ny = dy / d;
-              b.x = ptr.x + nx * rr;
-              b.y = ptr.y + ny * rr;
-              const vn = (b.vx - pvx) * nx + (b.vy - pvy) * ny;
-              if (vn < 0) {
-                b.vx -= kick * vn * nx;
-                b.vy -= kick * vn * ny;
-              }
-            }
-          }
-        }
-        for (let i = 0; i < B.length; i++) {
-          const a = B[i]!;
-          for (let j = i + 1; j < B.length; j++) {
-            const b = B[j]!;
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const rr = a.r + b.r;
-            const d2 = dx * dx + dy * dy;
-            if (d2 >= rr * rr || d2 < FIXED.MIN_D2) continue;
-            const d = Math.sqrt(d2);
-            const nx = dx / d;
-            const ny = dy / d;
-            const ov = rr - d;
-            const ia = 1 / a.m;
-            const ib = 1 / b.m;
-            const it = ia + ib;
-            a.x -= (nx * ov * ia) / it;
-            a.y -= (ny * ov * ia) / it;
-            b.x += (nx * ov * ib) / it;
-            b.y += (ny * ov * ib) / it;
-            const vn = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-            if (vn < 0) {
-              const jn = -(e * vn) / it;
-              a.vx -= jn * ia * nx;
-              a.vy -= jn * ia * ny;
-              b.vx += jn * ib * nx;
-              b.vy += jn * ib * ny;
-            }
-          }
-        }
-      }
+      physics(f, ptr.pointerType === 'mouse' ? ptr.active : ptr.dragging);
       draw();
     },
     still() {
       ptr.takeTaps();
+      // Reduced motion shows the settled pile: let the starting balls fall first.
+      if (!settled) {
+        for (let i = 0; i < FIXED.STILL_FRAMES; i++) physics(1, false);
+        settled = true;
+      }
       draw();
     },
     setParams(next) {

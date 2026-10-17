@@ -30,7 +30,7 @@ export const meta: SceneMeta = {
   behaviorLines: [
     'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).',
     'On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.',
-    'Reduced-motion still frame: the balls where they are.',
+    'Reduced-motion still frame: the settled pile (run 300 frames of the physics with f = 1 and no pointer before drawing).',
   ],
   interactionLines: ['The canvas has touch-action: pan-y.'],
 };
