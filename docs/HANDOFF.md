@@ -4,7 +4,7 @@ Work stopped at a clean point because the owner is switching Claude accounts. Ev
 
 ## Exact step
 
-**Wave 5 wrap-up is done** (suite green, deployed, live smoke 80 passed). Next: **6.3 `tilt`** (SCENES.md #37), then 6.4 `kaleido`, 6.5 `morph`, 6.6 `moire` (flash test), 6.7-6.10, Wave 6 wrap-up. Wave 6 steps 6.1 and 6.2 are done.
+**Wave 5 wrap-up is done** (suite green, deployed, live smoke 80 passed). 6.3 `tilt` is done. Next: 6.4 `kaleido`, 6.5 `morph`, 6.6 `moire` (flash test), 6.7-6.10, Wave 6 wrap-up. Wave 6 steps 6.1 and 6.2 are done.
 
 ## Prompt-test state
 

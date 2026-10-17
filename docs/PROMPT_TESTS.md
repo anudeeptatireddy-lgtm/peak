@@ -36,11 +36,11 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 30 | `blackhole` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Under the 0.02 ink-difference bar at all three moments (swirl, click burst, dragging the hole), both sizes. | None needed. |
 | 31 | `flock` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 32 | `lightning` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Under the 0.02 ink-difference bar at both moments (the first idle arc and a strike from the cursor), both sizes. Arcs are random and thin, so they are compared by where the ink is. The agent read "the first idle arc" the same way we do: it fires on the first frame. | None needed. |
-| 33 | `smoke` | 2026-10-17 | Detailed · New page · I'm new | **desktop passes, phone fails** | Desktop matches. On the phone size the smoke differs by 4.3% (plume) and 4.6% (stirred) vs 2%. The agent also starts the plume when the pointer sits still over the page; ours only when it has left. Phone failure is not explained by that, so the phrase is unchanged; one retest still allowed, not yet run. | |
+| 33 | `smoke` | 2026-10-17 | Detailed · New page · I'm new | **desktop passes, phone fails** | Desktop matches. On the phone size the smoke differs by 4.3% (plume) and 4.6% (stirred) vs 2%. The agent also starts the plume when the pointer sits still over the page; ours only when it has left. Phone failure is not explained by that, so the phrase is unchanged; owner chose to skip the retest and log it as a known gap. | |
 | 34 | `filings` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 35 | `overprint` | | | pending | | |
 | 36 | `halftone` | | | pending | | |
-| 37 | `tilt` | | | pending | | |
+| 37 | `tilt` | | | not tested (by owner rule: Medium, not Spicy, and this wave already has an easy scene proven against the demo) | | |
 | 38 | `kaleido` | | | pending | | |
 | 39 | `morph` | | | pending | | |
 | 40 | `moire` | | | pending | | |

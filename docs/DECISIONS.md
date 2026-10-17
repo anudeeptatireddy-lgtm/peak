@@ -182,3 +182,13 @@ Choices made while writing v1.1 (the owner can override any of them):
 - The sitemap is skipped (with a build warning) until `PUBLIC_SITE_URL` is set.
 - Empty folders from PRD §16.2 hold a `.gitkeep` so they survive in git.
 - Not committed: there is no git repository yet. Step 0.2 creates it and makes the first commit.
+
+## 2026-10-17: cloth and smoke phone prompt-parity gaps accepted
+Both match on desktop and miss at phone size (cloth 2.16%, smoke 4.3%, limit 2%). The owner chose to skip the retests. Logged as known gaps; revisit at Checkpoint 9.
+
+## 2026-10-17: 6.3 `tilt`
+- DOM scene (CSS 3D), no canvas. Springs chase a target (pointer, idle sway, or phone tilt); each angle uses velocity += (target − angle) × spring × f, then × damping^f.
+- Every number is a slider or a listed constant. Advanced group holds damping, card size and shape, perspective, idle sway, glare size and foil settings.
+- Glare uses the main text color with soft-light blend instead of white, so no color is hard-coded; it lightens on dark worlds (the default, Abyss).
+- "Use motion" button appears only when "Follow phone tilt" is on and the device is touch or asks permission. iOS permission is requested only from that tap; if denied, the pointer keeps working.
+- Not prompt-tested (Medium, not Spicy). Added tests/e2e/tilt.spec.ts.

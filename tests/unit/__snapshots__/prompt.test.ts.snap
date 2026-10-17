@@ -10562,6 +10562,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Holographic card
+
+## What I want
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- The name is set at 0.085 × the card width in Anybody weight 800, and the title under it at 0.048 × the card width in weight 500 in the soft text color, with padding of 0.08 × the card width. The card casts a soft shadow of the main text color: offset 0.06 × the card width down, blur 40px, at 20% strength.
+
+## How it moves
+- A card centered in a full-screen section (100svh, at least 540px): width min(340px, 82% of the section width), height = width × 1.45, corner radius 20px, main surface color, main text color. Name "[YOUR NAME]" and, under it, the title "Creative coder".
+- A glare layer covers the card: a radial gradient 60% across in the main text color at 0.5 opacity fading to transparent, blended with soft-light. Its center sits at the point the card faces: (50% + 50% × tiltY ÷ max tilt, 50% − 50% × tiltX ÷ max tilt), at most 50% of the card size from the center.
+- A foil layer covers the card at 0.6 opacity: a linear gradient at 115° through the three accent colors and back to the first (stops at 0%, 33%, 66%, 100%), 300% as large as the card, blended with color-dodge. Its position slides as the card tilts: x = 50% + 50% × tiltY ÷ max tilt, y = 50% − 50% × tiltX ÷ max tilt.
+- The card sits in perspective 900px and turns about x (tiltX) and y (tiltY), at most 14°. The target is the pointer's position across the section: tiltY = 14° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) and tiltX = −14° × the same for y. With no pointer the target wanders: tiltY = 14° × 0.5 × sin(t × 0.6), tiltX = 14° × 0.5 × sin(t × 0.6 × 0.8 + 1).
+- Each tilt angle follows its target with a spring each frame: velocity += (target − angle) × 0.15 × f, then velocity *= 0.8^f, then angle += velocity × f.
+- While the pointer is over the section the card scales to 1.04 (otherwise 1): scale += (target − scale) × (1 − (1 − 0.15)^f).
+- The card follows only the pointer; there is no motion button.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the card turned 5° about the x axis and -9° about the y axis, with the glare and foil to match, and nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll.
+- A phone's tilt counts as a full lean at 30° either way, measured from 45° of pitch (a phone held to read). iOS only reports tilt after a permission request made from a tap, so ask for it only when "Use motion" is tapped, and keep the pointer working if it is denied.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tilt prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Holographic card
+
+A card with a name and a title in the middle of the page that tilts in 3D toward my cursor. A glare highlight and a rainbow foil sheen slide across it as it tilts, and it springs back to rest when I leave. On a phone it can follow how I tilt the device after I tap "Use motion".
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Name: "[YOUR NAME]"
+- Glare: 0.5
+- Foil shine: 0.6
+- Max tilt: 14°
+- Springiness: 0.15
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`tumble prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Falling letters
 
