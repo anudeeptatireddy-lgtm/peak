@@ -26,7 +26,8 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   MIN_GAP:
     'Safety (PRD §8.2): at most 3 strikes in any second; a hair over 1/3s leaves room for rounding.',
   MAX_LEVELS: 'Caps the work per bolt; more segments than this are too small to see.',
-  BRANCH_LEVELS: 'Keeps branches simpler than the bolt they grow from; "Branching" sets how many there are.',
+  BRANCH_LEVELS:
+    'Keeps branches simpler than the bolt they grow from; "Branching" sets how many there are.',
   GLOW_LAYERS: 'Look of the arc glow only; kept soft so arcs never light up the background.',
   GLOW_SPREAD: 'Look of the arc glow only; "Arc width" sets the size.',
   GLOW_STRENGTH: 'Look of the arc glow only; kept soft so arcs never light up the background.',

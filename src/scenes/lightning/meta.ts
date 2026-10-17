@@ -3,7 +3,8 @@ import type { SceneMeta } from '../types';
 export const meta: SceneMeta = {
   slug: 'lightning',
   title: 'Lightning',
-  summary: 'Electric arcs jump from your cursor to glowing nodes and crackle on to their neighbors.',
+  summary:
+    'Electric arcs jump from your cursor to glowing nodes and crackle on to their neighbors.',
   useCase: 'An electric hero for a tech or music event.',
   tags: ['Backgrounds', 'Events'],
   difficulty: 'Spicy',

@@ -14,7 +14,8 @@ export const FIXED = {
 } as const;
 
 export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
-  PIN_EVERY: 'Names the "every 4th" option of the Pinned setting; the other options are every point and corners only.',
+  PIN_EVERY:
+    'Names the "every 4th" option of the Pinned setting; the other options are every point and corners only.',
   MIN_ROWS: 'A sheet needs two rows to hang; "Sheet height" sets the real size.',
   DOUBLE_TAP_S: 'The usual double-click window; longer catches two separate tugs.',
   DOUBLE_TAP_PX: 'Tells a click from a tug; any small value works.',

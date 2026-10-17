@@ -12,5 +12,6 @@ export const FIXED = {
 export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   SVG: 'The SVG namespace; not a setting.',
   STILL_TIME: 'Picks a moment where a few blobs overlap and merge, for the still frame.',
-  MAX_BLOBS: 'Same as the Blob count slider\'s top; more blobs fill the screen and the filter gets slow on phones.',
+  MAX_BLOBS:
+    "Same as the Blob count slider's top; more blobs fill the screen and the filter gets slow on phones.",
 };

@@ -3,7 +3,8 @@ import type { SceneMeta } from '../types';
 export const meta: SceneMeta = {
   slug: 'filings',
   title: 'Iron filings',
-  summary: 'Thousands of iron filings turn to trace the field of a magnet that follows your cursor.',
+  summary:
+    'Thousands of iron filings turn to trace the field of a magnet that follows your cursor.',
   useCase: 'A science-y or "drawn to you" background.',
   tags: ['Backgrounds', 'Just for fun'],
   difficulty: 'Medium',

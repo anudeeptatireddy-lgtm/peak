@@ -63,7 +63,10 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
 
   function styleFilter(): void {
     blur.setAttribute('stdDeviation', String(p.goo));
-    matrix.setAttribute('values', `1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${p.contrast} -${p.cutoff}`);
+    matrix.setAttribute(
+      'values',
+      `1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 ${p.contrast} -${p.cutoff}`,
+    );
   }
 
   function addBlob(rx: number, ry: number, phase: number, speed: number): void {

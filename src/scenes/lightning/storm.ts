@@ -123,7 +123,12 @@ export class Storm {
       const to = this.nearest(from.x, from.y, o.reach, hit);
       if (!to) break;
       hit.add(to);
-      this.arcs.push({ lines: this.lines(from.x, from.y, to.x, to.y, o, rand), age: 0, hop, power });
+      this.arcs.push({
+        lines: this.lines(from.x, from.y, to.x, to.y, o, rand),
+        age: 0,
+        hop,
+        power,
+      });
       to.glow = Math.max(to.glow, power);
       to.ink = hop % SHARED.INKS;
       from = to;

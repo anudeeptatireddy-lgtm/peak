@@ -18,5 +18,6 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   GLOW_LAYERS: 'Look of the glowing ring only; "Ring width" sets its size.',
   GLOW_SPREAD: 'Look of the glowing ring only; "Ring width" sets its size.',
   GLOW_STRENGTH: 'Look of the glowing ring only; kept soft so it never flares.',
-  STILL_FRAMES: 'Long enough for particles to gather into a ring around the hole for the still frame.',
+  STILL_FRAMES:
+    'Long enough for particles to gather into a ring around the hole for the still frame.',
 };

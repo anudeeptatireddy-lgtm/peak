@@ -54,7 +54,8 @@ export const params: Param[] = [
     step: 0.001,
     default: 0.985,
     key: true,
-    phrase: (v: number) => `After each step, multiply every dye cell by ${v}^f, so the smoke fades.`,
+    phrase: (v: number) =>
+      `After each step, multiply every dye cell by ${v}^f, so the smoke fades.`,
   },
   {
     kind: 'slider',

@@ -17,27 +17,27 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 11 | `splitflap` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 12 | `kinetic` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 13 | `shatter` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
-| 14 | `flag` | | | pending | | |
-| 15 | `extrude` | | | pending | | |
+| 14 | `flag` | | | not tested yet | Wave 4 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 15 | `extrude` | | | not tested yet | Wave 4 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 16 | `echo` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Nothing at 2% (idle drift and following the pointer, both sizes). | None needed. |
-| 17 | `sand` | | | pending | | |
+| 17 | `sand` | | | not tested yet | Wave 4 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 18 | `neon` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Nothing at 2% (warming up at 0.7s and fully lit, both sizes). | None needed. |
-| 19 | `rubber` | | | pending | | |
+| 19 | `rubber` | | | not tested yet | Wave 4 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 20 | `fire` | 2026-10-17 | Detailed · New page · I'm new | **Pass** (after fixing our scene) | First comparison: 0.027 and 0.065 ink difference. The agent had followed the prompt; our scene hadn't: our flames leaned away from the pointer, and drew random numbers for fuel cells too. | Fixed in our scene (lean toward the pointer, no random numbers for fuel cells, fan distance from cell centers); the same built page then matches (under 0.02 at both moments and sizes). |
 | 21 | `ripple` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Nothing at 2% (automatic ripples, cursor, click; both sizes). | None needed. |
 | 22 | `flow` | 2026-10-17 | Detailed · New page · I'm new | **Fail after retest** (fix made, not yet retested) | Run 1: 0.06 ink difference (bar 0.02). I blamed the update order and fixed that phrase; the retest still scored 0.06. Real cause, found after: our scene rebuilds once more when the web font finishes loading, and the prompt never said so, so the particles were seeded differently. Proof: the retest page plus that one rebuild scores 0.007–0.019. | Run 1: update order spelled out. After retest: the rebuild sentence now includes "once more when the Anybody font has finished loading". The one retest is used; a third run waits for the owner. |
 | 23 | `warp` | 2026-10-17 | Detailed · New page · I'm new | **Fail after retest** (fix made, not yet retested) | Run 1: off-screen stars respawned at a random depth (prompt only said "respawns"). Retest: same 3–9% while warping. Real cause, found after: the same missing font-load rebuild as `flow` (cruise frames passed only because sparse stars cover under 2% of pixels either way). Proof: the retest page plus that one rebuild passes every moment. | Run 1: respawn depth and stroke order spelled out. After retest: the rebuild sentence includes the font-load rebuild. The one retest is used; a third run waits for the owner. |
-| 24 | `confetti` | | | pending | | |
-| 25 | `goo` | | | pending | | |
-| 26 | `drop` | | | pending | | |
-| 27 | `pluck` | | | pending | | |
-| 28 | `cloth` | | | pending | | |
-| 29 | `fireworks` | | | pending | | |
-| 30 | `blackhole` | | | pending | | |
-| 31 | `flock` | | | pending | | |
-| 32 | `lightning` | | | pending | | |
-| 33 | `smoke` | | | pending | | |
-| 34 | `filings` | | | pending | | |
+| 24 | `confetti` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 25 | `goo` | 2026-10-17 | Detailed · New page · I'm new | running | | |
+| 26 | `drop` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17 as a riso-demo port; its parity with the demo is checked by `tests/e2e/parity.spec.ts` instead. |
+| 27 | `pluck` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17 as a riso-demo port; its parity with the demo is checked by `tests/e2e/parity.spec.ts` instead. |
+| 28 | `cloth` | 2026-10-17 | Detailed · New page · I'm new | running | | |
+| 29 | `fireworks` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 30 | `blackhole` | 2026-10-17 | Detailed · New page · I'm new | running | | |
+| 31 | `flock` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 32 | `lightning` | 2026-10-17 | Detailed · New page · I'm new | running | | |
+| 33 | `smoke` | 2026-10-17 | Detailed · New page · I'm new | running | | |
+| 34 | `filings` | | | not tested yet | Wave 5 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 35 | `overprint` | | | pending | | |
 | 36 | `halftone` | | | pending | | |
 | 37 | `tilt` | | | pending | | |

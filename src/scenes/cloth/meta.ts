@@ -3,7 +3,8 @@ import type { SceneMeta } from '../types';
 export const meta: SceneMeta = {
   slug: 'cloth',
   title: 'Tearable cloth',
-  summary: 'A sheet hangs from a rail and sways in a breeze. Drag to stretch it; pull hard and it tears.',
+  summary:
+    'A sheet hangs from a rail and sways in a breeze. Drag to stretch it; pull hard and it tears.',
   useCase: 'A show-off background, or a "pull back the curtain" reveal.',
   tags: ['Just for fun', 'Backgrounds'],
   difficulty: 'Spicy',
