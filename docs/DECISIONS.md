@@ -215,3 +215,9 @@ Audited every page at 390 and 360 wide (sideways scroll, tap-target size, text s
 - **`tilt`:** name and title at the top of the card (see the earlier entry).
 - New test `tests/e2e/phone.spec.ts` (phone project only) runs on every page and scene: no sideways overflow, targets 44px or more, controls within the screen width, and the stage ends above the sheet.
 - Not phone bugs: Gallery, Tour, Start here, Fix it, Put it online, Words, Drops and About are Wave 8 placeholders ("still being built"). `echo` and `velocity` bleed past the edges on purpose.
+
+## 2026-10-17: 6.6 `moire` (⚠)
+- Flash safety: the second layer slides and turns toward its target at a capped speed. Slide and turn each get half of the 3-per-second cap (divided by 1.5 with three layers, since the third moves relative to the second). The cap scales with the spacing (finer patterns move slower) and with the distance to the farthest corner. `sim.ts` has no DOM; `tests/unit/flash.test.ts` runs it at spacing 3, follow 0.3, three layers, with a new far target every frame, at 240, 60 and 20 frames a second, and fails if any spot beats faster than 3 times a second.
+- Trade-off: at the default spacing (8px) the layer slides at most 12px/s and turns at most about 1.4°/s. That is slow on purpose; larger spacing allows faster motion.
+- Dots use one pre-tinted tile per layer, filled as a pattern (cheap even at 3px spacing).
+- Under reduced motion the still frame is a fixed small shift and turn. Prompt test is pending (Spicy; run with the other Wave 6 Spicy scenes).

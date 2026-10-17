@@ -242,3 +242,45 @@ describe('lightning strikes (⚠)', () => {
     expect(w.kind === 'slider' && w.max).toBeLessThanOrEqual(3);
   });
 });
+
+describe('moire interference (⚠)', () => {
+  it('never beats faster than 3 times a second at any spot, at the most extreme settings', async () => {
+    const { step, beatRate } = await import('../../src/scenes/moire/sim');
+    const { FIXED } = await import('../../src/scenes/moire/constants');
+    const { params } = await import('../../src/scenes/moire/params');
+    const slider = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const rand = seededRandom(7);
+    const scales = [0, 1, FIXED.SECOND_SCALE];
+    for (const dt of [1 / 240, 1 / 60, 0.05]) {
+      for (const layers of [2, 3]) {
+        const limits = {
+          spacing: slider('spacing').min,
+          radius: 900,
+          layers,
+          follow: slider('follow').max,
+        };
+        const m = { ox: 0, oy: 0, ang: 0 };
+        let worst = 0;
+        for (let i = 0; i < 4000; i++) {
+          // The most violent visitor: a new far-away target every single frame.
+          const target = {
+            ox: (rand() - 0.5) * 4000,
+            oy: (rand() - 0.5) * 4000,
+            ang: (rand() - 0.5) * 2,
+          };
+          const before = { ...m };
+          step(m, target, dt, Math.min(dt * 60, 2.5), limits);
+          for (let a = 0; a < layers; a++)
+            for (let b = a + 1; b < layers; b++)
+              worst = Math.max(worst, beatRate(before, m, scales[a]!, scales[b]!, dt, limits));
+        }
+        expect(worst).toBeLessThanOrEqual(FIXED.RATE_CAP + 1e-9);
+        expect(worst).toBeGreaterThan(0);
+      }
+    }
+  });
+});
