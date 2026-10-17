@@ -1,1 +1,3 @@
-{ "hide": ".hud, .toggle" }
+{
+  "hide": ".hud, .toggle"
+}

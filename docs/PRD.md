@@ -251,7 +251,17 @@ Applies to `neon`, `lightning`, `glitch`, `fireworks`, `fire`, `moire` and `tunn
 
 ### §8.6 Proven parity
 - Ported scenes match their source pixel for pixel under identical conditions (`tests/e2e/parity.spec.ts`: same seed, viewport, frames and colors; under 2% of pixels differ at 1280×800 and 390×844).
-- Every scene's prompt is proven to rebuild it: a fresh agent in an empty folder builds from the prompt alone, and `tests/e2e/prompt-parity.spec.ts` compares its page with the scene the same way (`docs/PROMPT_TESTS.md`).
+- Every scene's prompt is proven to rebuild it: a fresh agent in an empty folder builds from the prompt alone, and `tests/e2e/prompt-parity.spec.ts` compares its page with the scene by the rule in §8.7 (`docs/PROMPT_TESTS.md`).
+
+### §8.7 Prompt tests: the pass rule (owner, 2026-10-17)
+Parity tests (our scene against the prototype) stay pixel-based. A **prompt test** (a fresh agent builds the scene from its prompt alone, then we compare) passes when the fresh build matches on what a person can measure, not on identical random numbers or frame timing:
+- **Palette:** the same colors (hue mix overlap of at least 0.80 on clearly colored pixels).
+- **Amount:** ink or element count within ±10%. Between 10% and 30% apart the test records "judge by eye" and the side-by-side picture decides; beyond 30% it fails. Frames with under 1% ink are judged on layout only.
+- **Layout:** the same on-screen box (middle 90% of the ink within 5% of the screen size) and the same ink center when there is enough ink (at least 2%). While things are moving fast between moments, a box that differs is judged by eye instead, because one frame of timing moves a fast letter several percent.
+- **Speed and settle time:** the amount of motion between scripted moments within ±20%, for motion large enough to be real movement (small jitter, like an idle shake, depends on the phase it was sampled at).
+- **Reactions:** every scripted interaction (move, click, press) changes the picture the same way (more or less ink).
+- **Side by side:** every run saves a picture of the built page next to ours (`docs/prompt-tests/<slug>/side-by-side-<size>.png`) for the owner to judge by eye.
+A scene that fails because of a real difference in look or behavior gets its prompt phrases fixed and retested. A difference that comes only from random numbers or timing is not a failure.
 
 ### §8.4 Scene definition of done
 A scene is done only when it has: the module interface (§16.3), a params schema with labels and plain-language help text for each param, a prompt phrase for every param (§10.4), 3–5 follow-up prompts, a "How it works" explanation (3–5 short sentences, §9.5), linked word-bank terms, a still frame, `destroy()` that removes all listeners and stops all work, mobile behavior (§8.3), passing tests (§21), and a row in `docs/PROMPT_TESTS.md`. Scenes marked ⚠ also pass the flash test (§8.2). If the scene is one of the 12 featured on the home page (§6.1), it replaces its stand-in there.

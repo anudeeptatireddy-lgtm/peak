@@ -1,5 +1,3 @@
 {
-  "hide": ".hud",
-  "expect": "fail",
-  "reason": "Failed its one retest (shatter frame 6%/3%). Cause found after: the agent sampled the word before the font loaded, which used extra random numbers, so every kick differed. Prompt fixed 2026-10-17; awaiting the owner’s OK for another retest."
+  "hide": ".hud"
 }

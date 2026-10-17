@@ -3,10 +3,10 @@
 // fresh agent built index.html from PROMPT.md in an empty folder. This test renders
 // that page and our scene side by side under identical conditions, runs the same
 // scripted moments as the prototype parity test, and compares.
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { compare, inkGrid, open } from './parity-helpers';
+import { FRAME_MS, judge, look, open, sideBySide, type Look } from './parity-helpers';
 import { SCENARIOS, type Pair } from './scenarios';
 
 test.use({ browserName: 'chromium' });
@@ -65,21 +65,31 @@ for (const slug of BUILT) {
     await hide(pp.proto, cfg.hide);
     await hide(pp.ours, '[data-stage] button');
     const step = async (ms: number) => {
-      for (let t = 0; t < ms; t += 16) {
-        await pp.proto.clock.runFor(16);
-        await pp.ours.clock.runFor(16);
+      for (let t = 0; t < ms; t += FRAME_MS) {
+        await pp.proto.clock.runFor(FRAME_MS);
+        await pp.ours.clock.runFor(FRAME_MS);
       }
     };
+    const rows: { name: string; theirs: Buffer; ours: Buffer }[] = [];
+    const problems: string[] = [];
+    const eye: string[] = [];
+    let prev: { a: Look; b: Look } | undefined;
     for await (const yielded of SCENARIOS[slug]!(pp, step, viewport)) {
-      const [kind, name] = yielded.includes(':') ? yielded.split(':') : ['pixels', yielded];
+      const name = yielded.includes(':') ? yielded.split(':')[1]! : yielded;
       const theirs = await pp.proto.screenshot({ path: info.outputPath(`prompt-${name}.png`) });
       const ours = await pp.ours.screenshot({ path: info.outputPath(`ours-${name}.png`) });
-      if (kind === 'signature') {
-        const [a, b] = await Promise.all([inkGrid(pp.proto), inkGrid(pp.ours)]);
-        const diff = a.reduce((sum, v, i) => sum + Math.abs(v - b[i]!), 0) / a.length;
-        expect.soft(diff, `${name}: average ink difference per grid cell`).toBeLessThan(0.02);
-      } else await compare(ours, theirs, info, `${slug}-${name}.png`, 0.02);
+      const [a, b] = [await look(pp.ours, ours), await look(pp.ours, theirs)];
+      problems.push(...judge(name, b, a, prev && { a: prev.b, b: prev.a }, eye));
+      prev = { a, b };
+      rows.push({ name, theirs, ours });
     }
+    // Side by side for the owner to judge by eye (PRD §8.7).
+    writeFileSync(
+      join(DIR, slug, `side-by-side-${info.project.name}.png`),
+      await sideBySide(pp.ours, rows),
+    );
+    for (const e of eye) info.annotations.push({ type: 'judge by eye', description: e });
+    expect(problems, 'what differs from the rule in PRD §8.7').toEqual([]);
     await ctxA.close();
     await ctxB.close();
   });

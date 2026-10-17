@@ -1,1 +1,3 @@
-{ "hide": ".hero-copy, .foot" }
+{
+  "hide": ".hero-copy, .foot"
+}

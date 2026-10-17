@@ -1,8 +1,8 @@
 {
   "hide": ".bar",
   "expect": "fail",
-  "reason": "Failed its one retest on desktop (arrival 4%, replay 3%; the phone size passes). The agent drew letters with the multiply blend; the prompt now says source-over. Awaiting the owner’s OK for another retest.",
+  "reason": "Real timing difference on phone (PROMPT_TESTS.md): arriving letters sit further right and the idle shake is weaker. Fix the entry and shake phrases, then retest.",
   "failOn": [
-    "desktop"
+    "mobile"
   ]
 }

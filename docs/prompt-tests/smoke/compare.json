@@ -1,1 +1,5 @@
-{ "hide": ".card, .about, .note" }
+{
+  "hide": ".card, .about, .note",
+  "expect": "fail",
+  "reason": "Real behavior difference (PROMPT_TESTS.md): the plume starts when the pointer sits still over the page, and stirring reacts differently. Fix the plume phrase, then retest."
+}

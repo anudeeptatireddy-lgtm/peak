@@ -1,1 +1,3 @@
-{ "hide": ".overlay, .toggle" }
+{
+  "hide": ".overlay, .toggle"
+}

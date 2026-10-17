@@ -4,7 +4,10 @@
 
 import { isPaused, onPausedChange } from './motion';
 import type { ScrollSource } from './scroll';
+import { TEST_DT, initTestMode, isTestMode } from './testmode';
 import { computeDt } from './time';
+
+initTestMode();
 
 export interface Tickable {
   update(dt: number, t: number): void;
@@ -64,7 +67,9 @@ function frame(now: number): void {
   const list = active();
   if (list.length === 0) return stop();
   raf = requestAnimationFrame(frame);
-  const dt = computeDt(now, last);
+  // Test mode: the same frames as ever (including the skipped first one), each a fixed step.
+  const measured = computeDt(now, last);
+  const dt = measured !== null && isTestMode() ? TEST_DT : measured;
   if (dt === null) return;
   last = now;
   clock += dt;

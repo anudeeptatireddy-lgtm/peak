@@ -3,7 +3,7 @@
 // viewport, same seeded Math.random, Riso light colors, living colors off, Anybody
 // fully loaded before sampling, and a paused fake clock stepped frame by frame.
 import { expect, test } from '@playwright/test';
-import { compare, inkGrid, open, shot } from './parity-helpers';
+import { FRAME_MS, compare, inkGrid, open, shot } from './parity-helpers';
 import { SCENARIOS, type Pair } from './scenarios';
 
 // Playwright's fake clock drives requestAnimationFrame in Chromium only, so both
@@ -26,13 +26,14 @@ const PORTED = [
   'halftone',
 ];
 
-// Known exceptions, logged in docs/DECISIONS.md. They are skipped with their
-// reason: the result depends on frame timing, so it passes on some runs and
-// fails on others, which an expected-failure marker would turn into a flaky suite.
+// Known exception, logged in docs/DECISIONS.md. Our side now runs in the engine's test
+// mode (seeded random numbers, fixed 16ms step), so the variation left is on the demo's
+// side: its frame loop starts relative to the page's observers in real time. With 32
+// colliding balls that offset compounds, so this size passes on some runs and not others.
 const KNOWN: Record<string, Record<string, string>> = {
   drop: {
     desktop:
-      'The demo starts its frame loop up to a frame later than our scheduler under the test clock; with 32 colliding balls that offset compounds, so this size passes on some runs and not others (code paths are identical; the phone size passes).',
+      "The demo's frame loop starts at a real-time moment our engine can't control; the phone size passes in every run.",
   },
 };
 
@@ -59,9 +60,9 @@ for (const [slug, scenario] of Object.entries(SCENARIOS).filter(([s]) => PORTED.
     // Advance both pages in lockstep, one 60Hz frame at a time: one long runFor()
     // can deliver frames slightly differently to the two pages.
     const step = async (ms: number) => {
-      for (let t = 0; t < ms; t += 16) {
-        await pp.proto.clock.runFor(16);
-        await pp.ours.clock.runFor(16);
+      for (let t = 0; t < ms; t += FRAME_MS) {
+        await pp.proto.clock.runFor(FRAME_MS);
+        await pp.ours.clock.runFor(FRAME_MS);
       }
     };
     for await (const yielded of scenario(pp, step, viewport)) {

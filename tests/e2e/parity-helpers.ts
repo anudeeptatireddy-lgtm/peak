@@ -46,7 +46,7 @@ export function prototypeFor(slug: string): string {
   );
 }
 
-export async function prepare(page: Page) {
+export async function prepare(page: Page, ours = false) {
   await page.addInitScript((seed: number) => {
     // mulberry32: the same sequence on both pages. __reseed() restarts it, so a
     // scenario can re-synchronize the two pages at a known moment.
@@ -65,6 +65,9 @@ export async function prepare(page: Page) {
       localStorage.setItem('peak:living', '0');
     } catch {}
   }, SEED);
+  // Our engine's test mode: seeded random numbers and a fixed 16ms step per frame.
+  if (ours)
+    await page.addInitScript((seed: number) => ((window as any).__PEAK_TEST__ = seed), SEED);
   // Hold the font back so both pages draw their first frames before Anybody exists:
   // a scene must wait for the real font instead of sampling a fallback.
   await page.route('https://fonts.gstatic.com/**', async (route) => {
@@ -83,7 +86,7 @@ export async function open(
   slug: string,
   file?: string,
 ) {
-  await prepare(page);
+  await prepare(page, which === 'peak');
   if (which === 'prototype') {
     const url = `http://localhost:4329/__prototype/${slug}`;
     await page.route(url, (r) => r.fulfill({ body: prototypeFor(slug), contentType: 'text/html' }));
@@ -151,3 +154,209 @@ export async function compare(
   writeFileSync(expected, theirs);
   expect.soft(ours).toMatchSnapshot(name, { maxDiffPixelRatio: maxRatio, threshold: 0.2 });
 }
+
+/** What a prompt test measures on one screenshot (PRD §8.7). */
+export interface Look {
+  ink: number;
+  box: [number, number, number, number];
+  centroid: [number, number];
+  hues: number[];
+  /** Share of the picture that is clearly colored (not gray). */
+  color: number;
+  gray: number[];
+}
+
+const GRAY_W = 64;
+const GRAY_H = 40;
+const HUE_BINS = 6;
+
+/** Measures a screenshot inside a throwaway page (ink share, layout, palette, a tiny gray copy). */
+export async function look(page: Page, png: Buffer): Promise<Look> {
+  return page.evaluate(
+    async ({ b64, GRAY_W, GRAY_H, HUE_BINS }) => {
+      const img = new Image();
+      img.src = `data:image/png;base64,${b64}`;
+      await img.decode();
+      const w = 320;
+      const h = Math.round((img.height / img.width) * w);
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const g = c.getContext('2d', { willReadFrequently: true })!;
+      g.drawImage(img, 0, 0, w, h);
+      const d = g.getImageData(0, 0, w, h).data;
+      // The background is the most common color (so a star in the corner can't fool it).
+      const seen = new Map<number, number>();
+      for (let i = 0; i < d.length; i += 4) {
+        const key = ((d[i]! >> 3) << 10) | ((d[i + 1]! >> 3) << 5) | (d[i + 2]! >> 3);
+        seen.set(key, (seen.get(key) ?? 0) + 1);
+      }
+      const top = [...seen.entries()].sort((x, y) => y[1] - x[1])[0]![0];
+      const bg = [((top >> 10) & 31) << 3, ((top >> 5) & 31) << 3, (top & 31) << 3];
+      let n = 0;
+      let sx = 0;
+      let sy = 0;
+      const colHist = new Array(w).fill(0);
+      const rowHist = new Array(h).fill(0);
+      const hues = new Array(HUE_BINS).fill(0);
+      let sat = 0;
+      for (let y = 0; y < h; y++)
+        for (let x = 0; x < w; x++) {
+          const i = (y * w + x) * 4;
+          const r = d[i]!;
+          const gg = d[i + 1]!;
+          const b = d[i + 2]!;
+          const diff = Math.abs(r - bg[0]!) + Math.abs(gg - bg[1]!) + Math.abs(b - bg[2]!);
+          if (diff < 120) continue;
+          n++;
+          sx += x;
+          sy += y;
+          colHist[x]++;
+          rowHist[y]++;
+          const mx = Math.max(r, gg, b);
+          const mn = Math.min(r, gg, b);
+          if (mx - mn > 64) {
+            let hue =
+              mx === r
+                ? ((gg - b) / (mx - mn)) % 6
+                : mx === gg
+                  ? (b - r) / (mx - mn) + 2
+                  : (r - gg) / (mx - mn) + 4;
+            if (hue < 0) hue += 6;
+            hues[Math.min(HUE_BINS - 1, Math.floor((hue / 6) * HUE_BINS))]++;
+            sat++;
+          }
+        }
+      // The box holds the middle 90% of the ink, so a few stray pixels don't count.
+      const span = (hist: number[], len: number): [number, number] => {
+        let lo = 0;
+        let hi = len - 1;
+        let acc = 0;
+        while (lo < len - 1 && acc + hist[lo]! < n * 0.05) acc += hist[lo++]!;
+        acc = 0;
+        while (hi > 0 && acc + hist[hi]! < n * 0.05) acc += hist[hi--]!;
+        return [lo / len, hi / len];
+      };
+      const [x0, x1] = span(colHist, w);
+      const [y0, y1] = span(rowHist, h);
+      const small = document.createElement('canvas');
+      small.width = GRAY_W;
+      small.height = GRAY_H;
+      const sg = small.getContext('2d', { willReadFrequently: true })!;
+      sg.drawImage(c, 0, 0, GRAY_W, GRAY_H);
+      const sd = sg.getImageData(0, 0, GRAY_W, GRAY_H).data;
+      const gray: number[] = [];
+      for (let i = 0; i < sd.length; i += 4) gray.push((sd[i]! + sd[i + 1]! + sd[i + 2]!) / 765);
+      return {
+        ink: n / (w * h),
+        box: [x0, y0, x1, y1] as [number, number, number, number],
+        centroid: (n ? [sx / n / w, sy / n / h] : [0.5, 0.5]) as [number, number],
+        hues: hues.map((v) => (sat ? v / sat : 0)),
+        color: sat / (w * h),
+        gray,
+      };
+    },
+    { b64: png.toString('base64'), GRAY_W, GRAY_H, HUE_BINS },
+  );
+}
+
+/** The motion between two looks: mean absolute change of the tiny gray copy. */
+export const energy = (a: Look, b: Look) =>
+  a.gray.reduce((s, v, i) => s + Math.abs(v - b.gray[i]!), 0) / a.gray.length;
+
+/**
+ * The prompt-test pass rule (PRD §8.7). Returns what differs, empty when it passes:
+ * same palette, ink amount within ±10%, same layout, speeds within ±20%, and the
+ * same reaction (more or less ink) to what the visitor did.
+ */
+export function judge(
+  name: string,
+  a: Look,
+  b: Look,
+  prev?: { a: Look; b: Look },
+  eye?: string[],
+): string[] {
+  const out: string[] = [];
+  const rel = (x: number, y: number) => Math.abs(x - y) / Math.max(x, y, 1e-9);
+  if (rel(a.ink, b.ink) > 0.3 && Math.max(a.ink, b.ink) > 0.01)
+    out.push(`${name}: ink amount ${a.ink.toFixed(4)} vs ${b.ink.toFixed(4)} (limit ±30%)`);
+  else if (rel(a.ink, b.ink) > 0.1 && Math.max(a.ink, b.ink) > 0.01)
+    eye?.push(
+      `${name}: ink amount ${a.ink.toFixed(4)} vs ${b.ink.toFixed(4)} (10–30% apart: judge by eye)`,
+    );
+  const near = (x: number, y: number) => Math.abs(x - y) <= 0.05;
+  const moving = prev ? Math.max(energy(prev.a, a), energy(prev.b, b)) > 0.02 : false;
+  if (!a.box.every((v, i) => near(v, b.box[i]!)) && a.ink > 0.003)
+    (moving ? (eye ?? out) : out).push(
+      `${name}: layout box ${a.box.map((v) => v.toFixed(2))} vs ${b.box.map((v) => v.toFixed(2))}`,
+    );
+  if (
+    Math.min(a.ink, b.ink) > 0.02 &&
+    (!near(a.centroid[0], b.centroid[0]) || !near(a.centroid[1], b.centroid[1]))
+  )
+    out.push(
+      `${name}: ink center ${a.centroid.map((v) => v.toFixed(2))} vs ${b.centroid.map((v) => v.toFixed(2))}`,
+    );
+  const same = a.hues.reduce((s, v, i) => s + Math.min(v, b.hues[i]!), 0);
+  const any = a.color > 0.003 && b.color > 0.003;
+  if (any && same < 0.8) out.push(`${name}: palette overlap ${same.toFixed(2)} (needs 0.80)`);
+  if (prev) {
+    const ea = energy(prev.a, a);
+    const eb = energy(prev.b, b);
+    if (Math.max(ea, eb) > 0.03 && rel(ea, eb) > 0.2)
+      out.push(`${name}: motion ${ea.toFixed(3)} vs ${eb.toFixed(3)} (limit ±20%)`);
+    const da = a.ink - prev.a.ink;
+    const db = b.ink - prev.b.ink;
+    if (Math.abs(da) > 0.1 * a.ink && Math.abs(db) > 0.1 * b.ink && Math.sign(da) !== Math.sign(db))
+      out.push(`${name}: reacts the opposite way (ink ${da.toFixed(4)} vs ${db.toFixed(4)})`);
+  }
+  return out;
+}
+
+/** Stacks "prompt build | ours" screenshots into one image for the owner to judge by eye. */
+export async function sideBySide(
+  page: Page,
+  rows: { name: string; theirs: Buffer; ours: Buffer }[],
+): Promise<Buffer> {
+  const b64 = await page.evaluate(
+    async (items) => {
+      const load = async (s: string) => {
+        const i = new Image();
+        i.src = `data:image/png;base64,${s}`;
+        await i.decode();
+        return i;
+      };
+      const imgs = await Promise.all(
+        items.map(async (r) => [await load(r.theirs), await load(r.ours)] as const),
+      );
+      const w = 640;
+      const label = 28;
+      const hs = imgs.map(([t]) => Math.round((t.height / t.width) * w));
+      const c = document.createElement('canvas');
+      c.width = w * 2 + 10;
+      c.height = hs.reduce((s, h) => s + h + label, 0);
+      const g = c.getContext('2d')!;
+      g.fillStyle = '#fff';
+      g.fillRect(0, 0, c.width, c.height);
+      g.fillStyle = '#000';
+      g.font = '16px sans-serif';
+      let y = 0;
+      imgs.forEach(([t, o], i) => {
+        g.fillText(`${items[i]!.name}: built from the prompt (left) | peak (right)`, 4, y + 20);
+        g.drawImage(t, 0, y + label, w, hs[i]!);
+        g.drawImage(o, w + 10, y + label, w, hs[i]!);
+        y += hs[i]! + label;
+      });
+      return c.toDataURL('image/png').split(',')[1]!;
+    },
+    rows.map((r) => ({
+      name: r.name,
+      theirs: r.theirs.toString('base64'),
+      ours: r.ours.toString('base64'),
+    })),
+  );
+  return Buffer.from(b64, 'base64');
+}
+
+/** The fake clock's frame: Playwright fires requestAnimationFrame every 16ms. */
+export const FRAME_MS = 16;
