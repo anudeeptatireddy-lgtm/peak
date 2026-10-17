@@ -65,7 +65,7 @@ Scripted moments for all five scenes are already in `tests/e2e/scenarios.ts`. A 
 
 - **Font-load reset in older scenes.** Some scenes before Wave 5 also reset when the web font loads; `flow` and `warp` do, and their prompts say so. Others, such as `ripple` and `sand`, haven't been checked. Audit this in 9.3 (performance pass). Don't change `flow` or `warp` without redoing their prompt tests.
 - **`drop` desktop prototype parity is skipped.** The demo's loop starts up to a frame later under the test clock (documented).
-- **Three background agents** (cloth, smoke, goo retest) belonged to the old account's session. Their results only exist in the temporary scratchpad folder.
+- **The goo retest agent** belonged to the old account's session. If it finished, its page only exists in the temporary scratchpad folder (`ptest5b/goo/index.html`). Cloth's and smoke's final pages are saved in the repo.
 
 ## Next 5 actions, in order
 
