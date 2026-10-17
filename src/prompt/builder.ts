@@ -30,7 +30,9 @@ function paletteLine(t: Theme): string {
   return `background ${t.ground}, text ${t.ink}, secondary text ${t.inkSoft}, accents ${t.c1}, ${t.c2}, ${t.c3}`;
 }
 
-function blendLine(t: Theme): string {
+function blendLine(t: Theme, blends = true): string {
+  if (!blends)
+    return 'Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.';
   if (t.blend === 'multiply')
     return 'Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").';
   if (t.blend === 'lighter')
@@ -65,7 +67,7 @@ function detailed(input: PromptInput, o: PromptOptions): string {
   const m = scene.meta;
   const look = [
     `Colors ("${theme.name}" palette): ${paletteLine(theme)}.`,
-    blendLine(theme),
+    blendLine(theme, m.blends !== false),
     ...cycleLines(input.cycle),
     `Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with ${FONT_URL}, with a system sans-serif fallback.`,
     ...m.lookLines,

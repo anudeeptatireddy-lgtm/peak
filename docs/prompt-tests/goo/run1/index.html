@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F4F2FF">
+  <meta name="color-scheme" content="light">
+  <title>Gooey blobs</title>
+
+  <!-- Font: Anybody (variable width 50–150, weight 100–900) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&amp;display=swap">
+
+  <style>
+    /* ---------- Riso palette ---------- */
+    :root {
+      --bg: #F4F2FF;        /* paper */
+      --ink: #1A1240;       /* text */
+      --ink-2: #4E4777;     /* secondary text */
+      --pink: #EC1C7F;
+      --blue: #2A47EA;
+      --orange: #FF7A00;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- Stage ---------- */
+    .stage {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Full-screen SVG: 100svh tall (100vh fallback), never shorter than 540px */
+    .scene {
+      display: block;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      min-height: 540px;
+      touch-action: pan-y;                 /* vertical scrolling still works on touch screens */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* Overlapping accent colors multiply like ink on paper */
+    .blob { mix-blend-mode: multiply; }
+
+    /* ---------- Text panel (solid paper behind text keeps contrast high) ---------- */
+    .panel {
+      position: absolute;
+      top: clamp(16px, 4vw, 40px);
+      left: clamp(16px, 4vw, 40px);
+      width: min(25rem, calc(100% - 32px));
+      padding: 18px 20px 20px;
+      background: var(--bg);
+      border: 2px solid var(--ink);
+      border-radius: 18px;
+      box-shadow: 6px 6px 0 var(--ink);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(2rem, 5.5vw, 3.25rem);
+      font-weight: 850;
+      font-stretch: 150%;                  /* the "wdth" axis of Anybody */
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+    }
+
+    .hint {
+      margin: 0 0 16px;
+      color: var(--ink-2);
+      font-size: 1rem;
+      font-stretch: 100%;
+    }
+
+    /* ---------- Play / Pause button ---------- */
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55em;
+      min-height: 44px;
+      padding: 0.55em 1.15em 0.55em 0.95em;
+      font: inherit;
+      font-weight: 700;
+      font-stretch: 115%;
+      font-size: 1rem;
+      color: var(--bg);
+      background: var(--ink);
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .toggle[hidden] { display: none; }
+    .toggle:hover { background: var(--bg); color: var(--ink); }
+    .toggle:focus:not(:focus-visible) { outline: none; }
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+    .toggle svg { width: 1em; height: 1em; flex: none; fill: currentColor; }
+
+    /* Visible only to screen readers */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    @media (forced-colors: active) {
+      .panel, .toggle { border-color: CanvasText; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <svg class="scene" id="scene" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Goo: blur, then sharpen alpha (alpha × 22 − 10), then lay the crisp original on top -->
+        <filter id="goo" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%"
+                color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/>
+          <feColorMatrix in="blur" type="matrix"
+                         values="1 0 0 0 0
+                                 0 1 0 0 0
+                                 0 0 1 0 0
+                                 0 0 0 22 -10" result="goo"/>
+          <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+        </filter>
+      </defs>
+      <g id="blobs" filter="url(#goo)"></g>
+    </svg>
+
+    <div class="panel">
+      <h1>Gooey blobs</h1>
+      <p class="hint">Move your pointer, or slide a finger sideways, to pull the pink blob around. Click or tap to drop a new blob (up to 16).</p>
+      <p class="visually-hidden">Decorative animation: pink, blue and orange blobs drift slowly in oval orbits. When two blobs touch they melt into one shape, and where colors overlap they darken like printing ink. One pink blob follows your pointer, and clicking adds another blob.</p>
+      <noscript><p class="hint">Turn on JavaScript to see the blobs move.</p></noscript>
+      <button class="toggle" id="toggle" type="button" hidden>
+        <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/></svg>
+        <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 2.2v11.6c0 .8.9 1.3 1.6.9l9.2-5.8c.6-.4.6-1.4 0-1.8L5.6 1.3C4.9.9 4 1.4 4 2.2z"/></svg>
+        <span class="label">Pause animation</span>
+      </button>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // ---------- Settings ----------
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    var ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];   // pink, blue, orange
+    var START_BLOBS = 8;
+    var MAX_BLOBS = 16;
+    var STILL_T = 2.4;                                  // reduced-motion still frame time (s)
+
+    // ---------- Elements ----------
+    var svg = document.getElementById('scene');
+    var layer = document.getElementById('blobs');
+    var gooFilter = document.getElementById('goo');
+    var toggleBtn = document.getElementById('toggle');
+    var toggleLabel = toggleBtn.querySelector('.label');
+    var iconPause = toggleBtn.querySelector('.icon-pause');
+    var iconPlay = toggleBtn.querySelector('.icon-play');
+
+    // ---------- State ----------
+    var motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    var reduceMotion = !!(motionQuery && motionQuery.matches);
+
+    var W = 0, H = 0;           // SVG size in CSS pixels
+    var t = 0;                  // seconds the loop has run (sum of dt)
+    var lastTime = null;        // timestamp of the previous frame
+    var rafId = 0;
+    var userPaused = reduceMotion;
+    var onScreen = true;
+    var blobs = [];
+    var pointer = { x: 0, y: 0, active: false };
+
+    // ---------- Helpers ----------
+    function randomRadius() {
+      return 70 * (1 - 0.35 + Math.random() * 0.35 * 2);
+    }
+
+    // Orbit sizes are stored as fractions of the SVG size so they scale on resize.
+    function orbitX(b, time) {
+      return W / 2 + b.ax * W * Math.cos(b.phase + time * 0.5 * b.speed);
+    }
+    function orbitY(b, time) {
+      return H / 2 + b.ay * H * Math.sin(b.phase + time * 0.5 * b.speed);
+    }
+
+    function setTransform(b) {
+      b.el.style.transform = 'translate(' + b.x.toFixed(1) + 'px,' + b.y.toFixed(1) + 'px)';
+    }
+
+    function measure() {
+      var r = svg.getBoundingClientRect();
+      W = r.width;
+      H = r.height;
+      // Filter region = the SVG's own box (cheap, and covers everything visible)
+      gooFilter.setAttribute('x', '0');
+      gooFilter.setAttribute('y', '0');
+      gooFilter.setAttribute('width', String(Math.ceil(W)));
+      gooFilter.setAttribute('height', String(Math.ceil(H)));
+    }
+
+    // Creates a blob and puts it where its orbit is at the current time t.
+    function addBlob(orbit) {
+      var index = blobs.length;
+      var el = document.createElementNS(SVG_NS, 'circle');
+      el.setAttribute('class', 'blob');
+      el.setAttribute('r', orbit.r.toFixed(1));
+      el.setAttribute('fill', ACCENTS[index % 3]);
+      var b = {
+        el: el,
+        ax: orbit.ax, ay: orbit.ay,        // orbit width / height as fractions of W / H
+        phase: orbit.phase,
+        speed: orbit.speed,
+        x: 0, y: 0,
+        vx: 0, vy: 0
+      };
+      b.x = orbitX(b, t);
+      b.y = orbitY(b, t);
+      setTransform(b);                     // position it before it is ever drawn
+      layer.appendChild(el);
+      blobs.push(b);
+      return b;
+    }
+
+    function placeOnOrbits(time) {
+      for (var i = 0; i < blobs.length; i++) {
+        var b = blobs[i];
+        b.x = orbitX(b, time);
+        b.y = orbitY(b, time);
+        b.vx = 0;
+        b.vy = 0;
+      }
+    }
+
+    function render() {
+      for (var i = 0; i < blobs.length; i++) setTransform(blobs[i]);
+    }
+
+    // ---------- Simulation ----------
+    function step(dt) {
+      var f = Math.min(dt * 60, 2.5);
+      var damp = Math.pow(0.8, f);
+      t += dt;
+
+      for (var i = 0; i < blobs.length; i++) {
+        var b = blobs[i];
+        var ox = orbitX(b, t);
+        var oy = orbitY(b, t);
+
+        if (i === 0) {
+          // Blob 0 springs toward the pointer, or back to its own orbit point.
+          var tx = pointer.active ? pointer.x : ox;
+          var ty = pointer.active ? pointer.y : oy;
+          b.vx = (b.vx + (tx - b.x) * 0.12 * f) * damp;
+          b.vy = (b.vy + (ty - b.y) * 0.12 * f) * damp;
+          b.x += b.vx * f;
+          b.y += b.vy * f;
+        } else {
+          b.x = ox;
+          b.y = oy;
+        }
+      }
+    }
+
+    function frame(now) {
+      rafId = 0;
+      var dt = lastTime === null ? 0 : Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      step(dt);
+      render();
+      if (shouldRun()) rafId = window.requestAnimationFrame(frame);
+    }
+
+    function shouldRun() {
+      return !userPaused && onScreen && !document.hidden;
+    }
+
+    // Start or stop the single requestAnimationFrame loop to match the current state.
+    function syncLoop() {
+      if (shouldRun()) {
+        if (!rafId) {
+          lastTime = null;
+          rafId = window.requestAnimationFrame(frame);
+        }
+      } else if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    // ---------- Play / Pause ----------
+    function syncButton() {
+      toggleLabel.textContent = userPaused ? 'Play animation' : 'Pause animation';
+      iconPause.style.display = userPaused ? 'none' : '';
+      iconPlay.style.display = userPaused ? '' : 'none';
+    }
+
+    toggleBtn.addEventListener('click', function () {
+      userPaused = !userPaused;
+      syncButton();
+      syncLoop();
+    });
+
+    if (motionQuery) {
+      var onMotionChange = function (e) {
+        if (e.matches && !userPaused) {
+          userPaused = true;
+          syncButton();
+          syncLoop();
+        }
+      };
+      if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+      else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+    }
+
+    // ---------- Pointer ----------
+    function trackPointer(e) {
+      if (!e.isPrimary) return;
+      var r = svg.getBoundingClientRect();
+      pointer.x = e.clientX - r.left;
+      pointer.y = e.clientY - r.top;
+      pointer.active = true;
+    }
+    function releasePointer(e) {
+      if (e.isPrimary) pointer.active = false;
+    }
+
+    svg.addEventListener('pointerdown', trackPointer);
+    svg.addEventListener('pointermove', trackPointer);
+    svg.addEventListener('pointerup', function (e) {
+      // A mouse is still hovering after a click; a finger or pen has lifted.
+      if (e.pointerType !== 'mouse') releasePointer(e);
+    });
+    svg.addEventListener('pointercancel', releasePointer);   // e.g. the touch became a scroll
+    svg.addEventListener('pointerleave', releasePointer);
+
+    // A click or tap (fires on release) drops a new blob on an orbit through that point.
+    svg.addEventListener('click', function (e) {
+      if (blobs.length >= MAX_BLOBS || !W || !H) return;
+      var r = svg.getBoundingClientRect();
+      var x = e.clientX - r.left;
+      var y = e.clientY - r.top;
+      var dx = x - W / 2;
+      var dy = y - H / 2;
+      var orbitW = Math.max(1, Math.SQRT2 * Math.abs(dx));
+      var orbitH = Math.max(1, Math.SQRT2 * Math.abs(dy));
+      var speed = 1;
+      // The orbit angle advances at 0.5 × speed radians per second.
+      var phase = Math.atan2(dy / orbitH, dx / orbitW) - t * 0.5 * speed;
+      addBlob({
+        ax: orbitW / W,
+        ay: orbitH / H,
+        phase: phase,
+        speed: speed,
+        r: randomRadius()
+      });
+    });
+
+    // ---------- Size, visibility, off-screen ----------
+    function onResize() {
+      measure();
+      if (!rafId) {
+        // Not animating: redraw the still frame at the new size.
+        placeOnOrbits(t);
+        render();
+      }
+    }
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(onResize).observe(svg);
+    } else {
+      window.addEventListener('resize', onResize);
+    }
+
+    document.addEventListener('visibilitychange', syncLoop);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        syncLoop();
+      }).observe(svg);
+    }
+
+    // ---------- Start ----------
+    measure();
+
+    for (var i = 0; i < START_BLOBS; i++) {
+      // Math.random() calls in this exact order: orbit width, orbit height, phase, speed, radius.
+      var orbitW = 0.3 * (0.5 + Math.random() * 0.5);   // × W
+      var orbitH = 0.26 * (0.5 + Math.random() * 0.5);  // × H
+      var phase = Math.random() * 2 * Math.PI;
+      var speed = 1 - 0.6 + Math.random() * 0.6 * 2;
+      var radius = randomRadius();
+      addBlob({ ax: orbitW, ay: orbitH, phase: phase, speed: speed, r: radius });
+    }
+
+    // Reduced motion: start paused on a still frame at t = 2.4 s.
+    t = reduceMotion ? STILL_T : 0;
+    placeOnOrbits(t);
+    render();
+
+    syncButton();
+    toggleBtn.hidden = false;
+    syncLoop();
+  })();
+  </script>
+</body>
+</html>

@@ -30,5 +30,6 @@ export const meta: SceneMeta = {
     'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).',
     'Reduced-motion still frame: every blob where its orbit puts it at t = 2.4s.',
   ],
+  blends: false,
   interactionLines: ['The SVG has touch-action: pan-y.'],
 };

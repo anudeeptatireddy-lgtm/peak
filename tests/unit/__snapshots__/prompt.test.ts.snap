@@ -4594,7 +4594,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4630,7 +4630,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4666,7 +4666,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4702,7 +4702,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4738,7 +4738,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4774,7 +4774,7 @@ Colored blobs orbit slowly and melt into each other when they touch. One blob fo
 
 ## Look
 - Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
-- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
 - Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
 - Blobs are filled in their accent color. Keep a visually hidden description for screen readers; the SVG is aria-hidden.
 
@@ -4881,6 +4881,318 @@ Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8
 - Blob count: 8
 - Blob size: 70px
 - Orbit speed: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Halftone paper
+
+## What I want
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, covered in a honeycomb grid of dots with spacing g = clamp(short side ÷ 30, 18, 30) px: rows 0.866 × g apart, ceil(width ÷ g) + 2 columns and ceil(height ÷ (0.866 × g)) + 2 rows, dot (i, j) at ((i − 0.5) × g + (j odd ? g ÷ 2 : 0), (j − 0.5) × 0.866 × g). A plain dot has radius base = 1.1 + g × 0.035; draw all plain dots as one path in the soft text color at opacity 0.5.
+- The swell has radius R = short side × 34%. For each dot at distance d from the swell's center: e = q × q × (3 − 2q) with q = 1 − d ÷ R when d < R, else 0.
+- Dots with e below 0.04 stay plain. The rest (e capped at 1.25) are hot: pushed away from the swell's center by e × g × 0.55 and with radius base + e × g × 0.4.
+- Hot dots are printed three times, once per accent, with the blend mode above, after the gray dots. Ink L (0, 1, 2) is moved by (fixed + slip × (L − 1)) × e and drawn 0.08 × L smaller (radius × (1 − L × 0.08)), where fixed = (−1, −0.6), (1, −0.2) and (0, 0.95) × g × 0.1 for L = 0, 1, 2, and slip = the swell's velocity × 1.1, each axis clamped to ±g × 0.6.
+- The swell's center follows a target each frame: new = lerp(center, target, 1 − (1 − 0.13)^f); its velocity = lerp(velocity, (new − center) ÷ f, 1 − (1 − 0.2)^f); then center = new. The target is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.3 × sin(t × 0.27)), height × (0.42 + 0.2 × sin(t × 0.41 + 1))).
+- A click or tap (on release) starts a ring there with radius 0 and strength 1; each frame radius += 11 × f and strength ×= 0.968^f, and it is removed below 0.03. A ring adds strength × exp(−u²) × 0.9 to every dot's e, with u = (the dot's distance from the ring's center − radius) ÷ (g × 1.7), for |u| < 3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Rebuild the dot grid on every resize; the swell starts (once) at 64% of the width and 40% of the height, at rest.
+- Reduced-motion still frame: the swell resting where it starts, toward the upper right.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`halftone prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Halftone paper
+
+A sheet of small gray halftone dots. Around my cursor the dots swell, push outward and split into three inks, slightly out of register like a riso print; moving fast exaggerates the misprint. Clicks send rings rolling through the dots, and when I leave it alone the swell wanders by itself.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Dot spacing: 0
+- Swell size: 34%
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -6567,6 +6879,324 @@ Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E9
 - Sign text: "open late"
 - Tube thickness: 5px
 - Turn-on time per letter: 0.35s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Overprint blobs
+
+## What I want
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+## Look
+- Colors ("Riso" palette): background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, with three ink blobs (i = 0, 1, 2, in accents 1, 2 and 3). R = short side × 21%. Blob i's radius is R × its scale × (1 − i × 0.04). Draw each blob as a closed path of 72 points (j = 0 … 72) filled in its accent, using the blend mode above, in the order 0, 1, 2.
+- Point j sits at angle θ = j ÷ 72 × 2π; with w = θ + the blob's heading, its radius is r0 × (1 + 0.055 × sin(3w + t × 1.3 + 2i) + 0.035 × sin(5w − t × 0.9 + i)).
+- A moving blob stretches: with speed = its velocity's length and heading = atan2(vy, vx), st = 1 + min(speed × 0.012, 0.45); the point's local position is (cos θ × r × st, sin θ × r ÷ √st), turned by the heading and added to the blob's position.
+- Each frame every blob springs toward its own target point: velocity = (velocity + (target − position) × k × f) × d^f, then position += velocity × f, with k = 0.075, 0.042 and 0.024 and d = 0.8, 0.84 and 0.87 for blobs 0, 1 and 2.
+- The targets sit around the aim point on a turning triangle: blob i's target = aim + (cos a, sin a) × R × 0.55, a = t × 0.45 + i × 2π ÷ 3. The aim point is the pointer while it is over the canvas (a finger while it touches); otherwise it wanders: (width × (0.55 + 0.26 × sin(t × 0.47)), height × (0.42 + 0.14 × sin(t × 0.83))).
+- Each blob has a scale (starting at 1) on its own spring: scaleVelocity = (scaleVelocity + (1 − scale) × 0.12 × f) × 0.84^f, scale += scaleVelocity × f. A click or tap (on release) makes the blobs jump one after another, blob i after i × 0.07s: when its timer runs out, its scaleVelocity += 0.11.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- The blobs start (once, on the first resize) at x = width × (0.48 + i × 0.07), y = height × (0.42 + (i mod 2) × 0.05), at rest, scale 1.
+- Reduced-motion still frame: the blobs where they start, overlapping in a trefoil, at t = 0.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`overprint prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Overprint blobs
+
+Three big ink blobs that chase my cursor, each on a spring of a different speed, arranged in a slowly turning triangle. Where they overlap the inks mix into new colors. Fast movement stretches them in the direction they travel, a click makes them jump in a quick staggered pulse, and when I leave them alone they wander.
+
+Colors: background #F4F2FF, text #1A1240, secondary text #4E4777, accents #EC1C7F, #2A47EA, #FF7A00. Font: "Anybody" from Google Fonts.
+- Blob size: 21%
+- Fastest ink’s spring: 0.075
+- Click jump: 0.11
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

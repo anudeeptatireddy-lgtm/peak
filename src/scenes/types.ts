@@ -70,6 +70,11 @@ export interface SceneMeta {
   lookLines: string[];
   behaviorLines: string[];
   interactionLines: string[];
+  /**
+   * false: this scene never blends its accents (e.g. goo, whose blobs must melt
+   * into one shape), so the prompt says so instead of describing the world's blend.
+   */
+  blends?: false;
 }
 
 export interface SoundHooks {

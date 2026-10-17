@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F4F2FF">
+<title>Black hole</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&amp;display=swap">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --ink: #1A1240;
+    --soft: #4E4777;
+    --pink: #EC1C7F;
+    --blue: #2A47EA;
+    --orange: #FF7A00;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  [hidden] { display: none !important; }
+
+  /* Full-screen stage that holds the canvas and the text on top of it */
+  .stage {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+  }
+
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: transparent;
+    touch-action: pan-y;           /* vertical swipes still scroll the page */
+    cursor: crosshair;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  canvas.dragging { cursor: grabbing; }
+
+  .hud {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: clamp(16px, 3vw, 32px);
+    pointer-events: none;          /* clicks fall through to the canvas */
+  }
+
+  .intro {
+    max-width: 34rem;
+    padding: 12px 16px 14px;
+    border-radius: 10px;
+    background: rgba(244, 242, 255, 0.86); /* keeps text readable over the drawing */
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.25rem, 7vw, 4.5rem);
+    font-weight: 850;
+    font-stretch: 150%;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  .intro p {
+    margin: 0.5rem 0 0;
+    max-width: 32ch;
+    font-size: clamp(1rem, 1.6vw, 1.125rem);
+    font-weight: 450;
+    line-height: 1.4;
+    color: var(--soft);
+  }
+
+  .toggle {
+    pointer-events: auto;
+    align-self: flex-end;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 44px;
+    padding: 0.6em 1.25em;
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    font-stretch: 125%;
+    color: var(--ink);
+    background: var(--bg);
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    box-shadow: 3px 3px 0 var(--pink);
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .toggle:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--pink); }
+  .toggle:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--pink); }
+  .toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+  .toggle svg { width: 1em; height: 1em; fill: currentColor; flex: none; }
+
+  .about {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 48px 16px 64px;
+  }
+  .about h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-stretch: 130%;
+    color: var(--ink);
+  }
+  .about p {
+    margin: 0 0 1rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toggle { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <section class="stage" aria-labelledby="title">
+    <canvas id="sky" aria-hidden="true"></canvas>
+    <div class="hud">
+      <div class="intro">
+        <h1 id="title">Black hole</h1>
+        <p>Press and hold to drag the hole around. Click or tap to release a burst of particles.</p>
+      </div>
+      <button type="button" id="toggle" class="toggle">
+        <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>
+        <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" hidden><path d="M4 2.2v11.6c0 .8.9 1.3 1.6.8l8.6-5.8a1 1 0 0 0 0-1.6L5.6 1.4C4.9.9 4 1.4 4 2.2z"/></svg>
+        <span class="label">Pause</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="about" aria-labelledby="about-title">
+    <h2 id="about-title">What you are looking at</h2>
+    <p>Every speck is pulled toward the hole, and the pull gets stronger the closer it gets, so particles whip around faster as they fall in. A little friction makes each orbit shrink until the particle crosses the pink ring and disappears, and a new one drifts in from off-screen.</p>
+    <p>The faint grid is bent by the same pull, which is why it sinks into a funnel around the hole.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- Settings ----------
+  const BG = '#F4F2FF';
+  const SOFT = '#4E4777';
+  const ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
+  const BLEND = 'multiply';        // how overlapping accent colors mix (like ink on paper)
+
+  const G = 2000;                  // strength of gravity
+  const MASS = 1;                  // mass of the hole
+  const R = 40;                    // event horizon radius (px)
+  const DRAG = 0.998;              // velocity kept per frame
+  const GRID = 40;                 // grid spacing (px)
+  const GRID_STEP = GRID / 3;      // one polyline point every 40/3 px
+  const HOLD_MS = 200;             // a press becomes a drag after this long
+  const TOUCH_HOLD_MS = 250;       // a finger must hold still this long
+  const TOUCH_SLOP = 10;           // px a finger may wobble and still count as "still"
+  const FOLLOW = 0.12;             // how quickly the hole follows the pointer
+  const BURST = 80;                // particles released per click
+  const BURST_SPEED = 4;           // max burst speed (px per frame)
+  const STILL_FRAMES = 180;        // frames simulated for the still image
+  const TAU = Math.PI * 2;
+
+  // ---------- Elements ----------
+  const canvas = document.getElementById('sky');
+  const ctx = canvas.getContext('2d');
+  const toggle = document.getElementById('toggle');
+  const toggleLabel = toggle.querySelector('.label');
+  const iconPause = toggle.querySelector('.icon-pause');
+  const iconPlay = toggle.querySelector('.icon-play');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // ---------- State ----------
+  let W = 0, H = 0, dpr = 0, diag = 0, halfDiag = 0;
+  const hole = { x: 0, y: 0 };
+
+  let N = 0;
+  let px = new Float64Array(0), py = new Float64Array(0);
+  let vx = new Float64Array(0), vy = new Float64Array(0);
+  let burstIndex = 0;
+
+  let gridPts = new Float32Array(0); // x,y pairs of the undistorted grid
+  let gridLens = new Int32Array(0);  // number of points in each line
+
+  let press = null;                  // the current press on the canvas, if any
+  const clicks = [];                 // clicks waiting to be handled next frame
+
+  let playing = !reduceMotion.matches;
+  let onScreen = true;
+  let rafId = 0;
+  let lastT = 0;
+
+  // ---------- Particles ----------
+  // Give particle i a sideways speed so it orbits the hole.
+  function startOrbit(i, x, y) {
+    px[i] = x;
+    py[i] = y;
+    const dx = x - hole.x, dy = y - hole.y;
+    const r = Math.sqrt(dx * dx + dy * dy);
+    if (r < 1e-6) { vx[i] = 0; vy[i] = 0; return; }
+    const s = Math.sqrt(G * MASS / r) / r;
+    vx[i] = -dy * s;
+    vy[i] = dx * s;
+  }
+
+  // Start particle i again somewhere off-screen.
+  function respawn(i) {
+    const angle = Math.random() * TAU;
+    const dist = halfDiag * (1 + Math.random() * 0.3);
+    startOrbit(i, hole.x + Math.cos(angle) * dist, hole.y + Math.sin(angle) * dist);
+  }
+
+  function placeParticles() {
+    const n = W < 700 ? 500 : 1200;
+    if (n !== N) {
+      N = n;
+      px = new Float64Array(N); py = new Float64Array(N);
+      vx = new Float64Array(N); vy = new Float64Array(N);
+    }
+    burstIndex = 0;
+    for (let i = 0; i < N; i++) {
+      const x = Math.random() * W;
+      const y = Math.random() * H;
+      startOrbit(i, x, y);
+    }
+  }
+
+  function burst(x, y) {
+    for (let k = 0; k < BURST; k++) {
+      const i = burstIndex;
+      burstIndex = (burstIndex + 1) % N;
+      const angle = Math.random() * TAU;
+      const speed = Math.random() * BURST_SPEED;
+      px[i] = x;
+      py[i] = y;
+      vx[i] = Math.cos(angle) * speed;
+      vy[i] = Math.sin(angle) * speed;
+    }
+  }
+
+  function moveParticles(f) {
+    const hx = hole.x, hy = hole.y;
+    const R2 = R * R;
+    const maxD2 = diag * diag;
+    const damp = Math.pow(DRAG, f);
+    const GM = G * MASS;
+
+    for (let i = 0; i < N; i++) {
+      const x = px[i], y = py[i];
+      const dx = hx - x, dy = hy - y;
+      const r2 = dx * dx + dy * dy;
+
+      // Already inside the horizon (for example, the hole was dragged onto it).
+      if (r2 < R2) { respawn(i); continue; }
+
+      const r = Math.sqrt(r2);
+      const a = GM / (r2 * r) * f;   // (dx, dy) / r * G * M / r^2 * f
+      const nvx = (vx[i] + dx * a) * damp;
+      const nvy = (vy[i] + dy * a) * damp;
+      const nx = x + nvx * f;
+      const ny = y + nvy * f;
+      vx[i] = nvx; vy[i] = nvy;
+      px[i] = nx; py[i] = ny;
+
+      // Did this step cross the event horizon? (closest point of the step to the hole)
+      const sx = nx - x, sy = ny - y;
+      const sl2 = sx * sx + sy * sy;
+      let t = sl2 > 0 ? (dx * sx + dy * sy) / sl2 : 0;
+      if (t < 0) t = 0; else if (t > 1) t = 1;
+      const cx = x + sx * t - hx, cy = y + sy * t - hy;
+      if (cx * cx + cy * cy < R2) { respawn(i); continue; }
+
+      // Wandered too far away.
+      const ex = nx - hx, ey = ny - hy;
+      if (ex * ex + ey * ey > maxD2) respawn(i);
+    }
+  }
+
+  // ---------- Grid ----------
+  function samples(from, to) {
+    const out = [];
+    for (let i = 0; ; i++) {
+      const v = from + i * GRID_STEP;
+      if (v >= to - 1e-6) { out.push(to); break; }
+      out.push(v);
+    }
+    return out;
+  }
+
+  function buildGrid() {
+    const pts = [];
+    const lens = [];
+
+    const ys = samples(-GRID, H + GRID);
+    const kx0 = Math.ceil((-GRID - W / 2) / GRID);
+    const kx1 = Math.floor((W + GRID - W / 2) / GRID);
+    for (let k = kx0; k <= kx1; k++) {
+      const x = W / 2 + k * GRID;
+      for (const y of ys) pts.push(x, y);
+      lens.push(ys.length);
+    }
+
+    const xs = samples(-GRID, W + GRID);
+    const ky0 = Math.ceil((-GRID - H / 2) / GRID);
+    const ky1 = Math.floor((H + GRID - H / 2) / GRID);
+    for (let k = ky0; k <= ky1; k++) {
+      const y = H / 2 + k * GRID;
+      for (const x of xs) pts.push(x, y);
+      lens.push(xs.length);
+    }
+
+    gridPts = new Float32Array(pts);
+    gridLens = Int32Array.from(lens);
+  }
+
+  // ---------- Drawing ----------
+  function drawGrid() {
+    const hx = hole.x, hy = hole.y;
+    const K = 3 * MASS * R * R;
+    ctx.beginPath();
+    let j = 0;
+    for (let l = 0; l < gridLens.length; l++) {
+      const n = gridLens[l];
+      for (let i = 0; i < n; i++, j += 2) {
+        let x = gridPts[j], y = gridPts[j + 1];
+        const dx = hx - x, dy = hy - y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d > 0) {
+          const pull = Math.min(K / (d + R), d) / d; // never past the center
+          x += dx * pull;
+          y += dy * pull;
+        }
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 0.3;
+    ctx.strokeStyle = SOFT;
+    ctx.lineWidth = 1;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  function drawParticles() {
+    const hx = hole.x, hy = hole.y;
+    const near2 = (2.5 * R) * (2.5 * R);
+    const mid2 = (6 * R) * (6 * R);
+    const paths = [new Path2D(), new Path2D(), new Path2D()];
+    for (let i = 0; i < N; i++) {
+      const x = px[i], y = py[i];
+      const dx = x - hx, dy = y - hy;
+      const d2 = dx * dx + dy * dy;
+      const p = d2 < near2 ? paths[0] : d2 < mid2 ? paths[1] : paths[2];
+      p.moveTo(x - vx[i] * 3, y - vy[i] * 3);
+      p.lineTo(x, y);
+    }
+    ctx.globalCompositeOperation = BLEND;
+    ctx.globalAlpha = 1;
+    ctx.lineWidth = 1.5;
+    ctx.lineCap = 'round';
+    for (let c = 0; c < 3; c++) {
+      ctx.strokeStyle = ACCENTS[c];
+      ctx.stroke(paths[c]);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function drawHole() {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.beginPath();
+    ctx.arc(hole.x, hole.y, R, 0, TAU);
+    ctx.fillStyle = BG;
+    ctx.fill();
+
+    ctx.strokeStyle = ACCENTS[0];
+    if (BLEND === 'lighter') {
+      // Soft glow, only used with the "lighter" blend mode.
+      const widths = [12, 9, 6, 3];
+      const alphas = [0.0375, 0.075, 0.1125, 0.15];
+      ctx.globalCompositeOperation = 'lighter';
+      for (let k = 0; k < 4; k++) {
+        ctx.lineWidth = 2 + widths[k];
+        ctx.globalAlpha = alphas[k];
+        ctx.stroke();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+    }
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    drawGrid();
+    drawParticles();
+    drawHole();
+  }
+
+  // ---------- Pointer: press-and-hold to drag, click to burst ----------
+  function localPoint(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function endPress() {
+    press = null;
+    canvas.classList.remove('dragging');
+  }
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (!e.isPrimary) return;
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const p = localPoint(e);
+    press = {
+      id: e.pointerId,
+      touch: e.pointerType === 'touch',
+      t0: performance.now(),
+      sx: p.x, sy: p.y,
+      x: p.x, y: p.y,
+      still: true,
+      dragging: false
+    };
+    if (!press.touch) {
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    }
+  });
+
+  canvas.addEventListener('pointermove', (e) => {
+    if (!press || e.pointerId !== press.id) return;
+    const p = localPoint(e);
+    press.x = p.x;
+    press.y = p.y;
+    if (press.touch && !press.dragging) {
+      const mx = p.x - press.sx, my = p.y - press.sy;
+      if (mx * mx + my * my > TOUCH_SLOP * TOUCH_SLOP) press.still = false; // it's a swipe
+    }
+  });
+
+  canvas.addEventListener('pointerup', (e) => {
+    if (!press || e.pointerId !== press.id) return;
+    const p = localPoint(e);
+    const held = performance.now() - press.t0;
+    if (rafId && !press.dragging && press.still && held < HOLD_MS) clicks.push(p);
+    endPress();
+  });
+
+  canvas.addEventListener('pointercancel', (e) => {
+    if (press && e.pointerId === press.id) endPress();
+  });
+
+  // Once a finger is dragging the hole, stop the page from scrolling.
+  canvas.addEventListener('touchmove', (e) => {
+    if (press && press.dragging) e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('contextmenu', (e) => {
+    if (press && press.touch) e.preventDefault();
+  });
+
+  function updatePress(now) {
+    if (!press || press.dragging) return;
+    const held = now - press.t0;
+    const ready = press.touch ? (press.still && held >= TOUCH_HOLD_MS) : held >= HOLD_MS;
+    if (ready) {
+      press.dragging = true;
+      canvas.classList.add('dragging');
+    }
+  }
+
+  function handleClicks() {
+    for (const c of clicks) burst(c.x, c.y);
+    clicks.length = 0;
+  }
+
+  function moveHole(f) {
+    if (!press || !press.dragging) return;
+    const tx = Math.min(Math.max(press.x, 0), W);
+    const ty = Math.min(Math.max(press.y, 0), H);
+    const k = 1 - Math.pow(1 - FOLLOW, f);
+    hole.x += (tx - hole.x) * k;
+    hole.y += (ty - hole.y) * k;
+  }
+
+  // ---------- Animation loop ----------
+  function frame(now) {
+    rafId = requestAnimationFrame(frame);
+    const dt = Math.min(Math.max((now - lastT) / 1000, 0), 0.05);
+    lastT = now;
+    const f = Math.min(dt * 60, 2.5);
+
+    updatePress(now);
+    handleClicks();
+    moveHole(f);
+    moveParticles(f);
+    draw();
+  }
+
+  function shouldRun() {
+    return playing && onScreen && !document.hidden;
+  }
+
+  function updateRunning() {
+    if (shouldRun()) {
+      if (!rafId) {
+        lastT = performance.now();
+        rafId = requestAnimationFrame(frame);
+      }
+    } else if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+      endPress();
+      clicks.length = 0;
+    }
+  }
+
+  // A meaningful still image: 180 frames of physics at f = 1, no pointer.
+  function renderStill() {
+    for (let i = 0; i < STILL_FRAMES; i++) moveParticles(1);
+    draw();
+  }
+
+  // ---------- Play / Pause ----------
+  function renderToggle() {
+    toggleLabel.textContent = playing ? 'Pause' : 'Play';
+    iconPause.hidden = !playing;
+    iconPlay.hidden = playing;
+  }
+
+  function setPlaying(value) {
+    playing = value;
+    renderToggle();
+    updateRunning();
+  }
+
+  toggle.addEventListener('click', () => setPlaying(!playing));
+
+  const onReduceChange = (e) => { if (e.matches) setPlaying(false); };
+  if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onReduceChange);
+  else if (reduceMotion.addListener) reduceMotion.addListener(onReduceChange);
+
+  // ---------- Sizing ----------
+  function resize() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (w === 0 || h === 0) return;
+    const newDpr = Math.min(window.devicePixelRatio || 1, 2);
+    const sizeChanged = w !== W || h !== H;
+    if (!sizeChanged && newDpr === dpr) return;
+
+    dpr = newDpr;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // all math stays in CSS pixels
+
+    if (sizeChanged) {
+      if (W > 0 && H > 0) {
+        hole.x *= w / W;
+        hole.y *= h / H;
+      } else {
+        hole.x = w / 2;
+        hole.y = h / 2;
+      }
+      W = w; H = h;
+      diag = Math.sqrt(W * W + H * H);
+      halfDiag = diag / 2;
+      buildGrid();
+      placeParticles();
+      if (!shouldRun()) renderStill();
+    } else if (!rafId) {
+      draw();
+    }
+  }
+
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(resize).observe(canvas);
+  }
+  window.addEventListener('resize', resize);
+
+  // Pause when the canvas is scrolled off-screen or the tab is hidden.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      updateRunning();
+    }).observe(canvas);
+  }
+  document.addEventListener('visibilitychange', updateRunning);
+
+  // ---------- Start ----------
+  renderToggle();
+  resize();
+  updateRunning();
+})();
+</script>
+</body>
+</html>
