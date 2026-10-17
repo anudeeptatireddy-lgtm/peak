@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 
 <Base title="Page not found" noindex>
   <section class="lost wrap">
+    <div class="play" data-lost-scene aria-hidden="true"></div>
     <h1 class="display">This page doesn't exist</h1>
     <p class="body measure">The link might be old, or there's a typo in the address.</p>
     <div class="links">
@@ -20,6 +21,17 @@ import Base from '../layouts/Base.astro';
   </section>
 </Base>
 
+<script>
+  import { mountScene } from '../engine/mount';
+  import { loadScene } from '../scenes/registry';
+
+  // A small playful scene (falling letters), in preview quality: it spells the lost page.
+  const host = document.querySelector<HTMLElement>('[data-lost-scene]')!;
+  loadScene('tumble').then((mod) =>
+    mountScene(host, mod, { quality: 'preview', params: { text: '404' } }),
+  );
+</script>
+
 <style>
   .lost {
     display: grid;
@@ -28,6 +40,11 @@ import Base from '../layouts/Base.astro';
     min-height: 80vh;
     min-height: 80svh;
     padding-top: calc(var(--header-h) + 2rem);
+  }
+  .play {
+    position: relative;
+    height: min(34vh, 260px);
+    touch-action: pan-y;
   }
   .links {
     display: flex;

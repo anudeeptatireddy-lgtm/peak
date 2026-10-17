@@ -315,10 +315,10 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
   - Done when: every scene's `terms` resolve to real words (validator test); scene info popovers and How it works chips link to the right anchors.
 - [x] **8.13 Drops** · PRD §14
   - Done when: `/drops`, `/drops/[slug]`, `/rss.xml` work; the home page shows the latest drop; one launch drop exists.
-- [ ] **8.14 About** · PRD §15
+- [x] **8.14 About** · PRD §15
   - Do: ask the owner in one message for their name, a one-line bio, what they're looking for (internships, freelance, collaborators), a contact link, and social links. Keep working on other steps while waiting. Build the page with the `tilt` card; use their answers, or clearly marked placeholders if they haven't answered yet (list them in `docs/DECISIONS.md`).
   - Done when: the page uses the `tilt` card with the owner's name (or a marked placeholder); nothing invented.
-- [ ] **8.15 404**
+- [x] **8.15 404**
   - Done when: a small playful animation (reuse a scene in preview quality) and links to Home, Gallery, Start here.
 
 - [ ] **Wave 8 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: browse the gallery and the Tour (try Shuffle and Autoplay) on laptop and phone. Read all three guides as if you'd never used Claude Code and note anything confusing.

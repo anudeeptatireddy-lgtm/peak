@@ -325,3 +325,8 @@ Desktop matched at once; the phone showed a real bug in our scene (the cup was w
 ## 2026-10-18: 8.13 Drops and 8.5 Home latest drop
 - `/drops` (newest first), `/drops/[slug]` and `/rss.xml` all read the `drops` content collection. The launch drop "Hello, peak" (`src/content/drops/hello-peak.md`) points at the `particles` scene (a drop needs a scene or a world; the hero scene is the closest thing to "the site itself"), dated 2026-10-18.
 - Home shows a "Latest drop" row in the closing Matcha world, between How it works and Start here. The stand-in code and the "arrives in wave N" notes are gone; a unit test fails if any featured slot lacks its own scene.
+
+## 2026-10-18: 8.14 About and 8.15 404
+- `/about` uses the `tilt` card as its header. **Placeholders still to fill in (owner):** `[YOUR NAME]` (the card's name), `[ONE-LINE BIO]` (also the card's second line), `[WHY I MADE PEAK: …]`, `[WHAT YOU'RE LOOKING FOR, e.g. internships, freelance, collaborators]`, `[CONTACT LINK]`, `[SOCIAL LINKS]`. Nothing personal was invented (the card's own default job title was replaced by the bio placeholder).
+- `/404` shows the `tumble` scene (falling letters) spelling "404" in preview quality, with links to Home, Gallery and Start here.
+- Small fix: "Seen in" links on `/words` now meet the 44px tap-target rule on phones.

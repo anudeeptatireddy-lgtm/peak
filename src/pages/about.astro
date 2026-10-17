@@ -1,8 +1,70 @@
 ---
+// About (PRD §15): the maker's page. Everything personal is a clearly marked placeholder
+// for the owner to fill in; nothing here is invented. The header is the tilt card scene.
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
 ---
 
-<Base title="About">
-  <Placeholder title="About" lede="Who made peak, and why." wave={8} />
+<Base title="About" description="Who made peak, and why." world="dreamhouse">
+  <div class="about wrap">
+    <div class="card" data-about-card aria-label="Name card"></div>
+    <section class="block" aria-labelledby="bio-h">
+      <h1 class="display" id="bio-h">
+        About
+      </h1>
+      <p class="body measure" data-placeholder="bio">
+        [ONE-LINE BIO]
+      </p>
+    </section>
+    <section class="block" aria-labelledby="why-h">
+      <h2 id="why-h">Why I made peak</h2>
+      <p class="body measure" data-placeholder="why">
+        [WHY I MADE PEAK: a short paragraph written by the maker]
+      </p>
+    </section>
+    <section class="block" aria-labelledby="looking-h">
+      <h2 id="looking-h">What I'm looking for</h2>
+      <p class="body measure" data-placeholder="looking">
+        [WHAT YOU'RE LOOKING FOR, e.g. internships, freelance, collaborators]
+      </p>
+    </section>
+    <section class="block" aria-labelledby="contact-h">
+      <h2 id="contact-h">Say hello</h2>
+      <p class="body measure" data-placeholder="contact">
+        [CONTACT LINK]
+      </p>
+      <p class="body measure" data-placeholder="social">
+        [SOCIAL LINKS]
+      </p>
+    </section>
+  </div>
 </Base>
+
+<script>
+  import { mountScene } from '../engine/mount';
+  import { loadScene } from '../scenes/registry';
+
+  const host = document.querySelector<HTMLElement>('[data-about-card]')!;
+  // The card carries the maker's name; until it is filled in, it shows the marked placeholder.
+  loadScene('tilt').then((mod) =>
+    mountScene(host, mod, { params: { name: '[YOUR NAME]', role: '[ONE-LINE BIO]' } }),
+  );
+</script>
+
+<style>
+  .about {
+    padding-top: calc(var(--header-h) + 1rem);
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 2rem;
+  }
+  .card {
+    position: relative;
+    height: min(60vh, 460px);
+    min-height: 340px;
+    touch-action: pan-y;
+  }
+  .block {
+    display: grid;
+    gap: 0.5rem;
+  }
+</style>
