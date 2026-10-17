@@ -83,7 +83,7 @@ export const params: Param[] = [
     default: 0.6,
     phrase: (v: number, all) =>
       v > 0
-        ? `At the start, and once the pointer has been away for ${all.plumeDelay}s, a slow plume rises from the bottom: each frame splat at x = width × (0.5 + ${all.plumeSway} × sin(t × ${all.plumeWander})), y = height − ${all.splat}px, adding velocity (0, −${all.plumeLift} × ${v}) and dye ${all.plumeDye} × ${v}.`
+        ? `At the start, and once the pointer has been away (off the canvas, not just still over it) for ${all.plumeDelay}s, a slow plume rises from the bottom: each frame splat at x = width × (0.5 + ${all.plumeSway} × sin(t × ${all.plumeWander})), y = height − ${all.splat}px, adding velocity (0, −${all.plumeLift} × ${v}) and dye ${all.plumeDye} × ${v}.`
         : 'There is no idle plume.',
   },
   /* ---------- Interaction ---------- */

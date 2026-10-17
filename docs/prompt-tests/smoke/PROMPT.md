@@ -15,7 +15,7 @@ Soft colored smoke that pours from my cursor and swirls, curls and fades behind 
 - Viscosity = 0.1 × 0.0005.
 - After each step, multiply every dye cell by 0.985^f, so the smoke fades.
 - Before each step, add swirl (vorticity confinement): per cell, curl = (vy right − vy left − (vx below − vx above)) ÷ 2; at each inner cell take the gradient of |curl| (central differences, ÷ 2), normalize it to N, and add (N.y, −N.x) × curl × 20 × dt to the velocity.
-- At the start, and once the pointer has been away for 1s, a slow plume rises from the bottom: each frame splat at x = width × (0.5 + 0.12 × sin(t × 0.4)), y = height − 36px, adding velocity (0, −0.6 × 0.6) and dye 0.3 × 0.6.
+- At the start, and once the pointer has been away (off the canvas, not just still over it) for 1s, a slow plume rises from the bottom: each frame splat at x = width × (0.5 + 0.12 × sin(t × 0.4)), y = height − 36px, adding velocity (0, −0.6 × 0.6) and dye 0.3 × 0.6.
 - While the pointer is over the canvas (a finger while it touches), splat at the pointer every frame: each cell whose center is within 36px of it, with weight = 1 − distance ÷ 36, gets velocity += (pointer movement since last frame ÷ f) × 60 ÷ width (and ÷ height for y) × 2 × weight, and dye += 0.4 × min(1, pointer speed in px per frame ÷ 8) × weight, split between the accents by the current color weights (a still pointer pours nothing).
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: splat from the pointer or the plume, add the swirl (vorticity confinement), step the fluid with dt, fade the dye, draw.

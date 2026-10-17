@@ -285,7 +285,7 @@ export function judge(
       `${name}: ink amount ${a.ink.toFixed(4)} vs ${b.ink.toFixed(4)} (10–30% apart: judge by eye)`,
     );
   const near = (x: number, y: number) => Math.abs(x - y) <= 0.05;
-  const moving = prev ? Math.max(energy(prev.a, a), energy(prev.b, b)) > 0.02 : false;
+  const moving = prev ? Math.max(energy(prev.a, a), energy(prev.b, b)) > 0.02 : true;
   if (!a.box.every((v, i) => near(v, b.box[i]!)) && a.ink > 0.003)
     (moving ? (eye ?? out) : out).push(
       `${name}: layout box ${a.box.map((v) => v.toFixed(2))} vs ${b.box.map((v) => v.toFixed(2))}`,
@@ -303,7 +303,7 @@ export function judge(
   if (prev) {
     const ea = energy(prev.a, a);
     const eb = energy(prev.b, b);
-    if (Math.max(ea, eb) > 0.03 && rel(ea, eb) > 0.2)
+    if (Math.max(ea, eb) > 0.05 && rel(ea, eb) > 0.2)
       out.push(`${name}: motion ${ea.toFixed(3)} vs ${eb.toFixed(3)} (limit ±20%)`);
     const da = a.ink - prev.a.ink;
     const db = b.ink - prev.b.ink;

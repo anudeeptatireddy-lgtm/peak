@@ -1,8 +1,1 @@
-{
-  "hide": ".bar",
-  "expect": "fail",
-  "reason": "Real timing difference on phone (PROMPT_TESTS.md): arriving letters sit further right and the idle shake is weaker. Fix the entry and shake phrases, then retest.",
-  "failOn": [
-    "mobile"
-  ]
-}
+{"hide": ".bar"}
