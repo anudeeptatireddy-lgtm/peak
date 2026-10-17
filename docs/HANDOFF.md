@@ -2,13 +2,11 @@
 
 Work stopped at a clean point because the owner is switching Claude accounts. Everything below is committed in "handoff: save state" and pushed to `main`. Pushing deploys to Vercel. The pushed code is tested, but the live smoke run for this deploy hasn't been done yet (see action 2).
 
-## Added scope (2026-10-17)
-
-Three extra scenes after Wave 7, gallery only: fogged bottle, tailor's cut, latte pour (PLAN Wave 7b; specs in docs/INDUSTRY_HEROES.md). Not on the home page.
-
 ## Exact step
 
-Steps 6.3 `tilt`, 6.4 `kaleido` and 6.5 `morph` are done. Next: 6.6 `moire` (flash test, like `fireworks`), then 6.7 to 6.10 and the Wave 6 wrap-up. The project folder is now `~/peak` (it was `~/Documents/peak`). The Wave 5 wrap-up is done; its live smoke run passed (80 passed, 20 skipped) and was repeated after step 6.5.
+All 50 scenes plus the three gallery-only industry heroes (`fogged`, `tailor`, `latte`) are built. Wave 7 and Wave 7b are wrapped up (full suite 608 passed; live smoke 80, live phone and gallery checks 72 passed). Wave 8: **8.1 and 8.2 (gallery and its filters/sort) are done.** Next: **8.3 Tour** (`/tour`, all scenes in catalog order using `src/scenes/catalog.ts`; the industry heroes (51-53) are gallery-only, so the Tour plays the first 50), then 8.4 Tour Shuffle and Autoplay, 8.5 Home (latest drop; home stays the 12 featured scenes, now with the black hole and confetti in the lava and glitch slots), then the guides (8.6 to 8.9: facts must come from official docs with a Last checked date), words (8.10 to 8.12), drops (8.13), About (8.14: ask the owner for details in one message), 404 (8.15).
+
+The project folder is `~/peak`.
 
 ## Update 1 status
 
@@ -26,11 +24,12 @@ By the owner's rule: all Spicy scenes plus one easy one. Spicy: `moire`, `tunnel
 
 ## Retest estimate
 
-Only `smoke` still fails. One fresh agent run: about 150k tokens. Nothing else needs a retest.
+`smoke` fails (real plume difference): one fresh agent run, about 100-150k tokens (agents have been costing about 90-110k each). `tailor` could be retested the same way if the owner wants. Nothing else needs a retest.
 
 ## Prompt-test state (measured rule)
 
-- Pass: particles, elastic, velocity, scramble, echo, neon, fire, ripple, lightning, blackhole, goo, cloth, flow, warp, marbles, skid.
+- Pass: particles, elastic, velocity, scramble, echo, neon, fire, ripple, lightning, blackhole, goo, cloth, flow, warp, marbles, skid, moire, tunnel, glitch, fogged, latte.
+- Fails on the measure but matches by eye: `tailor` (cloth physics diverge mid-cut; its threads linger). Not chased; owner may decide.
 - Fail (real behavior difference): `smoke`. The plume phrase is fixed; a retest needs the owner's OK (about 150k tokens).
 - Untested by rule: see `docs/PROMPT_TESTS.md`.
 
@@ -47,10 +46,10 @@ Only `smoke` still fails. One fresh agent run: about 150k tokens. Nothing else n
 - **Friend test** with 3-5 people at Checkpoint 9.
 - **Unchanged:** nothing paid, no domain purchase, no cookies or personal data.
 
-## Draft owner update (Wave 5, not sent yet)
+## Draft owner update (Waves 5 to 7b, not sent yet)
 
-> Wave 5 is built: 11 particle and physics scenes, live at https://peak-teal.vercel.app. Live checks pass.
-> Try on a phone: (1) **Tearable cloth**: press and hold, then drag hard until it rips, and double-tap to rehang. (2) **Fireworks**: tap fast; it never does more than 3 bursts a second. (3) **Smoke**: drag a finger sideways across it.
-> Also new: four more home-page slots (cloth, fireworks, flock, lightning) now show their real scenes. Since then I added tilt, kaleido and morph from Wave 6.
-> Prompt tests (new measured rule): cloth, goo, lightning and blackhole rebuild correctly from the prompt alone. Smoke has one real difference (the idle plume), phrase fixed, retest waiting on you.
-> Needs you: OK to retest smoke (about 150k tokens).
+> All 50 animations are built, plus three extra gallery-only ones (Fogged bottle, Tailor's cut, Latte pour). The gallery is live at https://peak-teal.vercel.app/gallery with filters and sort. The home page keeps its 12 featured scenes (the black hole and confetti are back in two slots).
+> Try on a phone: (1) Gallery: pick Events, then try Easiest first. (2) Fogged bottle: drag a finger sideways across it. (3) Tilt the phone on Holographic card after tapping "Use motion".
+> The site now has a phone-readiness test (no sideways scroll, 44px taps) on every page and scene.
+> Prompt tests: all new scenes pass except Tailor's cut, which matches by eye but not on the measure; Smoke still waits on a retest.
+> Needs you: OK to retest Smoke (about 100-150k tokens), and your About-page details when you are ready.
