@@ -6878,6 +6878,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Shape morph
+
+## What I want
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Every shape is 120 points, numbered from 0 at the top going clockwise (screen y points down), with its farthest point at distance 1 from the center after centering its bounding box on the origin. Point k of one shape morphs into point k of the next.
+- Angles: a = −π/2 + 2π × k ÷ 120. circle: radius 1. square: radius 0.8 ÷ max(|cos a|, |sin a|). triangle: radius 0.5 ÷ cos(φ − π/3) where φ = (a + π/2) mod (2π/3). blob: radius 1 + 0.16 × sin(3a + 1) + 0.1 × sin(5a + 2). flower: radius 0.72 + 0.28 × cos(5 × (a + π/2)).
+- star: a 5-pointed star, ten corners alternately at radius 1 and 0.45, starting with an outer point at the top, resampled to 120 points evenly along its outline.
+- heart: with u = 2π × k ÷ 120, x = 16 × sin³u and y = −(13 × cos u − 5 × cos 2u − 2 × cos 3u − cos 4u).
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Cycle through these shapes in order, then around again: circle, star, heart, blob. The shape is centered, with its farthest point 50% of the short side across (diameter), so radius = short side × 50 ÷ 100 ÷ 2.
+- Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
+- Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
+- Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. A click or tap ends the current wait or morph at once and starts morphing to the shape after it.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`morph prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Shape morph
+
+A big shape in the middle of the page that smoothly melts into the next shape (circle, star, heart, blob and around again) with a jelly overshoot each time. Up to three inks draw it, following slightly out of step. A click or tap skips to the next shape.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Shapes: "circle, star, heart, blob"
+- Shape size: 50%
+- Ink layers: 3
+- Morph time: 1.2s
+- Easing: Bouncy
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`neon prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Neon sign
 

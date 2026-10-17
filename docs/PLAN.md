@@ -251,7 +251,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **6.2 `halftone`** · SCENES.md #36 (port from `reference/riso-demo.html`)
 - [x] **6.3 `tilt`** · SCENES.md #37 (motion permission only after a tap; graceful fallback when denied)
 - [x] **6.4 `kaleido`** · SCENES.md #38
-- [ ] **6.5 `morph`** · SCENES.md #39
+- [x] **6.5 `morph`** · SCENES.md #39
 - [ ] **6.6 `moire`** · SCENES.md #40 (⚠ flash test)
 - [ ] **6.7 `tunnel`** · SCENES.md #41 (⚠ flash test)
 - [ ] **6.8 `lava`** · SCENES.md #42 (featured)

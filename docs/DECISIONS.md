@@ -197,3 +197,9 @@ Both match on desktop and miss at phone size (cloth 2.16%, smoke 4.3%, limit 2%)
 - Prompt tests now use the measured rule in PRD §8.7 (palette, amount, layout, motion, reactions, plus a side-by-side picture); parity tests stay pixel-based. All earlier prompt tests re-judged from saved pages: flow, warp, marbles, skid, cloth and goo now pass; smoke fails on a real behavior difference (plume phrase fixed, retest waits for the owner's OK).
 - Engine test mode (`src/engine/testmode.ts`): a test sets `window.__PEAK_TEST__ = seed`; then Math.random is seeded and the scheduler uses a fixed 16ms step (the fake clock's frame, the same step the demos measure), keeping the usual first-frame skip. All parity tests use it. `drop` desktop parity is still skipped: after this change our side is fully deterministic, and the variation left comes from the demo's loop starting at a real-time moment. A 1/60s step was tried and made the demos mismatch, so 16ms it is.
 - 6.4 `kaleido`: strokes fold into one wedge of a hidden canvas; each frame it is drawn around the center, every other copy mirrored. Not prompt-tested (Easy, not Spicy).
+
+## 2026-10-17: 6.5 `morph`
+- Shapes are 120 points each, numbered from the top going clockwise, so point k of one shape morphs into point k of the next (`shapes.ts`; the geometry is spelled out in plain words in the prompt). The "Shapes" setting is a comma-separated text field (unknown words are ignored; circle if none are left).
+- Easing reuses `kits/easing.ts`: smooth = ease-in-out cubic, bouncy = ease-out back (overshoot 1.70158), snappy = ease-out expo.
+- Each extra ink starts "Ink lag" later and is drawn "Ink shrink" smaller (added so the three multiplied inks show as rings instead of one dark blob at rest). The morph ends when the last ink arrives.
+- A click or tap ends the wait or morph and starts morphing to the shape after it. Not prompt-tested (Medium, not Spicy).
