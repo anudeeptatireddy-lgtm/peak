@@ -149,26 +149,33 @@ export function flowAngle(
  */
 export class Fluid {
   readonly size: number;
+  /** One density field per dye channel; `density` is channel 0. */
+  dyes: Float32Array[];
   density: Float32Array;
   vx: Float32Array;
   vy: Float32Array;
   private d0: Float32Array;
   private vx0: Float32Array;
   private vy0: Float32Array;
+  private curl: Float32Array;
 
   constructor(
     readonly w: number,
     readonly h: number,
     /** Gauss–Seidel passes per solve: more is smoother and slower. */
     readonly iterations = 12,
+    /** Dye channels carried by the same flow (e.g. one per accent color). */
+    channels = 1,
   ) {
     this.size = (w + 2) * (h + 2);
-    this.density = new Float32Array(this.size);
+    this.dyes = Array.from({ length: channels }, () => new Float32Array(this.size));
+    this.density = this.dyes[0]!;
     this.vx = new Float32Array(this.size);
     this.vy = new Float32Array(this.size);
     this.d0 = new Float32Array(this.size);
     this.vx0 = new Float32Array(this.size);
     this.vy0 = new Float32Array(this.size);
+    this.curl = new Float32Array(this.size);
   }
 
   /** Index of cell (i, j), 1 ≤ i ≤ w, 1 ≤ j ≤ h. */
@@ -176,8 +183,8 @@ export class Fluid {
     return i + (this.w + 2) * j;
   }
 
-  addDensity(i: number, j: number, amount: number): void {
-    this.density[this.ix(i, j)]! += amount;
+  addDensity(i: number, j: number, amount: number, channel = 0): void {
+    this.dyes[channel]![this.ix(i, j)]! += amount;
   }
 
   addVelocity(i: number, j: number, ux: number, uy: number): void {
@@ -198,11 +205,36 @@ export class Fluid {
     this.advect(1, this.vx, this.vx0, this.vx0, this.vy0, dt);
     this.advect(2, this.vy, this.vy0, this.vx0, this.vy0, dt);
     this.project(this.vx, this.vy, this.vx0, this.vy0);
-    this.d0.set(this.density);
-    this.diffuse(0, this.density, this.d0, diffusion, dt);
-    this.d0.set(this.density);
-    this.advect(0, this.density, this.d0, this.vx, this.vy, dt);
-    if (fade !== 1) for (let k = 0; k < this.size; k++) this.density[k]! *= fade;
+    for (const d of this.dyes) {
+      this.d0.set(d);
+      this.diffuse(0, d, this.d0, diffusion, dt);
+      this.d0.set(d);
+      this.advect(0, d, this.d0, this.vx, this.vy, dt);
+      if (fade !== 1) for (let k = 0; k < this.size; k++) d[k]! *= fade;
+    }
+  }
+
+  /**
+   * Vorticity confinement: finds where the flow spins (its curl) and pushes it
+   * to spin a little more there, putting back the small swirls the coarse grid
+   * smooths away. `strength` is in the same units as velocity per second.
+   */
+  confine(strength: number, dt: number): void {
+    if (!strength) return;
+    const { w, h, vx, vy, curl } = this;
+    const row = w + 2;
+    for (let j = 1; j <= h; j++)
+      for (let i = 1, k = j * row + 1; i <= w; i++, k++)
+        curl[k] = (vy[k + 1]! - vy[k - 1]! - (vx[k + row]! - vx[k - row]!)) * 0.5;
+    for (let j = 2; j < h; j++)
+      for (let i = 2, k = j * row + 2; i < w; i++, k++) {
+        const gx = (Math.abs(curl[k + 1]!) - Math.abs(curl[k - 1]!)) * 0.5;
+        const gy = (Math.abs(curl[k + row]!) - Math.abs(curl[k - row]!)) * 0.5;
+        const len = Math.hypot(gx, gy) + 1e-5;
+        const c = curl[k]! * strength * dt;
+        vx[k]! += (gy / len) * c;
+        vy[k]! -= (gx / len) * c;
+      }
   }
 
   /** Total density (for tests: advection and projection should roughly conserve it). */

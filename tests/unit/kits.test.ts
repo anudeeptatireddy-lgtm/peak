@@ -369,6 +369,56 @@ describe('field kit', () => {
     expect(f.mass()).toBeLessThan(mass * 1.1);
   });
 
+  it('fluid carries several dye channels with the same flow', () => {
+    const f = new Fluid(24, 24, 10, 3);
+    f.addDensity(10, 10, 1, 0);
+    f.addDensity(10, 10, 2, 2);
+    for (let i = 0; i < 5; i++) {
+      f.addVelocity(10, 10, 3, 0);
+      f.step(0.016, 0, 0);
+    }
+    const a = f.dyes[0]!;
+    const c = f.dyes[2]!;
+    let worst = 0;
+    for (let k = 0; k < f.size; k++) worst = Math.max(worst, Math.abs(c[k]! - 2 * a[k]!));
+    expect(worst).toBeLessThan(1e-4);
+    expect(f.dyes[1]!.every((v) => v === 0)).toBe(true);
+  });
+
+  it('vorticity confinement strengthens an existing swirl', () => {
+    const spin = (strength: number) => {
+      const f = new Fluid(32, 32, 10);
+      for (let j = 10; j < 22; j++)
+        for (let i = 10; i < 22; i++) f.addVelocity(i, j, -(j - 16) * 0.05, (i - 16) * 0.05);
+      for (let i = 0; i < 10; i++) {
+        f.confine(strength, 0.016);
+        f.step(0.016, 0, 0);
+      }
+      let e = 0;
+      for (let k = 0; k < f.size; k++) e += f.vx[k]! ** 2 + f.vy[k]! ** 2;
+      return e;
+    };
+    expect(spin(40)).toBeGreaterThan(spin(0));
+  });
+
+  it(
+    'benchmark: a smoke-sized fluid step (128 × 80, 3 dyes, swirl) in under 6ms',
+    { retry: 3 },
+    () => {
+      const f = new Fluid(128, 80, 8, 3);
+      const times: number[] = [];
+      for (let i = 0; i < 40; i++) {
+        f.addVelocity(64, 40, 1, 0);
+        f.addDensity(64, 40, 1, i % 3);
+        const t0 = performance.now();
+        f.confine(20, 0.016);
+        f.step(0.016, 0, 0.0001, 0.985);
+        times.push(performance.now() - t0);
+      }
+      expect(best(times)).toBeLessThan(6);
+    },
+  );
+
   it(
     'benchmark: a 48 × 48 fluid step (the size smoke and fire use) in under 2ms',
     { retry: 3 },
