@@ -12,7 +12,10 @@ test.use({ browserName: 'chromium' });
 // Frame-by-frame stepping is slow; give each scene two minutes.
 test.setTimeout(120_000);
 
-for (const [slug, scenario] of Object.entries(SCENARIOS)) {
+// Only the scenes ported from the prototype have something to compare against.
+const PORTED = ['particles', 'elastic', 'velocity', 'ripple', 'flow', 'warp'];
+
+for (const [slug, scenario] of Object.entries(SCENARIOS).filter(([s]) => PORTED.includes(s))) {
   test(`${slug} matches the prototype`, async ({ browser }, info) => {
     const viewport = info.project.use.viewport!;
     const opts = {

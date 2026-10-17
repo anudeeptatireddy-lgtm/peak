@@ -10,13 +10,13 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 4 | `scramble` | | | pending | | |
 | 5 | `marbles` | | | pending | | |
 | 6 | `skid` | | | pending | | |
-| 7 | `melt` | | | pending | | |
-| 8 | `tumble` | | | pending | | |
-| 9 | `fridge` | | | pending | | |
-| 10 | `typewriter` | | | pending | | |
-| 11 | `splitflap` | | | pending | | |
-| 12 | `kinetic` | | | pending | | |
-| 13 | `shatter` | | | pending | | |
+| 7 | `melt` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 8 | `tumble` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 9 | `fridge` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 10 | `typewriter` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 11 | `splitflap` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 12 | `kinetic` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
+| 13 | `shatter` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 14 | `flag` | | | pending | | |
 | 15 | `extrude` | | | pending | | |
 | 16 | `echo` | | | pending | | |

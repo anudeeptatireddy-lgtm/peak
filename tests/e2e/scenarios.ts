@@ -80,4 +80,34 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(800);
     yield 'slowing';
   },
+  async *scramble(_pp, step) {
+    // Mid-decode the scrambling characters come from Math.random in a fixed order,
+    // so seeded pages should flicker identically; then the settled text.
+    await step(400);
+    yield 'decoding';
+    await step(3200);
+    yield 'settled';
+  },
+  async *marbles(pp, step, { width, height }) {
+    await step(800);
+    yield 'whole';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.5), Math.round(height * 0.45)));
+    await step(250);
+    yield 'shatter';
+    // A settling pile is chaotic: compare where its ink is, not every pixel.
+    await step(2500);
+    yield 'signature:pile';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.5), Math.round(height * 0.45)));
+    await step(2500);
+    yield 'rebuilt';
+  },
+  async *skid(pp, step, { width, height }) {
+    await step(450);
+    yield 'arriving';
+    await step(2500);
+    yield 'parked';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.5), Math.round(height * 0.3)));
+    await step(600);
+    yield 'replay';
+  },
 };
