@@ -3296,6 +3296,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Flock
+
+## What I want
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The flock has 500 birds (220 on screens under 700px wide). Start each at a random spot heading a random way (Math.random() for x, y, then angle = random × 2π), flying at full speed. Bird i is drawn in accent (i mod 3).
+- Draw each bird as an arrowhead with points (1, 0), (−0.7, 0.6), (−0.35, 0), (−0.7, −0.6) × 6px, turned so +x points along its velocity, filled, one path per accent, using the blend mode above.
+- Full speed is 3px per frame. After steering, velocity += steering × f; then rescale the velocity so its length stays between 0.6 × 3 and 3; then position += velocity × f. A bird that leaves the canvas by more than its size comes back in on the opposite side.
+- Each frame, work out every bird's steering from where all birds are at the start of the frame, then update them all. For bird i, look at every other bird within 50px (use a grid of 50px cells so this stays fast): A = the average of their velocities, C = the average of their positions; and for each one closer than 20px, at distance d, add (my position − its position) ÷ d × (1 − d ÷ 20) to a push vector S. Steering = 0.04 × (1.5 × S × full speed + 1 × (A − my velocity) + 1 × (C − my position) ÷ 50 × full speed); a bird with no neighbors gets no steering from these.
+- While the pointer is over the canvas (a finger while it touches), a bird at distance d < 130px from it adds 0.04 × 2 × 4 × (1 − d ÷ 130) × (my position − pointer) ÷ d × full speed to its steering.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the birds again on every resize.
+- Reduced-motion still frame: the flock after 240 frames of flocking with f = 1 and no pointer.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flock prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Flock
+
+Hundreds of small arrow-shaped birds swirling across the whole screen in flocks: they keep their distance, line up with their neighbors and stick together. My cursor is a predator: they scatter away from it and regroup behind it.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Birds: 500
+- Speed: 3
+- Personal space: 1.5
+- Cursor fear: 2
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`flow prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Living wallpaper
 

@@ -236,7 +236,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **5.5 `cloth`** · SCENES.md #28 (featured)
 - [x] **5.6 `fireworks`** · SCENES.md #29 (⚠ flash test; featured)
 - [x] **5.7 `blackhole`** · SCENES.md #30
-- [ ] **5.8 `flock`** · SCENES.md #31 (featured)
+- [x] **5.8 `flock`** · SCENES.md #31 (featured)
 - [ ] **5.9 `lightning`** · SCENES.md #32 (⚠ flash test; featured)
 - [ ] **5.10 `smoke`** · SCENES.md #33
 - [ ] **5.11 `filings`** · SCENES.md #34
