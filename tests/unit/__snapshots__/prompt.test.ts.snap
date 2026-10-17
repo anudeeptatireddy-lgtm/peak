@@ -6458,6 +6458,306 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Jelly cards
+
+## What I want
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A few cards in a full-screen section (100svh, at least 540px), labeled Drag me, Tap me, Me too (split at commas, trimmed, at most 6 cards, each label cut to 16 characters; "Drag me" if empty). Each card is a real button 150px wide and 150 × 1px tall, in the surface color with a 3px border in an accent color (the first, second and third accent in turn), corner radius 20px, with its label centered in the main text color (Anybody weight 800). At rest the cards stand in a row centered in the section, 1.15 × the card width apart, each turned 5° more than the one before so the row fans out around the middle card.
+- While a card moves, its lean (skewX) is −velocity x × 2.5 × 0.6 degrees (at most ±30°) and its stretch is speed × 0.01 × 0.6 (at most 0.25): scaleX = 1 + stretch, scaleY = 1 − stretch ÷ 2. Velocity is in pixels per frame.
+- Each card's centre follows its target with a spring each frame: velocity += (target − position) × 0.15 × f, then velocity *= 0.88^f, then position += velocity × f (x and y separately), f = min(dt × 60, 2.5). The jiggle (squash and tilt) uses the same spring toward 0 with the same damping.
+- A tap (or Enter or Space on a focused card) makes the card jiggle: its squash j is set to 0.15 and then springs back to 0 (scaleY × (1 − j), scaleX × (1 + j × 0.5)), and it is tipped by ±12° × the wobble (random side) which also springs back. Dragging: pressing a card (on touch: pressing and holding about 250ms) lets the visitor drag it; its target follows the pointer (keeping the spot where it was grabbed) so the card lags behind and leans; on release the target stays where it was dropped, so the card wobbles to rest there. A press that moves less than 6px is a tap, not a drag. Cards turn to straight once they have been dragged.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the cards at rest, slightly fanned (5° apart), no wobble.
+
+## How people interact
+- Cards are real buttons, so Enter and Space jiggle them. The stage keeps touch-action: pan-y; on touch, a press-and-hold of about 250ms starts a drag.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`jelly prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Jelly cards
+
+A few cards that feel like jelly. Tapping one makes it jiggle. Dragging one makes it lag and lean, and when I drop it, it wobbles to rest where I let go. The cards are real buttons.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Card labels: "Drag me, Tap me, Me too"
+- Wobble: 0.6
+- Springiness: 0.15
+- Squish on tap: 0.15
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Kaleidoscope
 

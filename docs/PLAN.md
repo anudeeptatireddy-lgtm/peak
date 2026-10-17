@@ -268,7 +268,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **7.2 `countdown`** · SCENES.md #46 (**Owner first:** answer open question 2 on its default date; live region once per minute; handles past dates by showing "It's time"; reuses the confetti burst)
 - [x] **7.3 `trail`** · SCENES.md #47
 - [x] **7.4 `curtain`** · SCENES.md #48
-- [ ] **7.5 `jelly`** · SCENES.md #49
+- [x] **7.5 `jelly`** · SCENES.md #49
 - [ ] **7.6 `loaders`** · SCENES.md #50
 
 - [ ] **Wave 7 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone. All 50 scenes now exist.
