@@ -296,7 +296,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
   - Done when: e2e: `--ground` changes between every pair of neighbors; never more than 2 scenes running (scheduler debug count); memory stays flat scrolling end to end (no growth in mounted scene count); zero console errors.
 - [x] **8.4 Tour Shuffle and Autoplay** · PRD §6.7 (item 2)
   - Done when: Shuffle order reorders scenes and worlds and round-trips through the URL; Reset order restores catalog order; Autoplay advances every 12 seconds and stops on pointer down, wheel, touch or any key (e2e); under reduced motion it jumps instead of scrolling smoothly.
-- [ ] **8.5 Home: latest drop and final check**
+- [x] **8.5 Home: latest drop and final check**
   - Done when: the home page shows the latest drop row; no stand-ins remain (test fails if any featured slot isn't its own scene).
 
 **Facts rule (PRD §11):** before writing anything about Claude Code, Netlify, GitHub Pages, or browser menus, look it up in the official documentation, link the exact pages in the guide's Sources, and set `lastChecked` to today. Keep wording general where details may change. If you can't verify something, leave a visible `[OWNER: verify …]` note instead of guessing.
@@ -313,7 +313,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
   - Done when: each term has a mini demo using the engine and scheduler, paused until on screen, still frame under reduced motion; the page stays within the content-page performance budget (only visible demos run).
 - [x] **8.12 Link it up**
   - Done when: every scene's `terms` resolve to real words (validator test); scene info popovers and How it works chips link to the right anchors.
-- [ ] **8.13 Drops** · PRD §14
+- [x] **8.13 Drops** · PRD §14
   - Done when: `/drops`, `/drops/[slug]`, `/rss.xml` work; the home page shows the latest drop; one launch drop exists.
 - [ ] **8.14 About** · PRD §15
   - Do: ask the owner in one message for their name, a one-line bio, what they're looking for (internships, freelance, collaborators), a contact link, and social links. Keep working on other steps while waiting. Build the page with the `tilt` card; use their answers, or clearly marked placeholders if they haven't answered yet (list them in `docs/DECISIONS.md`).

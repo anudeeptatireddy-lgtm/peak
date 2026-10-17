@@ -321,3 +321,7 @@ Desktop matched at once; the phone showed a real bug in our scene (the cup was w
 - `/words` lists the 24 word-bank terms (definition, a say-it sentence with a copy button, links to the scenes that use it, a live demo). Search filters as you type; A to Z links; `/words#damping` scrolls to and highlights a word. No extra terms were added (the PRD says to propose, not add).
 - 24 mini demos live in `src/demos/defs.ts`, wrapped as scene modules by `src/demos/framework.ts`, so they run through the one scheduler, pause when off screen (IntersectionObserver), show a still frame under reduced motion and clean up on destroy. At most four run at once. Sliders only where they teach.
 - "Seen in" is computed at build time from each scene's `terms` and its params' `term`. A unit test checks every term any scene uses is a real word.
+
+## 2026-10-18: 8.13 Drops and 8.5 Home latest drop
+- `/drops` (newest first), `/drops/[slug]` and `/rss.xml` all read the `drops` content collection. The launch drop "Hello, peak" (`src/content/drops/hello-peak.md`) points at the `particles` scene (a drop needs a scene or a world; the hero scene is the closest thing to "the site itself"), dated 2026-10-18.
+- Home shows a "Latest drop" row in the closing Matcha world, between How it works and Start here. The stand-in code and the "arrives in wave N" notes are gone; a unit test fails if any featured slot lacks its own scene.

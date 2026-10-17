@@ -1,8 +1,70 @@
 ---
+// Drops (PRD §14): a new animation or color world, newest first.
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Placeholder from '../../components/Placeholder.astro';
+
+const drops = (await getCollection('drops')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 ---
 
-<Base title="Drops">
-  <Placeholder title="Drops" lede="A new animation or color world, most weeks." wave={8} />
+<Base title="Drops" description="A new animation or color world, most weeks.">
+  <div class="drops wrap">
+    <header class="head">
+      <h1 class="display">Drops</h1>
+      <p class="body measure soft">
+        A new animation or color world, most weeks. <a href="/rss.xml">Follow with RSS</a>.
+      </p>
+    </header>
+    <ul class="list">
+      {drops.map((d) => (
+        <li>
+          <p class="small soft">
+            <time datetime={d.data.date.toISOString().slice(0, 10)}>{fmt(d.data.date)}</time>
+          </p>
+          <h2>
+            <a href={`/drops/${d.id}`}>{d.data.title}</a>
+          </h2>
+          <p class="body measure">{d.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
 </Base>
+
+<style>
+  .drops {
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 2rem;
+  }
+  .head {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+  }
+  .list li {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .list h2 a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+  }
+</style>

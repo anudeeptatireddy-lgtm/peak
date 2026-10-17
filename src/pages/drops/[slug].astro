@@ -1,0 +1,69 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  return (await getCollection('drops')).map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const when = d.date.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Base title={d.title} description={d.summary} world={d.world as never}>
+  <article class="drop wrap">
+    <p class="small soft">
+      <a href="/drops">All drops</a>
+    </p>
+    <h1 class="display">{d.title}</h1>
+    <p class="small soft">
+      <time datetime={d.date.toISOString().slice(0, 10)}>{when}</time>
+    </p>
+    <div class="prose measure body">
+      <Content />
+    </div>
+    {d.scene && (
+      <p>
+        <a class="btn btn--primary" href={`/scenes/${d.scene}`}>
+          Tweak it and get the prompt
+        </a>
+      </p>
+    )}
+    {d.world && (
+      <p>
+        <a class="btn btn--primary" href="/gallery">
+          See it in the gallery
+        </a>
+      </p>
+    )}
+  </article>
+</Base>
+
+<style>
+  .drop {
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+  .prose {
+    display: grid;
+    gap: 1rem;
+  }
+  .small a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+  }
+</style>

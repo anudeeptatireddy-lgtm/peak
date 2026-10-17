@@ -74,3 +74,11 @@ describe('home journey config', () => {
     ]);
   });
 });
+
+describe('home lineup has no stand-ins', () => {
+  it('every featured slot is its own built scene', async () => {
+    const { existsSync } = await import('node:fs');
+    for (const slot of HOME_JOURNEY)
+      expect(existsSync(`src/scenes/${slot.scene}/meta.ts`), slot.scene).toBe(true);
+  });
+});

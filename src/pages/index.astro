@@ -5,51 +5,25 @@ import Base from '../layouts/Base.astro';
 import HowItWorks from '../components/HowItWorks.astro';
 import WorldRail from '../components/WorldRail.astro';
 import { HOME_CLOSING_WORLD, HOME_JOURNEY } from '../theme/journey';
-import type { SceneMeta } from '../scenes/types';
+import { getCollection } from 'astro:content';
 
-// Which scenes exist yet (each scene folder has a meta.ts).
-const metas = Object.values(
-  import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
-).map((m) => m.meta);
-const bySlug = new Map(metas.map((m) => [m.slug, m]));
-
-// Until a featured scene is built, its slot shows a built scene in the slot's world.
-const ARRIVES: Record<string, number> = {
-  marbles: 3,
-  neon: 4,
-  lightning: 5,
-  flock: 5,
-  cloth: 5,
-  fireworks: 5,
-};
-const featured = new Set(HOME_JOURNEY.map((s) => s.scene));
-const pool = [
-  ...metas.filter((m) => !featured.has(m.slug)).map((m) => m.slug),
-  ...['ripple', 'particles'].filter((s) => bySlug.has(s)),
-];
-let next = 0;
+const latest = (await getCollection('drops')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+)[0];
 const NO_SCRIM = new Set(['elastic', 'velocity']);
 
-const slots = HOME_JOURNEY.map((slot) => {
-  const built = bySlug.get(slot.scene);
-  const mount = built ? slot.scene : pool[next++ % Math.max(1, pool.length)];
-  const standIn = !built && mount ? bySlug.get(mount) : undefined;
-  return {
-    ...slot,
-    featuredTitle: slot.title,
-    id: slot.scene === 'particles' ? 'top' : `s-${slot.scene}`,
-    mount,
-    standIn,
-    title: standIn ? standIn.title : slot.title,
-    line: standIn ? standIn.summary : slot.line,
-    link: mount,
-    scrim: !NO_SCRIM.has(mount ?? ''),
-  };
-});
+// Every featured slot is its own scene (a test checks this).
+const slots = HOME_JOURNEY.map((slot) => ({
+  ...slot,
+  id: slot.scene === 'particles' ? 'top' : `s-${slot.scene}`,
+  mount: slot.scene,
+  link: slot.scene,
+  scrim: !NO_SCRIM.has(slot.scene),
+}));
 const [hero, ...rest] = slots;
 
 const railItems = [
-  ...slots.map((s) => ({ id: s.id, label: s.featuredTitle, world: s.world })),
+  ...slots.map((s) => ({ id: s.id, label: s.title, world: s.world })),
   { id: 'how-it-works', label: 'How it works', world: HOME_CLOSING_WORLD },
 ];
 ---
@@ -98,11 +72,6 @@ const railItems = [
       <div class="caption wrap">
         <h2 id={`t-${s.id}`}>{s.title}</h2>
         <p class="lede">{s.line}</p>
-        {s.standIn && (
-          <p class="small soft">
-            Stand-in until {s.featuredTitle} arrives in wave {ARRIVES[s.scene] ?? '?'}.
-          </p>
-        )}
         <div class="actions">
           <a class="btn btn--secondary" href={`/scenes/${s.link}`}>
             Tweak it and get the prompt
@@ -122,6 +91,27 @@ const railItems = [
     <h2 id="t-how">How it works</h2>
     <HowItWorks />
   </section>
+
+  {latest && (
+    <section
+      class="j j--content j--drop wrap"
+      id="latest-drop"
+      data-journey
+      data-world={HOME_CLOSING_WORLD}
+      aria-labelledby="t-drop"
+    >
+      <h2 id="t-drop" class="small soft">
+        Latest drop
+      </h2>
+      <p class="display drop-title">
+        <a href={`/drops/${latest.id}`}>{latest.data.title}</a>
+      </p>
+      <p class="body measure soft">{latest.data.summary}</p>
+      <p>
+        <a href="/drops">All drops</a>
+      </p>
+    </section>
+  )}
 
   <section
     class="j j--content j--start wrap"
@@ -268,6 +258,20 @@ const railItems = [
     gap: 2.5rem;
     padding-top: calc(var(--header-h) + 3rem);
     padding-bottom: 4rem;
+  }
+  .j--drop {
+    min-height: 50vh;
+    min-height: 50svh;
+    gap: 0.75rem;
+  }
+  .drop-title a {
+    color: var(--accent-text);
+    text-decoration: none;
+  }
+  .j--drop a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
   .j--start {
     min-height: 70vh;
