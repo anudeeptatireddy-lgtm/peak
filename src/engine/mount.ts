@@ -5,6 +5,7 @@
 import type { Params, SceneInstance, SceneModule, SoundHooks } from '../scenes/types';
 import { resolveParams } from '../scenes/params';
 import { getTheme, subscribe } from '../theme/store';
+import type { Theme } from '../theme/worlds';
 import { fontsReady } from './fonts';
 import { isPaused, prefersReducedMotion } from './motion';
 import { register } from './scheduler';
@@ -13,6 +14,8 @@ export interface MountOptions {
   params?: Record<string, unknown>;
   quality?: 'full' | 'preview';
   sound?: SoundHooks;
+  /** A fixed theme (a gallery tile in its own world): the scene ignores the page's theme store. */
+  theme?: Theme;
 }
 
 export interface MountedScene {
@@ -33,7 +36,7 @@ export function mountScene(
   host.classList.add('scene-host');
   let params = resolveParams(mod.params, opts.params);
   const instance = mod.create(host, params, {
-    theme: getTheme(),
+    theme: opts.theme ?? getTheme(),
     reducedMotion: prefersReducedMotion(),
     isSmall: (host.clientWidth || window.innerWidth) < 700,
     quality: opts.quality ?? 'full',
@@ -59,10 +62,12 @@ export function mountScene(
   const ro = new ResizeObserver(resize);
   ro.observe(host);
 
-  const unsubscribe = subscribe((theme) => {
-    instance.setTheme(theme);
-    redrawIfIdle();
-  }, false);
+  const unsubscribe = opts.theme
+    ? () => {}
+    : subscribe((theme) => {
+        instance.setTheme(theme);
+        redrawIfIdle();
+      }, false);
 
   // Text-sampled scenes rebuild once the real font has arrived.
   fontsReady().then(() => {

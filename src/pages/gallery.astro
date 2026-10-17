@@ -1,8 +1,346 @@
 ---
+// Gallery (PRD §13): every scene as a live preview in its own world, so the grid
+// reads as a patchwork of color. Filters and sort live in the URL. At most four
+// previews animate at once; the rest show their still frame.
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import { themeVars } from '../theme/apply';
+import { HOME_JOURNEY } from '../theme/journey';
+import { getWorld } from '../theme/worlds';
+import { CATALOG_ORDER, catalogNumber } from '../scenes/catalog';
+import type { SceneMeta } from '../scenes/types';
+
+const metas = Object.values(
+  import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
+).map((m) => m.meta);
+
+// "Featured" is the home page lineup first, then the catalog order.
+const featuredOrder = HOME_JOURNEY.map((s) => s.scene);
+const rank = (slug: string) => {
+  const f = featuredOrder.indexOf(slug);
+  return f >= 0 ? f : featuredOrder.length + catalogNumber(slug);
+};
+const DIFFICULTY = { Easy: 0, Medium: 1, Spicy: 2 } as const;
+
+const tiles = metas
+  .map((m) => ({
+    ...m,
+    style: Object.entries(themeVars(getWorld(m.world)))
+      .map(([k, v]) => `${k}:${v}`)
+      .join(';'),
+    featured: rank(m.slug),
+    newest: CATALOG_ORDER.length - catalogNumber(m.slug),
+    easy: DIFFICULTY[m.difficulty] * 1000 + m.minutes,
+  }))
+  .sort((a, b) => a.featured - b.featured);
+
+const FILTERS = [
+  'Portfolio',
+  'Events',
+  'Landing pages',
+  'Backgrounds',
+  'Headlines',
+  'Just for fun',
+  'Brands',
+];
+const slugOf = (t: string) => t.toLowerCase().replace(/\s+/g, '-');
 ---
 
-<Base title="Gallery">
-  <Placeholder title="Gallery" lede="All 50 animations, each in its own color world." wave={8} />
+<Base title="Gallery" description="Every animation, each in its own color world.">
+  <div class="gallery wrap">
+    <header class="head">
+      <h1 class="display">Gallery</h1>
+      <p class="body measure soft">
+        {tiles.length} animations, each in its own color world. Pick one to tweak it and copy the
+        prompt.
+      </p>
+    </header>
+
+    <div class="controls" role="group" aria-label="Filter and sort">
+      <div class="chips" role="group" aria-label="Use case">
+        <button type="button" class="chip" data-tag="all" aria-pressed="true">
+          All
+        </button>
+        {FILTERS.map((t) => (
+          <button type="button" class="chip" data-tag={slugOf(t)} aria-pressed="false">
+            {t}
+          </button>
+        ))}
+      </div>
+      <label class="sort">
+        <span class="small soft">Sort</span>
+        <select data-sort>
+          <option value="featured">Featured</option>
+          <option value="newest">Newest</option>
+          <option value="easy">Easiest first</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="empty body" data-empty hidden>
+      Nothing matches that filter yet.{' '}
+      <button type="button" class="link" data-reset>
+        Show all
+      </button>
+      to see every animation.
+    </p>
+
+    <ul class="grid" data-grid>
+      {tiles.map((t) => (
+        <li
+          class="tile"
+          style={t.style}
+          data-slug={t.slug}
+          data-tags={t.tags.map(slugOf).join(' ')}
+          data-featured={t.featured}
+          data-newest={t.newest}
+          data-easy={t.easy}
+        >
+          <div class="pv" data-mount={t.slug} aria-hidden="true" />
+          <div class="cap">
+            <h2 class="title">
+              <a href={`/scenes/${t.slug}`}>{t.title}</a>
+            </h2>
+            <p class="small line">{t.useCase}</p>
+            <p class="small meta">
+              {t.difficulty} · about {t.minutes} min · {t.tags.join(', ')}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
 </Base>
+
+<script>
+  import { mountScene, type MountedScene } from '../engine/mount';
+  import { setMaxActive } from '../engine/scheduler';
+  import { loadScene, hasScene } from '../scenes/registry';
+  import { getWorld, isWorldId } from '../theme/worlds';
+
+  // At most four previews animate at once (PRD §13); the rest show their still frame.
+  setMaxActive(4);
+
+  const grid = document.querySelector<HTMLElement>('[data-grid]')!;
+  const tiles = [...grid.querySelectorAll<HTMLElement>('.tile')];
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+  const sortSel = document.querySelector<HTMLSelectElement>('[data-sort]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+
+  // ---- Filters and sort, kept in the URL (?tag=events&sort=easy) ----
+  const state = { tag: 'all', sort: 'featured' };
+  const readUrl = () => {
+    const q = new URLSearchParams(location.search);
+    const tag = q.get('tag') ?? 'all';
+    state.tag = chips.some((c) => c.dataset.tag === tag) ? tag : 'all';
+    const sort = q.get('sort') ?? 'featured';
+    state.sort = ['featured', 'newest', 'easy'].includes(sort) ? sort : 'featured';
+  };
+  const writeUrl = () => {
+    const q = new URLSearchParams();
+    if (state.tag !== 'all') q.set('tag', state.tag);
+    if (state.sort !== 'featured') q.set('sort', state.sort);
+    const s = q.toString();
+    history.replaceState(null, '', s ? `?${s}` : location.pathname);
+  };
+  const apply = () => {
+    chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.tag === state.tag)));
+    sortSel.value = state.sort;
+    const key = state.sort === 'easy' ? 'easy' : state.sort === 'newest' ? 'newest' : 'featured';
+    const ordered = [...tiles].sort((a, b) => Number(a.dataset[key]) - Number(b.dataset[key]));
+    ordered.forEach((t, i) => {
+      t.style.order = String(i);
+      t.hidden = state.tag !== 'all' && !(t.dataset.tags ?? '').split(' ').includes(state.tag);
+    });
+    empty.hidden = tiles.some((t) => !t.hidden);
+    watch();
+  };
+  chips.forEach((c) =>
+    c.addEventListener('click', () => {
+      state.tag = c.dataset.tag ?? 'all';
+      writeUrl();
+      apply();
+    }),
+  );
+  sortSel.addEventListener('change', () => {
+    state.sort = sortSel.value;
+    writeUrl();
+    apply();
+  });
+  document.querySelector('[data-reset]')?.addEventListener('click', () => {
+    state.tag = 'all';
+    writeUrl();
+    apply();
+  });
+
+  // ---- Live previews: mount near the screen, destroy far from it ----
+  const live = new Map<HTMLElement, MountedScene>();
+  const loading = new Set<HTMLElement>();
+  const near = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const stage = e.target as HTMLElement;
+        const tile = stage.closest<HTMLElement>('.tile')!;
+        if (e.isIntersecting && !tile.hidden) mount(stage, tile);
+        else unmount(stage);
+      }
+    },
+    { rootMargin: '60% 0px' },
+  );
+  function mount(stage: HTMLElement, tile: HTMLElement): void {
+    const slug = stage.dataset.mount ?? '';
+    if (live.has(stage) || loading.has(stage) || !hasScene(slug)) return;
+    loading.add(stage);
+    loadScene(slug).then((mod) => {
+      loading.delete(stage);
+      if (live.has(stage) || tile.hidden || !stage.isConnected) return;
+      const id = mod.meta.world;
+      const world = getWorld(isWorldId(id) ? id : 'riso');
+      live.set(stage, mountScene(stage, mod, { quality: 'preview', theme: world }));
+    });
+  }
+  function unmount(stage: HTMLElement): void {
+    loading.delete(stage);
+    live.get(stage)?.destroy();
+    live.delete(stage);
+  }
+  // A filter change hides tiles: re-observe so hidden ones unmount and shown ones mount.
+  function watch(): void {
+    for (const t of tiles) {
+      const stage = t.querySelector<HTMLElement>('[data-mount]')!;
+      near.unobserve(stage);
+      if (t.hidden) unmount(stage);
+      else near.observe(stage);
+    }
+  }
+
+  readUrl();
+  apply();
+  (window as unknown as { __gallery?: object }).__gallery = { live: () => live.size };
+</script>
+
+<style>
+  .gallery {
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .head {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--ground);
+    border-color: var(--ink);
+  }
+  .sort {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .sort select {
+    min-height: 44px;
+    padding: 0 2rem 0 0.75rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background-color: var(--ground);
+    color: var(--ink);
+    font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+      linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.1rem) 50%,
+      calc(100% - 0.8rem) 50%;
+    background-size:
+      0.35rem 0.35rem,
+      0.35rem 0.35rem;
+    background-repeat: no-repeat;
+  }
+  .empty {
+    padding: 2rem 0;
+  }
+  .link {
+    min-height: 44px;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 0;
+  }
+  /* No shadows, no borders: each tile is the live scene in its own world, caption below. */
+  .tile {
+    display: grid;
+    align-content: start;
+    background: var(--ground);
+    color: var(--ink);
+  }
+  .tile[hidden] {
+    display: none;
+  }
+  .pv {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  .cap {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem 1.25rem;
+  }
+  .title {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .title a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+  }
+  .line {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .meta {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+</style>
