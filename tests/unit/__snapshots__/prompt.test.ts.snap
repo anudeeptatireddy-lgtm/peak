@@ -3506,6 +3506,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Typewriter
+
+## What I want
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the whole text in a visually hidden element for screen readers and mark the typing layer aria-hidden.
+
+## How it moves
+- Three lines type out: "Dear reader,", "this page types itself" and "one key at a time." (skip empty lines). They sit left-aligned in a block centered in a full-screen section (100svh, at least 540px): font size clamp(1.15rem, 4.2vw, 3.4rem), Anybody weight 500, font-stretch 85%, line-height 1.35, main text color, no wrapping (white-space: pre). Size the block for the finished text, so nothing moves while it types.
+- Typing starts 0.4s after the animation starts. Each key waits (1 ÷ 12) × (1 + 0.4 × (random − 0.5) × 2) seconds after the previous one (one Math.random() call per key, made when the previous key lands), so the rhythm wobbles.
+- Each typed letter is an inline-block span that gets three Math.random() calls when it lands (a, b, c, in that order): opacity 1 − 0.5 × 0.45 × a, rotate((b − 0.5) × 2 × 0.5 × 4deg), translateY((c − 0.5) × 2 × 0.5 × 0.05em).
+- Then, if another random < 0.3, the strike splatters: 1 + floor(random × 3) specks, each a round dot (position: absolute inside the letter, which is position: relative) with three more random calls: left = (x − 0.5) × 0.7em + 0.5em, top = (y − 0.5) × 0.7em + 0.5em, size = (0.5 + z × 0.5) × 0.07em, in the main text color at 0.5 opacity. Spaces get no ink or specks.
+- After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
+- When everything is typed it stays; a click or tap clears the text and types it all again.
+- A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
+- When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
+
+## How people interact
+- A click or tap (on release) anywhere on the section starts the typing over.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`typewriter prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Typewriter
+
+Lines that type out key by key, like on an old typewriter. Each strike leaves a slightly uneven, inky letter and sometimes a tiny ink splatter. At the end of a line the carriage slams back with a jolt and the next line starts. A cursor blinks at the end; clicking types everything again.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- First line: "Dear reader,"
+- Typing speed: 12 keys/s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`velocity prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Scroll-reactive marquee
 
