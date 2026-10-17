@@ -33,7 +33,7 @@ The three open Wave 5 prompt tests. The agents worked in a temporary folder outs
 |---|---|---|---|
 | `cloth` | Agent **finished**; its page is final. | `docs/prompt-tests/cloth/PROMPT.md`, `draft-index.html` | Rename `draft-index.html` to `index.html`. Add `compare.json` that hides only the agent's title, hint and Play/Pause button (read the page to find their selectors). Run the comparison and log the result. |
 | `smoke` | Agent **finished**; its page is final. | `docs/prompt-tests/smoke/PROMPT.md`, `draft-index.html` | Same as cloth. Watch for one likely difference: the agent also starts the idle plume when the pointer has sat still over the page for 1s, while ours only starts it once the pointer has left. If the comparison fails on that, tighten the plume phrase ("away" means not over the canvas), then retest once. |
-| `goo` (retest) | Retest agent was **still running**. Run 1 failed only on blending; the fix is in. | `docs/prompt-tests/goo/PROMPT.md` (retest prompt), `compare.json`, `run1/` | If `scratchpad/ptest5b/goo/index.html` exists, copy it to `docs/prompt-tests/goo/index.html` and compare. Otherwise rerun with the saved prompt. This is goo's one allowed retest. |
+| `goo` (retest) | Retest agent **finished** after the handoff commit; its page is final. Run 1 failed only on blending; the fix is in. | `docs/prompt-tests/goo/PROMPT.md` (retest prompt), `draft-index.html` (retest page), `compare.json`, `run1/` | Check `compare.json` still matches the retest page's extra UI (this agent put its title and hint on a card). Rename `draft-index.html` to `index.html`, compare and log. This was goo's one allowed retest. |
 
 **How to compare a page:**
 ```
@@ -65,11 +65,11 @@ Scripted moments for all five scenes are already in `tests/e2e/scenarios.ts`. A 
 
 - **Font-load reset in older scenes.** Some scenes before Wave 5 also reset when the web font loads; `flow` and `warp` do, and their prompts say so. Others, such as `ripple` and `sand`, haven't been checked. Audit this in 9.3 (performance pass). Don't change `flow` or `warp` without redoing their prompt tests.
 - **`drop` desktop prototype parity is skipped.** The demo's loop starts up to a frame later under the test clock (documented).
-- **The goo retest agent** belonged to the old account's session. If it finished, its page only exists in the temporary scratchpad folder (`ptest5b/goo/index.html`). Cloth's and smoke's final pages are saved in the repo.
+- **All five Wave 5 prompt-test agents finished.** Every final page is saved in the repo (`draft-index.html` for cloth, smoke and the goo retest), so nothing depends on the temporary scratchpad folder any more.
 
 ## Next 5 actions, in order
 
-1. **Finish the three open prompt tests** (cloth, smoke, goo retest) as described above. Log each in `docs/PROMPT_TESTS.md`, and change "not compared yet" or "retest pending" to the result.
+1. **Compare the three saved prompt-test pages** (cloth, smoke, goo retest) as described above. Log each in `docs/PROMPT_TESTS.md`, and change "not compared yet" or "retest pending" to the result.
 2. **Finish the Wave 5 wrap-up:**
    - `bash scripts/wait-for-deploy.sh`, then `npm run test:live`. If a deploy fails, read the build log, fix and push.
    - Send the owner update (draft below) and tick the Wave 5 wrap-up box in `docs/PLAN.md`.
