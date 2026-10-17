@@ -1,17 +1,22 @@
-# Handoff: 2026-10-17
+# Handoff: 2026-10-17 (updated after step 6.5)
 
 Work stopped at a clean point because the owner is switching Claude accounts. Everything below is committed in "handoff: save state" and pushed to `main`. Pushing deploys to Vercel. The pushed code is tested, but the live smoke run for this deploy hasn't been done yet (see action 2).
 
 ## Exact step
 
-**Wave 5 wrap-up is done** (suite green, deployed, live smoke 80 passed). 6.3 `tilt` is done. Next: 6.4 `kaleido`, 6.5 `morph`, 6.6 `moire` (flash test), 6.7-6.10, Wave 6 wrap-up. Wave 6 steps 6.1 and 6.2 are done.
+Steps 6.3 `tilt`, 6.4 `kaleido` and 6.5 `morph` are done. Next: 6.6 `moire` (flash test, like `fireworks`), then 6.7 to 6.10 and the Wave 6 wrap-up. The project folder is now `~/peak` (it was `~/Documents/peak`). The Wave 5 wrap-up is done; its live smoke run passed (80 passed, 20 skipped) and was repeated after step 6.5.
 
-## Prompt-test state
+## Update 1 status
 
-- Passing: particles, elastic, velocity, scramble, echo, neon, fire, ripple, lightning, blackhole, goo (retest).
-- Desktop passes, phone fails: `cloth` (2.16% vs 2%, near-miss), `smoke` (4.3-4.6% vs 2%). One retest each still allowed, not run.
-- Failing after retest: flow, warp, marbles, skid (third retest needs the owner's OK, about 550k tokens).
-- Untested by rule: see docs/PROMPT_TESTS.md.
+- **Measured pass rule for prompt tests:** done (PRD §8.7, `docs/PROMPT_TESTS.md`, `judge()` in `tests/e2e/parity-helpers.ts`). Every run writes `docs/prompt-tests/<slug>/side-by-side-<size>.png`.
+- **Test mode:** done in `src/engine/testmode.ts`: seeded random numbers and a fixed step. The step is 16ms, not 1/60s: Playwright's fake clock fires frames every 16ms and the demos measure that; a 1/60s step made every parity test mismatch. See DECISIONS.
+- **`drop` desktop parity** is still skipped. Our side is now fully deterministic; the variation left starts in the demo's loop. A fix needs a way to start the demo's loop on a known frame.
+
+## Prompt-test state (measured rule)
+
+- Pass: particles, elastic, velocity, scramble, echo, neon, fire, ripple, lightning, blackhole, goo, cloth, flow, warp, marbles, skid.
+- Fail (real behavior difference): `smoke`. The plume phrase is fixed; a retest needs the owner's OK (about 150k tokens).
+- Untested by rule: see `docs/PROMPT_TESTS.md`.
 
 ## Known bugs and loose ends
 
@@ -21,15 +26,15 @@ Work stopped at a clean point because the owner is switching Claude accounts. Ev
 
 ## Waiting on the owner
 
-- **Third retest of `flow`, `warp`, `marbles`, `skid`.** Each has had its one retest. Root causes are found and fixed in the prompts. A third run needs the owner's OK (about 550k tokens for all four).
+- **Smoke retest** (one fresh agent, about 150k tokens). Skipped for now.
 - **About page details** (name, one-line bio, what you're looking for, contact link, social links). Asked at step 8.14.
-- **Friend test** with 3–5 people at Checkpoint 9.
+- **Friend test** with 3-5 people at Checkpoint 9.
 - **Unchanged:** nothing paid, no domain purchase, no cookies or personal data.
 
 ## Draft owner update (Wave 5, not sent yet)
 
-> Wave 5 is built: 11 particle and physics scenes. Live at https://peak-teal.vercel.app once the deploy finishes.
+> Wave 5 is built: 11 particle and physics scenes, live at https://peak-teal.vercel.app. Live checks pass.
 > Try on a phone: (1) **Tearable cloth**: press and hold, then drag hard until it rips, and double-tap to rehang. (2) **Fireworks**: tap fast; it never does more than 3 bursts a second. (3) **Smoke**: drag a finger sideways across it.
-> Also new: four more home-page slots (cloth, fireworks, flock, lightning) now show their real scenes.
-> Prompt tests: lightning and blackhole rebuild correctly from the prompt alone. Goo's first test found a real prompt issue (blending), now fixed and being retested. Cloth and smoke pages are built and waiting to be compared.
-> Needs you: OK for a third retest of flow, warp, marbles and skid (about 550k tokens), whenever you like.
+> Also new: four more home-page slots (cloth, fireworks, flock, lightning) now show their real scenes. Since then I added tilt, kaleido and morph from Wave 6.
+> Prompt tests (new measured rule): cloth, goo, lightning and blackhole rebuild correctly from the prompt alone. Smoke has one real difference (the idle plume), phrase fixed, retest waiting on you.
+> Needs you: OK to retest smoke (about 150k tokens).
