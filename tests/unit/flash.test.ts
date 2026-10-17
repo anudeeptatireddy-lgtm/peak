@@ -130,3 +130,62 @@ describe('fire flames (⚠)', () => {
     expect(flashes.length).toBe(0);
   });
 });
+
+describe('fireworks bursts (⚠)', () => {
+  it('never starts more than 3 bursts in any second, even with taps on every frame', async () => {
+    const { Show } = await import('../../src/scenes/fireworks/show');
+    const { params } = await import('../../src/scenes/fireworks/params');
+    const r = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const o = {
+      sparks: r('sparks').max,
+      shape: 'mixed' as const,
+      trail: r('trail').max,
+      gravity: r('gravity').max,
+      drag: r('drag').min,
+      speed: r('speed').max,
+      life: r('life').min,
+      rise: r('rise').min,
+      autoEvery: r('autoEvery').step,
+      willowDrag: r('willowDrag').min,
+      willowLife: r('willowLife').min,
+      ringTilt: r('ringTilt').min,
+      autoTop: r('autoTop').min,
+      autoBottom: r('autoBottom').max,
+      autoMargin: r('autoMargin').min,
+    };
+    const show = new Show();
+    const rand = seededRandom(11);
+    // Five minutes at 60 fps with a tap every frame, then a stretch at 240 fps.
+    for (let i = 0; i < 60 * 300; i++) {
+      show.tap(rand() * 390, rand() * 844);
+      show.step(1 / 60, 390, 844, o, rand);
+    }
+    for (let i = 0; i < 240 * 30; i++) {
+      show.tap(rand() * 390, rand() * 844);
+      show.step(1 / 240, 390, 844, o, rand);
+    }
+    // A slow, stuttering device: frames up to the 0.05s clamp.
+    for (let i = 0; i < 20 * 60; i++) {
+      show.tap(rand() * 390, rand() * 844);
+      show.step(0.01 + rand() * 0.04, 390, 844, o, rand);
+    }
+    expect(show.log.length).toBeGreaterThan(500);
+    expect(worstSecond(show.log)).toBeLessThanOrEqual(3);
+  });
+
+  it('a burst glows softly over less than a quarter of the smallest stage', async () => {
+    const { params } = await import('../../src/scenes/fireworks/params');
+    const r = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const stage = 390 * 540; // a phone-width stage at its 540px minimum height
+    expect((Math.PI * r('glowRadius').max ** 2) / stage).toBeLessThan(0.25);
+    expect(r('glowAlpha').max).toBeLessThanOrEqual(0.3);
+  });
+});

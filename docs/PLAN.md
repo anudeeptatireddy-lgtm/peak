@@ -234,7 +234,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **5.3 `drop`** · SCENES.md #26 (port from `reference/riso-demo.html`)
 - [x] **5.4 `pluck`** · SCENES.md #27 (port from `reference/riso-demo.html`)
 - [x] **5.5 `cloth`** · SCENES.md #28 (featured)
-- [ ] **5.6 `fireworks`** · SCENES.md #29 (⚠ flash test; featured)
+- [x] **5.6 `fireworks`** · SCENES.md #29 (⚠ flash test; featured)
 - [ ] **5.7 `blackhole`** · SCENES.md #30
 - [ ] **5.8 `flock`** · SCENES.md #31 (featured)
 - [ ] **5.9 `lightning`** · SCENES.md #32 (⚠ flash test; featured)

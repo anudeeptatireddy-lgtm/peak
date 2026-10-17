@@ -2300,6 +2300,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Fireworks
+
+## What I want
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- Each burst makes 160 sparks (80 on screens under 700px wide), all starting at the burst point.
+- Each burst first calls Math.random() to pick its shape (below 1/3 sphere, below 2/3 ring, otherwise willow): a sphere (per spark, call Math.random() for an angle a = random × 2π, then u = random × 2 − 1; speed = 6 × √(1 − u²) px per frame in direction a, so sparks crowd toward the rim like a ball seen from the side); a ring (one Math.random() call turns the whole ring by random × 2π; spark i flies at angle turn + i ÷ count × 2π at speed 6, its vertical speed × 0.6 so the ring looks tilted); or a willow (spread like the sphere, but its sparks use air drag 0.94 and live 1.8 × as long, so they droop and hang).
+- Each spark remembers its last 8 positions (one per frame, recorded before it moves). Draw it as one line through them to its current position, 1.8px wide with round caps and joins. A rocket is a line of the same width from where it was 8 ÷ 60 seconds earlier on its rise curve to where it is.
+- Every frame, for each spark: velocity ×= its drag^f; vertical velocity += 0.06 × f; position += velocity × f.
+- Sparks have air drag 0.975 and live 1.6s; a burst's sparks all fade together: opacity = 1 − (age ÷ life)², and the burst is removed at the end of its life.
+- A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
+- A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
+- For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
+- Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
+- Reduced-motion still frame: three bursts (sphere, ring, willow, in the three accents) at 25%/34%, 50%/20% and 75%/40% of the width/height, 30 frames after they burst, with no rockets.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fireworks prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Fireworks
+
+Fireworks across the whole screen. Tapping launches a rocket that climbs to where I tapped, slows down and bursts into colored sparks with fading trails, which droop and fade as they fall. A rocket also goes up by itself every few seconds so it never looks empty.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Sparks per burst: 160
+- Burst shape: Mixed
+- Gravity: 0.06
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`flag prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Flag text
 
