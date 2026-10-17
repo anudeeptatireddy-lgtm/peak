@@ -5846,6 +5846,312 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Lava lamp
+
+## What I want
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent. 10 blobs of wax drawn as metaballs: blob i has a radius r = 60px × a random size between 0.3 and 1 + 0.4 (one Math.random() each, from a generator seeded 77), and the field at a point is the sum over blobs of r² ÷ (distance² + 1). Compute the field on a grid of square cells (Detail is medium; cell size by Detail: low 12px, medium 8px, high 5px; always 12px under 700px wide), one image pixel per cell, then scale the image up with smoothing. A pixel's opacity is clamp((field − threshold) ÷ 0.3 + 0.5, 0, 1), where threshold = 1 ÷ 1. Body: the first accent color at that threshold. Starting positions are random across the screen, each with a random heat between 0 and 1.
+- Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
+- Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
+- A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a tap warms the lamp.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`lava prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Lava lamp
+
+A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretching, merging and splitting. A click warms the lamp and sends more blobs up.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Blobs: 10
+- Blob size: 60px
+- Merge softness: 1
+- Flow speed: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`lightning prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Lightning
 
@@ -12236,7 +12542,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
@@ -12276,7 +12582,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
@@ -12316,7 +12622,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
@@ -12356,7 +12662,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
@@ -12396,7 +12702,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
@@ -12436,7 +12742,7 @@ I fly through an endless tunnel of glowing rings and stripes that twists and tur
 - Stripes: 12 of them. For each stripe s, at angle 2π × s ÷ 12 around the ring, draw a line from that point on one ring to the same angle on the next ring (on a square or hexagon, the point on its outline in that direction), in the second accent color at 0.6 opacity, 3px thick.
 - Rings are drawn 3px thick with round joins, one path per color.
 - Flight speed v = 1 × 600 world units per second (× the boost while boosting). Each frame, travel += v × dt and frac += v × dt ÷ gap; when frac reaches 1, subtract 1 (a ring has passed). Safety: gap = max(120, v ÷ 3) so rings pass any spot at most 3 times a second, whatever the speed.
-- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.001, 0), noise(d × 0.001, 11.3)) × 0.8 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.001 × 0.5, 37.5) radians.
+- The tunnel winds along a smooth simplex-noise path (noise seed 41): a ring at distance d along the tunnel (d = travel + its depth) is shifted by (noise(d × 0.0003, 0), noise(d × 0.0003, 11.3)) × 0.6 × the ring radius, minus the same for the camera's own spot so the tunnel bends ahead of you, and turned by 0.8 × π × noise(d × 0.0003 × 0.5, 37.5) radians.
 - While the mouse button is held (on touch: after a press-and-hold of about 250ms), the speed multiplier eases toward 2.5, otherwise toward 1: boost += (target − boost) × (1 − (1 − 0.06)^f).
 - The camera sits off the tunnel's middle by (cam x, cam y), eased toward its target each frame: cam += (target − cam) × (1 − (1 − 0.06)^f). While the pointer is over the canvas the target is 0.4 × the ring radius × the pointer's position across the screen from the center, from −1 to 1 on each axis. Otherwise it wanders by itself: (noise(t × 0.25, 0), noise(t × 0.25, 11.3)) × 0.4 × the ring radius.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).

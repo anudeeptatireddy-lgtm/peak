@@ -254,7 +254,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **6.5 `morph`** · SCENES.md #39
 - [x] **6.6 `moire`** · SCENES.md #40 (⚠ flash test)
 - [x] **6.7 `tunnel`** · SCENES.md #41 (⚠ flash test)
-- [ ] **6.8 `lava`** · SCENES.md #42 (featured)
+- [x] **6.8 `lava`** · SCENES.md #42 (featured)
 - [ ] **6.9 `fold`** · SCENES.md #43 (inner scroller on scene pages, like `velocity`)
 - [ ] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
 
