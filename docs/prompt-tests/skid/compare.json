@@ -1,5 +1,8 @@
 {
   "hide": ".bar",
   "expect": "fail",
-  "reason": "Failed its one retest on desktop (arrival 4%, replay 3%; the phone size passes). The agent drew letters with the multiply blend; the prompt now says source-over. Awaiting the owner’s OK for another retest."
+  "reason": "Failed its one retest on desktop (arrival 4%, replay 3%; the phone size passes). The agent drew letters with the multiply blend; the prompt now says source-over. Awaiting the owner’s OK for another retest.",
+  "failOn": [
+    "desktop"
+  ]
 }

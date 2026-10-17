@@ -28,6 +28,8 @@ interface CompareConfig {
   hide: string;
   /** A logged failure (docs/PROMPT_TESTS.md) awaiting a retest: runs, and must still fail. */
   expect?: 'fail';
+  /** Sizes (Playwright projects) the logged failure applies to; all when omitted. */
+  failOn?: string[];
   reason?: string;
 }
 const config = (slug: string) =>
@@ -39,7 +41,10 @@ for (const slug of BUILT) {
   test(`${slug}: the prompt alone rebuilds the scene`, async ({ browser }, info) => {
     const cfg = config(slug);
     // Known failures stay visible: if the page starts matching, this flips to an error.
-    test.fail(cfg.expect === 'fail', cfg.reason);
+    test.fail(
+      cfg.expect === 'fail' && (!cfg.failOn || cfg.failOn.includes(info.project.name)),
+      cfg.reason,
+    );
     const viewport = info.project.use.viewport!;
     const opts = {
       viewport,

@@ -333,6 +333,20 @@ export async function initPlayground(): Promise<void> {
   // True only while our own fullscreen is showing, so a late "left fullscreen" event
   // from an earlier exit can't cancel a fresh Just play.
   let inFullscreen = false;
+  // Fullscreen enters and exits run one after another (an enter during an unfinished
+  // exit would be a no-op), and events that arrive while one is in flight are ignored.
+  let busy = 0;
+  let queue: Promise<unknown> = Promise.resolve();
+  const runFullscreen = (op: () => Promise<unknown> | undefined) => {
+    busy++;
+    queue = queue
+      .then(op)
+      .catch(() => {})
+      .finally(() => {
+        busy--;
+        inFullscreen = fidget && document.fullscreenElement === wrap;
+      });
+  };
   function setFidget(on: boolean): void {
     if (on === fidget) return;
     fidget = on;
@@ -342,19 +356,21 @@ export async function initPlayground(): Promise<void> {
     // Drags start at once in this mode (see engine/pointer.ts), so nothing scrolls.
     stage.style.touchAction = on ? 'none' : '';
     if (on) {
-      wrap.requestFullscreen?.().catch(() => {});
+      if (wrap.requestFullscreen)
+        runFullscreen(() =>
+          fidget && !document.fullscreenElement ? wrap.requestFullscreen() : undefined,
+        );
       exitBtn.focus();
     } else {
-      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      runFullscreen(() => (document.fullscreenElement ? document.exitFullscreen() : undefined));
       justPlay.focus();
     }
   }
   justPlay.addEventListener('click', () => setFidget(true));
   exitBtn.addEventListener('click', () => setFidget(false));
   document.addEventListener('fullscreenchange', () => {
-    if (document.fullscreenElement === wrap) inFullscreen = fidget;
     // The browser's own Esc leaves fullscreen without telling the page: leave Just play too.
-    else if (!document.fullscreenElement && inFullscreen && fidget) setFidget(false);
+    if (!document.fullscreenElement && inFullscreen && fidget && busy === 0) setFidget(false);
   });
   document.addEventListener('keydown', (e) => {
     const typing = (e.target as HTMLElement).closest('input, textarea, select, [contenteditable]');
