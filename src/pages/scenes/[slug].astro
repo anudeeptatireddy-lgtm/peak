@@ -349,6 +349,17 @@ const linked = (s: string) =>
 <script>
   import { initPlayground } from '../../playground/index';
   initPlayground();
+
+  // On phones the stage should end exactly where the bottom sheet starts, so floor-based
+  // scenes (piles, falling letters) are fully visible without scrolling. The title block's
+  // height changes with the screen width, so measure it.
+  const title = document.querySelector<HTMLElement>('.title-block');
+  if (title) {
+    const sync = () =>
+      document.documentElement.style.setProperty('--title-h', `${title.offsetHeight}px`);
+    sync();
+    new ResizeObserver(sync).observe(title);
+  }
 </script>
 
 <style>
@@ -434,9 +445,13 @@ const linked = (s: string) =>
   .peek-copy {
     margin-left: auto;
     display: none;
-    min-height: 36px;
+    min-height: 44px;
     font-size: 0.8rem;
     padding: 0 0.8rem;
+  }
+  /* Wide children (the swatch row) must never stretch a pane past the screen. */
+  .pane > * {
+    min-width: 0;
   }
   .panes {
     overflow-y: auto;
@@ -524,7 +539,7 @@ const linked = (s: string) =>
   }
   .followups .btn {
     justify-self: start;
-    min-height: 36px;
+    min-height: 44px;
     font-size: 0.8rem;
   }
   .chips {
@@ -671,7 +686,10 @@ const linked = (s: string) =>
       scroll-snap-align: start;
     }
     .stage-wrap {
-      height: calc(100svh - var(--header-h) - 72px);
+      height: calc(
+        100svh - var(--header-h) - var(--title-h, 0px) - 72px - env(safe-area-inset-bottom, 0px)
+      );
+      min-height: 300px;
     }
   }
 

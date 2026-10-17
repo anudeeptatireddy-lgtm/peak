@@ -173,3 +173,11 @@ canvas {
   height: 100%;
   display: block;
 }
+
+/* The wordmark is a link: keep its tap area at least 44px. */
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
+}

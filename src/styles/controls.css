@@ -48,8 +48,9 @@
 .ctl-info {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
+  margin-block: -8px;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -81,7 +82,7 @@
 }
 .ctl input[type='range'] {
   width: 100%;
-  min-height: 32px;
+  min-height: 44px;
   accent-color: var(--ink);
 }
 .ctl input[type='text'],
@@ -145,7 +146,7 @@
 }
 .segmented [role='radio'] {
   flex: 1 1 auto;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 0.7rem;
   border: 0;
   border-radius: 9px;

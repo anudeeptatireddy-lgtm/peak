@@ -206,3 +206,12 @@ Both match on desktop and miss at phone size (cloth 2.16%, smoke 4.3%, limit 2%)
 
 ## 2026-10-17: tilt on phones
 The card's name and title sat at the bottom, hidden behind the phone bottom sheet. They are now at the top of the card, and the card is never taller than 60% of the stage. A sweep of all 48 pages at 390px found no sideways overflow.
+
+## 2026-10-17: phone readiness pass
+Audited every page at 390 and 360 wide (sideways scroll, tap-target size, text size, content off screen) and looked at a screenshot of every scene. Fixed:
+- **Controls ran off the screen.** The swipeable color row made the Tweak panel 838px wide, so sliders and headings stretched past the edge. Panes' children now have `min-width: 0`.
+- **The stage hid behind the bottom sheet.** Floor-based scenes (falling letters, ink-ball pile) landed below the visible area. On phones the stage now ends exactly where the sheet starts (the title block's height is measured).
+- **Tap targets under 44px:** the "peak" wordmark, footer About and RSS, the "?" info buttons (32px), sliders (32px), the Copy prompt peek button (36px), and the segmented buttons (40px) are all 44px or more now.
+- **`tilt`:** name and title at the top of the card (see the earlier entry).
+- New test `tests/e2e/phone.spec.ts` (phone project only) runs on every page and scene: no sideways overflow, targets 44px or more, controls within the screen width, and the stage ends above the sheet.
+- Not phone bugs: Gallery, Tour, Start here, Fix it, Put it online, Words, Drops and About are Wave 8 placeholders ("still being built"). `echo` and `velocity` bleed past the edges on purpose.
