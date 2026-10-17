@@ -1,0 +1,82 @@
+---
+title: Start here
+description: Never used Claude Code? Set it up and make your first animated page, step by step.
+lastChecked: '2026-10-18'
+sources:
+  - label: 'Claude Code overview (official docs)'
+    url: 'https://code.claude.com/docs/en/overview'
+  - label: 'Claude Code quickstart (official docs)'
+    url: 'https://code.claude.com/docs/en/quickstart'
+  - label: 'Terminal guide for new users (official docs)'
+    url: 'https://code.claude.com/docs/en/terminal-guide'
+  - label: 'Choose a permission mode, including plan mode (official docs)'
+    url: 'https://code.claude.com/docs/en/permission-modes'
+  - label: 'Checkpointing and /rewind (official docs)'
+    url: 'https://code.claude.com/docs/en/checkpointing'
+  - label: 'Claude plans and pricing'
+    url: 'https://claude.com/pricing'
+---
+
+import CopyMessage from '../../components/guide/CopyMessage.astro';
+
+## What Claude Code is
+
+Claude Code is an AI coding assistant. You tell it in plain words what you want, and it reads and edits files and runs commands on your computer to make it happen. Its docs describe it as a tool that "reads your codebase, edits files, runs commands, and integrates with your development tools."
+
+Peak gives you a precise description to start from: tweak an animation until it looks right, copy the prompt, and Claude Code builds it.
+
+## What you need
+
+- A computer, with a terminal if you want to use the terminal version (the desktop app below does not need one).
+- A way to log in. The quickstart says that means a Claude subscription (Pro, Max, Team, or Enterprise), a Claude Console account, or access through a supported cloud provider. See the [Claude pricing page](https://claude.com/pricing) for what each plan includes.
+- About 20 minutes. That is our own estimate for your first page.
+
+## Set it up
+
+Follow the install steps for your computer on the official [quickstart page](https://code.claude.com/docs/en/quickstart). It lists the exact command for macOS, Linux, Windows and Homebrew, and says how to check that it worked. We don't copy the commands here, because they can change.
+
+New to the terminal? The official [terminal guide for new users](https://code.claude.com/docs/en/terminal-guide) shows how to open a terminal on macOS, Linux and Windows and how to paste a command into it.
+
+In short, the steps are:
+
+1. Open a terminal.
+2. Run the install command for your system from the quickstart page.
+3. Go to a folder and type `claude`. The first time, it asks you to log in with your Claude account, and a browser window opens to sign in.
+
+**Prefer to avoid the terminal?** The official docs describe a desktop app that includes Claude Code, so you don't install anything else. Download it from the [overview page](https://code.claude.com/docs/en/overview), open it, sign in, and use its **Code** tab. The overview says a paid subscription is required for the desktop app.
+
+## Your first build
+
+1. Make a new, empty folder for your first page. Call it anything, such as `my-first-animation`.
+2. Open Claude Code in that folder (in the terminal: go to the folder, then type `claude`).
+3. Get a prompt from peak. This button takes you to a friendly first animation, a confetti burst. Press **Copy prompt** on that page.
+
+<p><a class="btn btn--primary" href="/scenes/confetti">Get a beginner-friendly prompt</a></p>
+
+4. Paste the prompt into Claude Code and press Enter. If Claude asks before it creates files, approve. The terminal guide says you can press Enter to choose **Yes**.
+5. When Claude says it's done, find the file it made, `index.html`, in your folder and double-click it. It opens in your browser.
+
+## Make it yours
+
+- Change one thing at a time. Small changes are easier to check and easier to undo.
+- Use the follow-up prompts on the animation's page. They are written to paste straight after the first prompt.
+- Describe what you see and what you want instead. For example: "The dots are too small and too slow. Make them about twice as big and a bit faster."
+- If something goes wrong, the [Fix it guide](/fix) has a message you can copy for each problem.
+
+<CopyMessage
+  label="A good way to ask for a change"
+  text={
+    'Right now the animation does [what you see]. I want it to do [what you want]. Please change only that and leave everything else as it is.'
+  }
+/>
+
+## Helpful habits
+
+- **Ask for a plan before a big change.** Claude Code has a plan mode. The docs say you press Shift+Tab to cycle through permission modes, and the cycle includes plan mode. In plan mode Claude explores first and doesn't change files yet. Read how modes work on the [permission modes page](https://code.claude.com/docs/en/permission-modes).
+- **Know how to undo.** The docs say Claude Code tracks the file edits it makes. Type `/rewind`, or press Esc twice when the input box is empty, to open the rewind menu and go back to an earlier point. Two limits from the [checkpointing page](https://code.claude.com/docs/en/checkpointing): it does not track files changed by shell commands Claude runs, and it is not a replacement for version control such as Git.
+
+## Next
+
+- [Word bank](/words): the words that make animation prompts work.
+- [Fix it](/fix): what to do when something looks wrong.
+- [Put it online](/ship): share your page with a link.

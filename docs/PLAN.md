@@ -301,11 +301,11 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 **Facts rule (PRD §11):** before writing anything about Claude Code, Netlify, GitHub Pages, or browser menus, look it up in the official documentation, link the exact pages in the guide's Sources, and set `lastChecked` to today. Keep wording general where details may change. If you can't verify something, leave a visible `[OWNER: verify …]` note instead of guessing.
 
-- [ ] **8.6 Guide layout and content collection** · PRD §16.6
+- [x] **8.6 Guide layout and content collection** · PRD §16.6
   - Done when: `Guide.astro` renders MDX with a readable 68ch column, a table of contents for long guides, Sources and Last checked at the bottom, copyable message blocks (a small component with a Copy button).
-- [ ] **8.7 Start here** · PRD §11.1
-- [ ] **8.8 Fix it** · PRD §11.2 (every symptom has a copyable "what to tell Claude Code" message)
-- [ ] **8.9 Put it online** · PRD §11.3
+- [x] **8.7 Start here** · PRD §11.1
+- [x] **8.8 Fix it** · PRD §11.2 (every symptom has a copyable "what to tell Claude Code" message)
+- [x] **8.9 Put it online** · PRD §11.3
   - Done when (each guide): all sections from the PRD present; every external fact has a source link; Lighthouse content-page budgets met (§19).
 - [ ] **8.10 Words content and page** · PRD §12
   - Done when: 24 terms with definition, say-it sentence, seen-in links; search filters as you type; A–Z anchors; deep links like `/words#damping` scroll to and highlight the term. If the 50 scenes need terms the list lacks (for example noise or metaball), propose them to the owner before adding.

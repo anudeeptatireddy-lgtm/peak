@@ -1,0 +1,71 @@
+---
+// A message the visitor can copy and paste into Claude Code. The text is plain (no markup),
+// so what is shown is exactly what gets copied.
+interface Props {
+  /** A short label above the message, e.g. "What to tell Claude Code". */
+  label?: string;
+  /** The message. */
+  text: string;
+}
+const { label = 'What to tell Claude Code', text } = Astro.props;
+---
+
+<figure class="copy-message">
+  <figcaption class="small soft">{label}</figcaption>
+  <pre data-copy-text>{text}</pre>
+  <button type="button" class="btn btn--secondary" data-copy-button>
+    Copy message
+  </button>
+  <span class="small soft" role="status" data-copy-status></span>
+</figure>
+
+<script>
+  // One handler for every copy block on the page.
+  const flash = (status: HTMLElement, text: string) => {
+    status.textContent = text;
+    setTimeout(() => (status.textContent = ''), 2000);
+  };
+  document.addEventListener('click', async (e) => {
+    const button = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy-button]');
+    if (!button) return;
+    const box = button.closest('.copy-message')!;
+    const text = box.querySelector<HTMLElement>('[data-copy-text]')!.textContent ?? '';
+    const status = box.querySelector<HTMLElement>('[data-copy-status]')!;
+    try {
+      await navigator.clipboard.writeText(text);
+      flash(status, 'Copied.');
+    } catch {
+      // No clipboard permission: select the text so Ctrl or Cmd + C works.
+      const range = document.createRange();
+      range.selectNodeContents(box.querySelector('[data-copy-text]')!);
+      getSelection()?.removeAllRanges();
+      getSelection()?.addRange(range);
+      flash(status, 'Select and copy it with Ctrl+C or Cmd+C.');
+    }
+  });
+</script>
+
+<style>
+  .copy-message {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.25rem 0;
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .copy-message pre {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink);
+    user-select: all;
+  }
+  .copy-message button {
+    justify-self: start;
+  }
+</style>

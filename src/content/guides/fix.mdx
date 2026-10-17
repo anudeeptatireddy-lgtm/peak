@@ -1,0 +1,138 @@
+---
+title: Fix it
+description: Something looks wrong? Find what you see, then copy the exact message to send Claude Code.
+lastChecked: '2026-10-18'
+sources:
+  - label: 'Open Chrome DevTools (Chrome for Developers)'
+    url: 'https://developer.chrome.com/docs/devtools/open'
+  - label: 'Web Console (Firefox Source Docs)'
+    url: 'https://firefox-source-docs.mozilla.org/devtools-user/web_console/index.html'
+  - label: 'Use the developer tools in the Develop menu in Safari on Mac (Apple Support)'
+    url: 'https://support.apple.com/guide/safari/use-the-developer-tools-in-the-develop-menu-sfri20948/mac'
+  - label: 'Safari Web Inspector Guide (Apple Developer)'
+    url: 'https://developer.apple.com/library/archive/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/TheDevelopMenu/TheDevelopMenu.html'
+  - label: 'Checkpointing and /rewind (Claude Code docs)'
+    url: 'https://code.claude.com/docs/en/checkpointing'
+  - label: 'Terminal guide for new users (Claude Code docs)'
+    url: 'https://code.claude.com/docs/en/terminal-guide'
+---
+
+import CopyMessage from '../../components/guide/CopyMessage.astro';
+
+Find what you're seeing below. Each problem says what is probably going on, and gives a message you can copy and paste into Claude Code. Claude Code can't see your screen, so say what you see in your own words, as the messages ask.
+
+## The page is blank
+
+**What's probably happening:** the page has an error, so nothing was drawn. The browser console, explained at the bottom of this page, shows the error.
+
+<CopyMessage
+  text={
+    "The page is blank when I open index.html. Please look for errors: check the browser console messages below, then fix the cause and tell me what was wrong.\n\n[Paste what you see in the console here, or write 'I don't know how to open the console' and I'll ask you to explain.]"
+  }
+/>
+
+## Nothing moves
+
+**What's probably happening:** the animation loaded but isn't running. Often it is waiting for a click or the pointer, or a setting called reduced motion is turned on in your computer, which tells pages to hold still.
+
+<CopyMessage
+  text={
+    "The page loads but nothing moves. Please check whether the animation is waiting for my pointer or a click, and whether it is respecting my computer's 'reduce motion' setting. If it is, add a Play button so I can run it anyway. Tell me what you found."
+  }
+/>
+
+## It's laggy or my laptop fan spins up
+
+**What's probably happening:** the animation draws too much every frame. Fewer things, or a lower detail, usually fixes it.
+
+<CopyMessage
+  text={
+    'The animation is laggy and my laptop fan spins up. Please make it lighter: lower the number of particles or shapes, cap the canvas pixel density at 2, and stop animating when the page is hidden or scrolled out of view. Keep the look as close as you can.'
+  }
+/>
+
+## It looks wrong on my phone
+
+**What's probably happening:** the page was built for a wide screen, or it relies on the mouse.
+
+<CopyMessage
+  text={
+    "It looks wrong on my phone: [describe what you see, for example 'the text is cut off' or 'the animation is too small']. Please make it work on a narrow screen without sideways scrolling, make the buttons easy to tap (at least 44 pixels), and give touch a version of anything that only works on hover."
+  }
+/>
+
+## The colors look wrong in dark mode
+
+**What's probably happening:** the colors were written for a light background only.
+
+<CopyMessage
+  text={
+    'The colors look wrong when my computer is in dark mode. Please define the colors as variables, add a dark version under prefers-color-scheme: dark, and make sure the text stays readable on both.'
+  }
+/>
+
+## Text is hard to read
+
+**What's probably happening:** the text and the background are too close in brightness, or the text is too small.
+
+<CopyMessage
+  text={
+    'Some text is hard to read: [say which text]. Please make the contrast between text and background at least 4.5 to 1, and make the text no smaller than 16 pixels.'
+  }
+/>
+
+## Claude Code changed things I didn't ask for
+
+**What's probably happening:** the request was broad, so Claude made other changes along the way. You can go back: in Claude Code, type `/rewind` (or press Esc twice on an empty input) and pick an earlier point. The [checkpointing page](https://code.claude.com/docs/en/checkpointing) explains what it can and can't undo. It does not track files changed by shell commands.
+
+<CopyMessage
+  text={
+    "You changed things I didn't ask for: [say what changed]. Please undo those changes and keep only this one change: [say the one thing you wanted]. From now on, change only what I ask and tell me about anything else you'd like to change first."
+  }
+/>
+
+## It worked, then broke after a change
+
+**What's probably happening:** the last change broke something that was working.
+
+<CopyMessage
+  text={
+    "The page worked before your last change and now it doesn't: [say what's wrong]. Please undo your last change, check that it works again, and then try the change again in a smaller way."
+  }
+/>
+
+## I don't know how to open the file
+
+**What's probably happening:** the file is on your computer, not on the internet, so it opens in your browser from the folder. The terminal guide says to double-click the HTML file to open it in your browser.
+
+<CopyMessage
+  text={
+    "I don't know how to open the page you made. Please tell me exactly where the file is, and how to open it in my browser on my computer, step by step."
+  }
+/>
+
+## I got an error message
+
+**What's probably happening:** something in the page, or in Claude Code itself, failed. The message usually says what.
+
+<CopyMessage
+  text={
+    'I got this error message: [paste the whole message]. Please tell me in plain words what it means, then fix it.'
+  }
+/>
+
+## How to describe a problem
+
+Good messages have three parts:
+
+1. **What you did.** "I opened index.html and moved the mouse over the word."
+2. **What you expected.** "The dots should push away from the mouse."
+3. **What happened.** "Nothing moves, and the console says 'x is not defined'."
+
+## How to open the browser console
+
+The console is where a page prints its errors. Open it on the page that's going wrong, then copy what it says and paste it into Claude Code.
+
+- **Chrome:** press Ctrl+Shift+J on Windows and Linux, or Cmd+Option+J on a Mac. These shortcuts are from [Chrome's own guide](https://developer.chrome.com/docs/devtools/open).
+- **Firefox:** press Ctrl+Shift+K on Windows and Linux, or Cmd+Opt+K on a Mac, or use the Browser Tools menu. See [Firefox's Web Console page](https://firefox-source-docs.mozilla.org/devtools-user/web_console/index.html).
+- **Safari:** first turn on the Develop menu: open Safari's settings, go to **Advanced**, and choose **Show features for web developers** ([Apple's page](https://support.apple.com/guide/safari/use-the-developer-tools-in-the-develop-menu-sfri20948/mac)). Then open Web Inspector from the **Develop** menu and click its **Console** tab. Apple's older guide gives Option+Command+I for Web Inspector. [OWNER: verify the current Safari menu names and shortcut on a Mac.]

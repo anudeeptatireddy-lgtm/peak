@@ -1,0 +1,68 @@
+---
+title: Put it online
+description: Get your page off your laptop and share it with a link, with the easiest route first.
+lastChecked: '2026-10-18'
+sources:
+  - label: 'Netlify: deploy with drag and drop (official docs)'
+    url: 'https://docs.netlify.com/deploy/create-deploys/#drag-and-drop'
+  - label: 'Quickstart for GitHub Pages (official docs)'
+    url: 'https://docs.github.com/en/pages/quickstart'
+  - label: 'What is GitHub Pages? (official docs)'
+    url: 'https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages'
+  - label: 'Claude Code overview (official docs)'
+    url: 'https://code.claude.com/docs/en/overview'
+---
+
+import CopyMessage from '../../components/guide/CopyMessage.astro';
+
+Your page is a folder of files on your computer. To share it, you put that folder on a hosting service, which gives you a link. Here are three ways, easiest first. We link to each service's own documentation, because buttons and plans change.
+
+## 1. Drag and drop with Netlify
+
+**Good for:** the fastest way to get a link, with nothing to install.
+
+Netlify's docs say you can create a site by dragging a project folder that holds your site files (such as `.html` files) to [Netlify Drop](https://app.netlify.com/drop). They add that if you drop a folder without being logged in, Netlify publishes the files as they are.
+
+1. Make sure your folder has your page in it (for the pages Claude Code makes for you, that's `index.html` and anything it saved next to it).
+2. Open [Netlify Drop](https://app.netlify.com/drop).
+3. Drag your folder onto the page.
+4. Netlify shows you the link to your site.
+
+**To update the site later:** the docs say to drag the updated folder onto the deploy drop area at the bottom of your site's **Deploys** page. Read the [drag and drop section](https://docs.netlify.com/deploy/create-deploys/#drag-and-drop) for the current steps and for what an account adds.
+
+## 2. GitHub Pages
+
+**Good for:** a free, lasting home for your page if you already use GitHub, or want to learn it.
+
+GitHub's [quickstart](https://docs.github.com/en/pages/quickstart) walks through it. The steps, in short:
+
+1. Make a new repository on GitHub, named `your-username.github.io` (with your own GitHub username).
+2. Put your page's files in it.
+3. In the repository, open **Settings**, then **Pages**.
+4. Under "Build and deployment," set **Source** to **Deploy from a branch**, and choose the branch to publish.
+5. Visit `your-username.github.io`.
+
+The quickstart says changes can take up to 10 minutes to publish after you push them to GitHub. It does not say here which repository types or plans can use Pages, so check GitHub's [What is GitHub Pages?](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) page and your own plan. [OWNER: verify which repositories and plans can publish with GitHub Pages.]
+
+## 3. Ask Claude Code to do it
+
+**Good for:** when you're not sure which route to take, or you want help at every click.
+
+Open Claude Code in your page's folder and paste this:
+
+<CopyMessage
+  label="What to tell Claude Code"
+  text={
+    'Help me put this folder online for free. Walk me through each step, explain anything you need me to click or sign up for, and tell me the final link.'
+  }
+/>
+
+Claude Code can explain each step as you go, and it can prepare your folder first. It will tell you when you need to click or sign up for something yourself.
+
+## Share your link
+
+Once you have the link, send it like any other link. Open it on your phone and on another computer first, to check it works away from your laptop. If something looks wrong, the [Fix it guide](/fix) can help.
+
+## Update your site later
+
+Change your page with Claude Code as before, then publish again the same way you did the first time: drag the updated folder to Netlify, or push your changes to GitHub and wait a few minutes.

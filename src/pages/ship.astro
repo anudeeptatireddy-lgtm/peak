@@ -1,12 +1,17 @@
 ---
-import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import { getEntry, render } from 'astro:content';
+import Guide from '../layouts/Guide.astro';
+
+const entry = (await getEntry('guides', 'ship'))!;
+const { Content, headings } = await render(entry);
 ---
 
-<Base title="Put it online">
-  <Placeholder
-    title="Put it online"
-    lede="Get your page off your laptop and share the link."
-    wave={8}
-  />
-</Base>
+<Guide
+  title={entry.data.title}
+  description={entry.data.description}
+  lastChecked={entry.data.lastChecked}
+  sources={entry.data.sources}
+  headings={headings}
+>
+  <Content />
+</Guide>

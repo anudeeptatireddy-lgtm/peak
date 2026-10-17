@@ -1,0 +1,137 @@
+---
+// Guide layout (PRD §16.6): a readable 68-character column in the Riso world, a table of
+// contents for long guides, then Sources and the "Last checked" date at the bottom.
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  lastChecked: string;
+  sources: { label: string; url: string }[];
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { title, description, lastChecked, sources, headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2);
+const showToc = toc.length >= 4;
+const when = new Date(`${lastChecked}T12:00:00Z`).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Base title={title} description={description}>
+  <article class="guide wrap">
+    <header class="head">
+      <h1 class="display">{title}</h1>
+      <p class="body measure soft">{description}</p>
+    </header>
+
+    {showToc && (
+      <nav class="toc" aria-label="On this page">
+        <h2 class="small soft">On this page</h2>
+        <ol>
+          {toc.map((h) => (
+            <li>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    <footer class="foot">
+      <h2 id="sources">Sources</h2>
+      <ul>
+        {sources.map((s) => (
+          <li>
+            <a href={s.url} rel="noopener">
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="small soft" data-last-checked>
+        Last checked: {when}
+      </p>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .guide {
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 5rem;
+    display: grid;
+    gap: 2rem;
+  }
+  .head {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 68ch;
+  }
+  .toc {
+    max-width: 68ch;
+  }
+  .toc ol {
+    margin: 0.4rem 0 0;
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.1rem;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    min-width: 44px;
+    color: var(--ink);
+  }
+  .prose,
+  .foot {
+    max-width: 68ch;
+  }
+  .prose :global(h2) {
+    margin: 2.5rem 0 0.75rem;
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .prose :global(p),
+  .prose :global(li) {
+    line-height: 1.65;
+  }
+  .prose :global(p) {
+    margin: 0 0 1em;
+  }
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .prose :global(a),
+  .foot a {
+    color: var(--ink);
+    text-underline-offset: 0.2em;
+  }
+  .prose :global(a:not(.btn)),
+  .foot a {
+    display: inline;
+    padding-block: 0.6em;
+  }
+  .prose :global(code) {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.92em;
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .foot ul {
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 0.25rem;
+  }
+</style>
