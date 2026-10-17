@@ -85,3 +85,48 @@ describe('neon flicker (⚠)', () => {
     expect(f.log).toEqual([]);
   });
 });
+
+describe('fire flames (⚠)', () => {
+  it('never jumps in overall brightness, even at the most extreme settings with fanning', async () => {
+    const { HeatGrid } = await import('../../src/scenes/fire/heat');
+    const { params } = await import('../../src/scenes/fire/params');
+    const r = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const cols = 160;
+    const rows = 100;
+    const fuel = new Uint8Array(cols * rows);
+    for (let y = 60; y < 80; y++) for (let x = 30; x < 130; x++) fuel[y * cols + x] = 1;
+    const grid = new HeatGrid(cols, rows, fuel);
+    const rand = seededRandom(7);
+    const o = {
+      height: r('height').max,
+      cooling: r('cooling').min,
+      burn: r('burn').min,
+      turbulence: r('turbulence').max,
+      seed: r('seed').max,
+    };
+    let prev = grid.mean();
+    let prevHeat = grid.heat.slice();
+    const flashes: number[] = [];
+    for (let frame = 0; frame < 60 * 20; frame++) {
+      // The pointer sweeps back and forth across the flames, fanning at full strength.
+      const fan = { x: 80 + 60 * Math.sin(frame / 7), y: 50, radius: 40, strength: r('fan').max };
+      grid.step(o, frame > 120 ? fan : null, rand);
+      const mean = grid.mean();
+      let changed = 0;
+      for (let i = 0; i < grid.heat.length; i++)
+        if (Math.abs(grid.heat[i]! - prevHeat[i]!) > 0.5) changed++;
+      // A flash: the whole picture brightens or darkens noticeably at once, or more
+      // than a quarter of the stage changes sharply in one frame.
+      if ((frame > 120 && Math.abs(mean - prev) > 0.05) || changed > grid.heat.length / 4)
+        flashes.push(frame / 60);
+      prev = mean;
+      prevHeat = grid.heat.slice();
+    }
+    expect(worstSecond(flashes)).toBeLessThanOrEqual(3);
+    expect(flashes.length).toBe(0);
+  });
+});

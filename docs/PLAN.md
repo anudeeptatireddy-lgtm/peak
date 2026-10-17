@@ -221,7 +221,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **4.4 `sand`** · SCENES.md #17
 - [x] **4.5 `neon`** · SCENES.md #18 (⚠ flash test; featured)
 - [x] **4.6 `rubber`** · SCENES.md #19
-- [ ] **4.7 `fire`** · SCENES.md #20 (⚠ flash test)
+- [x] **4.7 `fire`** · SCENES.md #20 (⚠ flash test)
 
 - [ ] **Wave 4 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone; check that `neon` and `fire` never feel strobe-like; run at least two prompt tests.
 
