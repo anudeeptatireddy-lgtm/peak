@@ -16,6 +16,10 @@ Steps 6.3 `tilt`, 6.4 `kaleido` and 6.5 `morph` are done. Next: 6.6 `moire` (fla
 
 Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.png` and `side-by-side-mobile.png`, for all 17 prompt-tested scenes. Left picture: built from the prompt. Right: peak. Examples: `docs/prompt-tests/cloth/`, `smoke/`, `flow/`, `warp/`, `marbles/`, `skid/`. They are rewritten every time `tests/e2e/prompt-parity.spec.ts` runs.
 
+## Wave 6 prompt tests (waiting on the owner's OK)
+
+By the owner's rule: all Spicy scenes plus one easy one. Spicy: `moire`, `tunnel`, `glitch`. Easy one: none needed (`overprint` and `halftone` are proven against the demo). Three fresh agents, about 150k tokens each, about 450k in total. Not started.
+
 ## Retest estimate
 
 Only `smoke` still fails. One fresh agent run: about 150k tokens. Nothing else needs a retest.
