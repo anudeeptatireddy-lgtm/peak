@@ -12,6 +12,14 @@ Steps 6.3 `tilt`, 6.4 `kaleido` and 6.5 `morph` are done. Next: 6.6 `moire` (fla
 - **Test mode:** done in `src/engine/testmode.ts`: seeded random numbers and a fixed step. The step is 16ms, not 1/60s: Playwright's fake clock fires frames every 16ms and the demos measure that; a 1/60s step made every parity test mismatch. See DECISIONS.
 - **`drop` desktop parity** is still skipped. Our side is now fully deterministic; the variation left starts in the demo's loop. A fix needs a way to start the demo's loop on a known frame.
 
+## Side-by-side pictures (ours vs the fresh build)
+
+Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.png` and `side-by-side-mobile.png`, for all 17 prompt-tested scenes. Left picture: built from the prompt. Right: peak. Examples: `docs/prompt-tests/cloth/`, `smoke/`, `flow/`, `warp/`, `marbles/`, `skid/`. They are rewritten every time `tests/e2e/prompt-parity.spec.ts` runs.
+
+## Retest estimate
+
+Only `smoke` still fails. One fresh agent run: about 150k tokens. Nothing else needs a retest.
+
 ## Prompt-test state (measured rule)
 
 - Pass: particles, elastic, velocity, scramble, echo, neon, fire, ripple, lightning, blackhole, goo, cloth, flow, warp, marbles, skid.
