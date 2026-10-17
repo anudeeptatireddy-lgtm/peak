@@ -265,7 +265,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 ## Wave 7: Interface and micro-interactions 45–50
 
 - [x] **7.1 `magnetic`** · SCENES.md #45
-- [ ] **7.2 `countdown`** · SCENES.md #46 (**Owner first:** answer open question 2 on its default date; live region once per minute; handles past dates by showing "It's time"; reuses the confetti burst)
+- [x] **7.2 `countdown`** · SCENES.md #46 (**Owner first:** answer open question 2 on its default date; live region once per minute; handles past dates by showing "It's time"; reuses the confetti burst)
 - [ ] **7.3 `trail`** · SCENES.md #47
 - [ ] **7.4 `curtain`** · SCENES.md #48
 - [ ] **7.5 `jelly`** · SCENES.md #49

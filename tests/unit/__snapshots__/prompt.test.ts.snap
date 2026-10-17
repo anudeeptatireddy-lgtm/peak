@@ -1052,6 +1052,312 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Event countdown
+
+## What I want
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the confetti canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- When the time reaches zero, hide nothing: the digits stay at 00 and the words "It's time." appear under them at 0.6 × the digit size in the main text color. If the target is already in the past when the page loads, show them straight away with no confetti.
+- Accessibility: keep a visually hidden live region (polite) that says the time left, such as "Launch party: 6 days, 23 hours, 59 minutes left", and update it only once a minute, never every second.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) centered on the page: the event name "Launch party" in the main text color at 0.4 × the digit size, then a row of four units (days, hours, minutes, seconds) each made of flip-clock digit cards, each unit's label under it in the soft text color at 0.18 × the digit size. Digits are Anybody weight 800 at 4.5rem. Every digit is its own card 0.8em wide and 1.25em tall (em of the digit size), corner radius 0.12em, the main text color as its background with the page background color for the digit. Two cards per unit (2 for days, or 3 once there are 100 or more), 0.08em apart, units 1.25rem apart (wrapping on a narrow screen).
+- When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
+- The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
+- When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
+
+## How people interact
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`countdown prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Event countdown
+
+A countdown with the days, hours, minutes and seconds flipping like an airport board. At zero it shows "It's time." and bursts confetti.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Event name: "Launch party"
+- Digit style: Flip
+- Count down to 7 days from now: on
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Ink-ball pile
 
