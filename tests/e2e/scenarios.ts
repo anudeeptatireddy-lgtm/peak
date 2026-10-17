@@ -157,4 +157,67 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(400);
     yield 'signature:tap';
   },
+  async *goo(pp, step, { width, height }) {
+    await step(1500);
+    yield 'orbit';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.45)));
+    await step(600);
+    yield 'follow';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.7), Math.round(height * 0.4)));
+    await step(300);
+    yield 'added';
+  },
+  async *cloth(pp, step, { width, height }) {
+    // No randomness, but a torn sheet amplifies tiny float differences: compare
+    // the hanging sheet by pixels and the tugged sheet by where its ink is.
+    await step(1500);
+    yield 'hanging';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.4), Math.round(height * 0.45)));
+    await both(pp, (p) => p.mouse.down());
+    for (let k = 1; k <= 10; k++) {
+      await both(pp, (p) =>
+        p.mouse.move(Math.round(width * (0.4 - k * 0.01)), Math.round(height * (0.45 + k * 0.03))),
+      );
+      await step(32);
+    }
+    yield 'signature:pulled';
+    await both(pp, (p) => p.mouse.up());
+    await step(800);
+    yield 'signature:released';
+  },
+  async *blackhole(pp, step, { width, height }) {
+    // Close orbits are sensitive to the smallest difference: compare by ink.
+    await step(2000);
+    yield 'signature:swirl';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.3), Math.round(height * 0.4)));
+    await step(400);
+    yield 'signature:burst';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.6), Math.round(height * 0.55)));
+    await both(pp, (p) => p.mouse.down());
+    await step(1000);
+    yield 'signature:dragged';
+    await both(pp, (p) => p.mouse.up());
+  },
+  async *lightning(pp, step, { width, height }) {
+    // The first idle arc jumps at 2.5s and lives 0.3s.
+    await step(2600);
+    yield 'signature:idle-arc';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.4), Math.round(height * 0.5)));
+    await step(100);
+    yield 'signature:strike';
+  },
+  async *smoke(pp, step, { width, height }) {
+    // A fluid never settles: compare where the smoke is.
+    await step(2500);
+    yield 'signature:plume';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.2), Math.round(height * 0.5)));
+    for (let k = 1; k <= 15; k++) {
+      await both(pp, (p) =>
+        p.mouse.move(Math.round(width * (0.2 + k * 0.03)), Math.round(height * (0.5 - k * 0.01))),
+      );
+      await step(16);
+    }
+    await step(400);
+    yield 'signature:stirred';
+  },
 };

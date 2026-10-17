@@ -163,7 +163,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
 
   return {
     resize() {
-      c.fit();
+      // Only a real size change rebuilds (the engine also calls this when the font loads).
+      if (!c.fit()) return;
       build();
       settled = false;
     },

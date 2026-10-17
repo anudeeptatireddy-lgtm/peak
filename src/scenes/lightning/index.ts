@@ -124,7 +124,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
 
   return {
     resize() {
-      c.fit();
+      // Only a real size change re-scatters (the engine also calls this when the font loads).
+      if (!c.fit()) return;
       storm.place(c.w, c.h, options());
       storm.arcs = [];
       still = null;
