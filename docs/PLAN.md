@@ -241,7 +241,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **5.10 `smoke`** · SCENES.md #33
 - [x] **5.11 `filings`** · SCENES.md #34
 
-- [ ] **Wave 5 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone, and scroll the home page again: four more featured slots now show their real scenes.
+- [x] **Wave 5 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone, and scroll the home page again: four more featured slots now show their real scenes.
 
 ---
 
