@@ -43,7 +43,7 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 35 | `overprint` | | | pending | | |
 | 36 | `halftone` | | | pending | | |
 | 37 | `tilt` | | | not tested (by owner rule: Medium, not Spicy, and this wave already has an easy scene proven against the demo) | | |
-| 38 | `kaleido` | | | pending | | |
+| 38 | `kaleido` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 39 | `morph` | | | pending | | |
 | 40 | `moire` | | | pending | | |
 | 41 | `tunnel` | | | pending | | |

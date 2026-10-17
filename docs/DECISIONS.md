@@ -192,3 +192,8 @@ Both match on desktop and miss at phone size (cloth 2.16%, smoke 4.3%, limit 2%)
 - Glare uses the main text color with soft-light blend instead of white, so no color is hard-coded; it lightens on dark worlds (the default, Abyss).
 - "Use motion" button appears only when "Follow phone tilt" is on and the device is touch or asks permission. iOS permission is requested only from that tap; if denied, the pointer keeps working.
 - Not prompt-tested (Medium, not Spicy). Added tests/e2e/tilt.spec.ts.
+
+## 2026-10-17: new prompt-test rule, engine test mode, 6.4 `kaleido`
+- Prompt tests now use the measured rule in PRD §8.7 (palette, amount, layout, motion, reactions, plus a side-by-side picture); parity tests stay pixel-based. All earlier prompt tests re-judged from saved pages: flow, warp, marbles, skid, cloth and goo now pass; smoke fails on a real behavior difference (plume phrase fixed, retest waits for the owner's OK).
+- Engine test mode (`src/engine/testmode.ts`): a test sets `window.__PEAK_TEST__ = seed`; then Math.random is seeded and the scheduler uses a fixed 16ms step (the fake clock's frame, the same step the demos measure), keeping the usual first-frame skip. All parity tests use it. `drop` desktop parity is still skipped: after this change our side is fully deterministic, and the variation left comes from the demo's loop starting at a real-time moment. A 1/60s step was tried and made the demos mismatch, so 16ms it is.
+- 6.4 `kaleido`: strokes fold into one wedge of a hidden canvas; each frame it is drawn around the center, every other copy mirrored. Not prompt-tested (Easy, not Spicy).

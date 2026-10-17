@@ -5198,6 +5198,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Kaleidoscope
+
+## What I want
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared and redrawn every frame. The circle around the center is cut into 8 wedges, each w = 2π ÷ 8 wide. Draw only into one wedge (angles 0 to w) of a hidden same-size canvas: a point at angle θ from the center is folded into the wedge, θ' = (θ − turn angle) mod 2w, then w × 2 − θ′ if it is above w. Each frame draw that hidden canvas 8 times around the center, clipped to the wedge: copy k is rotated by turn angle + k × w, and every odd copy is rotated to (k + 1) × w and flipped, so neighbors mirror each other and the seams line up.
+- Strokes are lines 4px wide with round ends, drawn from the previous folded point to the new one at 0.9 opacity (skip a line that jumps more than 0.5 of a wedge in one step, because it crossed a seam). The stroke color is one of the three accents, switching to the next every 80px drawn.
+- The turn angle increases by 0.15 × 1 radians per second. Points you draw stay under the pointer: subtract the turn angle before folding.
+- Every frame, before drawing new strokes, erase 0.01 × f of the hidden canvas (draw a full-size rectangle with destination-out at that opacity), so old strokes fade away.
+- Drawing follows the pointer while it is over the canvas (on touch: while a finger is held down after a ~250ms hold). Otherwise a point draws on its own: x = center x + short side × 0.7 × 0.5 × sin(t × 1 × 0.9), y = center y + short side × 0.7 × 0.5 × sin(t × 1 × 1.31 + 1.7).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Keep strokes on a second, hidden canvas of the same size. The visible canvas is cleared and redrawn from it every frame.
+- Reduced-motion still frame: the pattern after the self-drawing point has run 300 frames at f = 1 and dt = 1/60, with nothing moving.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll. On a touch screen, drawing starts after a press-and-hold of about 250ms.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kaleido prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Kaleidoscope
+
+A kaleidoscope: I move the cursor to draw and my strokes are mirrored around the center into a symmetrical pattern that slowly turns. Old strokes fade so it never fills up. When I leave it alone it draws by itself.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Mirror segments: 8
+- Brush size: 4px
+- Turn speed: 0.15
+- Fade: 0.01
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Kinetic poster
 
