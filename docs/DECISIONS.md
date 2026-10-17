@@ -21,6 +21,8 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, step 5.2: `goo`.** An SVG scene: circles in one group under a blur + alpha-threshold filter (`feGaussianBlur` → `feColorMatrix` → `feComposite atop`), with the filter region set to the stage in user space so the blur stays cheap. Blobs move with transforms only. A clicked blob joins an orbit that passes through the click point at that moment (√2 × its offset from the center on each axis, phase solved from the click), so it stays where it was dropped and then drifts on, instead of jumping. Up to 16 blobs (the slider's top), a reasoned constant.
+
 **2026-10-17, steps 5.3–5.4: `drop` and `pluck` ported from the riso demo.** Every constant of `reference/riso-demo.html` is a param default (or a reasoned constant, like the owner-approved lightsaber glow), and the parity test now also renders the riso demo, with our Riso palette injected so both pages use the same inks. `pluck` matches at both sizes. `drop` matches at the phone size; on desktop it is logged as a known exception that still runs (as an expected failure): the demo starts its frame loop later than our scheduler under the test's fake clock, and with 32 colliding balls that one-frame offset compounds. The physics code is identical line for line. Ported details kept: `pluck`'s automatic spacing (width ÷ 34, 22–44px) and `drop`'s automatic starting count (width ÷ 40, 14–38) are the "0 = auto" setting of their sliders.
 
 Also: Wave 3 and 4 prompt tests found two real bugs in our own scenes, both fixed in the scenes (not the prompts): `fire`'s flames leaned away from the cursor, and drew random numbers for fuel cells, which the prompt says they shouldn't.

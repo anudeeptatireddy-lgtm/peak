@@ -230,7 +230,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 ## Wave 5: Particles and physics 24–34
 
 - [x] **5.1 `confetti`** · SCENES.md #24 (build the burst as a reusable module; `countdown` uses it)
-- [ ] **5.2 `goo`** · SCENES.md #25
+- [x] **5.2 `goo`** · SCENES.md #25
 - [x] **5.3 `drop`** · SCENES.md #26 (port from `reference/riso-demo.html`)
 - [x] **5.4 `pluck`** · SCENES.md #27 (port from `reference/riso-demo.html`)
 - [ ] **5.5 `cloth`** · SCENES.md #28 (featured)
