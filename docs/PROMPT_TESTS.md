@@ -19,7 +19,7 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 13 | `shatter` | | | not tested yet | Wave 3 tests its Spicy scenes plus one easy scene (owner rule, to save usage). | Built 2026-10-17; listed here as untested, as the owner asked. |
 | 14 | `flag` | | | pending | | |
 | 15 | `extrude` | | | pending | | |
-| 16 | `echo` | | | pending | | |
+| 16 | `echo` | 2026-10-17 | Detailed · New page · I'm new | **Pass** | Nothing at 2% (idle drift and following the pointer, both sizes). | None needed. |
 | 17 | `sand` | | | pending | | |
 | 18 | `neon` | | | pending | | |
 | 19 | `rubber` | | | pending | | |

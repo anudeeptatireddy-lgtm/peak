@@ -86,7 +86,8 @@ export const section = (page: Page) => page.locator('section').first();
 /** How much ink is in each cell of a 24×16 grid over the canvas (0 = background). */
 export async function inkGrid(page: Page): Promise<number[]> {
   return page.evaluate(() => {
-    const src = document.querySelector('section canvas') as HTMLCanvasElement;
+    const src = (document.querySelector('section canvas') ??
+      document.querySelector('canvas')) as HTMLCanvasElement;
     const cols = 24;
     const rows = 16;
     const small = document.createElement('canvas');

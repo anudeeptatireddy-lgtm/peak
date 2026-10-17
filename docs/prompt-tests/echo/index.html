@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Echo trail</title>
+  <meta name="description" content="A word drifts along a looping path and leaves a trail of colored, overlapping echoes.">
+  <meta name="theme-color" content="#F4F2FF">
+
+  <!-- The "Anybody" font from Google Fonts (variable width 50-150, weight 100-900) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+
+  <style>
+    /* ---- Riso palette ---- */
+    :root {
+      --bg: #F4F2FF;
+      --ink: #1A1240;      /* main text */
+      --ink-2: #4E4777;    /* secondary text */
+      --pink: #EC1C7F;
+      --blue: #2A47EA;
+      --orange: #FF7A00;
+      --gutter: clamp(16px, 4vw, 40px);
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color-scheme: light;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Full-screen, transparent canvas. pan-y lets vertical swipes scroll the page. */
+    #echo {
+      display: block;
+      width: 100%;
+      height: 100vh;      /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      background: transparent;
+      touch-action: pan-y;
+    }
+
+    /* Title card. Clicks pass through it to the canvas. The see-through
+       background keeps the text readable when the word slides underneath. */
+    .label {
+      position: absolute;
+      top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+      left: calc(var(--gutter) + env(safe-area-inset-left, 0px));
+      max-width: min(30rem, calc(100% - 2 * var(--gutter)));
+      margin: 0;
+      padding: 12px 16px 14px;
+      border-radius: 14px;
+      background: rgba(244, 242, 255, 0.88);
+      pointer-events: none;
+    }
+
+    .label h1 {
+      margin: 0;
+      font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+      font-weight: 850;
+      font-stretch: 130%;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+
+    .label p {
+      margin: 6px 0 0;
+      max-width: 36ch;
+      color: var(--ink-2);
+      font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+      font-weight: 450;
+      line-height: 1.45;
+    }
+
+    .controls {
+      position: absolute;
+      left: calc(var(--gutter) + env(safe-area-inset-left, 0px));
+      bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+      pointer-events: none;
+    }
+
+    .toggle {
+      pointer-events: auto;
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 20px 0 16px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--bg);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      font-stretch: 115%;
+      cursor: pointer;
+      transition: background-color 150ms ease;
+    }
+
+    .toggle:hover { background: #2C2266; }
+
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .toggle svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      flex: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toggle { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <!-- Decorative drawing surface: hidden from screen readers -->
+    <canvas id="echo" aria-hidden="true"></canvas>
+
+    <header class="label">
+      <h1>Echo trail</h1>
+      <p>Bring your cursor close to the word, or drag sideways with a finger, and it follows you. Leave it alone and it loops on its own.</p>
+    </header>
+
+    <div class="controls">
+      <button type="button" class="toggle" id="toggle">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path id="toggle-icon" d=""></path></svg>
+        <span id="toggle-text">Pause</span>
+      </button>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ---------- Settings (all distances are CSS pixels) ----------
+    const WORD = 'echo';
+    const INK = '#1A1240';
+    const ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
+    const ECHOES = 12;          // number of colored copies
+    const SPACING = 3;          // samples between copies
+    const SAMPLE_RATE = 60;     // position samples per second of animation time
+    const HISTORY = 64;         // ring buffer size (must be > ECHOES * SPACING)
+    const FOLLOW_RADIUS = 260;  // how close the pointer must be to pull the word
+    const STILL_T = 2.2;        // time shown in the reduced-motion still frame
+    const FONT_FAMILY = 'Anybody, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+    const PAUSE_ICON = 'M3 2h3.5v12H3zM9.5 2H13v12H9.5z';
+    const PLAY_ICON = 'M4 1.8 14 8 4 14.2z';
+
+    // Echo k fades to 0.85^k
+    const ALPHAS = [];
+    for (let k = 0; k <= ECHOES; k++) ALPHAS[k] = Math.pow(0.85, k);
+
+    // ---------- Elements ----------
+    const canvas = document.getElementById('echo');
+    const ctx = canvas.getContext('2d');
+    const button = document.getElementById('toggle');
+    const buttonText = document.getElementById('toggle-text');
+    const buttonIcon = document.getElementById('toggle-icon');
+    const reduceMotion = window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)')
+      : null;
+
+    // ---------- State ----------
+    let W = 0, H = 0, DPR = 1;        // canvas size in CSS pixels, pixel ratio
+    let ready = false;                 // has the word been placed yet?
+    let x = 0, y = 0;                  // the word's current position
+    let t = 0;                         // seconds the loop has run
+    let samplesTaken = 0;              // sample n was recorded at t = n / 60
+    const histX = new Float64Array(HISTORY);
+    const histY = new Float64Array(HISTORY);
+    let head = 0;                      // ring buffer slot of the newest sample
+
+    const pointer = { active: false, id: null, clientX: 0, clientY: 0 };
+
+    let playing = !(reduceMotion && reduceMotion.matches);
+    let onScreen = true;
+    let rafId = 0;
+    let lastNow = -1;
+
+    // Some browsers accept "expanded" inside ctx.font, others only via ctx.fontStretch.
+    // Check once so we never hand the canvas a font string it rejects.
+    const stretchInFontString = (() => {
+      ctx.font = '10px sans-serif';
+      const before = ctx.font;
+      ctx.font = '900 expanded 11px sans-serif';
+      return ctx.font !== before;
+    })();
+
+    // ---------- The looping path ----------
+    function pathX(time) { return W / 2 + W * 0.26 * Math.sin(time * 0.6); }
+    function pathY(time) { return H / 2 + H * 0.16 * Math.sin(time * 0.6 * 1.7 + 0.5); }
+
+    // ---------- Text style ----------
+    function setFont(px) {
+      ctx.font = '900 ' + (stretchInFontString ? 'expanded ' : '') + px.toFixed(2) + 'px ' + FONT_FAMILY;
+      if ('fontStretch' in ctx) ctx.fontStretch = 'expanded';
+    }
+
+    // Font size = height x 0.24, shrunk if the word would be wider than 60% of the width.
+    function applyTextStyle() {
+      const base = H * 0.24;
+      setFont(base);
+      const width = ctx.measureText(WORD).width;
+      const size = width > W * 0.6 ? base * (W * 0.6) / width : base;
+      setFont(size);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+    }
+
+    // ---------- Position history ----------
+    function pushSample(sx, sy) {
+      head = (head + 1) % HISTORY;
+      histX[head] = sx;
+      histY[head] = sy;
+    }
+
+    // Place the word on the path at a given time and fill the history
+    // with where the path was at each earlier sample time.
+    function startAt(time) {
+      samplesTaken = Math.round(time * SAMPLE_RATE);
+      t = samplesTaken / SAMPLE_RATE;
+      x = pathX(t);
+      y = pathY(t);
+      head = 0;
+      for (let i = 0; i < HISTORY; i++) {
+        const sampleTime = Math.max(0, (samplesTaken - i) / SAMPLE_RATE);
+        const slot = (head - i + HISTORY) % HISTORY;
+        histX[slot] = pathX(sampleTime);
+        histY[slot] = pathY(sampleTime);
+      }
+    }
+
+    // ---------- One animation step ----------
+    function step(dt) {
+      const f = Math.min(dt * 60, 2.5);
+      const t0 = t;
+      const prevX = x, prevY = y;
+      t += dt;
+
+      let following = false;
+      let px = 0, py = 0;
+      if (pointer.active) {
+        const rect = canvas.getBoundingClientRect();
+        px = pointer.clientX - rect.left;
+        py = pointer.clientY - rect.top;
+        const dx = px - x, dy = py - y;
+        following = dx * dx + dy * dy <= FOLLOW_RADIUS * FOLLOW_RADIUS;
+      }
+
+      if (following) {
+        x += (px - x) * 0.12 * f;
+        y += (py - y) * 0.12 * f;
+      } else {
+        const tx = pathX(t), ty = pathY(t);
+        x += (tx - x) * 0.05 * f;
+        y += (ty - y) * 0.05 * f;
+      }
+
+      // Record one sample per 1/60 s of animation time, no matter the screen's
+      // refresh rate. Samples that land between frames are interpolated.
+      while ((samplesTaken + 1) / SAMPLE_RATE <= t + 1e-9) {
+        samplesTaken++;
+        const a = Math.min(1, Math.max(0, (samplesTaken / SAMPLE_RATE - t0) / dt));
+        pushSample(prevX + (x - prevX) * a, prevY + (y - prevY) * a);
+      }
+    }
+
+    // ---------- Drawing ----------
+    function draw() {
+      if (!W || !H) return;
+      ctx.clearRect(0, 0, W, H);
+
+      // Echoes, oldest first, multiplied like overlapping inks
+      ctx.globalCompositeOperation = 'multiply';
+      for (let k = ECHOES; k >= 1; k--) {
+        const slot = (head - k * SPACING + HISTORY) % HISTORY;
+        ctx.globalAlpha = ALPHAS[k];
+        ctx.fillStyle = ACCENTS[(k - 1) % 3];
+        ctx.fillText(WORD, histX[slot], histY[slot]);
+      }
+
+      // The word itself on top
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = INK;
+      ctx.fillText(WORD, x, y);
+    }
+
+    // ---------- The single requestAnimationFrame loop ----------
+    function frame(now) {
+      rafId = requestAnimationFrame(frame);
+      const dt = lastNow < 0 ? 0 : Math.min(Math.max((now - lastNow) / 1000, 0), 0.05);
+      lastNow = now;
+      if (dt > 0) step(dt);
+      draw();
+    }
+
+    // Run only while playing, on screen, and in a visible tab.
+    function updateLoop() {
+      const shouldRun = playing && onScreen && !document.hidden && ready;
+      if (shouldRun && !rafId) {
+        lastNow = -1;
+        rafId = requestAnimationFrame(frame);
+      } else if (!shouldRun && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    // ---------- Sizing ----------
+    function resize() {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (!w || !h) return;
+      if (w === W && h === H && dpr === DPR) return;
+
+      // Keep the word and its trail in the same relative spot
+      if (ready && W && H) {
+        const sx = w / W, sy = h / H;
+        x *= sx; y *= sy;
+        for (let i = 0; i < HISTORY; i++) { histX[i] *= sx; histY[i] *= sy; }
+      }
+
+      W = w; H = h; DPR = dpr;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);  // draw in CSS pixels
+      applyTextStyle();                        // resizing resets canvas text settings
+
+      if (!ready) {
+        // Normal start: t = 0. Reduced motion: the still frame at t = 2.2 s.
+        startAt(playing ? 0 : STILL_T);
+        ready = true;
+        updateLoop();
+      }
+      if (!rafId) draw();
+    }
+
+    // ---------- Play / Pause button ----------
+    function renderButton() {
+      buttonText.textContent = playing ? 'Pause' : 'Play';
+      button.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+      buttonIcon.setAttribute('d', playing ? PAUSE_ICON : PLAY_ICON);
+    }
+
+    button.addEventListener('click', () => {
+      playing = !playing;
+      renderButton();
+      updateLoop();
+    });
+
+    if (reduceMotion) {
+      const onReduceChange = () => {
+        if (reduceMotion.matches && playing) {
+          playing = false;
+          renderButton();
+          updateLoop();
+        }
+      };
+      if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onReduceChange);
+      else if (reduceMotion.addListener) reduceMotion.addListener(onReduceChange);
+    }
+
+    // ---------- Pointer: mouse while over the canvas, finger while touching ----------
+    function track(e) {
+      pointer.active = true;
+      pointer.id = e.pointerId;
+      pointer.clientX = e.clientX;
+      pointer.clientY = e.clientY;
+    }
+    function release() {
+      pointer.active = false;
+      pointer.id = null;
+    }
+
+    canvas.addEventListener('pointerdown', track);
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') {
+        if (pointer.active && e.pointerId === pointer.id) track(e);
+      } else {
+        track(e);
+      }
+    });
+    canvas.addEventListener('pointerup', (e) => {
+      if (e.pointerType === 'touch' && e.pointerId === pointer.id) release();
+    });
+    // Fires when the browser takes over a touch to scroll the page
+    canvas.addEventListener('pointercancel', (e) => {
+      if (e.pointerId === pointer.id) release();
+    });
+    canvas.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'touch' && e.pointerId === pointer.id) release();
+    });
+
+    // ---------- Pause when off-screen or in a hidden tab ----------
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        updateLoop();
+      }).observe(canvas);
+    }
+    document.addEventListener('visibilitychange', updateLoop);
+
+    // ---------- Resize ----------
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
+    window.addEventListener('resize', resize);
+
+    // ---------- Re-measure once the Anybody font has arrived ----------
+    function onFontReady() {
+      if (!W || !H) return;
+      applyTextStyle();
+      if (!rafId) draw();
+    }
+    if (document.fonts) {
+      if (document.fonts.load) {
+        document.fonts.load('900 expanded 100px "Anybody"', WORD).then(onFontReady, () => {});
+      }
+      if (document.fonts.ready) document.fonts.ready.then(onFontReady, () => {});
+    }
+
+    // ---------- Go ----------
+    renderButton();
+    resize();
+    updateLoop();
+  })();
+  </script>
+</body>
+</html>

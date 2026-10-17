@@ -110,4 +110,25 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(600);
     yield 'replay';
   },
+  async *echo(pp, step, { width, height }) {
+    await step(1500);
+    yield 'drift';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.62), Math.round(height * 0.4)));
+    await step(800);
+    yield 'follow';
+  },
+  async *neon(_pp, step) {
+    await step(700);
+    yield 'warming';
+    await step(5000);
+    yield 'lit';
+  },
+  async *fire(pp, step, { width, height }) {
+    // Flames are per-cell noise: compare where the fire is, not every pixel.
+    await step(1500);
+    yield 'signature:flames';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.3), Math.round(height * 0.45)));
+    await step(800);
+    yield 'signature:fanned';
+  },
 };
