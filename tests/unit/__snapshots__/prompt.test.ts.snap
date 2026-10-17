@@ -2846,6 +2846,336 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Falling letters
+
+## What I want
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw each block at its center (the average of its corners), rotated by the angle of its top edge.
+
+## How it moves
+- The headline is "tumble"; every letter except spaces becomes a block. Measure letters with Anybody weight 800, canvas fontStretch "normal" at the font size. A block is 0.88 × the letter's advance width (measureText) wide and 0.82 × the font size tall, a rounded rectangle (corner radius 0.08 × the font size) in accent (letter index mod 3), with its letter drawn in the background color, centered (textAlign center, textBaseline alphabetic, shifted down by half of actualBoundingBoxAscent − actualBoundingBoxDescent so the ink is centered).
+- Font size = 20% of the canvas height, scaled down if the row of letters (their advance widths, spaces included) is wider than 86% of the canvas width. Each letter's home column is where it would sit in that centered row.
+- Each block is four verlet points (its corners; velocity = position − previous position) held by six sticks: the four edges and both diagonals, at their starting lengths. Every frame: move each free corner by its velocity × 0.995^f plus 0.6 × f² downward (gravity); then repeat 8 times: restore each block's six stick lengths (move both ends half the error each), separate every overlapping pair of blocks, and keep corners inside the floor (the canvas bottom) and side walls.
+- A corner that passes the floor or a wall is put back on it, and its speed into the wall reverses and is multiplied by 0.2.
+- On the floor a corner loses 0.5 of its sliding speed. Two blocks overlap when no edge direction separates them (separating axis test over the four edge normals); push them apart along the axis of least overlap, moving the corners of each that sit deepest by half the overlap, and remove 0.5 ÷ 8 of those corners' sliding speed along the contact.
+- Press on a block to grab it (a mouse at once; a finger after holding still for 0.25s). Remember where on the block you grabbed it (as weights of its four corners). While held, each frame move every corner of that block by (pointer − grabbed point) × 0.5 × that corner's weight × 4, then let the sticks pull it back into shape, so it swings and tumbles. On release, multiply its corners' velocities by 1.
+- Letter i (left to right, spaces skipped) drops 120ms × i after the start: it appears with its center at its home column, just inside the top edge (half its height down), turned by (random − 0.5) × 2 × 0.06 radians (one Math.random() call per letter, in order). A double-click or double tap (two taps within 0.35s) drops them all again from the top.
+- Reduced-motion still frame: every block standing on the floor at its home column, leaning 0.1 radians, alternately left and right (first letter left), lifted so its lowest corner just touches the floor.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- The letters drop when the page loads; lay them out again and drop them all once more on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y so vertical swipes scroll; once a finger has grabbed a letter, it stops the page from scrolling.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tumble prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Falling letters
+
+The letters of my headline drop from the top one by one and stack on the floor as tilted blocks. I can grab any letter to drag and throw it; it tumbles and knocks the others over. A double-click drops them all again in order.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Your headline: "tumble"
+- Letter size: 20%
+- Gravity: 0.6
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`velocity prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Scroll-reactive marquee
 
