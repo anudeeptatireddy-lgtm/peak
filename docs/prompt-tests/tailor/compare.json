@@ -1,0 +1,5 @@
+{
+  "hide": ".controls, #playBtn, #restartBtn",
+  "expect": "fail",
+  "reason": "Measured differences, not looks: mid-cut ink center 28% apart (cloth physics diverge), and the built page's threads hover at the bottom edge while ours leave the screen. By eye the two match. Logged; not chased (PROMPT_TESTS.md)."
+}

@@ -253,6 +253,26 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(3000);
     yield 'creeping';
   },
+  async *tailor(pp, step) {
+    await step(800);
+    yield 'chalk';
+    await step(1200);
+    yield 'cutting';
+    await step(2000);
+    yield 'falling';
+    await step(5000);
+    yield 'done';
+  },
+  async *latte(pp, step) {
+    await step(500);
+    yield 'landing';
+    await step(1500);
+    yield 'drawing';
+    await step(1500);
+    yield 'poured';
+    await step(4000);
+    yield 'settled';
+  },
   async *smoke(pp, step, { width, height }) {
     // A fluid never settles: compare where the smoke is.
     await step(2500);

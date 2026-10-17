@@ -570,4 +570,10 @@ Three of the candidates in `docs/INDUSTRY_HEROES.md`. They appear in the gallery
 - **Tags:** Brands, Intros. Difficulty: Spicy (hard). Time: ~40 min.
 
 ### 53. `latte`: Latte pour
-- **Use case:** a café brand intro. **World:** Spice Dunes. **Technique:** a top-down cup, a milk stream, foam drawn into the name. (Spec to be filled in when this step starts: see INDUSTRY_HEROES #3.)
+- **Use case:** a café brand intro. **World:** Spice Dunes. **Technique:** a foam-amount grid, a falling stream that blooms in rings and then zigzags through the letters, diffusion to settle.
+- **What happens:** Looking straight down into a cup of dark coffee with a speckled, tiger-striped crema, a thin stream of milk pours in from the top edge. Where it lands white foam blooms in soft rings, then the stream drags through the surface filling the letters of the name in loose strokes. The stream lifts away and the foam settles, its edges softening. The cup turns a few degrees toward the cursor (on phones, with the tilt after a tap). Restart pours again.
+- **Interactions:** move (the cup turns); Restart to pour again.
+- **Params:** `text` Name: 1–16 chars ("Your brand"). `cupSize` Cup size: 40–95% of the height (70). `foam` Foam thickness: 0–1 (0.6). `crema` Crema darkness: 0–1 (0.5). `pourTime` Pour speed: 1.5–8s (3). `spread` Foam spread: 0.4–2 (1). `wobble` Pour wobble: 0–1 (0.3). `turn` Cup turn: 0–15° (6). `gyro` Follow phone tilt (off).
+- **Still:** the finished latte art with two faint curls of steam above.
+- **Mobile:** tilt the phone after tapping "Use motion".
+- **Tags:** Brands, Intros. Difficulty: Spicy (hard). Time: ~40 min.

@@ -1,0 +1,132 @@
+import type { Param } from '../types';
+import { FIXED } from './constants';
+
+// Every number that shapes this scene is a param (owner, 2026-10-16).
+
+export const params: Param[] = [
+  /* ---------- Look ---------- */
+  {
+    kind: 'text',
+    id: 'text',
+    label: 'Name',
+    help: 'The name poured in foam.',
+    group: 'Look',
+    maxLength: 16,
+    default: 'Your brand',
+    key: true,
+    phrase: (v: string, all) =>
+      `A full-screen canvas (100svh, at least 540px), transparent, redrawn every frame, showing a cup of coffee seen from straight above, centered. The coffee is a disc of radius R = screen height × ${all.cupSize}% ÷ 2. Around it: a cup rim ring at ${FIXED.RIM} × R and a saucer ring at ${FIXED.SAUCER} × R, both in the surface color with a ${FIXED.RIM_W}px outline in the main text color. The coffee is stored on a grid of ${FIXED.CELL}px cells over the disc, each with a foam amount from 0 (just crema) to 1 (white foam), all starting at 0. Crema color = the first accent color mixed toward the main text color by crema darkness ${all.crema}, with a fixed tiger-striped, speckled texture on top (random numbers from a generator seeded ${FIXED.SEED}): ${FIXED.STRIPES} radial streaks from the center at ${FIXED.STRIPE_ALPHA} opacity and about ${FIXED.SPECKS} small speckles per 1000 cells at ${FIXED.SPECK_ALPHA} opacity, in lighter and darker versions of the crema. Foam color = the surface color. A cell is drawn as crema mixed toward foam by smoothstep(0, 1, foam amount × ${all.foam} × 2) (foam thickness ${all.foam}). The name "${v}" is poured in foam: rasterize it (Anybody weight ${FIXED.TEXT_WEIGHT}, centered in the disc, font size ${FIXED.TEXT_SIZE} × the disc diameter) onto the grid to know which cells are letters.`,
+  },
+  {
+    kind: 'slider',
+    id: 'cupSize',
+    label: 'Cup size',
+    help: 'How big the coffee is, as a percentage of the screen height.',
+    group: 'Look',
+    min: 40,
+    max: 95,
+    step: 1,
+    default: 70,
+    unit: '%',
+    key: true,
+    phrase: (v: number) => `Cup size ${v}%.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'foam',
+    label: 'Foam thickness',
+    help: 'How white and thick the foam is.',
+    group: 'Look',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    default: 0.6,
+    key: true,
+    phrase: (v: number) => `Foam thickness ${v}.`,
+    phraseIn: 'text',
+  },
+  {
+    kind: 'slider',
+    id: 'crema',
+    label: 'Crema darkness',
+    help: 'How dark the coffee is, from golden crema (0) to near black (1).',
+    group: 'Look',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    default: 0.5,
+    phrase: (v: number) => `Crema darkness ${v}.`,
+    phraseIn: 'text',
+  },
+  /* ---------- Motion ---------- */
+  {
+    kind: 'slider',
+    id: 'pourTime',
+    label: 'Pour speed',
+    help: 'How long the whole pour takes, in seconds.',
+    group: 'Motion',
+    min: 1.5,
+    max: 8,
+    step: 0.5,
+    default: 3,
+    unit: 's',
+    key: true,
+    phrase: (v: number, all) =>
+      `The pour takes T = ${v}s from the start. Phase 1 (0 to ${FIXED.BLOOM_END} × T): the milk stream falls in a thin straight line (${FIXED.STREAM_W}px wide × foam spread ${all.spread}, in the surface color) from ${FIXED.STREAM_START} × R above the center, straight down to the center of the coffee, and lays foam there: a gaussian of radius ${FIXED.SPOT}px × ${all.spread} that adds ${FIXED.POUR_RATE} × foam per second, plus ${FIXED.RINGS} rings of foam, each ${FIXED.RING_WIDTH} cells wide, spreading outward from the landing spot at ${FIXED.RING_SPEED} cells per second, each ring laying foam at ${FIXED.RING_FOAM} (taking the larger of that and what is there) until it reaches ${FIXED.RING_REACH} × R, started in turn, evenly spread over this phase. Phase 2 (${FIXED.BLOOM_END} × T to ${FIXED.DRAW_END} × T): the landing spot follows a path that traces the letters: scan the name's rows from top to bottom, ${FIXED.ROW_GAP} × the spot size apart, and in each row visit the runs of letter cells left to right, then right to left in the next row (a zigzag that fills each letter), moving at a constant speed so the whole path takes this phase; foam is laid down along the way: as the spot moves each frame, stamp the foam gaussian every half spot-size along its move, each stamp adding ${FIXED.STROKE_FOAM} × (foam thickness + ${FIXED.RING_FOAM}) only on the pouring parts, and only on cells that are part of a letter or within ${FIXED.EDGE_CELLS} cell of one (so the letters keep their shape; the bloom at the start is not limited this way) (the jumps between runs lay nothing), so the strokes are continuous even though the spot moves far each frame. Phase 3 (${FIXED.DRAW_END} × T to T): the stream shortens and stops laying foam, lifting away (shrink its length to 0). Add a wobble to the landing spot: x and y each move by ${all.wobble} × ${FIXED.WOBBLE_PX}px × sin(t × ${FIXED.WOBBLE_RATE} and a different phase for each axis). Then for ${FIXED.SETTLE}s the foam settles: each frame move every cell's foam toward the average of its four neighbors by ${FIXED.DIFFUSE} × dt, so edges soften. Use real dt in seconds for everything.`,
+  },
+  {
+    kind: 'slider',
+    id: 'spread',
+    label: 'Foam spread',
+    help: 'How wide each pour of foam spreads. Bigger makes softer, fatter lines.',
+    group: 'Look',
+    min: 0.4,
+    max: 2,
+    step: 0.1,
+    default: 1,
+    phrase: (v: number) => `Foam spread ${v}.`,
+    phraseIn: 'pourTime',
+  },
+  {
+    kind: 'slider',
+    id: 'wobble',
+    label: 'Pour wobble',
+    help: 'How much the barista hand shakes while pouring. 0 is perfectly steady.',
+    group: 'Motion',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    default: 0.3,
+    key: true,
+    phrase: (v: number) => `Wobble ${v}.`,
+    phraseIn: 'pourTime',
+  },
+  /* ---------- Interaction ---------- */
+  {
+    kind: 'slider',
+    id: 'turn',
+    label: 'Cup turn',
+    help: 'How far the cup turns toward your cursor after the pour, in degrees. 0 holds it still.',
+    group: 'Interaction',
+    min: 0,
+    max: 15,
+    step: 1,
+    default: 6,
+    unit: '°',
+    phrase: (v: number) =>
+      `After the pour, the whole cup (coffee, rim and saucer, turned about the center) turns toward the pointer: its angle eases toward ${v}° × clamp((pointer x − center x) ÷ (width ÷ 2), −1, 1) each frame by 1 − (1 − ${FIXED.TURN_EASE})^f (f = min(dt × 60, 2.5)). The Restart button pours again.`,
+  },
+  {
+    kind: 'toggle',
+    id: 'gyro',
+    label: 'Follow phone tilt',
+    help: 'On phones, show a "Use motion" button so the cup turns as you tilt the device.',
+    group: 'Interaction',
+    default: false,
+    phrase: (v: boolean) =>
+      v
+        ? `On devices that report orientation, show a small "Use motion" button near the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the cup's target angle comes from the device: the maximum turn × clamp(gamma ÷ ${FIXED.GYRO_RANGE}, −1, 1). Keep the pointer working if permission is denied.`
+        : 'The cup follows only the pointer; there is no motion button.',
+  },
+];

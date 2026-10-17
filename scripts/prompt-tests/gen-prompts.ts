@@ -10,8 +10,8 @@ import { getWorld } from '../../src/theme/worlds';
 
 import moire from '../../src/scenes/moire/index';
 import tunnel from '../../src/scenes/tunnel/index';
-import fogged from '../../src/scenes/fogged/index';
-for (const scene of [fogged]) {
+import latte from '../../src/scenes/latte/index';
+for (const scene of [latte]) {
   const dir = '' + (process.env.PTEST_DIR ?? './ptest') + '/' + scene.meta.slug;
   mkdirSync(dir, { recursive: true });
   writeFileSync(

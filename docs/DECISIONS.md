@@ -286,3 +286,6 @@ Three fresh agents (about 90k tokens each) built the pages from the default prom
 - `fogged` first run failed on palette (prompt gap); fixed the phrase and retested: pass. Our blur now shrinks in halves so blob edges are smooth.
 - Rule bands added to PRD §8.7: palette overlap 0.65–0.80 and layout box 5–10% off are judged by eye (they are near-misses from things a prompt cannot pin down exactly).
 - Test margins: the fluid benchmark allows 8ms in the full run (6ms alone) and the contrast guardrail gets 60s: both passed alone and failed only when 800+ tests share the machine.
+
+## 2026-10-18: 7b.3 `latte` (gallery only)
+- A cup from above, with the foam amount per 4px cell. The stream lands at the centre and lays foam (plus three bloom rings), then the landing spot zigzags through the rasterized letters: because it moves far each frame, foam is stamped every half spot along the move, only on letter cells. After the pour, each cell's foam relaxes toward its neighbors' average so edges soften. Crema is the first accent mixed toward the text color, with seeded streaks and speckles. The cup turns toward the pointer (or the phone tilt after a tap on "Use motion"). The still frame is the finished art with two faint steam curls. Foam and text were tuned by eye: a first version filled the letters into one solid band.
