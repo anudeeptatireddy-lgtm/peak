@@ -1040,6 +1040,336 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Kinetic poster
+
+## What I want
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Keep the words in a visually hidden element for screen readers and mark the poster aria-hidden.
+- Position each cell absolutely from its current place in the grid (so swaps can slide), with the word and its color block inside.
+
+## How it moves
+- The poster's words are "MOVE", "SHAPE", "TYPE", "TIME", in capitals; cell i shows word (i mod the number of words).
+- The poster is a 2×2 grid (always the single column on screens under 700px wide), 82% of the section's width and 0.6 × that tall, centered in a full-screen section (100svh, at least 540px). Every cell holds one word in Anybody weight 850, font-stretch 110%, in the main text color, sized so it is 80% of the cell's width, centered. A click or tap switches to the next grid (2×2, 3×3, stacked, then back).
+- A "block" move toggles a block of color behind the word: it slides in from the left edge of the cell (scaleX 0 → 1, transform-origin left) in accent (cell index mod 3), and the word turns the background color; the next block move on that cell slides it out to the right.
+- A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
+- On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
+- Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
+- Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
+- Reduced-motion still frame: the poster after the first four beats, every move finished.
+
+## How people interact
+- A click or tap (on release) anywhere on the section switches the grid.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`kinetic prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Kinetic poster
+
+Bold words sit on a strict grid and change on a steady beat: one scales up, one turns 90°, two swap places, a block of color slides in, like a moving Swiss poster. The sequence loops. A click switches to the next grid.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Word 1: "MOVE"
+- Grid: 2×2
+- Tempo: 96 bpm
+- Motion feel: Snappy
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`marbles prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Text to marbles
 
