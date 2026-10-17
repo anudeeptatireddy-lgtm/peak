@@ -38,6 +38,8 @@ export const FIXED = {
   WOBBLE_PX: 14,
   /** How fast the settling softens foam edges: the share of the difference from the neighbors' average per second. */
   DIFFUSE: 0.6,
+  /** The saucer never fills more than this share of the screen width (so the cup fits phones). */
+  CUP_FIT: 0.92,
   /** Saucer and cup rim size, as multiples of the coffee's radius. */
   RIM: 1.1,
   SAUCER: 1.32,
@@ -114,6 +116,7 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   WOBBLE_RATE: 'Pace of the pour wobble.',
   WOBBLE_PX: 'Size of the pour wobble at full strength.',
   DIFFUSE: 'How quickly foam edges soften while settling.',
+  CUP_FIT: 'Keeps the whole saucer on a narrow screen.',
   RIM: 'Proportions of the cup.',
   SAUCER: 'Proportions of the saucer.',
   RIM_W: 'Thickness of the cup rim line.',

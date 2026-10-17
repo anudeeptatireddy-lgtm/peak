@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latte pour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --text: #1A1240;
+    --text2: #4E4777;
+    --a1: #EC1C7F;
+    --a2: #2A47EA;
+    --a3: #FF7A00;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body {
+    font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+    touch-action: pan-y;
+    background: var(--bg);
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: pan-y;
+  }
+  .intro {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    max-width: min(300px, 60vw);
+    pointer-events: none;
+  }
+  .intro h1 {
+    margin: 0 0 4px;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+  }
+  .intro p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: var(--text2);
+  }
+  .controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0 16px;
+    pointer-events: none;
+  }
+  .controls button {
+    pointer-events: auto;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 8px 18px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--bg);
+    border: 3px solid var(--text);
+    border-radius: 999px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .controls button:hover { background: var(--text); color: var(--bg); }
+  .controls button:focus-visible {
+    outline: 3px solid var(--a2);
+    outline-offset: 3px;
+  }
+  .controls button[hidden] { display: none; }
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="stage" id="stage">
+    <canvas id="cv" aria-hidden="true"></canvas>
+    <div class="intro">
+      <h1>Latte pour</h1>
+      <p>Milk pours into the coffee and draws the name in foam. Move your pointer and the cup turns.</p>
+    </div>
+    <div class="controls">
+      <button type="button" id="restart">Restart pour</button>
+      <button type="button" id="playpause">Pause</button>
+      <button type="button" id="motion" hidden aria-pressed="false">Use motion</button>
+    </div>
+    <p class="sr-only" id="status">A cup of coffee seen from above. Milk is poured in and fills the letters of the name Your brand with foam.</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- constants ----------
+  var COL = { bg: '#F4F2FF', text: '#1A1240', text2: '#4E4777', a1: '#EC1C7F', a2: '#2A47EA', a3: '#FF7A00' };
+  var NAME = 'Your brand';
+  var CELL = 4;
+  var T = 3;                 // pour length (s)
+  var P1 = 0.25 * T;
+  var P2 = 0.85 * T;
+  var SETTLE = 2.5;
+  var SPOT = 3.5 * 1;        // spot size in px (3.5px x spread 1)
+  var FOAM_THICK = 0.6;
+  var CREMA_DARK = 0.5;
+  var MAX_TILT = 6 * Math.PI / 180;
+
+  // ---------- helpers ----------
+  function hex(h) {
+    return [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  }
+  function mix(a, b, t) {
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  }
+  function css(c) {
+    return 'rgb(' + Math.round(c[0]) + ',' + Math.round(c[1]) + ',' + Math.round(c[2]) + ')';
+  }
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function mulberry32(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  var RGB = { bg: hex(COL.bg), text: hex(COL.text), a1: hex(COL.a1) };
+  var cremaRGB = mix(RGB.a1, RGB.text, CREMA_DARK);
+
+  // ---------- DOM ----------
+  var stage = document.getElementById('stage');
+  var cv = document.getElementById('cv');
+  var ctx = cv.getContext('2d');
+  var btnRestart = document.getElementById('restart');
+  var btnPlay = document.getElementById('playpause');
+  var btnMotion = document.getElementById('motion');
+  var reduceMQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+
+  // ---------- geometry / state ----------
+  var W = 0, H = 0, dpr = 1, cx = 0, cy = 0, R = 100, G = 100, n = 0;
+  var foam, foam2, inside, mask, insideList;
+  var cremaCanvas, foamCanvas, foamCtx, foamImg, foamDirty = true;
+  var segs = [], cum = [], pathLen = 0, segI = 0, nextS = 0;
+  var t = 0, angle = 0, inputX = 0;
+  var spotX = 0, spotY = 0, streamOn = false, streamTop = 0, streamBot = 0;
+  var userPaused = false, stillMode = false, visible = true, ready = false;
+  var raf = 0, last = 0;
+  var px = 0, py = 0, ppour = false;
+  var motionOn = false;
+
+  // ---------- setup (sizes, grid, textures, path) ----------
+  function setup() {
+    W = stage.clientWidth;
+    H = stage.clientHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * dpr);
+    cv.height = Math.round(H * dpr);
+    cx = W / 2;
+    cy = H / 2;
+    R = Math.min(H * 0.7 / 2, (W / 2 - 6) / 1.32);
+    if (R < 60) R = 60;
+
+    n = Math.ceil(2 * R / CELL);
+    G = n * CELL / 2;
+    foam = new Float32Array(n * n);
+    foam2 = new Float32Array(n * n);
+    inside = new Uint8Array(n * n);
+    mask = new Uint8Array(n * n);
+    var list = [];
+    for (var j = 0; j < n; j++) {
+      for (var i = 0; i < n; i++) {
+        var x = (i + 0.5) * CELL - G, y = (j + 0.5) * CELL - G;
+        if (x * x + y * y <= R * R) { inside[j * n + i] = 1; list.push(j * n + i); }
+      }
+    }
+    insideList = Int32Array.from(list);
+
+    buildCrema();
+    buildMask();
+    buildPath();
+
+    foamCanvas = document.createElement('canvas');
+    foamCanvas.width = n; foamCanvas.height = n;
+    foamCtx = foamCanvas.getContext('2d');
+    foamImg = foamCtx.createImageData(n, n);
+    for (var k = 0; k < n * n; k++) {
+      foamImg.data[k * 4] = RGB.bg[0];
+      foamImg.data[k * 4 + 1] = RGB.bg[1];
+      foamImg.data[k * 4 + 2] = RGB.bg[2];
+      foamImg.data[k * 4 + 3] = 0;
+    }
+    foamDirty = true;
+  }
+
+  function buildCrema() {
+    var rng = mulberry32(91);
+    cremaCanvas = document.createElement('canvas');
+    cremaCanvas.width = Math.ceil(2 * G * dpr);
+    cremaCanvas.height = Math.ceil(2 * G * dpr);
+    var c = cremaCanvas.getContext('2d');
+    c.scale(dpr, dpr);
+    c.translate(G, G);
+    c.beginPath(); c.arc(0, 0, R, 0, Math.PI * 2); c.clip();
+    c.fillStyle = css(cremaRGB);
+    c.fillRect(-G, -G, 2 * G, 2 * G);
+    var light = css(mix(cremaRGB, RGB.bg, 0.4));
+    var dark = css(mix(cremaRGB, RGB.text, 0.55));
+    // 28 radial tiger streaks at 0.15 opacity
+    c.globalAlpha = 0.15;
+    for (var s = 0; s < 28; s++) {
+      var a = rng() * Math.PI * 2;
+      var w = 0.025 + rng() * 0.07;
+      var r0 = R * (rng() * 0.25);
+      var r1 = R * (0.6 + rng() * 0.4);
+      var bend = (rng() - 0.5) * 0.25;
+      var isLight = rng() < 0.5;
+      c.fillStyle = isLight ? light : dark;
+      c.beginPath();
+      c.moveTo(Math.cos(a) * r0, Math.sin(a) * r0);
+      c.quadraticCurveTo(
+        Math.cos(a + bend - w * 0.4) * (r0 + r1) * 0.5, Math.sin(a + bend - w * 0.4) * (r0 + r1) * 0.5,
+        Math.cos(a + bend - w * 0.5) * r1, Math.sin(a + bend - w * 0.5) * r1);
+      c.lineTo(Math.cos(a + bend + w * 0.5) * r1, Math.sin(a + bend + w * 0.5) * r1);
+      c.quadraticCurveTo(
+        Math.cos(a + bend + w * 0.4) * (r0 + r1) * 0.5, Math.sin(a + bend + w * 0.4) * (r0 + r1) * 0.5,
+        Math.cos(a) * r0, Math.sin(a) * r0);
+      c.fill();
+    }
+    // speckles: ~14 per 1000 cells at 0.35 opacity
+    var count = Math.round(insideList.length * 14 / 1000);
+    c.globalAlpha = 0.35;
+    for (var p = 0; p < count; p++) {
+      var ang = rng() * Math.PI * 2;
+      var rad = Math.sqrt(rng()) * R;
+      var sz = 0.8 + rng() * 1.8;
+      c.fillStyle = rng() < 0.5 ? light : dark;
+      c.beginPath();
+      c.arc(Math.cos(ang) * rad, Math.sin(ang) * rad, sz, 0, Math.PI * 2);
+      c.fill();
+    }
+    c.globalAlpha = 1;
+  }
+
+  function buildMask() {
+    var D = 2 * R;
+    var m = document.createElement('canvas');
+    m.width = n; m.height = n;
+    var c = m.getContext('2d', { willReadFrequently: true });
+    // font size 0.32 x disc diameter, shrunk only if the name would not fit in the disc
+    var fs = 0.32 * D;
+    var fontFor = function (size) { return '800 ' + size + 'px Anybody, system-ui, sans-serif'; };
+    var probe = document.createElement('canvas').getContext('2d');
+    probe.font = fontFor(fs);
+    var wText = probe.measureText(NAME).width;
+    if (wText > 0.86 * D) fs = fs * 0.86 * D / wText;
+    probe.font = fontFor(fs);
+    var met = probe.measureText(NAME);
+    var asc = met.actualBoundingBoxAscent || fs * 0.7;
+    var desc = met.actualBoundingBoxDescent || 0;
+    c.setTransform(1 / CELL, 0, 0, 1 / CELL, 0, 0);
+    c.font = fontFor(fs);
+    c.textAlign = 'center';
+    c.textBaseline = 'alphabetic';
+    c.fillStyle = '#000';
+    c.fillText(NAME, G, G + (asc - desc) / 2);
+    var d = c.getImageData(0, 0, n, n).data;
+    for (var k = 0; k < n * n; k++) {
+      mask[k] = (inside[k] && d[k * 4 + 3] > 110) ? 1 : 0;
+    }
+  }
+
+  function buildPath() {
+    segs = []; cum = []; pathLen = 0;
+    var jmin = -1, jmax = -1;
+    for (var j = 0; j < n; j++) {
+      for (var i = 0; i < n; i++) {
+        if (mask[j * n + i]) { if (jmin < 0) jmin = j; jmax = j; break; }
+      }
+    }
+    if (jmin < 0) return;
+    // runs per cell row, in px (disc-local)
+    var runs = [];
+    for (var jj = 0; jj < n; jj++) {
+      var rr = [], start = -1;
+      for (var ii = 0; ii <= n; ii++) {
+        var on = ii < n && mask[jj * n + ii];
+        if (on && start < 0) start = ii;
+        if (!on && start >= 0) { rr.push([start * CELL - G, ii * CELL - G]); start = -1; }
+      }
+      runs.push(rr);
+    }
+    var step = 0.8 * SPOT;
+    var yTop = jmin * CELL - G + 0.5, yBot = (jmax + 1) * CELL - G - 0.5;
+    var row = 0, cxp = null, cyp = null;
+    function add(x0, y0, x1, y1, pour) {
+      var len = Math.hypot(x1 - x0, y1 - y0);
+      segs.push({ x0: x0, y0: y0, x1: x1, y1: y1, len: len, pour: pour });
+      cum.push(pathLen);
+      pathLen += len;
+    }
+    for (var y = yTop; y <= yBot; y += step, row++) {
+      var cj = Math.floor((y + G) / CELL);
+      var rs = runs[cj];
+      if (!rs || !rs.length) continue;
+      var ltr = (row % 2 === 0);
+      var order = ltr ? rs : rs.slice().reverse();
+      for (var q = 0; q < order.length; q++) {
+        var a = ltr ? order[q][0] : order[q][1];
+        var b = ltr ? order[q][1] : order[q][0];
+        if (cxp !== null && (Math.abs(cxp - a) > 0.001 || Math.abs(cyp - y) > 0.001)) {
+          add(cxp, cyp, a, y, false);   // jump: lays nothing
+        }
+        add(a, y, b, y, true);
+        cxp = b; cyp = y;
+      }
+    }
+  }
+
+  // ---------- simulation ----------
+  function reset() {
+    foam.fill(0); foam2.fill(0);
+    t = 0; angle = 0;
+    segI = 0; nextS = 0;
+    streamOn = false;
+    stillMode = false;
+    foamDirty = true;
+  }
+
+  function gauss(x, y, r, amount, maskOnly) {
+    var reach = 2.2 * r;
+    var i0 = Math.max(0, Math.floor((x - reach + G) / CELL));
+    var i1 = Math.min(n - 1, Math.floor((x + reach + G) / CELL));
+    var j0 = Math.max(0, Math.floor((y - reach + G) / CELL));
+    var j1 = Math.min(n - 1, Math.floor((y + reach + G) / CELL));
+    var rr = r * r;
+    for (var j = j0; j <= j1; j++) {
+      var dy = (j + 0.5) * CELL - G - y;
+      for (var i = i0; i <= i1; i++) {
+        var k = j * n + i;
+        if (maskOnly ? !mask[k] : !inside[k]) continue;
+        var dx = (i + 0.5) * CELL - G - x;
+        var w = Math.exp(-(dx * dx + dy * dy) / rr);
+        var v = foam[k] + amount * w;
+        foam[k] = v > 1 ? 1 : v;
+      }
+    }
+    foamDirty = true;
+  }
+
+  function ringBand(lo, hi, level) {
+    // lay foam (max with level) on cells whose distance from the landing spot is within [lo, hi]
+    var i0 = Math.max(0, Math.floor((-hi + G) / CELL));
+    var i1 = Math.min(n - 1, Math.floor((hi + G) / CELL));
+    for (var j = i0; j <= i1; j++) {
+      var y = (j + 0.5) * CELL - G;
+      for (var i = i0; i <= i1; i++) {
+        var k = j * n + i;
+        if (!inside[k]) continue;
+        var x = (i + 0.5) * CELL - G;
+        var d = Math.sqrt(x * x + y * y);
+        if (d >= lo && d <= hi && foam[k] < level) foam[k] = level;
+      }
+    }
+    foamDirty = true;
+  }
+
+  function posAt(s) {
+    while (segI < segs.length - 1 && cum[segI] + segs[segI].len < s) segI++;
+    var g = segs[segI];
+    var u = g.len > 0 ? clamp((s - cum[segI]) / g.len, 0, 1) : 0;
+    px = g.x0 + (g.x1 - g.x0) * u;
+    py = g.y0 + (g.y1 - g.y0) * u;
+    ppour = g.pour;
+  }
+
+  function diffuse(k) {
+    var a = foam, b = foam2;
+    for (var q = 0; q < insideList.length; q++) {
+      var idx = insideList[q];
+      var v = a[idx];
+      var l = inside[idx - 1] ? a[idx - 1] : v;
+      var r = inside[idx + 1] ? a[idx + 1] : v;
+      var u = inside[idx - n] ? a[idx - n] : v;
+      var d = inside[idx + n] ? a[idx + n] : v;
+      b[idx] = v + k * ((l + r + u + d) * 0.25 - v);
+    }
+    foam = b; foam2 = a;
+    foamDirty = true;
+  }
+
+  function step(dt) {
+    var t0 = t;
+    t += dt;
+    var t1 = t;
+    var wx = 0.3 * 14 * Math.sin(t1 * 5.5);
+    var wy = 0.3 * 14 * Math.sin(t1 * 5.5 + 1.9);
+    var topY = -1.25 * R;
+    streamOn = t1 < T;
+
+    var tl = 0.3 * P1; // moment the falling stream reaches the coffee
+    if (t0 < P1) {
+      var ga = Math.max(t0, tl), gb = Math.min(t1, P1);
+      if (gb > ga) gauss(wx, wy, 3.5 * 1, 2.4 * FOAM_THICK * (gb - ga), false);
+    }
+    // 3 rings of foam
+    var ringSpeed = 28 * CELL, ringHalf = 2.5 * CELL / 2, maxR = 0.4 * R;
+    for (var i = 0; i < 3; i++) {
+      var st = tl + i * (P1 - tl) / 3;
+      if (t1 <= st) continue;
+      var r0 = Math.max(0, (t0 - st) * ringSpeed);
+      var r1 = (t1 - st) * ringSpeed;
+      if (r0 >= maxR) continue;
+      r1 = Math.min(r1, maxR);
+      ringBand(Math.max(0, r0 - ringHalf), r1 + ringHalf, 0.35);
+    }
+
+    // landing spot and stream
+    if (t1 < P1) {
+      spotX = wx; spotY = wy;
+      var q = clamp(t1 / tl, 0, 1);
+      var e = q * q;
+      streamTop = topY;
+      streamBot = topY + (spotY - topY) * e;
+    } else if (t1 < P2 || t0 < P2) {
+      var tp = clamp((t1 - P1) / (P2 - P1), 0, 1);
+      if (segs.length) {
+        var sT = pathLen * tp;
+        while (nextS <= sT) {
+          posAt(nextS);
+          if (ppour) gauss(px + wx, py + wy, SPOT, 0.7 * (FOAM_THICK + 0.35), true);
+          nextS += SPOT * 0.5;
+        }
+        posAt(sT);
+        spotX = px + wx; spotY = py + wy;
+      } else { spotX = wx; spotY = wy; }
+      streamTop = topY; streamBot = spotY;
+    } else {
+      if (segs.length) { posAt(pathLen); spotX = px + wx; spotY = py + wy; }
+      var p3 = clamp((t1 - P2) / (T - P2), 0, 1);
+      streamTop = topY + (spotY - topY) * p3;
+      streamBot = spotY;
+    }
+
+    // settling
+    if (t1 > T) {
+      var sa = Math.max(t0, T), sb = Math.min(t1, T + SETTLE);
+      if (sb > sa) diffuse(0.6 * (sb - sa));
+    }
+  }
+
+  // ---------- drawing ----------
+  function updateFoamImage() {
+    var data = foamImg.data;
+    var k = FOAM_THICK * 2;
+    for (var q = 0; q < insideList.length; q++) {
+      var idx = insideList[q];
+      var x = foam[idx] * k;
+      x = x > 1 ? 1 : (x < 0 ? 0 : x);
+      data[idx * 4 + 3] = (x * x * (3 - 2 * x)) * 255;
+    }
+    foamCtx.putImageData(foamImg, 0, 0);
+    foamDirty = false;
+  }
+
+  function drawSteam() {
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    ctx.strokeStyle = COL.text;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    var y0 = -0.95 * R, rise = 0.45 * R;
+    var offs = [-0.2 * R, 0.2 * R], phs = [0, 1.7];
+    for (var s = 0; s < 2; s++) {
+      ctx.beginPath();
+      for (var i = 0; i <= 40; i++) {
+        var u = i / 40;
+        var x = offs[s] + Math.sin(u * Math.PI * 2.2 + phs[s]) * 0.05 * R;
+        var y = y0 - rise * u;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function render(withSteam) {
+    if (foamDirty) updateFoamImage();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    // riso-style offset inks under the saucer, overprinted with multiply
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.fillStyle = COL.a2;
+    ctx.beginPath(); ctx.arc(5, 4, 1.32 * R, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = COL.a3;
+    ctx.beginPath(); ctx.arc(-4, -4, 1.32 * R, 0, Math.PI * 2); ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+
+    ctx.fillStyle = COL.bg;
+    ctx.strokeStyle = COL.text;
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(0, 0, 1.32 * R, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, 1.1 * R, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+    ctx.save();
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(cremaCanvas, -G, -G, 2 * G, 2 * G);
+    ctx.drawImage(foamCanvas, -G, -G, 2 * G, 2 * G);
+    ctx.restore();
+
+    if (withSteam) drawSteam();
+    ctx.restore();
+
+    // the milk stream (screen space; the cup is not turned while pouring)
+    if (streamOn && streamBot > streamTop) {
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = COL.text;
+      ctx.globalAlpha = 0.3;
+      ctx.lineWidth = 3.5 + 3;
+      ctx.beginPath(); ctx.moveTo(cx + spotX, cy + streamTop); ctx.lineTo(cx + spotX, cy + streamBot); ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = COL.bg;
+      ctx.lineWidth = 3.5;
+      ctx.beginPath(); ctx.moveTo(cx + spotX, cy + streamTop); ctx.lineTo(cx + spotX, cy + streamBot); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // ---------- loop control ----------
+  function shouldRun() { return ready && !userPaused && visible && !document.hidden; }
+
+  function frame(now) {
+    raf = 0;
+    if (!shouldRun()) return;
+    var dt = clamp((now - last) / 1000, 0, 0.05);
+    last = now;
+    var f = Math.min(dt * 60, 2.5);
+    if (t < T + SETTLE) step(dt);
+    if (t >= T) {
+      var target = MAX_TILT * clamp(inputX, -1, 1);
+      angle += (target - angle) * (1 - Math.pow(1 - 0.05, f));
+    }
+    render(false);
+    raf = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (!raf && shouldRun()) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  }
+  function stop() {
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }
+
+  function showStill() {
+    reset();
+    var steps = Math.ceil((T + SETTLE) * 60);
+    for (var i = 0; i < steps; i++) step(1 / 60);
+    stillMode = true;
+    streamOn = false;
+    angle = 0;
+    render(true);
+  }
+
+  function setPaused(p) {
+    userPaused = p;
+    btnPlay.textContent = p ? 'Play' : 'Pause';
+    if (p) stop(); else start();
+  }
+
+  // ---------- events ----------
+  btnRestart.addEventListener('click', function () {
+    reset();
+    setPaused(false);
+    render(false);
+    start();
+  });
+  btnPlay.addEventListener('click', function () {
+    if (userPaused) {
+      if (stillMode) reset();
+      setPaused(false);
+    } else {
+      setPaused(true);
+    }
+  });
+
+  window.addEventListener('pointermove', function (e) {
+    if (motionOn) return;
+    var rect = stage.getBoundingClientRect();
+    inputX = clamp((e.clientX - (rect.left + cx)) / (W / 2), -1, 1);
+  }, { passive: true });
+
+  function onTilt(e) {
+    if (e.gamma == null) return;
+    inputX = clamp(e.gamma / 30, -1, 1);
+  }
+  if (window.DeviceOrientationEvent && window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+    btnMotion.hidden = false;
+  }
+  btnMotion.addEventListener('click', function () {
+    if (motionOn) {
+      window.removeEventListener('deviceorientation', onTilt);
+      motionOn = false; inputX = 0;
+      btnMotion.textContent = 'Use motion';
+      btnMotion.setAttribute('aria-pressed', 'false');
+      return;
+    }
+    var enable = function () {
+      window.addEventListener('deviceorientation', onTilt);
+      motionOn = true;
+      btnMotion.textContent = 'Motion on';
+      btnMotion.setAttribute('aria-pressed', 'true');
+    };
+    var DOE = window.DeviceOrientationEvent;
+    if (DOE && typeof DOE.requestPermission === 'function') {
+      DOE.requestPermission().then(function (r) { if (r === 'granted') enable(); }).catch(function () {});
+    } else {
+      enable();
+    }
+  });
+
+  document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[entries.length - 1].isIntersecting;
+      if (visible) start(); else stop();
+    }, { threshold: 0 }).observe(stage);
+  }
+
+  var resizeTimer = 0;
+  function onResize() {
+    if (!ready) return;
+    if (W === stage.clientWidth && H === stage.clientHeight) return;
+    setup();
+    if (stillMode || userPaused) showStill(); else { reset(); render(false); start(); }
+  }
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(onResize, 120); }).observe(stage);
+  } else {
+    window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(onResize, 120); });
+  }
+
+  if (reduceMQ.addEventListener) {
+    reduceMQ.addEventListener('change', function (e) {
+      if (!ready) return;
+      if (e.matches) { setPaused(true); showStill(); }
+    });
+  }
+
+  // ---------- go ----------
+  function init() {
+    if (ready) return;
+    setup();
+    ready = true;
+    if (reduceMQ.matches) {
+      setPaused(true);
+      showStill();
+    } else {
+      reset();
+      render(false);
+      setPaused(false);
+    }
+  }
+  var fontsDone = false;
+  function go() { if (fontsDone) return; fontsDone = true; init(); }
+  setTimeout(go, 2500);
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('800 64px Anybody').then(go, go);
+  } else {
+    go();
+  }
+})();
+</script>
+</body>
+</html>

@@ -150,7 +150,10 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   }
 
   function build(): void {
-    R = (c.h * n('cupSize')) / SHARED.PERCENT / 2;
+    R = Math.min(
+      (c.h * n('cupSize')) / SHARED.PERCENT / 2,
+      (c.w * FIXED.CUP_FIT) / 2 / FIXED.SAUCER,
+    );
     N = Math.max(FIXED.MIN_GRID, Math.ceil((R * 2) / cell));
     foam = new Float32Array(N * N);
     gridCv.width = N;
