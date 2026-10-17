@@ -36,10 +36,10 @@ export const HOME_JOURNEY: JourneySlot[] = [
     line: 'Scroll fast, then slow down. The type speeds up and leans into it.',
   },
   {
-    scene: 'lava',
+    scene: 'blackhole',
     world: 'lava',
-    title: 'Lava lamp',
-    line: 'Wax rises, merges and splits. Click to warm it up.',
+    title: 'Black hole',
+    line: 'A grid bends into a funnel while particles spiral in and vanish.',
   },
   {
     scene: 'marbles',
@@ -78,10 +78,10 @@ export const HOME_JOURNEY: JourneySlot[] = [
     line: 'The tubes buzz on letter by letter. Hover a letter to brighten it.',
   },
   {
-    scene: 'glitch',
+    scene: 'confetti',
     world: 'vapor',
-    title: 'Glitch',
-    line: 'Hover the headline and it tears apart, then snaps clean.',
+    title: 'Celebration burst',
+    line: 'A big message with confetti bursting around it. Click to fire more.',
   },
   {
     scene: 'fireworks',

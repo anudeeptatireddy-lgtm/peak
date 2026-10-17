@@ -233,10 +233,10 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **5.2 `goo`** · SCENES.md #25
 - [x] **5.3 `drop`** · SCENES.md #26 (port from `reference/riso-demo.html`)
 - [x] **5.4 `pluck`** · SCENES.md #27 (port from `reference/riso-demo.html`)
-- [x] **5.5 `cloth`** · SCENES.md #28 (featured)
+- [x] **5.5 `cloth`** · SCENES.md #28 
 - [x] **5.6 `fireworks`** · SCENES.md #29 (⚠ flash test; featured)
 - [x] **5.7 `blackhole`** · SCENES.md #30
-- [x] **5.8 `flock`** · SCENES.md #31 (featured)
+- [x] **5.8 `flock`** · SCENES.md #31 
 - [x] **5.9 `lightning`** · SCENES.md #32 (⚠ flash test; featured)
 - [x] **5.10 `smoke`** · SCENES.md #33
 - [x] **5.11 `filings`** · SCENES.md #34
@@ -254,7 +254,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **6.5 `morph`** · SCENES.md #39
 - [x] **6.6 `moire`** · SCENES.md #40 (⚠ flash test)
 - [x] **6.7 `tunnel`** · SCENES.md #41 (⚠ flash test)
-- [x] **6.8 `lava`** · SCENES.md #42 (featured)
+- [x] **6.8 `lava`** · SCENES.md #42 
 - [x] **6.9 `fold`** · SCENES.md #43 (inner scroller on scene pages, like `velocity`)
 - [x] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
 
