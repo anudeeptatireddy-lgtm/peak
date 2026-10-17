@@ -267,3 +267,7 @@ The owner added three scenes from `docs/INDUSTRY_HEROES.md`: Tailor's cut, Fogge
 
 ## 2026-10-17: 7.5 `jelly`
 - Real buttons, each with a target and three springs (position, squash, tip) sharing Springiness and Settle speed. Dragging moves the target while keeping the grab point; the card lags and leans with its velocity; on release the target stays where it was dropped. A press that moves under 6px counts as a tap (jiggle), also for Enter and Space. On touch the shared pointer helper starts a drag only after a press-and-hold so swipes still scroll. Marked `accessible` (stage not hidden from assistive tech).
+
+## 2026-10-17: 7.6 `loaders`
+- Six loaders in plain CSS keyframes (the CSS lives in `loaders/styles.ts` and every shape is spelled out in the prompt), so each is easy to copy into any site. The page pauses them by adding a class that freezes every animation halfway through its loop (the still frame and the paused state). A click or tap on a grid cell features that loader (3 columns on wide screens, 2 on phones). Speed scales every loop; thickness drives the ring stroke, bar width, morph border and orbit ring. The stage is marked `accessible` (grid cells are real buttons).
+- All 50 scenes now exist.

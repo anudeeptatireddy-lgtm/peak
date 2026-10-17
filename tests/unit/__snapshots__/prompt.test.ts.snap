@@ -8042,6 +8042,294 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Loading pack
+
+## What I want
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Use plain CSS keyframes wherever possible, so each loader is easy to drop into any site.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- Under reduced motion every loader stays still, paused halfway through its loop.
+- Reduced-motion still frame: every loader at 0.5 of its loop.
+
+## How people interact
+- The grid cells are real buttons, so they work with the keyboard.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`loaders prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Loading pack
+
+A pack of six small, original loading animations made with plain CSS only: a dot chase, a bouncing trio, a self-drawing ring, stacking bars, a morphing square and an orbiting pair. Clicking one shows it big in the middle.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Show large: Self-drawing ring
+- Size: 48px
+- Line thickness: 4px
+- Speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Magnetic buttons
 

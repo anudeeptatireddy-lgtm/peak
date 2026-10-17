@@ -55,7 +55,7 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 47 | `trail` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 48 | `curtain` | | | not tested (by owner rule: Medium, not Spicy) | | |
 | 49 | `jelly` | | | not tested (by owner rule: Easy, not Spicy) | | |
-| 50 | `loaders` | | | pending | | |
+| 50 | `loaders` | | | not tested (by owner rule: Easy, not Spicy) | | |
 
 ## Not tested yet
 
