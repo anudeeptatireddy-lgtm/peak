@@ -201,7 +201,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **3.7 `scramble`** · SCENES.md #4
 - [x] **3.8 `marbles`** · SCENES.md #5 (featured on the home page)
 - [x] **3.9 `skid`** · SCENES.md #6
-- [ ] **3.10 `melt`** · SCENES.md #7
+- [x] **3.10 `melt`** · SCENES.md #7
 - [ ] **3.11 `tumble`** · SCENES.md #8
 - [ ] **3.12 `fridge`** · SCENES.md #9
 - [ ] **3.13 `typewriter`** · SCENES.md #10

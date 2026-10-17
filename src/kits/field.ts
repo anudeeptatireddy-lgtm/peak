@@ -245,12 +245,12 @@ export class Fluid {
 
   private solve(b: number, x: Float32Array, x0: Float32Array, a: number, c: number): void {
     const { w, h } = this;
+    const row = w + 2;
+    const inv = 1 / c;
     for (let it = 0; it < this.iterations; it++) {
       for (let j = 1; j <= h; j++)
-        for (let i = 1; i <= w; i++) {
-          const k = this.ix(i, j);
-          x[k] = (x0[k]! + a * (x[k - 1]! + x[k + 1]! + x[k - (w + 2)]! + x[k + (w + 2)]!)) / c;
-        }
+        for (let i = 1, k = j * row + 1; i <= w; i++, k++)
+          x[k] = (x0[k]! + a * (x[k - 1]! + x[k + 1]! + x[k - row]! + x[k + row]!)) * inv;
       this.bounds(b, x);
     }
   }
@@ -273,41 +273,42 @@ export class Fluid {
     dt: number,
   ): void {
     const { w, h } = this;
+    const row = w + 2;
     const dtx = dt * w;
     const dty = dt * h;
     for (let j = 1; j <= h; j++)
-      for (let i = 1; i <= w; i++) {
-        const k = this.ix(i, j);
+      for (let i = 1, k = j * row + 1; i <= w; i++, k++) {
         const x = Math.min(w + 0.5, Math.max(0.5, i - dtx * u[k]!));
         const y = Math.min(h + 0.5, Math.max(0.5, j - dty * v[k]!));
-        const i0 = Math.floor(x);
-        const j0 = Math.floor(y);
+        const i0 = x | 0;
+        const j0 = y | 0;
         const s1 = x - i0;
         const t1 = y - j0;
+        const a = j0 * row + i0;
         d[k] =
-          (1 - s1) * ((1 - t1) * d0[this.ix(i0, j0)]! + t1 * d0[this.ix(i0, j0 + 1)]!) +
-          s1 * ((1 - t1) * d0[this.ix(i0 + 1, j0)]! + t1 * d0[this.ix(i0 + 1, j0 + 1)]!);
+          (1 - s1) * ((1 - t1) * d0[a]! + t1 * d0[a + row]!) +
+          s1 * ((1 - t1) * d0[a + 1]! + t1 * d0[a + row + 1]!);
       }
     this.bounds(b, d);
   }
 
   private project(u: Float32Array, v: Float32Array, p: Float32Array, div: Float32Array): void {
     const { w, h } = this;
+    const row = w + 2;
     const hx = 1 / Math.max(w, h);
     for (let j = 1; j <= h; j++)
-      for (let i = 1; i <= w; i++) {
-        const k = this.ix(i, j);
-        div[k] = -0.5 * hx * (u[k + 1]! - u[k - 1]! + v[k + (w + 2)]! - v[k - (w + 2)]!);
+      for (let i = 1, k = j * row + 1; i <= w; i++, k++) {
+        div[k] = -0.5 * hx * (u[k + 1]! - u[k - 1]! + v[k + row]! - v[k - row]!);
         p[k] = 0;
       }
     this.bounds(0, div);
     this.bounds(0, p);
     this.solve(0, p, div, 1, 4);
+    const g = 0.5 / hx;
     for (let j = 1; j <= h; j++)
-      for (let i = 1; i <= w; i++) {
-        const k = this.ix(i, j);
-        u[k]! -= (0.5 * (p[k + 1]! - p[k - 1]!)) / hx;
-        v[k]! -= (0.5 * (p[k + (w + 2)]! - p[k - (w + 2)]!)) / hx;
+      for (let i = 1, k = j * row + 1; i <= w; i++, k++) {
+        u[k]! -= g * (p[k + 1]! - p[k - 1]!);
+        v[k]! -= g * (p[k + row]! - p[k - row]!);
       }
     this.bounds(1, u);
     this.bounds(2, v);

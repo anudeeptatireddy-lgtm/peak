@@ -1088,6 +1088,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Melting text
+
+## What I want
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "melt". Draw it once, in the main text color, onto a hidden canvas the size of the visible one: Anybody weight 900, canvas fontStretch "normal", textAlign center, textBaseline alphabetic, centered horizontally. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width; the middle of the word (halfway between its actualBoundingBoxAscent and actualBoundingBoxDescent) sits at 40% of the height. Its ink box runs from actualBoundingBoxLeft to actualBoundingBoxRight and from the ascent to the descent; the letter height is ascent + descent.
+- Slice the ink box into vertical strips 2px wide, from its left edge. Each frame, copy each strip from the hidden canvas onto the visible one (drawImage), stretched downward: with sag = its melt × 36% of the letter height, its top moves down by 0.25 × sag and its bottom by the full sag.
+- Each strip has a melt amount from 0 (solid) to 1, starting at 0. Its rate is 1 − 0.8 × w(its center x), where w(x) = 0.5 + 0.25 × sin(x × 0.07) + 0.25 × sin(x × 0.07 ÷ 2.5 + 2.1). Every frame, a strip that isn't being cooled melts by 1 × rate × (1 − its hardness) × dt ÷ 14s, up to 1.
+- Keep 12 drops. A drop belongs to a strip that has ink (pick one with floor(random × number of inked strips)) and hangs from the bottom of that strip's ink, where it currently is on screen: it grows from radius 0 to 4px over 1.2s (drawn as a circle just below the attach point plus a line of the same width up to it), then lets go and falls (velocity += 0.35px per frame² × f), and once it is below the canvas it starts over on a new strip. Drop i first starts after i × 1.2s ÷ 12. Drops are the main text color.
+- The pointer cools strips within 140px of it (measured to the strip's center x at the word's middle height): with c = 1 − distance ÷ 140, melt += (0 − melt) × 0.1 × c × f, and hardness = max(hardness, c). A cooled strip doesn't melt; hardness wears off by dt ÷ 3s per frame, and the strip slowly starts melting again. A mouse cools whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Reduced-motion still frame: every strip's melt is 0.5 × its rate, and the first ceil(12 ÷ 3) drops hang full-size from their strips.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the word on the hidden canvas again (and rebuild the strips, all solid) on every resize, once the Anybody font has finished loading, and when the main text color changes.
+
+## How people interact
+- Listen for pointer events on the canvas, which has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`melt prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Melting text
+
+A big word that slowly sags and drips like hot wax: thin vertical strips of each letter stretch downward at different rates, and drops form and fall. Moving my cursor over a letter cools it: it snaps back up and hardens, then slowly starts melting again.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Your word: "melt"
+- Melt speed: 1
+- Longest drip: 36%
+- Drips: 12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`particles prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Your name in particles
 
