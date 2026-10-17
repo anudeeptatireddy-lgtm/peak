@@ -3176,6 +3176,330 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Split-flap board
+
+## What I want
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Give the board an aria-label with the current message (updated on each change) and mark the tiles aria-hidden; no live-region announcements.
+
+## How it moves
+- The board shows these messages in turn, in capitals: "NOW BOARDING", "GATE 50", "ON TIME". It has one tile per character of the longest message; shorter messages are centered with blank tiles (floor of half the spare tiles on the left).
+- Each tile flips forward through the sequence " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" (letters and numbers, with a space first for blank), wrapping around; any character a message needs that isn't in it is added to the end. Every tile starts blank.
+- One flip takes 90ms. In its first half the top flap (the old character's top half) falls forward: rotateX from 0 to −90deg with ease-in-quad, hinged at its bottom edge; behind it the static top already shows the new character's top. In its second half the bottom flap (the new character's bottom half) lands: rotateX from 90deg to 0 with ease-out-quad, hinged at its top edge, covering the old bottom. A moving flap is darkened: filter brightness(1 − 0.45 × how far it is from flat, 0 to 1). The tiles use perspective 5 × the tile height and backface-visibility: hidden.
+- To show a message, tile i (left to right) starts flipping 30ms × i later, then flips one character after another, back to back, until it reaches its character.
+- When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
+- Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
+- A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
+- The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
+- Reduced-motion still frame: the first message, every flap at rest.
+
+## How people interact
+- A click or tap (on release) anywhere on the section skips to the next message.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`splitflap prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Split-flap board
+
+A board of split-flap tiles, like an old airport departures board. Each tile flips through the characters (the top half falls, the bottom half lands) until it reaches its letter, so the message clatters into place. Every few seconds the board flips to the next message.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Message 1: "NOW BOARDING"
+- Flip time: 90ms
+- Delay between tiles: 30ms
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`tumble prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Falling letters
 
