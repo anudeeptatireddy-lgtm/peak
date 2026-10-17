@@ -75,6 +75,11 @@ export interface SceneMeta {
    * into one shape), so the prompt says so instead of describing the world's blend.
    */
   blends?: false;
+  /**
+   * true: the stage holds real controls or live text (buttons, a countdown's live region),
+   * so it is not hidden from assistive technology like a decorative stage is.
+   */
+  accessible?: true;
 }
 
 export interface SoundHooks {

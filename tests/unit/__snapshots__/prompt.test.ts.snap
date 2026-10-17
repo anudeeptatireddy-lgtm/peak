@@ -1358,6 +1358,306 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Page transitions
+
+## What I want
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A tiny 3-page site in a full-screen section (100svh, at least 540px): a row of 3 real link buttons at the top named Home, Work, Contact (split at commas, trimmed, each cut to 16 characters, at least 2.75rem tall, the current one underlined), and below it the current page: its name as a heading in the main text color (3.5rem, bold) with "Pick another link to see the page change." under it in the soft text color. The first page shows at the start. Clicking a link plays a transition, swaps the page halfway through it, and moves keyboard focus to the new page's heading.
+- Transition: curtain. A transition lasts 0.9s with progress p from 0 to 1 (driven by the animation clock). Cover: c = the easing applied to clamp(2p, 0, 1); reveal: r = the easing applied to clamp(2p − 1, 0, 1). The page swaps at p = 0.5, when it is fully covered. The cover is drawn over the section in accent colors with the blend of normal painting. Curtain: two panels, the left one in the first accent and the right in the second, each half the width, with vertical dark stripes 40px wide at 0.25 opacity for folds; they slide in from the sides (translateX from ∓100% to 0 by c) and back out (to ∓100% by r). Wipe: one panel in the first accent whose right edge leans 0.3 of the width, polygon(0 0, X 0, X − 0.3 × width 100%, 0 100%), with X growing from 0 to (1 + 0.3) × width by c and then its left edge following the same way by r. Iris: a full-section panel in the third accent clipped to a circle at the clicked point whose radius grows from 0 to the distance to the farthest corner by c, then shrinks back to 0 by r. Slats: 10 vertical slats alternating the three accents, each scaling in height from 0 to full by c and back by r, with slat i starting 60ms × i later than the one before.
+- Smooth easing is ease-in-out cubic: p < 0.5 ? 4p³ : 1 − (−2p + 2)³ ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced motion: every transition is only a fade of the cover color in and out, 0.2s each way.
+- Reduced-motion still frame: the first page, no transition running.
+
+## How people interact
+- Links are real buttons, so they work with the keyboard; the stage keeps touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`curtain prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Page transitions
+
+A tiny three-page site where clicking a link plays a transition before the next page appears: theater curtains closing and opening, a diagonal wipe, an iris circle or slats. Focus moves to the new page heading.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Page names: "Home, Work, Contact"
+- Transition: Curtain
+- Duration: 0.9s
+- Easing: Smooth
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Ink-ball pile
 

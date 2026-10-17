@@ -267,7 +267,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **7.1 `magnetic`** · SCENES.md #45
 - [x] **7.2 `countdown`** · SCENES.md #46 (**Owner first:** answer open question 2 on its default date; live region once per minute; handles past dates by showing "It's time"; reuses the confetti burst)
 - [x] **7.3 `trail`** · SCENES.md #47
-- [ ] **7.4 `curtain`** · SCENES.md #48
+- [x] **7.4 `curtain`** · SCENES.md #48
 - [ ] **7.5 `jelly`** · SCENES.md #49
 - [ ] **7.6 `loaders`** · SCENES.md #50
 

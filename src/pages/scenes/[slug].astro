@@ -37,7 +37,12 @@ const linked = (s: string) =>
 
     <div class="workspace">
       <div class="stage-wrap" data-stage-wrap>
-        <div class="stage" data-stage data-inner-scroll="true" aria-hidden="true"></div>
+        <div
+          class="stage"
+          data-stage
+          data-inner-scroll="true"
+          aria-hidden={m.accessible ? undefined : 'true'}
+        ></div>
         <p class="sr-only">{m.wants}</p>
         <div class="stage-controls" data-stage-controls>
           <button class="btn btn--secondary" type="button" data-stage-pause>

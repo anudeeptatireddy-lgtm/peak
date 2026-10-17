@@ -8,6 +8,7 @@ export const meta: SceneMeta = {
     'Days, hours, minutes and seconds flip like an airport board, and confetti bursts at zero.',
   useCase: 'A countdown page for a party, launch or exam.',
   tags: ['Events'],
+  accessible: true,
   difficulty: 'Medium',
   minutes: 20,
   world: 'dunes',

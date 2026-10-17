@@ -259,3 +259,8 @@ The owner asked to take `lava` and `glitch` off the home page (they go in the ga
 
 ## 2026-10-17: scope change by the owner: three industry heroes
 The owner added three scenes from `docs/INDUSTRY_HEROES.md`: Tailor's cut, Fogged bottle and Latte pour. Total scenes: 53 (the 50 plus these). Order: after Wave 7 (new "Wave 7b" in PLAN.md), starting with Fogged bottle. They appear **in the gallery only, never on the home page**; the home page keeps its 12 featured scenes. The other 21 candidates stay on the list, unbuilt, until the owner picks more. Each of the three follows the usual rules (every number a slider, flash safety, phone version, still frame, prompt test).
+
+## 2026-10-17: 7.4 `curtain`, and two accessibility fixes it exposed
+- `curtain`: a tiny three-page site of real buttons. A click covers the page (curtain, wipe, iris from the click point, or slats with a stagger), swaps the title at the halfway point, and moves keyboard focus to the new page's heading. Progress runs on the animation clock; "random" picks a style each time; under reduced motion every transition is a 0.2s fade each way.
+- **Scene stages were all `aria-hidden`.** That is right for decorative stages but wrong for ones with real buttons (`magnetic`, `curtain`) or a live region (`countdown`). New `SceneMeta.accessible: true` leaves the stage visible to assistive technology for those three.
+- **Native selects were 23px tall on iPhones** (iOS ignores a select's height unless `appearance: none`). All select controls now use `appearance: none` with a drawn arrow, so the 44px target holds. The phone test caught it on `curtain` (the first scene with a visible dropdown).

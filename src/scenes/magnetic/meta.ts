@@ -7,6 +7,7 @@ export const meta: SceneMeta = {
     'Buttons that lean toward your cursor, with labels that drift a little further, and squish when pressed.',
   useCase: 'Navigation or call-to-action buttons that feel alive.',
   tags: ['Portfolio', 'Landing pages'],
+  accessible: true,
   difficulty: 'Easy',
   minutes: 10,
   world: 'matcha',
