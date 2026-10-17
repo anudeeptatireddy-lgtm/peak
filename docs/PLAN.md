@@ -291,10 +291,10 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
   - Done when: all 50 scenes appear as live previews in `quality: 'preview'`, each tile in its own world (a patchwork); at most 4 animate at once (debug counter); off-screen tiles show still frames.
 - [x] **8.2 Gallery filters and sort** · PRD §13
   - Done when: tag filters and sort work, state is in the URL, the empty state (if any filter yields nothing) says what to do next.
-- [ ] **8.3 Tour page** · PRD §6.7 (item 2)
+- [x] **8.3 Tour page** · PRD §6.7 (item 2)
   - Do: `/tour`: all 50 scenes full-screen in catalog order, colors blending between every one (reuse `journey.ts`), caption and "Tweak it and get the prompt" per scene, an "N of 50" counter. Mount within one screen, destroy beyond two.
   - Done when: e2e: `--ground` changes between every pair of neighbors; never more than 2 scenes running (scheduler debug count); memory stays flat scrolling end to end (no growth in mounted scene count); zero console errors.
-- [ ] **8.4 Tour Shuffle and Autoplay** · PRD §6.7 (item 2)
+- [x] **8.4 Tour Shuffle and Autoplay** · PRD §6.7 (item 2)
   - Done when: Shuffle order reorders scenes and worlds and round-trips through the URL; Reset order restores catalog order; Autoplay advances every 12 seconds and stops on pointer down, wheel, touch or any key (e2e); under reduced motion it jumps instead of scrolling smoothly.
 - [ ] **8.5 Home: latest drop and final check**
   - Done when: the home page shows the latest drop row; no stand-ins remain (test fails if any featured slot isn't its own scene).

@@ -1,12 +1,319 @@
 ---
+// Tour (PRD §6.7 item 2): the first 50 scenes back to back, each full-screen, with the colors
+// blending between every one. Shuffle order, Reset order and Autoplay (steps 8.3 and 8.4).
+// Only the scenes near the viewport are mounted, never more than two run at once.
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import { CATALOG_ORDER } from '../scenes/catalog';
+import { tourWorlds } from '../theme/tour';
+import type { SceneMeta } from '../scenes/types';
+
+const TOUR_COUNT = 50;
+const metas = Object.values(
+  import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
+).map((m) => m.meta);
+const bySlug = new Map(metas.map((m) => [m.slug, m]));
+const order = CATALOG_ORDER.slice(0, TOUR_COUNT).filter((s) => bySlug.has(s));
+const worlds = tourWorlds(order.map((s) => bySlug.get(s)!.world));
+const items = order.map((slug, i) => ({ meta: bySlug.get(slug)!, world: worlds[i]! }));
+const catalog = items.map((i) => i.meta.slug);
 ---
 
-<Base title="Tour">
-  <Placeholder
-    title="Tour"
-    lede="All 50 animations back to back, with the colors blending between every one."
-    wave={8}
-  />
+<Base
+  title="Tour"
+  description="Every animation back to back, with the colors blending between them."
+  world="journey"
+>
+  <h1 class="sr-only">Tour</h1>
+  <div data-tour data-catalog={catalog.join(',')} data-count={items.length}>
+    {items.map((it) => (
+      <section
+        class="j has-scrim"
+        data-journey
+        data-slug={it.meta.slug}
+        data-own={it.meta.world}
+        data-world={it.world}
+        aria-labelledby={`t-${it.meta.slug}`}
+      >
+        <div class="stage" data-mount={it.meta.slug} />
+        <div class="caption wrap">
+          <h2 id={`t-${it.meta.slug}`}>{it.meta.title}</h2>
+          <p class="lede">{it.meta.summary}</p>
+          <div class="actions">
+            <a class="btn btn--secondary" href={`/scenes/${it.meta.slug}`}>
+              Tweak it and get the prompt
+            </a>
+          </div>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <div class="bar" role="group" aria-label="Tour controls">
+    <span class="count" data-count-label aria-live="off">
+      1 of {items.length}
+    </span>
+    <button type="button" class="btn btn--secondary" data-shuffle>
+      Shuffle order
+    </button>
+    <button type="button" class="btn btn--secondary" data-reset hidden>
+      Reset order
+    </button>
+    <button type="button" class="btn btn--secondary" data-autoplay aria-pressed="false">
+      Autoplay
+    </button>
+  </div>
 </Base>
+
+<script>
+  import { mountScene, type MountedScene } from '../engine/mount';
+  import { prefersReducedMotion } from '../engine/motion';
+  import { setMaxActive } from '../engine/scheduler';
+  import { loadScene, hasScene } from '../scenes/registry';
+  import { journeyState, journeyTheme, type Boundary } from '../theme/journey';
+  import { setTheme } from '../theme/store';
+  import { parseOrder, shuffled, tourWorlds } from '../theme/tour';
+  import { getWorld, isWorldId } from '../theme/worlds';
+
+  // Never more than two scenes run at once, even when two are on screen.
+  setMaxActive(2);
+  const AUTOPLAY_MS = 12000;
+
+  const root = document.querySelector<HTMLElement>('[data-tour]')!;
+  const catalog = (root.dataset.catalog ?? '').split(',');
+  const label = document.querySelector<HTMLElement>('[data-count-label]')!;
+  const shuffleBtn = document.querySelector<HTMLButtonElement>('[data-shuffle]')!;
+  const resetBtn = document.querySelector<HTMLButtonElement>('[data-reset]')!;
+  const autoBtn = document.querySelector<HTMLButtonElement>('[data-autoplay]')!;
+  const sectionOf = new Map<string, HTMLElement>(
+    [...root.querySelectorAll<HTMLElement>('[data-journey]')].map((s) => [s.dataset.slug!, s]),
+  );
+
+  // ---- Order (kept in the URL as ?order=a,b,c) ----
+  let order = parseOrder(new URLSearchParams(location.search).get('order'), catalog);
+  const writeUrl = () => {
+    const same = order.every((s, i) => s === catalog[i]);
+    history.replaceState(null, '', same ? location.pathname : `?order=${order.join(',')}`);
+    resetBtn.hidden = same;
+  };
+
+  // ---- Colors blend on scroll, exactly as on the home page ----
+  let sections: HTMLElement[] = [];
+  let themes: ReturnType<typeof getWorld>[] = [];
+  let bounds: Boundary[] = [];
+  let lastKey = '';
+  let current = 0;
+  const measure = () => {
+    sections = order.map((s) => sectionOf.get(s)!);
+    themes = sections.map((s) =>
+      getWorld(isWorldId(s.dataset.world ?? '') ? (s.dataset.world as never) : 'riso'),
+    );
+    bounds = sections.map((s) => {
+      const r = s.getBoundingClientRect();
+      return { top: r.top + window.scrollY, bottom: r.bottom + window.scrollY };
+    });
+    lastKey = '';
+    update();
+  };
+  const update = () => {
+    const st = journeyState(bounds, window.scrollY, window.innerHeight);
+    const key = `${st.from}:${st.to}:${st.t.toFixed(3)}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    setTheme(journeyTheme(themes, st));
+    current = st.t < 0.5 ? st.from : st.to;
+    label.textContent = `${current + 1} of ${sections.length}`;
+  };
+  addEventListener('scroll', update, { passive: true });
+  new ResizeObserver(measure).observe(document.body);
+
+  // ---- Mount within one screen, destroy beyond two ----
+  const live = new Map<string, MountedScene>();
+  const loading = new Set<string>();
+  const rect = (slug: string) => sectionOf.get(slug)!.getBoundingClientRect();
+  /** Near: within one viewport of the screen. */
+  const isNear = (slug: string) => {
+    const r = rect(slug);
+    return r.bottom > -innerHeight && r.top < innerHeight * 2;
+  };
+  /** Far: more than two viewports away. */
+  const isFar = (slug: string) => {
+    const r = rect(slug);
+    return r.bottom < -innerHeight * 2 || r.top > innerHeight * 3;
+  };
+  function mount(slug: string): void {
+    const stage = sectionOf.get(slug)!.querySelector<HTMLElement>('[data-mount]')!;
+    if (live.has(slug) || loading.has(slug) || !hasScene(slug)) return;
+    loading.add(slug);
+    loadScene(slug).then((mod) => {
+      loading.delete(slug);
+      if (live.has(slug) || !stage.isConnected || !isNear(slug)) return;
+      live.set(slug, mountScene(stage, mod));
+    });
+  }
+  function unmount(slug: string): void {
+    loading.delete(slug);
+    live.get(slug)?.destroy();
+    live.delete(slug);
+  }
+  function watch(): void {
+    for (const slug of order) {
+      if (isNear(slug)) mount(slug);
+      else if (isFar(slug)) unmount(slug);
+    }
+  }
+  let ticking = false;
+  addEventListener(
+    'scroll',
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        watch();
+      });
+    },
+    { passive: true },
+  );
+
+  const applyOrder = () => {
+    for (const slug of order) root.append(sectionOf.get(slug)!);
+    // Neighbors never share a world, so the colors change at every boundary.
+    const own = order.map((s) => sectionOf.get(s)!.dataset.own as never);
+    tourWorlds(own).forEach((w, i) => (sectionOf.get(order[i]!)!.dataset.world = w));
+    for (const slug of [...live.keys()]) unmount(slug);
+    measure();
+    watch();
+  };
+
+  // ---- Shuffle and reset ----
+  shuffleBtn.addEventListener('click', () => {
+    order = shuffled(catalog);
+    writeUrl();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    applyOrder();
+  });
+  resetBtn.addEventListener('click', () => {
+    order = [...catalog];
+    writeUrl();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    applyOrder();
+  });
+
+  // ---- Autoplay: next scene every 12 seconds, stops on any touch of the page ----
+  let timer = 0;
+  const stops = ['pointerdown', 'wheel', 'touchstart', 'keydown'] as const;
+  const next = () => {
+    const i = Math.min(sections.length - 1, current + 1);
+    if (i === current) return stopAuto();
+    window.scrollTo({
+      top: bounds[i]!.top,
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  };
+  function stopAuto(): void {
+    window.clearInterval(timer);
+    timer = 0;
+    autoBtn.setAttribute('aria-pressed', 'false');
+    stops.forEach((e) => removeEventListener(e, stopAuto));
+  }
+  function startAuto(): void {
+    autoBtn.setAttribute('aria-pressed', 'true');
+    window.clearInterval(timer);
+    timer = window.setInterval(next, AUTOPLAY_MS);
+    // Register after the click that started it, so that click does not stop it.
+    setTimeout(() => stops.forEach((e) => addEventListener(e, stopAuto, { passive: true })), 0);
+  }
+  autoBtn.addEventListener('click', () => {
+    if (timer) stopAuto();
+    else startAuto();
+  });
+  // Pressing the Autoplay button itself toggles it; anything else stops it.
+  autoBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
+  (window as unknown as { __tour?: object }).__tour = {
+    mounted: () => live.size,
+    autoplaying: () => timer !== 0,
+    order: () => [...order],
+    interval: AUTOPLAY_MS,
+  };
+
+  writeUrl();
+  applyOrder();
+</script>
+
+<style>
+  .j {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+  .has-scrim::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 40%;
+    z-index: 1;
+    background: linear-gradient(to top, var(--ground) 6%, transparent);
+    pointer-events: none;
+  }
+  .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(clamp(4.5rem, 10vh, 6rem) + env(safe-area-inset-bottom, 0px));
+    z-index: 2;
+    display: grid;
+    gap: 0.6rem;
+    max-width: calc(34rem + 2 * var(--gutter));
+    pointer-events: none;
+  }
+  .caption .lede {
+    max-width: 30em;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.45;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.4rem;
+  }
+  .actions a {
+    pointer-events: auto;
+  }
+  .bar {
+    position: fixed;
+    z-index: 40;
+    left: var(--gutter);
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 24px;
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    max-width: calc(100% - 2 * var(--gutter));
+  }
+  .count {
+    padding: 0 0.5rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .bar button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--ground);
+  }
+  .bar [hidden] {
+    display: none;
+  }
+</style>
