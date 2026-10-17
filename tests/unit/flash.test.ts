@@ -189,3 +189,56 @@ describe('fireworks bursts (⚠)', () => {
     expect(r('glowAlpha').max).toBeLessThanOrEqual(0.3);
   });
 });
+
+describe('lightning strikes (⚠)', () => {
+  it('never strikes more than 3 times in any second, at the most extreme settings', async () => {
+    const { Storm } = await import('../../src/scenes/lightning/storm');
+    const { params } = await import('../../src/scenes/lightning/params');
+    const r = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const o = {
+      nodes: r('nodes').max,
+      reach: r('reach').max,
+      branching: r('branching').max,
+      crackle: r('crackle').max,
+      chain: r('chain').max,
+      strikes: r('strikes').max,
+      idleEvery: r('idleEvery').step,
+      arcLife: r('arcLife').max,
+      segment: r('segment').min,
+      jag: r('jag').max,
+      branchRate: r('branchRate').max,
+      branchLen: r('branchLen').max,
+      branchAngle: r('branchAngle').max,
+      chainFade: r('chainFade').max,
+      nodeFade: r('nodeFade').max,
+      margin: r('margin').min,
+    };
+    const storm = new Storm();
+    const rand = seededRandom(5);
+    storm.place(390, 844, o, rand);
+    // The pointer sweeps around for two minutes, then idles, at 60 fps; then 240 fps;
+    // then a stuttering slow device.
+    let t = 0;
+    const at = () => ({ x: 195 + 180 * Math.sin(t * 3), y: 422 + 400 * Math.cos(t * 2) });
+    for (let i = 0; i < 60 * 180; i++, t += 1 / 60)
+      storm.step(1 / 60, i < 60 * 120 ? at() : null, o, rand);
+    for (let i = 0; i < 240 * 30; i++, t += 1 / 240) storm.step(1 / 240, at(), o, rand);
+    for (let i = 0; i < 60 * 20; i++) {
+      const dt = 0.01 + rand() * 0.04;
+      t += dt;
+      storm.step(dt, at(), o, rand);
+    }
+    expect(storm.log.length).toBeGreaterThan(300);
+    expect(worstSecond(storm.log)).toBeLessThanOrEqual(3);
+  });
+
+  it('arcs stay thin lines', async () => {
+    const { params } = await import('../../src/scenes/lightning/params');
+    const w = params.find((q) => q.id === 'arcWidth')!;
+    expect(w.kind === 'slider' && w.max).toBeLessThanOrEqual(3);
+  });
+});
