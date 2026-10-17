@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fogged bottle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --text: #1A1240;
+    --text2: #4E4777;
+    --pink: #EC1C7F;
+    --blue: #2A47EA;
+    --orange: #FF7A00;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .stage { position: relative; width: 100%; height: 100svh; min-height: 540px; overflow: hidden; touch-action: pan-y; background: var(--bg); }
+  canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: crosshair; }
+  .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .hint { position: absolute; left: 16px; bottom: 16px; margin: 0; padding: 8px 12px; background: var(--bg); color: var(--text2); border-radius: 8px; font-size: 14px; font-weight: 500; pointer-events: none; }
+  button.toggle { position: absolute; right: 16px; bottom: 16px; font: inherit; font-size: 15px; font-weight: 700; color: var(--text); background: var(--bg); border: 2px solid var(--text); border-radius: 999px; padding: 10px 20px; min-height: 44px; cursor: pointer; }
+  button.toggle:hover { background: #fff; }
+  button.toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <h1 class="sr-only">Fogged bottle: wipe the fog away to reveal the name</h1>
+  <div class="stage" id="stage">
+    <canvas id="c" aria-hidden="true"></canvas>
+    <p class="hint">Wipe the glass with your cursor or finger.</p>
+    <button type="button" class="toggle" id="toggle" aria-pressed="false">Pause</button>
+  </div>
+</main>
+<script>
+(function () {
+  'use strict';
+  var COLORS = { bg: '#F4F2FF', text: '#1A1240', pink: '#EC1C7F', blue: '#2A47EA', orange: '#FF7A00' };
+  var NAME = 'Your brand';
+  var CELL = 4, BLUR = 16;
+  var WIPE_FRAC = 0.06, EDGE = 0.45;
+  var RECOVER = 6, RECOVER_MIN = 0.3;
+  var DRIP_EVERY = 150, DRIP_P = 0.3, DRIP_SPEED = 80, DRIP_HALF = 3, BEAD_R = 4;
+
+  var stage = document.getElementById('stage');
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+  var btn = document.getElementById('toggle');
+  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var W = 0, H = 0, dpr = 1, cols = 0, rows = 0;
+  var fog = null, fog2 = null;
+  var sharp = null, fogged = null, fogLayer = null, mask = null, maskCtx = null, maskImg = null;
+  var drips = [];
+  var wipeDist = 0;
+  var last = null; // last pointer {x,y}
+  var playing = !mq.matches;
+  var visible = true;
+  var rafId = 0, lastT = 0;
+  var dirty = true;
+
+  function mk(w, h) {
+    var c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(w));
+    c.height = Math.max(1, Math.round(h));
+    return c;
+  }
+  function smoothstep(a, b, x) {
+    var t = (x - a) / (b - a);
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    return t * t * (3 - 2 * t);
+  }
+  function wipeRadius() { return WIPE_FRAC * W / 2; }
+
+  function drawScene(c, w, h, scale) {
+    var g = c.getContext('2d');
+    g.setTransform(scale, 0, 0, scale, 0, 0);
+    g.globalCompositeOperation = 'source-over';
+    g.globalAlpha = 1;
+    // 135deg linear gradient across the box
+    var rad = 135 * Math.PI / 180;
+    var dx = Math.sin(rad), dy = -Math.cos(rad);
+    var len = Math.abs(w * dx) + Math.abs(h * dy);
+    var cx = w / 2, cy = h / 2;
+    var grad = g.createLinearGradient(cx - dx * len / 2, cy - dy * len / 2, cx + dx * len / 2, cy + dy * len / 2);
+    grad.addColorStop(0, COLORS.pink);
+    grad.addColorStop(0.5, COLORS.blue);
+    grad.addColorStop(1, COLORS.orange);
+    g.fillStyle = grad;
+    g.fillRect(0, 0, w, h);
+    // soft circles, multiply
+    var s = Math.min(w, h);
+    var circles = [
+      [0.2, 0.3, 0.5, COLORS.pink],
+      [0.8, 0.25, 0.45, COLORS.blue],
+      [0.55, 0.85, 0.55, COLORS.orange]
+    ];
+    g.globalCompositeOperation = 'multiply';
+    g.globalAlpha = 0.8;
+    for (var i = 0; i < circles.length; i++) {
+      var ci = circles[i];
+      g.fillStyle = ci[3];
+      g.beginPath();
+      g.arc(ci[0] * w, ci[1] * h, ci[2] * s, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.globalCompositeOperation = 'source-over';
+    g.globalAlpha = 1;
+    // name
+    var size = Math.min(h * 0.22, w * 0.9 / NAME.length / 0.6);
+    g.font = '900 ' + size + 'px Anybody, system-ui, sans-serif';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillStyle = COLORS.text;
+    g.fillText(NAME, w / 2, h * 0.5);
+  }
+
+  function buildBlurred() {
+    // draw at 1/BLUR, then double up with smoothing
+    var cur = mk(W / BLUR, H / BLUR);
+    var g = cur.getContext('2d');
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = 'high';
+    g.drawImage(sharp, 0, 0, cur.width, cur.height);
+    while (cur.width * 2 < W || cur.height * 2 < H) {
+      var nx = mk(cur.width * 2, cur.height * 2);
+      var ng = nx.getContext('2d');
+      ng.imageSmoothingEnabled = true;
+      ng.imageSmoothingQuality = 'high';
+      ng.drawImage(cur, 0, 0, nx.width, nx.height);
+      cur = nx;
+    }
+    var out = mk(W * 0.5, H * 0.5);
+    var og = out.getContext('2d');
+    og.imageSmoothingEnabled = true;
+    og.imageSmoothingQuality = 'high';
+    og.drawImage(cur, 0, 0, out.width, out.height);
+    og.globalAlpha = 0.8;
+    og.fillStyle = COLORS.bg;
+    og.fillRect(0, 0, out.width, out.height);
+    og.globalAlpha = 1;
+    return out;
+  }
+
+  function buildScene() {
+    sharp = mk(W * dpr, H * dpr);
+    drawScene(sharp, W, H, dpr);
+    fogged = buildBlurred();
+    fogLayer = mk(W * 0.5, H * 0.5);
+    mask = mk(cols, rows);
+    maskCtx = mask.getContext('2d');
+    maskImg = maskCtx.createImageData(cols, rows);
+    dirty = true;
+  }
+
+  // ---- fog helpers ----
+  function clearCircle(px, py, r) {
+    var edge0 = r * (1 - EDGE), span = r * EDGE;
+    var c0 = Math.max(0, Math.floor((px - r) / CELL)), c1 = Math.min(cols - 1, Math.floor((px + r) / CELL));
+    var r0 = Math.max(0, Math.floor((py - r) / CELL)), r1 = Math.min(rows - 1, Math.floor((py + r) / CELL));
+    for (var j = r0; j <= r1; j++) {
+      var cy = (j + 0.5) * CELL - py;
+      for (var i = c0; i <= c1; i++) {
+        var cx = (i + 0.5) * CELL - px;
+        var d = Math.sqrt(cx * cx + cy * cy);
+        if (d > r) continue;
+        var v = smoothstep(0, 1, (d - edge0) / span);
+        var k = j * cols + i;
+        if (v < fog[k]) fog[k] = v;
+      }
+    }
+    dirty = true;
+  }
+  function clearLine(x, y0, y1) {
+    var c0 = Math.max(0, Math.floor((x - DRIP_HALF) / CELL)), c1 = Math.min(cols - 1, Math.floor((x + DRIP_HALF) / CELL));
+    var r0 = Math.max(0, Math.floor(Math.min(y0, y1) / CELL)), r1 = Math.min(rows - 1, Math.floor(Math.max(y0, y1) / CELL));
+    for (var j = r0; j <= r1; j++) {
+      for (var i = c0; i <= c1; i++) {
+        var cxm = (i + 0.5) * CELL;
+        if (Math.abs(cxm - x) <= DRIP_HALF + CELL / 2) fog[j * cols + i] = 0;
+      }
+    }
+    dirty = true;
+  }
+
+  function wipeSegment(x0, y0, x1, y1, allowDrips) {
+    var r = wipeRadius();
+    var dx = x1 - x0, dy = y1 - y0;
+    var dist = Math.sqrt(dx * dx + dy * dy);
+    var step = 4;
+    var n = Math.max(1, Math.ceil(dist / step));
+    for (var s = 1; s <= n; s++) {
+      var t = s / n;
+      var px = x0 + dx * t, py = y0 + dy * t;
+      clearCircle(px, py, r);
+      if (allowDrips) {
+        wipeDist += dist / n;
+        while (wipeDist >= DRIP_EVERY) {
+          wipeDist -= DRIP_EVERY;
+          if (Math.random() < DRIP_P) startDrip(px, py + 0.6 * r);
+        }
+      }
+    }
+  }
+
+  function startDrip(x, y) {
+    var d = {
+      x: x, y: y, travelled: 0,
+      total: (0.15 + 0.15 * Math.random()) * H
+    };
+    drips.push(d);
+    clearLine(x, y, y);
+  }
+
+  function updateDrips(dt) {
+    for (var i = drips.length - 1; i >= 0; i--) {
+      var d = drips[i];
+      var move = Math.min(DRIP_SPEED * dt, d.total - d.travelled);
+      var y0 = d.y + d.travelled;
+      d.travelled += move;
+      clearLine(d.x, y0, d.y + d.travelled);
+      if (d.travelled >= d.total) drips.splice(i, 1);
+    }
+  }
+
+  function recover(dt) {
+    var any = false;
+    var a = fog, b = fog2;
+    var k = dt / RECOVER;
+    for (var j = 0; j < rows; j++) {
+      for (var i = 0; i < cols; i++) {
+        var idx = j * cols + i;
+        var v = a[idx];
+        if (v >= 1) { b[idx] = 1; continue; }
+        var m = 0;
+        if (i > 0 && a[idx - 1] > m) m = a[idx - 1];
+        if (i < cols - 1 && a[idx + 1] > m) m = a[idx + 1];
+        if (j > 0 && a[idx - cols] > m) m = a[idx - cols];
+        if (j < rows - 1 && a[idx + cols] > m) m = a[idx + cols];
+        v += k * (RECOVER_MIN + (1 - RECOVER_MIN) * m);
+        if (v >= 1) v = 1; else any = true;
+        b[idx] = v;
+      }
+    }
+    fog = b; fog2 = a;
+    return any;
+  }
+
+  // ---- render ----
+  function render() {
+    // update mask from fog amounts
+    var data = maskImg.data;
+    for (var k = 0, n = cols * rows; k < n; k++) {
+      data[k * 4 + 3] = Math.round(fog[k] * 255);
+    }
+    maskCtx.putImageData(maskImg, 0, 0);
+    var fg = fogLayer.getContext('2d');
+    fg.setTransform(1, 0, 0, 1, 0, 0);
+    fg.globalCompositeOperation = 'source-over';
+    fg.clearRect(0, 0, fogLayer.width, fogLayer.height);
+    fg.imageSmoothingEnabled = true;
+    fg.drawImage(fogged, 0, 0, fogLayer.width, fogLayer.height);
+    fg.globalCompositeOperation = 'destination-in';
+    fg.drawImage(mask, 0, 0, fogLayer.width, fogLayer.height);
+    fg.globalCompositeOperation = 'source-over';
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(sharp, 0, 0, W, H);
+    ctx.drawImage(fogLayer, 0, 0, W, H);
+
+    // beads, batched into one path
+    if (drips.length) {
+      ctx.beginPath();
+      for (var i = 0; i < drips.length; i++) {
+        var d = drips[i];
+        var by = d.y + d.travelled;
+        ctx.moveTo(d.x + BEAD_R, by);
+        ctx.arc(d.x, by, BEAD_R, 0, Math.PI * 2);
+      }
+      ctx.globalAlpha = 0.8;
+      ctx.fillStyle = COLORS.bg;
+      ctx.fill();
+      ctx.globalAlpha = 0.25;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = COLORS.text;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function resetFog() {
+    fog = new Float32Array(cols * rows);
+    fog2 = new Float32Array(cols * rows);
+    fog.fill(1); fog2.fill(1);
+    drips = [];
+    wipeDist = 0;
+  }
+
+  // reduced-motion still frame
+  function buildStill() {
+    resetFog();
+    var r = wipeRadius();
+    var by = H * 0.5;
+    wipeSegment(W * 0.15, by, W * 0.85, by, false);
+    var specs = [[0.3, 0.14000000000000002], [0.6, 0.10]];
+    for (var i = 0; i < specs.length; i++) {
+      var x = W * specs[i][0];
+      var y0 = by + 0.6 * r;
+      var run = specs[i][1] * H;
+      clearLine(x, y0, y0 + run);
+      drips.push({ x: x, y: y0, travelled: run, total: run });
+    }
+    dirty = true;
+  }
+
+  function setup() {
+    var rect = stage.getBoundingClientRect();
+    W = Math.max(1, rect.width);
+    H = Math.max(1, rect.height);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    cols = Math.ceil(W / CELL);
+    rows = Math.ceil(H / CELL);
+    buildScene();
+    if (mq.matches) buildStill(); else resetFog();
+    last = null;
+    render();
+    dirty = false;
+  }
+
+  // ---- loop ----
+  function frame(t) {
+    rafId = 0;
+    if (!playing || !visible) return;
+    var dt = Math.min((t - lastT) / 1000, 0.05);
+    if (!(dt >= 0)) dt = 0;
+    lastT = t;
+    updateDrips(dt);
+    if (recover(dt)) dirty = true;
+    if (dirty || drips.length) { render(); dirty = false; }
+    rafId = requestAnimationFrame(frame);
+  }
+  function start() {
+    if (rafId || !playing || !visible) return;
+    lastT = performance.now();
+    rafId = requestAnimationFrame(frame);
+  }
+  function stop() {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+  }
+
+  function setPlaying(p) {
+    playing = p;
+    btn.textContent = p ? 'Pause' : 'Play';
+    btn.setAttribute('aria-pressed', p ? 'false' : 'true');
+    if (p) start(); else stop();
+  }
+
+  btn.addEventListener('click', function () { setPlaying(!playing); });
+
+  // ---- pointer ----
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+  canvas.addEventListener('pointerdown', function (e) {
+    if (!playing) return;
+    last = pos(e);
+    wipeSegment(last.x, last.y, last.x, last.y, true);
+    if (dirty) render();
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!playing) { last = null; return; }
+    var p = pos(e);
+    if (last) wipeSegment(last.x, last.y, p.x, p.y, true);
+    else wipeSegment(p.x, p.y, p.x, p.y, true);
+    last = p;
+  });
+  function endPointer() { last = null; }
+  canvas.addEventListener('pointerleave', endPointer);
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+
+  // ---- environment ----
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[entries.length - 1].isIntersecting;
+      if (visible) start(); else stop();
+    }, { threshold: 0 }).observe(stage);
+  }
+  var rt = 0;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { setup(); }, 120);
+  });
+  mq.addEventListener && mq.addEventListener('change', function () {
+    setup();
+    setPlaying(!mq.matches);
+  });
+
+  setup();
+  setPlaying(playing);
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('900 48px Anybody', NAME).then(function () {
+      buildScene();
+      render();
+    }, function () {});
+  }
+})();
+</script>
+</body>
+</html>

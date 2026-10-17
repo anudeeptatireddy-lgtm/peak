@@ -561,7 +561,13 @@ Three of the candidates in `docs/INDUSTRY_HEROES.md`. They appear in the gallery
 - **Tags:** Reveals, Brands. Difficulty: Medium. Time: ~30 min.
 
 ### 52. `tailor`: Tailor's cut
-- **Use case:** a fashion or tailoring brand intro. **World:** Newsprint. **Technique:** a hanging cloth sheet, a chalk line, shears, a cut that splits the cloth into two falling halves. (Spec to be filled in when this step starts: see INDUSTRY_HEROES #1.)
+- **Use case:** a fashion or tailoring brand intro. **World:** Newsprint. **Technique:** a Verlet cloth hanging from a pinned top row, a chalk line, shears that remove the links between the two halves, a lift and a fall, loose threads.
+- **What happens:** A heavy drape of cloth hangs in soft folds. A dashed chalk line draws itself across it, shears snip along it in short bites with the cloth bunching at each cut, then the top half lifts away and the bottom half drops to reveal the name behind. A few loose threads drift down. The cursor is a breeze on the cloth before the cut. Restart plays it again.
+- **Interactions:** move (breeze); Restart to replay.
+- **Params:** `text` Name: 1–16 chars ("Your brand"). `weight` Fabric weight: 0–1 (0.5). `fold` Fold depth: 0–1 (0.6). `pattern` Fabric pattern: plain / pinstripe / check (plain). `cutPath` Cut path: straight / wavy / diagonal (straight). `cutSpeed` Cut speed: 0.6–3s (1.4). `threads` Loose threads: 0–30 (12). `breeze` Cursor breeze: 0–1 (0.5). Advanced: chalk time, snips, cut height.
+- **Still:** the halves mid-fall with the name between them.
+- **Mobile:** drag a finger across the cloth for the breeze.
+- **Tags:** Brands, Intros. Difficulty: Spicy (hard). Time: ~40 min.
 
 ### 53. `latte`: Latte pour
 - **Use case:** a café brand intro. **World:** Spice Dunes. **Technique:** a top-down cup, a milk stream, foam drawn into the name. (Spec to be filled in when this step starts: see INDUSTRY_HEROES #3.)

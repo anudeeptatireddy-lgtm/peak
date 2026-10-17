@@ -50,7 +50,7 @@ describe('contrast guardrail (PRD §6.3)', () => {
       }
     }
     expect(failures.slice(0, 10)).toEqual([]);
-  });
+  }, 60_000);
   it('picks the canvas blend mode from the blended ground', () => {
     const a = themes.find((t) => t.id === 'dreamhouse')!;
     const b = themes.find((t) => t.id === 'doomsday')!;

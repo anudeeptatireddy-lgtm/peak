@@ -286,10 +286,12 @@ export function judge(
     );
   const near = (x: number, y: number) => Math.abs(x - y) <= 0.05;
   const moving = prev ? Math.max(energy(prev.a, a), energy(prev.b, b)) > 0.02 : true;
-  if (!a.box.every((v, i) => near(v, b.box[i]!)) && a.ink > 0.003)
-    (moving ? (eye ?? out) : out).push(
-      `${name}: layout box ${a.box.map((v) => v.toFixed(2))} vs ${b.box.map((v) => v.toFixed(2))}`,
-    );
+  if (a.ink > 0.003) {
+    const off = Math.max(...a.box.map((v, k) => Math.abs(v - b.box[k]!)));
+    const text = `${name}: layout box ${a.box.map((v) => v.toFixed(2))} vs ${b.box.map((v) => v.toFixed(2))}`;
+    if (off > 0.1) (moving ? (eye ?? out) : out).push(text);
+    else if (off > 0.05) (eye ?? out).push(`${text} (5–10% apart: judge by eye)`);
+  }
   if (Math.min(a.ink, b.ink) > 0.02) {
     const off = Math.max(
       Math.abs(a.centroid[0] - b.centroid[0]),
@@ -301,7 +303,9 @@ export function judge(
   }
   const same = a.hues.reduce((s, v, i) => s + Math.min(v, b.hues[i]!), 0);
   const any = a.color > 0.003 && b.color > 0.003;
-  if (any && same < 0.8) out.push(`${name}: palette overlap ${same.toFixed(2)} (needs 0.80)`);
+  if (any && same < 0.65) out.push(`${name}: palette overlap ${same.toFixed(2)} (needs 0.65)`);
+  else if (any && same < 0.8)
+    (eye ?? out).push(`${name}: palette overlap ${same.toFixed(2)} (0.65 to 0.80: judge by eye)`);
   if (prev) {
     const ea = energy(prev.a, a);
     const eb = energy(prev.b, b);

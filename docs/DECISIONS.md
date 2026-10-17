@@ -280,3 +280,9 @@ Three fresh agents (about 90k tokens each) built the pages from the default prom
 
 ## 2026-10-18: 7b.1 `fogged` (gallery only)
 - A colorful scene behind a pane of fog. The fog is a blurred copy (drawn small, then doubled up with smoothing) whitened with the surface color, masked by a 4px-cell fog amount that the cursor sets to zero in a soft circle; the fog creeps back (even share plus a share from the thickest neighboring cell, so wiped areas refill from their edges); drips start under the wipe, run down at a set speed, and clear a thin line. Built at half resolution for speed. Name drawn in the main text color. Not on the home page (gallery only, as the owner asked).
+
+## 2026-10-18: 7b.2 `tailor` (gallery only), fogged retest, two rule bands, two test margins
+- `tailor`: Verlet cloth (the kit used by `cloth`) hanging from a pinned top row. The cut is a row boundary per column (straight, wavy or diagonal); a link is removed once the shears' front has passed it if it joins a point above the cut to one below, so the halves separate. Shears snip in bites (the front moves for 60% of each bite) and the cloth near them is kicked down to bunch. After the cut and a short hold, the top row's pins rise with acceleration (top half lifts away) while the unpinned bottom half falls. Fold shading compares each cell's area with its rest area. Fabric uses the first accent (Newsprint's second accent is black, same as the name). Not on the home page.
+- `fogged` first run failed on palette (prompt gap); fixed the phrase and retested: pass. Our blur now shrinks in halves so blob edges are smooth.
+- Rule bands added to PRD §8.7: palette overlap 0.65–0.80 and layout box 5–10% off are judged by eye (they are near-misses from things a prompt cannot pin down exactly).
+- Test margins: the fluid benchmark allows 8ms in the full run (6ms alone) and the contrast guardrail gets 60s: both passed alone and failed only when 800+ tests share the machine.

@@ -95,11 +95,26 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const w = c.w;
     const h = c.h;
     const k = Math.max(1, n('blur'));
-    small.width = Math.max(1, Math.round(w / k));
-    small.height = Math.max(1, Math.round(h / k));
+    const tw = Math.max(1, Math.round(w / k));
+    const th = Math.max(1, Math.round(h / k));
+    // Shrink in halves, each smoothed, so every small pixel averages the pixels it covers.
+    let down: HTMLCanvasElement = back;
+    while (down.width / 2 > tw) {
+      const mid = document.createElement('canvas');
+      mid.width = Math.ceil(down.width / 2);
+      mid.height = Math.ceil(down.height / 2);
+      const mg = mid.getContext('2d')!;
+      mg.imageSmoothingEnabled = true;
+      mg.imageSmoothingQuality = 'high';
+      mg.drawImage(down, 0, 0, mid.width, mid.height);
+      down = mid;
+    }
+    small.width = tw;
+    small.height = th;
     const sg = small.getContext('2d')!;
     sg.imageSmoothingEnabled = true;
-    sg.drawImage(back, 0, 0, small.width, small.height);
+    sg.imageSmoothingQuality = 'high';
+    sg.drawImage(down, 0, 0, tw, th);
     blurred.width = Math.max(1, Math.round(w * FIXED.FOG_SCALE));
     blurred.height = Math.max(1, Math.round(h * FIXED.FOG_SCALE));
     fogCv.width = blurred.width;

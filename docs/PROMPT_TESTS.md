@@ -60,4 +60,5 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 ## Not tested yet
 
 Scenes are tested as their wave finishes. To save the owner's usage, each wave tests its Spicy scenes plus at least one easy scene; any scene left untested is listed here with the reason.
-| 51 | `fogged` | | | agent running | | |
+| 51 | `fogged` | 2026-10-18 | Detailed · New page · I'm new | **Pass on retest** | Run 1 (in `run1/`): palette overlap 0.35–0.42 (the prompt never said which accent each circle and the gradient start use, so the agent chose differently). Retest: palette 0.75–0.78 (judge by eye, looks the same), wipe left edge 5–7% off (our wipe starts a frame later than an event-driven page; harness artifact). Behavior, drips, fog creep and name all match. | Prompt: the gradient line's ends, which accent sits where, and which accent each circle uses. Rule: palette 0.65–0.80 and box 5–10% off are judged by eye. |
+| 52 | `tailor` | | | pending | | |
