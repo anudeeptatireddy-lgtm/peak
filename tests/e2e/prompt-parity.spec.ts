@@ -14,7 +14,12 @@ test.setTimeout(120_000);
 
 const DIR = join(process.cwd(), 'docs/prompt-tests');
 const BUILT = existsSync(DIR)
-  ? readdirSync(DIR).filter((d) => existsSync(join(DIR, d, 'compare.json')) && d in SCENARIOS)
+  ? readdirSync(DIR).filter(
+      (d) =>
+        existsSync(join(DIR, d, 'compare.json')) &&
+        existsSync(join(DIR, d, 'index.html')) &&
+        d in SCENARIOS,
+    )
   : [];
 
 /**
