@@ -704,6 +704,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: 3D letters
+
+## What I want
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "extrude" in Anybody weight 900, canvas fontStretch "expanded", drawn centered (textAlign center, textBaseline middle) at the middle of the canvas. Font size = height × 0.26, scaled down if the word is wider than 78% of the width.
+- The 3D word is 24 stacked copies drawn back to front: layer d (from 24 at the back down to 0, the front face) is offset by (−sin(yaw) × d × 0.018 × font size, sin(pitch) × d × 0.018 × font size) and squashed by cos(yaw) horizontally and cos(pitch) vertically.
+- The front face is the first accent color. Side layer d is the second accent mixed toward the third by d ÷ depth (in OKLab), then mixed toward the main text color by 0.6 × d ÷ depth ÷ 2, so the sides darken toward the back.
+- It turns to face the pointer: target yaw = clamp((pointer x − center x) ÷ (width / 2), −1, 1) × 25° and target pitch = clamp((pointer y − center y) ÷ (height / 2), −1, 1) × 25°.
+- Yaw and pitch each follow their target on a spring: velocity = (velocity + (target − angle) × 0.12 × f) × 0.82^f; angle += velocity × f. So when the pointer leaves, the word springs back with a little sway.
+- When the pointer isn't over the canvas, the targets float instead: yaw = 0.3 × max turn × sin(t × 0.6), pitch = 0.3 × max turn × 0.6 × sin(t × 0.6 × 0.7), t in seconds. A mouse steers whenever it is over the canvas, a finger while it touches (dragging sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: yaw = 0.6 × max turn and pitch = −0.3 × max turn.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`extrude prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: 3D letters
+
+A chunky 3D word, built from stacked layers, that turns to face my cursor and shows its sides; the front face is one color and the depth shades through the others. When I move away it springs back with a little sway, then floats gently.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Your word: "extrude"
+- Depth: 24
+- Max turn: 25°
+- Springiness: 0.12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`flow prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Living wallpaper
 
