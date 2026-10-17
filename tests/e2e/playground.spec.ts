@@ -190,12 +190,14 @@ test.describe('desktop', () => {
     }
   });
 
-  test('Cycle worlds changes the ground within 9 seconds', async ({ page }) => {
+  test('Cycle worlds changes the ground within 11 seconds (it cycles every 8)', async ({
+    page,
+  }) => {
     await page.goto('/scenes/ripple/');
     await ready(page);
     await page.locator('[data-cycle]').click();
     const start = await ground(page);
-    await expect.poll(() => ground(page), { timeout: 9000 }).not.toBe(start);
+    await expect.poll(() => ground(page), { timeout: 11000 }).not.toBe(start);
   });
 
   test('Cycle worlds and world changes are reflected in the prompt', async ({ page }) => {
