@@ -4256,6 +4256,318 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Paper fold
+
+## What I want
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A full-screen section (100svh, at least 540px) with a sheet of paper centered in it, 0.8 × the section width wide and 0.5 × its height tall, in the surface color, with the headline "unfold me" centered on it in the main text color (Anybody weight 800, font size min(sheet height × 0.3, sheet width × 0.9 ÷ letter count ÷ 0.6), one line). Cut the sheet into 4 equal panels, each showing its own slice of the sheet, with a 0.35 opacity line in the line color around it. Use CSS 3D: the section has perspective 1200px, every panel has transform-style preserve-3d and is a child of the one before it, hinged at its edge (transform-origin on the hinge side), so folds add up down the chain. Both sides of the paper are opaque and show the headline.
+- Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
+- Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
+- The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
+
+## How people interact
+- Use the page scroll. The stage has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fold prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Paper fold
+
+A sheet of paper with a headline on it, cut into panels that fold and unfold like origami as I scroll. The creases shade as they bend, and at the end the sheet folds up small.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Text on the paper: "unfold me"
+- Panels: 4
+- Fold: Accordion
+- Fold angle: 150°
+- Crease shading: 0.5
+- Scroll per fold: 2 screens
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`fridge prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Fridge magnets
 
