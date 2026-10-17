@@ -4094,6 +4094,318 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Sand text
+
+## What I want
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+## Look
+- Colors ("Spice Dunes" palette): background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word is "sand". Draw it once on a hidden canvas the size of the screen: Anybody weight 900, canvas fontStretch "expanded", textAlign center, textBaseline middle, centered horizontally at 45% of the height. Font size = min(height × 0.42, width × 0.3), scaled down if the word is wider than 86% of the width.
+- Use at most 4,000 grains (1,800 on screens under 700px wide): sample the hidden canvas on a square grid, row by row from the top-left, starting with a 2px spacing; every grid point whose alpha is above 127 is a grain's home. While there are too many, widen the spacing by 1px and sample again (up to 24px). Each grain picks a color once: accent floor(random × 3). Draw grains as squares 0.8 × the final grid spacing wide, centered on their positions, one path per accent, using the blend mode above.
+- A fast swipe blows sand: when the pointer moves more than 4px in a frame, every grain within 70px of it gets velocity += (the pointer's movement this frame) × 1.2 × (1 − distance ÷ 70), and it counts as disturbed now.
+- Each frame every grain away from home (more than 0.5px off) gets velocity += ((random − 0.5) × 0.4, (random − 0.5) × 0.4) × f (two Math.random() calls, grains in order), then velocity ×= 0.94^f and position += velocity × f.
+- A grain drifts home 2s after it was last disturbed: velocity = (velocity + (home − position) × 0.03 × f) × 0.86^f.
+- Reduced-motion still frame: every grain at home, except the last 6% of them, which lie scattered to the right of their homes by random × 140px sideways and (random − 0.5) × 140 ÷ 4 px up or down.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Sample the homes again on every resize and once the Anybody font has finished loading; grain i keeps its position, velocity and color and gets home i, new grains start at home.
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse blows whenever it moves fast over the canvas, a finger while it swipes sideways (vertical swipes still scroll).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`sand prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Sand text
+
+A word made of thousands of sand grains. A swipe blows grains off in the direction of the swipe in a drifting cloud. After a pause they drift back and settle into the letters.
+
+Colors: background #E8C9A0, text #2A1405, secondary text #5E3517, accents #D9561A, #8C2F14, #2F6FA3. Font: "Anybody" from Google Fonts.
+- Your word: "sand"
+- Swipe wind: 1.2
+- Drift back after: 2s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`scramble prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Decoding text
 

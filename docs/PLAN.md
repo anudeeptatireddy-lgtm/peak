@@ -218,7 +218,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **4.1 `flag`** · SCENES.md #14
 - [x] **4.2 `extrude`** · SCENES.md #15
 - [x] **4.3 `echo`** · SCENES.md #16
-- [ ] **4.4 `sand`** · SCENES.md #17
+- [x] **4.4 `sand`** · SCENES.md #17
 - [x] **4.5 `neon`** · SCENES.md #18 (⚠ flash test; featured)
 - [ ] **4.6 `rubber`** · SCENES.md #19
 - [ ] **4.7 `fire`** · SCENES.md #20 (⚠ flash test)

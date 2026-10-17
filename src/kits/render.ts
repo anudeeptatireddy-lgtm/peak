@@ -24,6 +24,11 @@ export class Batch {
     p.arc(x, y, r, 0, Math.PI * 2);
   }
 
+  /** A square of side `size` centered on (x, y): cheaper than a dot for tiny grains. */
+  square(slot: number, x: number, y: number, size: number): void {
+    this.paths[slot]!.rect(x - size / 2, y - size / 2, size, size);
+  }
+
   line(slot: number, x0: number, y0: number, x1: number, y1: number): void {
     const p = this.paths[slot]!;
     p.moveTo(x0, y0);
