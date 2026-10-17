@@ -1022,6 +1022,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Flag text
+
+## What I want
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it (and the hidden canvas) for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The banner says "flag". Paint it once on a hidden canvas: a rectangle in the first accent color, as wide as the text plus 0.4 × the font size on each side and 1.45 × the font size tall, with the text centered on it in the background color (Anybody weight 850, textAlign center, textBaseline middle). Font size = height × 0.2, scaled down if the banner would be wider than 74% of the width. The banner is centered on the canvas.
+- A pole stands at the banner's left edge: a rounded bar 8px wide in the main text color, from 0.3 × the banner height above the banner to the bottom of the canvas, drawn after the banner.
+- Shade each strip by its slope s (the change in its offset per pixel across the banner): after drawing it, cover it with the main text color at opacity min(0.5, 0.5 × s) where the cloth tilts down (s > 0), or with the background color at opacity min(0.5, 0.5 × −s) where it tilts up.
+- Draw the banner onto the visible canvas in vertical strips 3px wide. A strip at distance x from the banner's left edge is shifted down by 0.8 × (1 + gust) × 0.12 × the banner height × (x ÷ banner width)^0.8 × (sin(x × 2π ÷ L − t × S) + 0.45 × sin(x × 2π ÷ (0.45 × L) − t × S × 1.6 + 1.3)) ÷ (1 + 0.45), where L = 300px × 1 and S = 1.5, t in seconds. The pole side stays still and the free end flaps most.
+- Wave speed 1.5 (radians per second).
+- Moving the pointer over the canvas blows a gust: each frame gust += 1.2 × (pointer speed in px per frame) × 0.01, capped at 1.2; then gust ×= 0.95^f. A mouse blows whenever it moves over the canvas, a finger while it drags (sideways; vertical swipes still scroll).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Paint the hidden banner again on every resize, once the Anybody font has finished loading, and when the colors change.
+- Reduced-motion still frame: the banner at t = 1.3s, no gust.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`flag prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Flag text
+
+A headline printed on a fabric banner that ripples in a steady breeze, with light and shade following the folds. Moving my cursor blows a gust that sends a stronger wave through the cloth.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Banner text: "flag"
+- Wind: 0.8
+- Wave speed: 1.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`flow prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Living wallpaper
 

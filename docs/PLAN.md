@@ -215,7 +215,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 
 ## Wave 4: Text scenes 14–20
 
-- [ ] **4.1 `flag`** · SCENES.md #14
+- [x] **4.1 `flag`** · SCENES.md #14
 - [x] **4.2 `extrude`** · SCENES.md #15
 - [x] **4.3 `echo`** · SCENES.md #16
 - [ ] **4.4 `sand`** · SCENES.md #17
