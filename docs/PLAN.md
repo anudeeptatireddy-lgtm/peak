@@ -256,7 +256,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **6.7 `tunnel`** · SCENES.md #41 (⚠ flash test)
 - [x] **6.8 `lava`** · SCENES.md #42 (featured)
 - [x] **6.9 `fold`** · SCENES.md #43 (inner scroller on scene pages, like `velocity`)
-- [ ] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
+- [x] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
 
 - [ ] **Wave 6 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene; scroll the home page: every featured slot should now show its real scene.
 

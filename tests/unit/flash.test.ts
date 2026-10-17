@@ -314,3 +314,26 @@ describe('tunnel rings (⚠)', () => {
     }
   });
 });
+
+describe('glitch bursts (⚠)', () => {
+  it('never changes the picture more than 3 times a second, whatever triggers it', async () => {
+    const { BurstGate } = await import('../../src/scenes/glitch/gate');
+    const { params } = await import('../../src/scenes/glitch/params');
+    const burst = params.find((q) => q.id === 'burst')!;
+    if (burst.kind !== 'slider') throw new Error('burst');
+    const rand = seededRandom(5);
+    for (const length of [burst.min, 0.25, burst.max]) {
+      const gate = new BurstGate();
+      const changes: number[] = [];
+      // The most eager visitor: a trigger at every one of 240 frames a second, for two minutes.
+      for (let i = 0; i < 240 * 120; i++) {
+        const t = i / 240;
+        const len = rand() < 0.5 ? length : burst.min + rand() * (burst.max - burst.min);
+        if (gate.start(t, len)) changes.push(t, t + len);
+      }
+      changes.sort((a, b) => a - b);
+      expect(changes.length).toBeGreaterThan(10);
+      expect(worstSecond(changes)).toBeLessThanOrEqual(3);
+    }
+  });
+});
