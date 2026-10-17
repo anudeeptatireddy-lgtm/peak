@@ -3152,6 +3152,330 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Shattering words
+
+## What I want
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. Keep the line in a visually hidden element for screen readers; the canvas is aria-hidden.
+
+## How it moves
+- The line is "break the ice", drawn on the canvas in the main text color: Anybody weight 800, canvas fontStretch "normal", textAlign left, textBaseline alphabetic, as one centered line whose middle (halfway between actualBoundingBoxAscent and actualBoundingBoxDescent of the whole line) sits at 45% of the height. Font size = height × 0.18, scaled down if the line is wider than 86% of the width. Each word (split on spaces) is its own piece of glass: its left edge is where it starts in the line (measureText of the text before it), and its box is its ink box (actualBoundingBoxLeft/Right/Ascent/Descent) padded by 0.06 × the font size on every side.
+- Clicking a whole word cracks it into 24 shards: start with the word's box as one polygon; while there are fewer than 24 pieces, take the piece with the largest area (the first if tied), pick a point = its corners' average + ((random − 0.5) × 0.5 × its width, (random − 0.5) × 0.5 × its height) and an angle = random × π (Math.random() in that order), and cut the piece in two along the line through that point at that angle.
+- Each shard (in the order they were made) then flies away from the click: velocity = unit vector from the click to its center × 12 × (0.5 + random × 0.5), minus 3 upward, and it spins at (random − 0.5) × 2 × 0.12 radians per frame.
+- Flying shards gain 0.4 × f of downward velocity per frame; position += velocity × f and angle += spin × f.
+- After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
+- Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
+- Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
+- Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- The canvas has touch-action: pan-y, so swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`shatter prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Shattering words
+
+A line of words sits calmly. When I click a word, it cracks along jagged lines into glass shards that fly out, spin and fall, catching small glints of light. After a moment the shards fly back and fuse, with a short shimmer along the cracks.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Your words: "break the ice"
+- Shards per word: 24
+- Blast strength: 12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`skid prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Skidding headline
 
