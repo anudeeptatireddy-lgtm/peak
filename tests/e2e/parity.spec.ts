@@ -13,7 +13,18 @@ test.use({ browserName: 'chromium' });
 test.setTimeout(120_000);
 
 // Only the scenes ported from the prototype have something to compare against.
-const PORTED = ['particles', 'elastic', 'velocity', 'ripple', 'flow', 'warp', 'pluck', 'drop'];
+const PORTED = [
+  'particles',
+  'elastic',
+  'velocity',
+  'ripple',
+  'flow',
+  'warp',
+  'pluck',
+  'drop',
+  'overprint',
+  'halftone',
+];
 
 // Known exceptions, logged in docs/DECISIONS.md. They are skipped with their
 // reason: the result depends on frame timing, so it passes on some runs and

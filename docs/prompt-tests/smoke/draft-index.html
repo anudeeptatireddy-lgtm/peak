@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smoke</title>
+<meta name="description" content="Soft coloured smoke that pours from your cursor, swirls, curls and fades.">
+<meta name="theme-color" content="#F4F2FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+<style>
+  :root {
+    /* "Riso" palette */
+    --bg: #F4F2FF;
+    --ink: #1A1240;
+    --ink-2: #4E4777;
+    --pink: #EC1C7F;
+    --blue: #2A47EA;
+    --orange: #FF7A00;
+    --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color-scheme: light;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { background: var(--bg); }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Full-screen smoke stage ---------- */
+  .stage {
+    position: relative;
+    overflow: hidden;
+    touch-action: pan-y;               /* vertical swipes still scroll the page */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #smoke {
+    display: block;
+    width: 100%;
+    height: 100vh;                     /* fallback for older browsers */
+    height: 100svh;
+    min-height: 540px;
+    background: transparent;           /* the page colour shows through */
+    touch-action: pan-y;
+  }
+
+  .card {
+    position: absolute;
+    top: clamp(16px, 4vw, 48px);
+    left: clamp(16px, 4vw, 48px);
+    max-width: min(34rem, calc(100% - 32px));
+    padding: 20px 22px 22px;
+    /* Near-opaque page colour keeps text contrast above 4.5:1 even over the darkest smoke */
+    background: rgba(244, 242, 255, 0.9);
+    border-radius: 16px;
+  }
+
+  h1 {
+    margin: 0 0 0.2em;
+    font-size: clamp(2.75rem, 9.5vw, 5.75rem);
+    line-height: 0.95;
+    font-weight: 820;
+    font-stretch: 150%;
+    letter-spacing: -0.01em;
+  }
+
+  .lede {
+    margin: 0 0 1.1em;
+    max-width: 34ch;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    min-height: 44px;
+    padding: 0.55em 1.2em 0.55em 1em;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--bg);
+    font: inherit;
+    font-weight: 650;
+    font-stretch: 115%;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .toggle:hover { background: var(--blue); }
+  .toggle:focus:not(:focus-visible) { outline: none; }
+  .toggle:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+  }
+  .toggle svg { width: 1em; height: 1em; fill: currentColor; flex: none; }
+
+  .note {
+    margin: 0.9em 0 0;
+    font-size: 0.9375rem;
+    color: var(--ink-2);
+  }
+
+  /* ---------- Short section below, so the page can scroll ---------- */
+  .about {
+    padding: clamp(48px, 8vw, 96px) clamp(16px, 4vw, 48px) clamp(56px, 9vw, 112px);
+  }
+  .about-inner { max-width: 40rem; }
+
+  h2 {
+    margin: 0 0 0.6em;
+    font-size: clamp(1.75rem, 5vw, 2.75rem);
+    line-height: 1.05;
+    font-weight: 760;
+    font-stretch: 130%;
+  }
+
+  .about p {
+    margin: 0 0 1em;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  .inks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin: 1.6em 0 0;
+    padding: 0;
+    list-style: none;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .inks li { display: inline-flex; align-items: center; gap: 8px; }
+  .swatch { width: 18px; height: 18px; border-radius: 50%; flex: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toggle { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <section class="stage" id="stage" aria-labelledby="title">
+    <!-- Decorative: hidden from screen readers -->
+    <canvas id="smoke" aria-hidden="true"></canvas>
+
+    <div class="card">
+      <h1 id="title">Smoke</h1>
+      <p class="lede">Move your cursor, or drag a finger sideways, to pour soft coloured smoke. Faster strokes make bigger swirls. Leave it alone and a slow plume rises from below.</p>
+      <button type="button" class="toggle" id="toggle">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path id="toggle-icon" d="M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z"/></svg>
+        <span id="toggle-label">Pause</span>
+      </button>
+      <p class="note" id="motion-note" hidden>Paused because your device is set to reduce motion. Press Play to start the smoke.</p>
+    </div>
+  </section>
+
+  <section class="about" aria-labelledby="about-title">
+    <div class="about-inner">
+      <h2 id="about-title">How the smoke moves</h2>
+      <p>The screen is covered by a coarse, invisible grid. Every frame, each cell works out how the air around it is flowing using Jos Stam&rsquo;s &ldquo;stable fluids&rdquo; method, and a little extra spin keeps the curls lively. Three inks ride along on that flow and slowly fade away.</p>
+      <p>The colour drifts from pink to blue to orange, five seconds each, and is laid down with a multiply blend, the way printing inks build up on paper.</p>
+      <ul class="inks" aria-label="Ink colours">
+        <li><span class="swatch" style="background:#EC1C7F" aria-hidden="true"></span>Pink</li>
+        <li><span class="swatch" style="background:#2A47EA" aria-hidden="true"></span>Blue</li>
+        <li><span class="swatch" style="background:#FF7A00" aria-hidden="true"></span>Orange</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------------------------------------------------------------------------
+  // Settings (all taken from the brief)
+  // ---------------------------------------------------------------------------
+  const ACCENTS = [
+    [0xEC, 0x1C, 0x7F],   // pink   #EC1C7F
+    [0x2A, 0x47, 0xEA],   // blue   #2A47EA
+    [0xFF, 0x7A, 0x00]    // orange #FF7A00
+  ];
+  const GRID_WIDE = 128;          // cells across
+  const GRID_NARROW = 48;         // cells across on screens under 700px wide
+  const NARROW_BELOW = 700;
+  const ITERATIONS = 6;           // Gauss-Seidel passes
+  const VISCOSITY = 0.1 * 0.0005;
+  const FADE = 0.985;             // dye *= FADE^f after every step
+  const VORTICITY = 20;           // swirl strength
+  const RADIUS = 36;              // splat radius in CSS px
+  const COLOR_SECONDS = 5;        // each accent lasts 5s
+  const IDLE_SECONDS = 1;         // plume starts after the pointer has been away this long
+  const MAX_DT = 0.05;
+  const MAX_DPR = 2;
+  const STILL_FRAMES = 150;       // reduced-motion still frame
+
+  // ---------------------------------------------------------------------------
+  // Elements
+  // ---------------------------------------------------------------------------
+  const canvas = document.getElementById('smoke');
+  const stage = document.getElementById('stage');
+  const toggle = document.getElementById('toggle');
+  const toggleLabel = document.getElementById('toggle-label');
+  const toggleIcon = document.getElementById('toggle-icon');
+  const motionNote = document.getElementById('motion-note');
+  const ctx = canvas.getContext('2d');
+  const off = document.createElement('canvas');   // one pixel per grid cell
+  const offCtx = off.getContext('2d');
+
+  const ICON_PAUSE = 'M3.5 2.5h3v11h-3zM9.5 2.5h3v11h-3z';
+  const ICON_PLAY = 'M4 2.2v11.6L13.5 8z';
+
+  // ---------------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------------
+  let cssW = 0, cssH = 0, dpr = 1;
+  let NX = 0, NY = 0, ROW = 0, SIZE = 0;   // grid is (NX + 2) x (NY + 2) with a one-cell border
+  let u, v, u0, v0, p, div, curl, dye0, dye1, dye2;
+  let image = null;
+
+  let t = 0;                     // seconds the loop has run (sum of dt)
+  let lastTs = 0;
+  let rafId = 0;
+  let playing = true;            // user's choice (Play / Pause)
+  let onScreen = true;           // paused automatically when scrolled away
+  let lastActiveT = -Infinity;   // last time the pointer moved (or a finger touched)
+
+  const weights = [1, 0, 0];     // current colour mix of the three accents
+
+  const pointer = {
+    x: 0, y: 0,          // position in CSS px, relative to the canvas
+    px: 0, py: 0,        // position at the previous frame
+    over: false,         // mouse / pen is over the canvas
+    down: false,         // finger is touching
+    touch: false,        // last pointer was a finger
+    fresh: true          // ignore the jump on the first frame after entering
+  };
+
+  // ---------------------------------------------------------------------------
+  // Grid
+  // ---------------------------------------------------------------------------
+  function buildGrid() {
+    NX = window.innerWidth < NARROW_BELOW ? GRID_NARROW : GRID_WIDE;
+    // Rows keep the cells square: (cells across) x height / width.
+    NY = Math.max(8, Math.round(NX * cssH / cssW));
+    ROW = NX + 2;
+    SIZE = ROW * (NY + 2);
+    u = new Float32Array(SIZE);  v = new Float32Array(SIZE);
+    u0 = new Float32Array(SIZE); v0 = new Float32Array(SIZE);
+    p = new Float32Array(SIZE);  div = new Float32Array(SIZE);
+    curl = new Float32Array(SIZE);
+    dye0 = new Float32Array(SIZE); dye1 = new Float32Array(SIZE); dye2 = new Float32Array(SIZE);
+    off.width = NX;
+    off.height = NY;
+    image = offCtx.createImageData(NX, NY);
+  }
+
+  // Walls: b = 1 mirrors horizontal velocity, b = 2 vertical velocity, b = 0 copies.
+  function setBoundary(b, x) {
+    const last = (NY + 1) * ROW, prev = NY * ROW;
+    for (let j = 1; j <= NY; j++) {
+      const r = j * ROW;
+      x[r] = b === 1 ? -x[r + 1] : x[r + 1];
+      x[r + NX + 1] = b === 1 ? -x[r + NX] : x[r + NX];
+    }
+    for (let i = 1; i <= NX; i++) {
+      x[i] = b === 2 ? -x[ROW + i] : x[ROW + i];
+      x[last + i] = b === 2 ? -x[prev + i] : x[prev + i];
+    }
+    x[0] = 0.5 * (x[1] + x[ROW]);
+    x[NX + 1] = 0.5 * (x[NX] + x[ROW + NX + 1]);
+    x[last] = 0.5 * (x[last + 1] + x[prev]);
+    x[last + NX + 1] = 0.5 * (x[last + NX] + x[prev + NX + 1]);
+  }
+
+  // Gauss-Seidel relaxation: x = (x0 + a * (sum of 4 neighbours)) / c.
+  // The just-updated left neighbour is kept in a register to shorten the dependency chain.
+  function linSolve(b, x, x0, a, c) {
+    const inv = 1 / c, ai = a * inv;
+    for (let k = 0; k < ITERATIONS; k++) {
+      for (let j = 1; j <= NY; j++) {
+        let id = j * ROW + 1;
+        let left = x[id - 1];
+        for (let i = 1; i <= NX; i++, id++) {
+          left = x0[id] * inv + ai * (x[id + 1] + x[id - ROW] + x[id + ROW]) + ai * left;
+          x[id] = left;
+        }
+      }
+      setBoundary(b, x);
+    }
+  }
+
+  // Same relaxation for both velocity components at once (used for viscosity).
+  function linSolvePair(x, x0, y, y0, a, c) {
+    const inv = 1 / c, ai = a * inv;
+    for (let k = 0; k < ITERATIONS; k++) {
+      for (let j = 1; j <= NY; j++) {
+        let id = j * ROW + 1;
+        let lx = x[id - 1], ly = y[id - 1];
+        for (let i = 1; i <= NX; i++, id++) {
+          lx = x0[id] * inv + ai * (x[id + 1] + x[id - ROW] + x[id + ROW]) + ai * lx;
+          ly = y0[id] * inv + ai * (y[id + 1] + y[id - ROW] + y[id + ROW]) + ai * ly;
+          x[id] = lx;
+          y[id] = ly;
+        }
+      }
+      setBoundary(1, x);
+      setBoundary(2, y);
+    }
+  }
+
+  // Velocity is stored as (widths per second, heights per second).
+  // Converted to cells: U = u * NX, V = v * NY, which is isotropic because cells are square.
+  function project() {
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++) {
+        div[id] = -0.5 * (NX * (u[id + 1] - u[id - 1]) + NY * (v[id + ROW] - v[id - ROW]));
+        p[id] = 0;
+      }
+    }
+    setBoundary(0, div);
+    setBoundary(0, p);
+    linSolve(0, p, div, 1, 4);
+    const sx = 0.5 / NX, sy = 0.5 / NY;
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++) {
+        u[id] -= sx * (p[id + 1] - p[id - 1]);
+        v[id] -= sy * (p[id + ROW] - p[id - ROW]);
+      }
+    }
+    setBoundary(1, u);
+    setBoundary(2, v);
+  }
+
+  // Semi-Lagrangian advection: trace each cell back along the flow and sample.
+  function advect(b, d, d0, uu, vv, dt) {
+    const dtx = dt * NX, dty = dt * NY;
+    const maxX = NX + 0.5, maxY = NY + 0.5;
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++) {
+        let x = i - dtx * uu[id];
+        let y = j - dty * vv[id];
+        if (x < 0.5) x = 0.5; else if (x > maxX) x = maxX;
+        if (y < 0.5) y = 0.5; else if (y > maxY) y = maxY;
+        const i0 = x | 0, j0 = y | 0;
+        const s1 = x - i0, s0 = 1 - s1, t1 = y - j0, t0 = 1 - t1;
+        const a = i0 + j0 * ROW, c = a + ROW;
+        d[id] = s0 * (t0 * d0[a] + t1 * d0[c]) + s1 * (t0 * d0[a + 1] + t1 * d0[c + 1]);
+      }
+    }
+    setBoundary(b, d);
+  }
+
+  // The three dyes share one flow, so trace each cell back once and sample all three.
+  function advectDyes(dt) {
+    const s0a = u0, s1a = v0, s2a = div;   // scratch arrays are free at this point
+    s0a.set(dye0); s1a.set(dye1); s2a.set(dye2);
+    const dtx = dt * NX, dty = dt * NY;
+    const maxX = NX + 0.5, maxY = NY + 0.5;
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++) {
+        let x = i - dtx * u[id];
+        let y = j - dty * v[id];
+        if (x < 0.5) x = 0.5; else if (x > maxX) x = maxX;
+        if (y < 0.5) y = 0.5; else if (y > maxY) y = maxY;
+        const i0 = x | 0, j0 = y | 0;
+        const s1 = x - i0, s0 = 1 - s1, t1 = y - j0, t0 = 1 - t1;
+        const a = i0 + j0 * ROW, c = a + ROW;
+        const w00 = s0 * t0, w01 = s0 * t1, w10 = s1 * t0, w11 = s1 * t1;
+        dye0[id] = w00 * s0a[a] + w01 * s0a[c] + w10 * s0a[a + 1] + w11 * s0a[c + 1];
+        dye1[id] = w00 * s1a[a] + w01 * s1a[c] + w10 * s1a[a + 1] + w11 * s1a[c + 1];
+        dye2[id] = w00 * s2a[a] + w01 * s2a[c] + w10 * s2a[a + 1] + w11 * s2a[c + 1];
+      }
+    }
+    setBoundary(0, dye0);
+    setBoundary(0, dye1);
+    setBoundary(0, dye2);
+  }
+
+  // One stable-fluids step: diffuse velocity, project, self-advect, project, advect dyes.
+  function step(dt) {
+    const a = dt * VISCOSITY * NX * NX;
+    u0.set(u); v0.set(v);
+    linSolvePair(u, u0, v, v0, a, 1 + 4 * a);
+    project();
+    u0.set(u); v0.set(v);
+    advect(1, u, u0, u0, v0, dt);
+    advect(2, v, v0, u0, v0, dt);
+    project();
+    advectDyes(dt);
+  }
+
+  // Vorticity confinement: push the flow around its own curls so swirls survive.
+  function addSwirl(dt) {
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++) {
+        curl[id] = 0.5 * ((v[id + 1] - v[id - 1]) - (u[id + ROW] - u[id - ROW]));
+      }
+    }
+    const k = VORTICITY * dt;
+    for (let j = 2; j < NY; j++) {
+      let id = j * ROW + 2;
+      for (let i = 2; i < NX; i++, id++) {
+        const gx = 0.5 * (Math.abs(curl[id + 1]) - Math.abs(curl[id - 1]));
+        const gy = 0.5 * (Math.abs(curl[id + ROW]) - Math.abs(curl[id - ROW]));
+        const s = curl[id] * k / (Math.sqrt(gx * gx + gy * gy) + 1e-5);
+        u[id] += gy * s;    // (N.y, -N.x) * curl * 20 * dt
+        v[id] -= gx * s;
+      }
+    }
+  }
+
+  function fadeDye(f) {
+    const k = Math.pow(FADE, f);
+    for (let i = 0; i < SIZE; i++) {
+      dye0[i] *= k; dye1[i] *= k; dye2[i] *= k;
+    }
+  }
+
+  // Current colour: p = (t / 5) mod 3; accent k weighs max(0, 1 - wrapped distance).
+  function updateWeights(time) {
+    const ph = (time / COLOR_SECONDS) % 3;
+    for (let k = 0; k < 3; k++) {
+      let d = Math.abs(ph - k);
+      d = Math.min(d, 3 - d);
+      weights[k] = Math.max(0, 1 - d);
+    }
+  }
+
+  // Add velocity (grid units) and dye to every cell whose centre is within RADIUS px.
+  function splat(x, y, vx, vy, amount) {
+    const cw = cssW / NX, ch = cssH / NY;
+    const iMin = Math.max(1, Math.floor((x - RADIUS) / cw + 0.5));
+    const iMax = Math.min(NX, Math.ceil((x + RADIUS) / cw + 0.5));
+    const jMin = Math.max(1, Math.floor((y - RADIUS) / ch + 0.5));
+    const jMax = Math.min(NY, Math.ceil((y + RADIUS) / ch + 0.5));
+    const a0 = amount * weights[0], a1 = amount * weights[1], a2 = amount * weights[2];
+    for (let j = jMin; j <= jMax; j++) {
+      const dy = (j - 0.5) * ch - y;
+      for (let i = iMin; i <= iMax; i++) {
+        const dx = (i - 0.5) * cw - x;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist >= RADIUS) continue;
+        const w = 1 - dist / RADIUS;
+        const id = i + j * ROW;
+        u[id] += vx * w;
+        v[id] += vy * w;
+        if (amount > 0) {
+          dye0[id] += a0 * w;
+          dye1[id] += a1 * w;
+          dye2[id] += a2 * w;
+        }
+      }
+    }
+  }
+
+  function splatPlume() {
+    splat(cssW * (0.5 + 0.12 * Math.sin(t * 0.4)), cssH - 36, 0, -0.6 * 0.6, 0.3 * 0.6);
+  }
+
+  // Pour from the pointer while it is present and moving; otherwise, after 1s, the plume.
+  function inject(f) {
+    updateWeights(t);
+    const present = pointer.touch ? pointer.down : pointer.over;
+    let dx = 0, dy = 0;
+    if (present) {
+      if (pointer.fresh) { pointer.px = pointer.x; pointer.py = pointer.y; pointer.fresh = false; }
+      dx = pointer.x - pointer.px;
+      dy = pointer.y - pointer.py;
+      pointer.px = pointer.x;
+      pointer.py = pointer.y;
+      if (dx !== 0 || dy !== 0 || pointer.down) lastActiveT = t;
+    }
+    if (present && t - lastActiveT < IDLE_SECONDS) {
+      const speed = Math.sqrt(dx * dx + dy * dy);          // px this frame
+      const vx = (dx / f) * 60 / cssW * 2;
+      const vy = (dy / f) * 60 / cssH * 2;
+      const amount = 0.4 * Math.min(1, speed / 8);          // a still pointer pours nothing
+      splat(pointer.x, pointer.y, vx, vy, amount);
+    } else if (t - lastActiveT >= IDLE_SECONDS) {
+      splatPlume();
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Drawing: one pixel per cell, then one scaled-up, smoothed, multiplied draw.
+  // ---------------------------------------------------------------------------
+  const R0 = ACCENTS[0][0], G0 = ACCENTS[0][1], B0 = ACCENTS[0][2];
+  const R1 = ACCENTS[1][0], G1 = ACCENTS[1][1], B1 = ACCENTS[1][2];
+  const R2 = ACCENTS[2][0], G2 = ACCENTS[2][1], B2 = ACCENTS[2][2];
+
+  function draw() {
+    const data = image.data;
+    let o = 0;
+    for (let j = 1; j <= NY; j++) {
+      let id = j * ROW + 1;
+      for (let i = 1; i <= NX; i++, id++, o += 4) {
+        const a = dye0[id], b = dye1[id], c = dye2[id];
+        const sum = a + b + c;
+        if (sum < 1e-4) { data[o + 3] = 0; continue; }
+        const inv = 1 / sum;
+        data[o]     = (a * R0 + b * R1 + c * R2) * inv;
+        data[o + 1] = (a * G0 + b * G1 + c * G2) * inv;
+        data[o + 2] = (a * B0 + b * B1 + c * B2) * inv;
+        data[o + 3] = (sum * 1.2 >= 1 ? 1 : sum * 1.2) * 255;
+      }
+    }
+    offCtx.putImageData(image, 0, 0);
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalCompositeOperation = 'multiply';
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Loop
+  // ---------------------------------------------------------------------------
+  function simulate(dt, f) {
+    inject(f);
+    addSwirl(dt);
+    step(dt);
+    fadeDye(f);
+  }
+
+  function frame(ts) {
+    rafId = 0;
+    if (!playing || !onScreen) return;
+    let dt = lastTs ? (ts - lastTs) / 1000 : 1 / 60;
+    lastTs = ts;
+    if (!(dt > 0)) dt = 1 / 60;
+    if (dt > MAX_DT) dt = MAX_DT;
+    const f = Math.min(dt * 60, 2.5);
+    t += dt;
+    simulate(dt, f);
+    draw();
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function startLoop() {
+    if (rafId || !playing || !onScreen || !NX) return;
+    lastTs = 0;
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function stopLoop() {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  // Reduced-motion still frame: the plume after 150 frames at f = 1, dt = 1/60, no pointer.
+  function renderStill() {
+    t = 0;
+    lastActiveT = -Infinity;
+    const dt = 1 / 60;
+    for (let n = 0; n < STILL_FRAMES; n++) {
+      t += dt;
+      updateWeights(t);
+      splatPlume();
+      addSwirl(dt);
+      step(dt);
+      fadeDye(1);
+    }
+    draw();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Size (fresh, empty grid on every resize)
+  // ---------------------------------------------------------------------------
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    const nextDpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
+    if (w < 1 || h < 1) return;
+    if (w === cssW && h === cssH && nextDpr === dpr && NX) return;
+    cssW = w; cssH = h; dpr = nextDpr;
+    canvas.width = Math.max(1, Math.round(w * dpr));
+    canvas.height = Math.max(1, Math.round(h * dpr));
+    buildGrid();
+    if (playing) { draw(); startLoop(); } else renderStill();
+  }
+
+  let resizeQueued = false;
+  function queueResize() {
+    if (resizeQueued) return;
+    resizeQueued = true;
+    requestAnimationFrame(() => { resizeQueued = false; resize(); });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Pointer (listen on the whole stage so the text card does not block the smoke)
+  // ---------------------------------------------------------------------------
+  function readPointer(e) {
+    const rect = canvas.getBoundingClientRect();
+    pointer.x = e.clientX - rect.left;
+    pointer.y = e.clientY - rect.top;
+  }
+
+  stage.addEventListener('pointerdown', (e) => {
+    if (!e.isPrimary) return;
+    pointer.touch = e.pointerType === 'touch';
+    readPointer(e);
+    if (pointer.touch) { pointer.down = true; pointer.fresh = true; }
+  }, { passive: true });
+
+  stage.addEventListener('pointermove', (e) => {
+    if (!e.isPrimary) return;
+    const touch = e.pointerType === 'touch';
+    if (touch && !pointer.down) return;
+    if (!touch) {
+      if (pointer.touch || !pointer.over) pointer.fresh = true;
+      pointer.over = true;
+    }
+    pointer.touch = touch;
+    readPointer(e);
+  }, { passive: true });
+
+  function endTouch(e) {
+    if (e.pointerType === 'touch') pointer.down = false;
+  }
+  stage.addEventListener('pointerup', endTouch, { passive: true });
+  stage.addEventListener('pointercancel', (e) => {   // e.g. the browser took over to scroll
+    endTouch(e);
+    if (e.pointerType !== 'touch') pointer.over = false;
+  }, { passive: true });
+  stage.addEventListener('pointerleave', (e) => {
+    if (e.pointerType === 'touch') pointer.down = false;
+    else pointer.over = false;
+  }, { passive: true });
+
+  // ---------------------------------------------------------------------------
+  // Play / Pause and reduced motion
+  // ---------------------------------------------------------------------------
+  function setPlaying(next) {
+    playing = next;
+    toggleLabel.textContent = playing ? 'Pause' : 'Play';
+    toggleIcon.setAttribute('d', playing ? ICON_PAUSE : ICON_PLAY);
+    if (playing) { motionNote.hidden = true; startLoop(); }
+    else stopLoop();
+  }
+
+  toggle.addEventListener('click', () => setPlaying(!playing));
+
+  const reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  function onMotionPreference() {
+    if (reduceMotion && reduceMotion.matches && playing) {
+      setPlaying(false);
+      motionNote.hidden = false;
+    }
+  }
+  if (reduceMotion) {
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onMotionPreference);
+    else if (reduceMotion.addListener) reduceMotion.addListener(onMotionPreference);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Start
+  // ---------------------------------------------------------------------------
+  if (reduceMotion && reduceMotion.matches) {
+    playing = false;
+    toggleLabel.textContent = 'Play';
+    toggleIcon.setAttribute('d', ICON_PLAY);
+    motionNote.hidden = false;
+  }
+
+  resize();   // builds the grid; draws the still frame if paused
+
+  if ('ResizeObserver' in window) new ResizeObserver(queueResize).observe(canvas);
+  window.addEventListener('resize', queueResize);
+
+  // Pause when the canvas is scrolled off-screen.
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      if (onScreen) startLoop(); else stopLoop();
+    }).observe(canvas);
+  }
+
+  startLoop();
+})();
+</script>
+</body>
+</html>

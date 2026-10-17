@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tearable cloth</title>
+<meta name="description" content="A sheet of cloth hanging from a rail. Drag it to stretch it, pull hard to tear it, double-click for a fresh sheet.">
+<meta name="theme-color" content="#F4F2FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --ink: #1A1240;
+    --ink-soft: #4E4777;
+    --magenta: #EC1C7F;
+    --blue: #2A47EA;
+    --orange: #FF7A00;
+    --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    background: var(--bg);
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* The full-screen stage: 100svh tall, never shorter than 540px. */
+  .stage {
+    position: relative;
+    height: 100vh;      /* fallback for older browsers */
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+  }
+
+  /* Transparent canvas over the page background. pan-y keeps vertical page scrolling working on touch screens. */
+  #cloth {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: pan-y;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #cloth.is-grabbing { cursor: grabbing; }
+
+  /* Overlay text never blocks the canvas; only the button takes clicks. */
+  .bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    pointer-events: none;
+  }
+
+  .title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+    font-size: clamp(1rem, 0.85rem + 0.8vw, 1.5rem);
+    font-weight: 800;
+    font-stretch: 130%;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+
+  /* Three overlapping ink dots, multiplied like riso print. Decorative only. */
+  .ink {
+    position: relative;
+    flex: none;
+    width: 1.3em;
+    height: 0.8em;
+  }
+  .ink i {
+    position: absolute;
+    top: 0;
+    width: 0.8em;
+    height: 0.8em;
+    border-radius: 50%;
+    mix-blend-mode: multiply;
+  }
+  .ink i:nth-child(1) { left: 0;      background: var(--magenta); }
+  .ink i:nth-child(2) { left: 0.25em; background: var(--blue); }
+  .ink i:nth-child(3) { left: 0.5em;  background: var(--orange); }
+
+  .btn {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    min-height: 40px;
+    padding: 0 16px 0 13px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-stretch: 115%;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn:focus:not(:focus-visible) { outline: none; }
+  .btn:focus-visible {
+    outline: 3px solid var(--blue);
+    outline-offset: 3px;
+  }
+  .btn svg { width: 14px; height: 14px; flex: none; fill: currentColor; }
+  .btn svg[hidden] { display: none; }
+
+  .hint {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    margin: 0;
+    max-width: 44ch;
+    font-size: 0.9rem;
+    font-weight: 450;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    pointer-events: none;
+  }
+  .hint strong { font-weight: 700; color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="stage">
+  <canvas id="cloth" aria-hidden="true"></canvas>
+
+  <header class="bar">
+    <h1 class="title"><span class="ink" aria-hidden="true"><i></i><i></i><i></i></span>Tearable cloth</h1>
+    <button id="toggle" class="btn" type="button">
+      <svg class="icon-pause" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><rect x="2" y="1" width="3.5" height="12" rx="1"/><rect x="8.5" y="1" width="3.5" height="12" rx="1"/></svg>
+      <svg class="icon-play" viewBox="0 0 14 14" aria-hidden="true" focusable="false" hidden><path d="M3 1.6v10.8a.8.8 0 0 0 1.2.7l9-5.4a.8.8 0 0 0 0-1.4l-9-5.4A.8.8 0 0 0 3 1.6z"/></svg>
+      <span class="label">Pause</span>
+    </button>
+  </header>
+
+  <p class="hint"><strong>Drag</strong> the cloth to stretch it &mdash; pull hard and it tears. On a touch screen, hold your finger still for a moment, then drag. <strong>Double-click</strong> or double-tap to hang a fresh sheet.</p>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- Settings (from the brief) ----------
+  const INK = ['#EC1C7F', '#2A47EA', '#FF7A00']; // accents: calm -> stretched -> about to tear
+  const RAIL_COLOR = '#4E4777';
+  const PIN_COLOR = '#1A1240';
+  const TEAR = 3;            // a link breaks past 3x its rest length
+  const ITERATIONS = 5;      // link relaxation passes per frame
+  const GRAB_RADIUS = 40;    // px
+  const HOLD_MS = 250;       // a finger must hold still this long before grabbing
+  const HOLD_SLOP = 10;      // px a finger may wobble and still count as "still"
+  const DOUBLE_MS = 350;     // two clicks within this time...
+  const DOUBLE_DIST = 30;    // ...and this distance hang a fresh sheet
+  const CLICK_MOVE = 30;     // a press that moved less than this counts as a click
+  const STILL_FRAMES = 240;  // reduced-motion still frame
+  const TAU = Math.PI * 2;
+
+  const canvas = document.getElementById('cloth');
+  const ctx = canvas.getContext('2d');
+  const toggle = document.getElementById('toggle');
+  const toggleLabel = toggle.querySelector('.label');
+  const iconPause = toggle.querySelector('.icon-pause');
+  const iconPlay = toggle.querySelector('.icon-play');
+  const reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+  // ---------- Canvas size (CSS pixels) ----------
+  let W = 0, H = 0, dpr = 1;
+
+  // ---------- The sheet ----------
+  let cols = 0, rows = 0, count = 0;
+  let spacing = 0, sheetW = 0, left = 0, top = 0;
+  let X, Y, PX, PY;          // positions and previous positions
+  let OX, OY;                // offsets from the pointer while held
+  let phase;                 // breeze phase per point: (column + row) * 0.12
+  let pinned, fixed;         // fixed = pinned or held
+  let pinList;
+  let LA, LB, broken;        // links: end a, end b, broken flag
+  let linkCount = 0;
+  let B0, B1, B2;            // per-colour draw buckets
+  const held = [];
+
+  function build() {
+    const hasSize = W >= 1 && H >= 1;
+    cols = W < 700 ? 20 : 32;
+    sheetW = W * 0.7;
+    spacing = sheetW / (cols - 1);
+    rows = hasSize ? Math.max(2, Math.round(H * 0.6 / spacing) + 1) : 0;
+    left = (W - sheetW) / 2;
+    top = H * 0.12;
+    count = cols * rows;
+
+    X = new Float64Array(count);
+    Y = new Float64Array(count);
+    PX = new Float64Array(count);
+    PY = new Float64Array(count);
+    OX = new Float64Array(count);
+    OY = new Float64Array(count);
+    phase = new Float64Array(count);
+    pinned = new Uint8Array(count);
+    fixed = new Uint8Array(count);
+
+    const pins = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c;
+        X[i] = PX[i] = left + c * spacing;   // start exactly on the grid, at rest
+        Y[i] = PY[i] = top + r * spacing;
+        phase[i] = (c + r) * 0.12;
+        if (r === 0 && (c % 4 === 0 || c === cols - 1)) {
+          pinned[i] = fixed[i] = 1;
+          pins.push(i);
+        }
+      }
+    }
+    pinList = Int32Array.from(pins);
+
+    // Links, point by point from the top-left: right neighbour first, then the one below.
+    linkCount = rows ? rows * (cols - 1) + (rows - 1) * cols : 0;
+    LA = new Int32Array(linkCount);
+    LB = new Int32Array(linkCount);
+    broken = new Uint8Array(linkCount);
+    let k = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const i = r * cols + c;
+        if (c < cols - 1) { LA[k] = i; LB[k] = i + 1; k++; }
+        if (r < rows - 1) { LA[k] = i; LB[k] = i + cols; k++; }
+      }
+    }
+    B0 = new Int32Array(linkCount);
+    B1 = new Int32Array(linkCount);
+    B2 = new Int32Array(linkCount);
+
+    held.length = 0;
+    ptr.grabbing = false;
+    canvas.classList.remove('is-grabbing');
+  }
+
+  // ---------- Physics ----------
+  // Verlet step plus the breeze, for every point that is not pinned or held.
+  function integrate(f, t) {
+    const damp = Math.pow(0.99, f);
+    const gravity = 0.25 * f * f;
+    const breeze = 0.2 * 0.15 * f * f;
+    const wt = t * 1.3;
+    for (let i = 0; i < count; i++) {
+      if (fixed[i]) continue;
+      const x = X[i], y = Y[i];
+      const vx = (x - PX[i]) * damp;
+      const vy = (y - PY[i]) * damp;
+      PX[i] = x;
+      PY[i] = y;
+      X[i] = x + vx + breeze * Math.sin(wt - phase[i]);
+      Y[i] = y + vy + gravity;
+    }
+  }
+
+  // Held points follow the pointer; their last move becomes their velocity.
+  function moveHeld() {
+    for (let h = 0; h < held.length; h++) {
+      const i = held[h];
+      PX[i] = X[i];
+      PY[i] = Y[i];
+      X[i] = ptr.x + OX[i];
+      Y[i] = ptr.y + OY[i];
+    }
+  }
+
+  // Pull every link back to its rest length; break any stretched past the tear limit.
+  function relax() {
+    const rest = spacing;
+    const limit = rest * TEAR;
+    for (let pass = 0; pass < ITERATIONS; pass++) {
+      for (let l = 0; l < linkCount; l++) {
+        if (broken[l]) continue;
+        const a = LA[l], b = LB[l];
+        const dx = X[b] - X[a];
+        const dy = Y[b] - Y[a];
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d > limit) { broken[l] = 1; continue; }
+        if (d === 0) continue;
+        const fa = fixed[a], fb = fixed[b];
+        if (fa && fb) continue;
+        const k = (d - rest) / d;
+        if (!fa && !fb) {
+          const ox = dx * k * 0.5, oy = dy * k * 0.5;
+          X[a] += ox; Y[a] += oy;
+          X[b] -= ox; Y[b] -= oy;
+        } else if (fa) {
+          X[b] -= dx * k; Y[b] -= dy * k;
+        } else {
+          X[a] += dx * k; Y[a] += dy * k;
+        }
+      }
+    }
+  }
+
+  // The reduced-motion still frame: 240 frames of physics at f = 1, no pointer.
+  function settle() {
+    let t = 0;
+    for (let n = 0; n < STILL_FRAMES; n++) {
+      t += 1 / 60;
+      integrate(1, t);
+      relax();
+    }
+  }
+
+  // ---------- Drawing ----------
+  function strokeBucket(bucket, n, color) {
+    if (!n) return;
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    for (let j = 0; j < n; j++) {
+      const l = bucket[j];
+      const a = LA[l], b = LB[l];
+      ctx.moveTo(X[a], Y[a]);
+      ctx.lineTo(X[b], Y[b]);
+    }
+    ctx.stroke();
+  }
+
+  function draw() {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+
+    // Sort links by how close they are to tearing.
+    const inv = 1 / (spacing * (TEAR - 1)); // share = (length / rest - 1) / (tear - 1)
+    let n0 = 0, n1 = 0, n2 = 0;
+    for (let l = 0; l < linkCount; l++) {
+      if (broken[l]) continue;
+      const a = LA[l], b = LB[l];
+      const dx = X[b] - X[a], dy = Y[b] - Y[a];
+      const share = (Math.sqrt(dx * dx + dy * dy) - spacing) * inv;
+      if (share < 1 / 3) B0[n0++] = l;
+      else if (share < 2 / 3) B1[n1++] = l;
+      else B2[n2++] = l;
+    }
+
+    // One path per colour, multiplied like overlapping inks.
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalCompositeOperation = 'multiply';
+    strokeBucket(B0, n0, INK[0]);
+    strokeBucket(B1, n1, INK[1]);
+    strokeBucket(B2, n2, INK[2]);
+    ctx.globalCompositeOperation = 'source-over';
+
+    // The rail, at the sheet's rest position.
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = RAIL_COLOR;
+    ctx.beginPath();
+    ctx.moveTo(left, top);
+    ctx.lineTo(left + sheetW, top);
+    ctx.stroke();
+
+    // Pinned points.
+    ctx.fillStyle = PIN_COLOR;
+    ctx.beginPath();
+    for (let j = 0; j < pinList.length; j++) {
+      const i = pinList[j];
+      ctx.moveTo(X[i] + 3, Y[i]);
+      ctx.arc(X[i], Y[i], 3, 0, TAU);
+    }
+    ctx.fill();
+  }
+
+  // ---------- Pointer ----------
+  const ptr = {
+    id: null, type: '',
+    x: 0, y: 0,
+    downX: 0, downY: 0, downT: 0, maxMove: 0,
+    holdArmed: false,   // a finger is down and waiting to hold still long enough
+    grabbing: false
+  };
+  const grabQueue = [];   // 'press' / 'release', handled in order at the start of a frame
+  const clickQueue = [];  // finished clicks or taps, for double-click detection
+  let lastClick = null;
+
+  function localPoint(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function onDown(e) {
+    if (ptr.id !== null) return;                        // one pointer at a time
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const p = localPoint(e);
+    ptr.id = e.pointerId;
+    ptr.type = e.pointerType;
+    ptr.x = ptr.downX = p.x;
+    ptr.y = ptr.downY = p.y;
+    ptr.downT = performance.now();
+    ptr.maxMove = 0;
+    ptr.holdArmed = false;
+    if (e.pointerType === 'mouse') {
+      e.preventDefault();                               // no text selection while dragging
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+      if (running) grabQueue.push('press');             // a mouse grabs at once
+    } else if (running) {
+      ptr.holdArmed = true;                             // a finger grabs after holding still
+    }
+  }
+
+  function onMove(e) {
+    if (e.pointerId !== ptr.id) return;
+    const p = localPoint(e);
+    ptr.x = p.x;
+    ptr.y = p.y;
+    const m = Math.hypot(p.x - ptr.downX, p.y - ptr.downY);
+    if (m > ptr.maxMove) ptr.maxMove = m;
+    if (ptr.holdArmed && ptr.maxMove > HOLD_SLOP && performance.now() - ptr.downT < HOLD_MS) {
+      ptr.holdArmed = false;                            // it's a swipe, not a hold
+    }
+  }
+
+  function onUp(e) {
+    if (e.pointerId !== ptr.id) return;
+    const p = localPoint(e);
+    const m = Math.hypot(p.x - ptr.downX, p.y - ptr.downY);
+    if (m > ptr.maxMove) ptr.maxMove = m;
+    if (ptr.maxMove < CLICK_MOVE) clickQueue.push({ x: p.x, y: p.y, t: performance.now() });
+    finishPress();
+  }
+
+  function onCancel(e) {
+    if (e.pointerId !== ptr.id) return;
+    finishPress();
+  }
+
+  function finishPress() {
+    ptr.id = null;
+    ptr.holdArmed = false;
+    if (running) {
+      grabQueue.push('release');
+    } else {
+      processClicks();                                  // double-click still works while paused
+    }
+  }
+
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
+  canvas.addEventListener('pointercancel', onCancel);
+  canvas.addEventListener('lostpointercapture', onCancel);
+  canvas.addEventListener('contextmenu', (e) => { if (ptr.grabbing || ptr.holdArmed) e.preventDefault(); });
+  // While a finger holds the cloth, stop the page from scrolling under it.
+  canvas.addEventListener('touchmove', (e) => {
+    const holding = ptr.grabbing ||
+      (ptr.holdArmed && performance.now() - ptr.downT >= HOLD_MS);
+    if (holding && e.cancelable) e.preventDefault();
+  }, { passive: false });
+
+  function startGrab() {
+    endGrab();
+    const r2 = GRAB_RADIUS * GRAB_RADIUS;
+    for (let i = 0; i < count; i++) {
+      if (pinned[i]) continue;
+      const dx = X[i] - ptr.x, dy = Y[i] - ptr.y;
+      if (dx * dx + dy * dy <= r2) {
+        held.push(i);
+        fixed[i] = 1;
+        OX[i] = dx;
+        OY[i] = dy;
+      }
+    }
+    ptr.grabbing = true;
+    canvas.classList.add('is-grabbing');
+  }
+
+  function endGrab() {
+    for (let h = 0; h < held.length; h++) {
+      const i = held[h];
+      fixed[i] = pinned[i];   // free again; previous position keeps the pointer's last move
+    }
+    held.length = 0;
+    ptr.grabbing = false;
+    canvas.classList.remove('is-grabbing');
+  }
+
+  function processClicks() {
+    let fresh = false;
+    for (let j = 0; j < clickQueue.length; j++) {
+      const c = clickQueue[j];
+      if (lastClick &&
+          c.t - lastClick.t <= DOUBLE_MS &&
+          Math.hypot(c.x - lastClick.x, c.y - lastClick.y) <= DOUBLE_DIST) {
+        fresh = true;
+        lastClick = null;
+      } else {
+        lastClick = c;
+      }
+    }
+    clickQueue.length = 0;
+    if (fresh) hangSheet();
+  }
+
+  function processGrabs() {
+    for (let j = 0; j < grabQueue.length; j++) {
+      if (grabQueue[j] === 'press') startGrab();
+      else endGrab();
+    }
+    grabQueue.length = 0;
+    if (ptr.holdArmed && ptr.id !== null && performance.now() - ptr.downT >= HOLD_MS) {
+      ptr.holdArmed = false;
+      startGrab();
+    }
+  }
+
+  // ---------- Fresh sheet ----------
+  function hangSheet() {
+    build();
+    if (!running) {          // paused: show the settled still frame right away
+      settle();
+      draw();
+    }
+  }
+
+  // ---------- Loop ----------
+  let running = false;
+  let userPaused = !!(reduceMotion && reduceMotion.matches);
+  let onScreen = true;
+  let rafId = 0;
+  let lastTime = null;
+  let t = 0;                 // seconds the loop has run
+
+  function frame(now) {
+    rafId = requestAnimationFrame(frame);
+    const dt = lastTime === null ? 1 / 60 : Math.min(Math.max((now - lastTime) / 1000, 0), 0.05);
+    lastTime = now;
+    const f = Math.min(dt * 60, 2.5);
+    t += dt;
+
+    processClicks();   // 1. double-clicks
+    processGrabs();    // 2. start or end a grab
+    integrate(f, t);   // 3. gravity and breeze
+    moveHeld();        // 4. held points follow the pointer
+    relax();           // 5. links
+    draw();            // 6. draw
+  }
+
+  function setRunning(on) {
+    if (on === running) return;
+    running = on;
+    grabQueue.length = 0;
+    clickQueue.length = 0;
+    if (on) {
+      lastTime = null;
+      rafId = requestAnimationFrame(frame);
+    } else {
+      cancelAnimationFrame(rafId);
+      endGrab();
+      ptr.holdArmed = false;
+    }
+  }
+
+  function update() {
+    setRunning(!userPaused && onScreen && !document.hidden);
+  }
+
+  function updateButton() {
+    toggleLabel.textContent = userPaused ? 'Play' : 'Pause';
+    // SVG elements have no .hidden property, so set the attribute itself.
+    if (userPaused) { iconPause.setAttribute('hidden', ''); iconPlay.removeAttribute('hidden'); }
+    else { iconPlay.setAttribute('hidden', ''); iconPause.removeAttribute('hidden'); }
+  }
+
+  toggle.addEventListener('click', () => {
+    userPaused = !userPaused;
+    updateButton();
+    update();
+  });
+
+  if (reduceMotion) {
+    const onReduceChange = (e) => {
+      if (e.matches && !userPaused) {
+        userPaused = true;
+        updateButton();
+        update();
+      }
+    };
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener('change', onReduceChange);
+    else if (reduceMotion.addListener) reduceMotion.addListener(onReduceChange);
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      update();
+    }).observe(canvas);
+  }
+  document.addEventListener('visibilitychange', update);
+
+  // ---------- Sizing ----------
+  function measure() {
+    const r = canvas.getBoundingClientRect();
+    return { w: r.width, h: r.height, d: Math.min(window.devicePixelRatio || 1, 2) };
+  }
+
+  function applySize(m) {
+    W = m.w;
+    H = m.h;
+    dpr = m.d;
+    canvas.width = Math.max(1, Math.round(W * dpr));
+    canvas.height = Math.max(1, Math.round(H * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);  // all maths in CSS pixels
+  }
+
+  function onResize() {
+    const m = measure();
+    if (m.w < 1 || m.h < 1) return;
+    if (m.w === W && m.h === H && m.d === dpr) return;
+    applySize(m);
+    hangSheet();       // a fresh sheet on every resize
+    draw();
+  }
+
+  if ('ResizeObserver' in window) new ResizeObserver(onResize).observe(canvas);
+  window.addEventListener('resize', onResize);
+
+  // ---------- Start ----------
+  applySize(measure());
+  build();
+  if (userPaused) settle();   // reduced motion: start paused on a meaningful still frame
+  draw();
+  updateButton();
+  update();
+})();
+</script>
+</body>
+</html>

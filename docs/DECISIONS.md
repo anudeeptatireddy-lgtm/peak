@@ -21,6 +21,10 @@ Record owner answers, trade-offs, and deviations from the PRD here, newest first
 
 ## Log
 
+**2026-10-17, steps 6.1–6.2: `overprint` and `halftone` ported from the riso demo.** Both match `reference/riso-demo.html` in the parity test at both sizes (added to `PORTED` with their own scripted moments). Every demo constant is a slider default, or a reasoned constant where SCENES.md #35 calls it fixed physics (the middle spring 0.042, damping 0.80/0.84/0.87, the second wobble 0.035, jumps 70ms apart) or where it is geometry (the honeycomb row height, the riso misregistration offsets). Two small differences from the demo, neither visible in the parity test: a click registers on release (our shared pointer) rather than on press, and halftone's spacing slider uses 0 for "auto" (short side ÷ 30, kept between 18 and 30), like `drop` and `pluck`. Both default to the Riso world.
+
+**2026-10-17, handoff.** Work stopped at a clean point for an account switch. State, open items and the next actions are in `docs/HANDOFF.md`.
+
 **2026-10-17, Wave 5 prompt tests: scenes can opt out of the palette's blend.** Every prompt carries the world's blend line ("multiply them like ink on paper" in light worlds). `goo` never blends: its blobs must melt into one shape, and multiplying inside the goo filter makes dark overlaps. The goo prompt test caught it (every blob in the right place, only the overlaps darker), so `SceneMeta` gained `blends: false`, which swaps the blend line for "no blending" in the prompt.
 
 **2026-10-17, Wave 5 wrap-up: `drop`'s desktop parity is skipped, not an expected failure.** The Wave 5 full run showed it passing ("expected to fail, but passed"): the one-frame start offset between the demo's loop and ours depends on timing, so the comparison passes on some runs and fails on others. An expected-failure marker made the suite flaky either way, so the known exception is now a skip with its reason in `tests/e2e/parity.spec.ts`. The phone size still runs and passes.

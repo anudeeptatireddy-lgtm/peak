@@ -220,4 +220,33 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(400);
     yield 'signature:stirred';
   },
+  async *overprint(pp, step, { width, height }) {
+    await step(800);
+    yield 'wander';
+    const x = Math.round(width * 0.4);
+    const y = Math.round(height * 0.5);
+    await both(pp, (p) => p.mouse.move(x, y));
+    await step(600);
+    yield 'chase';
+    await both(pp, (p) => p.mouse.click(x, y));
+    await step(200);
+    yield 'jump';
+  },
+  async *halftone(pp, step, { width, height }) {
+    await step(600);
+    yield 'idle';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.35), Math.round(height * 0.45)));
+    await step(500);
+    yield 'swell';
+    for (let k = 1; k <= 5; k++) {
+      await both(pp, (p) =>
+        p.mouse.move(Math.round(width * (0.35 + k * 0.05)), Math.round(height * 0.45)),
+      );
+      await step(16);
+    }
+    yield 'misprint';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.5), Math.round(height * 0.5)));
+    await step(400);
+    yield 'ripple';
+  },
 };
