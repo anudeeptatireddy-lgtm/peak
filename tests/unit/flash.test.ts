@@ -284,3 +284,33 @@ describe('moire interference (⚠)', () => {
     }
   });
 });
+
+describe('tunnel rings (⚠)', () => {
+  it('never passes more than 3 rings a second at the fastest settings', async () => {
+    const { fly } = await import('../../src/scenes/tunnel/fly');
+    const { params } = await import('../../src/scenes/tunnel/params');
+    const slider = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    for (const dt of [1 / 240, 1 / 60, 0.05]) {
+      const s = { frac: 0, passed: 0, travel: 0, since: 0 };
+      const base = slider('spacing').min;
+      // Flat out for a minute, with the speed jumping around between the extremes.
+      const speeds = [
+        slider('speed').max * slider('boost').max * slider('speedUnit').max,
+        slider('speed').min * slider('speedUnit').min,
+      ];
+      const times: number[] = [];
+      let t = 0;
+      for (let i = 0; i < 60 / dt; i++) {
+        t += dt;
+        const v = speeds[Math.floor(t / 2) % 2]!;
+        for (let k = fly(s, v, base, dt); k > 0; k--) times.push(t);
+      }
+      expect(times.length).toBeGreaterThan(10);
+      expect(worstSecond(times)).toBeLessThanOrEqual(3);
+    }
+  });
+});

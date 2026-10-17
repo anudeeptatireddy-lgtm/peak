@@ -221,3 +221,8 @@ Audited every page at 390 and 360 wide (sideways scroll, tap-target size, text s
 - Trade-off: at the default spacing (8px) the layer slides at most 12px/s and turns at most about 1.4°/s. That is slow on purpose; larger spacing allows faster motion.
 - Dots use one pre-tinted tile per layer, filled as a pattern (cheap even at 3px spacing).
 - Under reduced motion the still frame is a fixed small shift and turn. Prompt test is pending (Spicy; run with the other Wave 6 Spicy scenes).
+
+## 2026-10-17: 6.7 `tunnel` (⚠)
+- Rings sit one "gap" apart; gap = max(base spacing, speed ÷ 3), so rings pass any spot at most 3 times a second at any speed. On top of that, `fly.ts` lets a ring pass the camera only if the last one passed at least 1/3 second ago (a ring that is early waits just short of the camera, too close to see). That makes the cap hold even if the speed setting jumps from the fastest to the slowest. `tests/unit/flash.test.ts` runs it flat out at 240, 60 and 20 frames a second with the speed jumping between extremes.
+- The path is a simplex-noise curve (fixed seed): each ring is shifted by noise of its distance along the tunnel, minus the camera's own shift, so the tunnel bends ahead of you. Defaults: path width 0.6 and windiness 0.0003 (the first guess, 0.8 and 0.001, looked tangled).
+- Press-and-hold boosts (mouse button down; on touch, after the 250ms hold). It steers itself when nobody points. Not prompt-tested yet (Spicy; run with the other Wave 6 Spicy scenes).

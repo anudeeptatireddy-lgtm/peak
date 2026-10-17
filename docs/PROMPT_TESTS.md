@@ -46,7 +46,7 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 38 | `kaleido` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 39 | `morph` | | | not tested (by owner rule: Medium, not Spicy) | | |
 | 40 | `moire` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
-| 41 | `tunnel` | | | pending | | |
+| 41 | `tunnel` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
 | 42 | `lava` | | | pending | | |
 | 43 | `fold` | | | pending | | |
 | 44 | `glitch` | | | pending | | |
