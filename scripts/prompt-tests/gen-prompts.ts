@@ -7,12 +7,11 @@ import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildPrompt } from '../../src/prompt/builder';
 import { defaultParams } from '../../src/scenes/params';
 import { getWorld } from '../../src/theme/worlds';
-import goo from '../../src/scenes/goo/index';
-import cloth from '../../src/scenes/cloth/index';
-import blackhole from '../../src/scenes/blackhole/index';
-import lightning from '../../src/scenes/lightning/index';
-import smoke from '../../src/scenes/smoke/index';
-for (const scene of [goo, cloth, blackhole, lightning, smoke]) {
+
+import moire from '../../src/scenes/moire/index';
+import tunnel from '../../src/scenes/tunnel/index';
+import glitch from '../../src/scenes/glitch/index';
+for (const scene of [moire, tunnel, glitch]) {
   const dir = '' + (process.env.PTEST_DIR ?? './ptest') + '/' + scene.meta.slug;
   mkdirSync(dir, { recursive: true });
   writeFileSync(

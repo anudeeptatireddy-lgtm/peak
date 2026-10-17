@@ -206,6 +206,37 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(100);
     yield 'signature:strike';
   },
+  async *moire(pp, step, { width, height }) {
+    await step(1500);
+    yield 'idle';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.75), Math.round(height * 0.3)));
+    await step(2500);
+    yield 'cursor';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.25), Math.round(height * 0.7)));
+    await step(2500);
+    yield 'moved';
+  },
+  async *tunnel(pp, step, { width, height }) {
+    await step(1500);
+    yield 'flying';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.8), Math.round(height * 0.3)));
+    await step(1200);
+    yield 'steered';
+    await both(pp, (p) => p.mouse.down());
+    await step(1500);
+    yield 'boost';
+    await both(pp, (p) => p.mouse.up());
+  },
+  async *glitch(pp, step, { width, height }) {
+    await step(800);
+    yield 'calm';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.2), Math.round(height * 0.2)));
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.5), Math.round(height * 0.5)));
+    await step(150);
+    yield 'burst';
+    await step(700);
+    yield 'after';
+  },
   async *smoke(pp, step, { width, height }) {
     // A fluid never settles: compare where the smoke is.
     await step(2500);
