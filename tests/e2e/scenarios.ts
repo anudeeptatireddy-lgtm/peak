@@ -131,4 +131,30 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(800);
     yield 'signature:fanned';
   },
+  async *pluck(pp, step, { width, height }) {
+    await step(500);
+    yield 'rest';
+    // Sweep across the strings, then let them ring.
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.2), Math.round(height * 0.5)));
+    for (let k = 1; k <= 12; k++) {
+      await both(pp, (p) =>
+        p.mouse.move(Math.round(width * (0.2 + k * 0.05)), Math.round(height * 0.5)),
+      );
+      await step(16);
+    }
+    await step(200);
+    yield 'ringing';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.5), Math.round(height * 0.02)));
+    await step(3500);
+    yield 'ghost';
+  },
+  async *drop(pp, step, { width, height }) {
+    await step(1200);
+    yield 'falling';
+    await step(4000);
+    yield 'signature:pile';
+    await both(pp, (p) => p.mouse.click(Math.round(width * 0.5), Math.round(height * 0.3)));
+    await step(400);
+    yield 'signature:tap';
+  },
 };

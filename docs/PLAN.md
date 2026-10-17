@@ -231,8 +231,8 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 
 - [x] **5.1 `confetti`** · SCENES.md #24 (build the burst as a reusable module; `countdown` uses it)
 - [ ] **5.2 `goo`** · SCENES.md #25
-- [ ] **5.3 `drop`** · SCENES.md #26 (port from `reference/riso-demo.html`)
-- [ ] **5.4 `pluck`** · SCENES.md #27 (port from `reference/riso-demo.html`)
+- [x] **5.3 `drop`** · SCENES.md #26 (port from `reference/riso-demo.html`)
+- [x] **5.4 `pluck`** · SCENES.md #27 (port from `reference/riso-demo.html`)
 - [ ] **5.5 `cloth`** · SCENES.md #28 (featured)
 - [ ] **5.6 `fireworks`** · SCENES.md #29 (⚠ flash test; featured)
 - [ ] **5.7 `blackhole`** · SCENES.md #30

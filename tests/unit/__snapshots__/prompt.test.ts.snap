@@ -368,6 +368,324 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Ink-ball pile
+
+## What I want
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+- Draw balls as circles in their accent color, one path per accent (skipping any still above the top), using the blend mode above.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. At the start, round(clamp(width ÷ 40, 14, 38)) balls are made, each at x = rmax + random × (width − 2 × rmax) and y = −random × height × 1.4 − rmax (Math.random() in that order, before the ball's own random calls), so they rain in.
+- There are at most 90 balls; adding one more removes the oldest.
+- Ball radii run from rmin = clamp(short side × 3%, 12, 26) px to rmax = clamp(short side × 7.5%, 26, 70) px. Making a ball calls Math.random() for its radius = rmin + (rmax − rmin) × random^1.7 (mostly small balls), then for its starting sideways speed = (random × 2 − 1) × 1.5; its mass is radius², and balls take the accents in turn (ball k uses accent k mod 3, counting every ball ever made).
+- Each frame runs 3 substeps with h = f ÷ 3. In each, for every ball in order: vy += 0.42 × h; vx ×= 0.996^h; x += vx × h; y += vy × h; side walls at 0 and the width put it back and bounce it with 0.5 of its sideways speed; the floor sits at height × 0.94: a ball past it is put back on it, its vy becomes −|vy| × floor bounce, and vx ×= 0.97^h. Then the cursor push (below). Then every pair (i < j, in order) that overlaps is pushed apart along the line between centers by the overlap, split by inverse mass, and if they move toward each other gets an impulse jn = −((1 + ball bounce) × relative speed along the line) ÷ (1/m₁ + 1/m₂).
+- Floor bounce 0.3.
+- Ball bounce 0.25.
+- The pointer is an invisible ball of radius clamp(short side × 9%, 44, 90) px with the pointer's velocity (its movement since last frame ÷ f): a ball overlapping it is placed just outside it, and if it moves toward the pointer (relative to the pointer's velocity) its velocity −= 1.5 × that speed along the line. A mouse pushes whenever it is over the canvas, a finger only after holding still for 0.25s (so swipes still scroll). A click or tap (on release) adds a ball at that point with vy = −3.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- On resize, recompute the sizes and floor, and keep each ball inside the side walls. The starting balls are made once, on the first resize.
+- Reduced-motion still frame: the balls where they are.
+
+## How people interact
+- The canvas has touch-action: pan-y.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`drop prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Ink-ball pile
+
+Balls in three inks fall in and pile up at the bottom, their colors overprinting where they overlap. Tapping drops another ball where I tap. Moving through the pile shoves it around and it settles again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Gravity: 0.42
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`echo prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Echo trail
 
@@ -4359,6 +4677,324 @@ Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8
 - Snap-back strength: 0.02
 - Bounciness: 0.86
 - Click blast: 40
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Strings
+
+## What I want
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame, holds vertical strings gap = clamp(width ÷ 34, 22, 44) px apart: n = max(3, floor((width − gap) ÷ gap)) strings, the first at x = (width − (n − 1) × gap) ÷ 2. Each string is anchored at y = height × 0.12 and y = height × 0.95. String i uses accent (i mod 3).
+- In dark worlds (additive blending), a ringing string is stroked four times along its path: in its accent at opacity a × 0.07 and width w × 6, at a × 0.16 and w × 2.8, at a × 0.9 and width w, then in #FFFFFF at a × 0.85 and width max(w × 0.38, 0.6). In light worlds it is stroked once in its accent at opacity a and width w.
+- String i's stiffness is 0.03 + 0.08 × (1 − i ÷ (n − 1)), so strings on the left are tighter. A free string's sideways offset rings on a damped spring each frame: velocity = (velocity − stiffness × offset × f) × 0.987^f; offset += velocity × f.
+- Pull limit = clamp(gap × 1.9, 42, 84) px. When the pointer (inside the anchored height) crosses a string between two frames ((previous x − string x) × (x − string x) ≤ 0, with x changed), the string is grabbed: its offset follows the pointer (x − string x), its bend point follows the pointer's y (clamped 12px inside the anchors), and its velocity is 0, until the offset passes the pull limit or the pointer leaves; then it rings.
+- After 3s without the pointer, an invisible hand sweeps across: direction = random < 0.5 ? left-to-right : right-to-left, y = height × (0.3 + random × 0.3), wave = 0.08 + random × 0.08 (Math.random() in that order). Over 2.1s, u goes from 0 to 1; the hand is at x from −60 to width + 60 (or the reverse) and y + sin(u × 2π × 1.5) × height × wave, and it plucks like the pointer. Then the idle timer restarts. Any real pointer cancels it.
+- Draw anchors as dots of radius 2.2px in the secondary text color (one path). For each string, with lit share a = min(|offset| ÷ (pull limit × 0.3), 1) and its path top anchor → (x + offset, bend y) → bottom anchor (round caps and joins): if a < 0.98, stroke it in the secondary text color at opacity (1 − a) × 0.55, width 1.4px; if a > 0.02, stroke it lit with width w = 1.6 + min(|offset| ÷ pull limit, 1) × 3.2 px, using the blend mode above.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Rebuild the strings on every resize; string i keeps its offset and velocity.
+- Reduced-motion still frame: the strings as they are (at rest when the page loads).
+
+## How people interact
+- Listen for pointer events on the canvas (touch-action: pan-y): a mouse plucks whenever it moves over the canvas, a finger while it touches (sideways drags strum; vertical swipes still scroll).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pluck prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Strings
+
+Vertical strings span the screen. Sweeping across them grabs each string in turn; it bends with my pointer until pulled too far, then lets go and rings with a damped vibration. Resting strings are soft gray; ringing ones light up in the accent colors, and in dark worlds they glow. When idle, an invisible hand strums them now and then.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Lowest string tension: 0.03
+- Ring time: 0.987
+- Bend before release: 1.9
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

@@ -6,11 +6,36 @@ import { dirname } from 'node:path';
 import { expect, type Page, type TestInfo } from '@playwright/test';
 
 export const PROTOTYPE = readFileSync('reference/peak-prototype.html', 'utf8');
+/** The earlier riso demo, source of `pluck`, `drop`, `overprint` and `halftone`. */
+export const RISO_DEMO = readFileSync('reference/riso-demo.html', 'utf8');
+export const FROM_RISO_DEMO = ['pluck', 'drop', 'overprint', 'halftone'];
+/** Our Riso world, so both pages draw with the same inks (the demo has its own palette). */
+const RISO = {
+  ground: '#F4F2FF',
+  ink: '#1A1240',
+  'ink-soft': '#4E4777',
+  c1: '#EC1C7F',
+  c2: '#2A47EA',
+  c3: '#FF7A00',
+};
 
 export const SEED = 20261016;
 
 /** The prototype with only one scene's section kept and its header/captions hidden. */
 export function prototypeFor(slug: string): string {
+  if (FROM_RISO_DEMO.includes(slug)) {
+    const only = RISO_DEMO.replace(
+      /<section class="scene[^"]*"[^>]*data-scene="([a-z]+)"[\s\S]*?<\/section>/g,
+      (block, s: string) => (s === slug ? block : ''),
+    );
+    const vars = Object.entries(RISO)
+      .map(([k, v]) => `--${k}:${v}!important;`)
+      .join('');
+    return only.replace(
+      '</style>',
+      `:root{${vars}}.site-header,.caption,.scene.has-canvas::after{display:none!important}</style>`,
+    );
+  }
   const withoutOthers = PROTOTYPE.replace(
     /<section class="scene[^"]*"[^>]*data-scene="([a-z]+)"[\s\S]*?<\/section>/g,
     (block, s: string) => (s === slug ? block : ''),
