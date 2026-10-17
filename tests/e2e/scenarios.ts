@@ -237,6 +237,22 @@ export const SCENARIOS: Record<string, Scenario> = {
     await step(700);
     yield 'after';
   },
+  async *fogged(pp, step, { width, height }) {
+    await step(800);
+    yield 'fogged';
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.15), Math.round(height * 0.5)));
+    for (let k = 1; k <= 12; k++) {
+      await both(pp, (p) =>
+        p.mouse.move(Math.round(width * (0.15 + k * 0.06)), Math.round(height * 0.5)),
+      );
+      await step(16);
+    }
+    await both(pp, (p) => p.mouse.move(Math.round(width * 0.95), Math.round(height * 0.9)));
+    await step(300);
+    yield 'wiped';
+    await step(3000);
+    yield 'creeping';
+  },
   async *smoke(pp, step, { width, height }) {
     // A fluid never settles: compare where the smoke is.
     await step(2500);

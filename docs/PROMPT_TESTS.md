@@ -60,4 +60,4 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 ## Not tested yet
 
 Scenes are tested as their wave finishes. To save the owner's usage, each wave tests its Spicy scenes plus at least one easy scene; any scene left untested is listed here with the reason.
-
+| 51 | `fogged` | | | agent running | | |

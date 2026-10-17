@@ -277,3 +277,6 @@ Full suite: 561 passed, 134 skipped (the skips are desktop-only or phone-only sp
 
 ## 2026-10-18: Wave 6 prompt tests (moire, tunnel, glitch)
 Three fresh agents (about 90k tokens each) built the pages from the default prompts. Under the measured rule: `moire` and `glitch` pass; `tunnel` failed first on ink amount and the side-by-side showed why: a bug in our scene (the fog gradient faded toward black, so it looked like a gray smudge on light worlds). Fixed in the scene (not the prompt); it now passes. The ink-center rule gained a band: 5–10% apart is judged by eye (a random noise path can't match exactly). The `smoke` expected-fail stays.
+
+## 2026-10-18: 7b.1 `fogged` (gallery only)
+- A colorful scene behind a pane of fog. The fog is a blurred copy (drawn small, then doubled up with smoothing) whitened with the surface color, masked by a 4px-cell fog amount that the cursor sets to zero in a soft circle; the fog creeps back (even share plus a share from the thickest neighboring cell, so wiped areas refill from their edges); drips start under the wipe, run down at a set speed, and clear a thin line. Built at half resolution for speed. Name drawn in the main text color. Not on the home page (gallery only, as the owner asked).
