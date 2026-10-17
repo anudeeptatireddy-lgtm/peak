@@ -50,7 +50,7 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 42 | `lava` | | | not tested (by owner rule: Medium, not Spicy) | | |
 | 43 | `fold` | | | not tested (by owner rule: Medium, not Spicy) | | |
 | 44 | `glitch` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
-| 45 | `magnetic` | | | pending | | |
+| 45 | `magnetic` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 46 | `countdown` | | | pending | | |
 | 47 | `trail` | | | pending | | |
 | 48 | `curtain` | | | pending | | |

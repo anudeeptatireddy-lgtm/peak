@@ -7136,6 +7136,312 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Magnetic buttons
+
+## What I want
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+
+## How it moves
+- A row of buttons centered in a full-screen section (100svh, at least 540px), labeled Start, Explore, Contact (split at commas, trimmed, at most 4 buttons, each label cut to 16 characters; "Start" if empty), 1.25rem apart, wrapping to another line on a narrow screen. Each is a real button at least 2.75rem tall in font weight 700, font size 1.2rem, padding 0.9em × 1.6em, corner radius 100% of its half height (1 = a pill). The first button is filled in the main text color with the background color for its label; the others are transparent with a 2px border and label in the main text color.
+- While the pointer is within 120px of a button's center (a finger while it touches), the button's target offset is (pointer − center) × 0.35 × (1 − distance ÷ 120); outside that reach the target is 0. The label's offset is the button's offset × 1.6, so it moves a little more than the body (parallax).
+- Each button's offset follows its target with a spring each frame: velocity += (target − offset) × 0.18 × f, then velocity *= 0.8^f, then offset += velocity × f (x and y separately), using f = min(dt × 60, 2.5).
+- While a button is pressed (pointer down on it), its scale eases toward (x: 1 + 0.1 × 0.5, y: 1 − 0.1), otherwise toward 1, with the same spring and damping (0.18, 0.8) on the scale.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Reduced-motion still frame: the buttons at rest, with no pull and no squish.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger on the screen pulls the nearby buttons.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`magnetic prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Magnetic buttons
+
+A row of buttons. Each one is pulled toward my cursor when it is near, with its label moving a bit more than its body, and it squishes slightly when I press it.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Button labels: "Start, Explore, Contact"
+- Pull strength: 0.35
+- Pull reach: 120px
+- Springiness: 0.18
+- Press squish: 0.1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`marbles prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Text to marbles
 
