@@ -25,7 +25,7 @@ export const meta: SceneMeta = {
     'A big headline whose letters drive in one by one from off-screen like cars, overshoot their spots and skid to a stop with a tilt and a squash, leaving smoky skid marks that fade. Parked, they idle with a small engine shake. Scrolling down makes them peel out the other way in a puff of smoke; scrolling back up brings them back in. Clicking replays the entrance.',
   lookLines: [
     'A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.',
-    'Draw in this order each frame: skid marks, smoke puffs, then the letters.',
+    'Draw in this order each frame: skid marks, smoke puffs, then the letters. Everything is drawn with normal blending (source-over), letters included.',
   ],
   behaviorLines: [
     'Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.',

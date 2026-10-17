@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#F4F2FF">
+  <title>skid</title>
+  <meta name="description" content="A headline whose letters drive in, skid to a stop, and peel out when you scroll.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+  <style>
+    /* ---------- Riso palette ---------- */
+    :root {
+      --bg: #F4F2FF;
+      --ink: #1A1240;
+      --ink-soft: #4E4777;
+      --pink: #EC1C7F;
+      --blue: #2A47EA;
+      --orange: #FF7A00;
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    body {
+      font-family: var(--font);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* ---------- The full-screen stage ---------- */
+    .stage {
+      position: relative;
+      height: 100vh;           /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      overflow: hidden;
+      cursor: pointer;
+      touch-action: pan-y;     /* vertical swipes keep scrolling */
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .stage canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: pan-y;
+    }
+
+    /* Invisible scroll area, only switched on when the page itself barely scrolls */
+    .scroller {
+      position: absolute;
+      inset: 0;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      outline: none;
+    }
+    .scroller::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    .scroller[hidden] { display: none; }
+    .scroller-track { width: 1px; height: 300%; }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+      font-weight: 900;        /* also nudges the browser to download the Anybody font */
+    }
+
+    /* ---------- Controls ---------- */
+    .controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 20px;
+      padding: 16px max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      pointer-events: none;    /* scrolls and taps pass through to the stage... */
+    }
+
+    .hint {
+      margin: 0;
+      max-width: 36rem;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-stretch: 110%;
+      line-height: 1.4;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-left: auto;
+      pointer-events: auto;    /* ...except on the buttons themselves */
+    }
+
+    .btn {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      min-height: 44px;
+      padding: 0 1.1rem;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--ink);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      font-stretch: 115%;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--pink);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--pink); }
+    .btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--pink); }
+
+    .btn--dark { background: var(--ink); color: var(--bg); box-shadow: 3px 3px 0 var(--orange); }
+    .btn--dark:hover { box-shadow: 4px 4px 0 var(--orange); }
+    .btn--dark:active { box-shadow: 1px 1px 0 var(--orange); }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .btn svg { width: 18px; height: 18px; flex: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+      .btn:hover, .btn:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage" id="stage" aria-labelledby="headline">
+      <h1 class="sr-only" id="headline">skid</h1>
+      <canvas id="canvas" aria-hidden="true"></canvas>
+      <div class="scroller" id="scroller" tabindex="-1" aria-hidden="true" hidden>
+        <div class="scroller-track" id="scroller-track"></div>
+      </div>
+    </section>
+
+    <div class="controls">
+      <p class="hint">Scroll down and the letters peel out. Scroll back up and they return. Click or tap to replay.</p>
+      <div class="buttons">
+        <button class="btn" id="replay" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M4 12a8 8 0 1 0 2.34-5.66" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M4 3.5V8h4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Replay</span>
+        </button>
+        <button class="btn btn--dark" id="toggle" type="button">
+          <span class="icon" aria-hidden="true"></span>
+          <span class="label">Pause</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ======================================================================
+    // Settings. All distances are in CSS pixels, all times in seconds.
+    // "per frame" values assume 60 frames per second and are multiplied by f.
+    // ======================================================================
+    const TEXT = 'skid';
+    const INK = '#1A1240';
+    const INK_SOFT = '#4E4777';
+    const FAMILY = '"Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    const DEG = Math.PI / 180;
+
+    const LETTER_GAP = 0.06;      // extra space between letters, x font size
+    const ARRIVE_STAGGER = 0.09;  // 90ms between letters on the way in
+    const DRIVE_SPEED = 40;       // px per frame while driving in
+    const SKID_RUNWAY = 160;      // skidding starts this far before the parked spot
+    const OVERSHOOT = 0.35;       // skid ends this far past the spot, x letter width
+    const SETTLE_TIME = 0.35;     // time to roll back onto the spot
+    const TILT = 12 * DEG;        // max tilt while skidding
+    const SQUASH = 0.18;          // max squash while skidding
+    const TIRE = 0.28;            // tyres sit at center +/- this x letter width
+    const MARK_LIFE = 2.5;
+    const MARK_ALPHA = 0.35;
+    const MARK_WIDTH = 3;
+    const STILL_MARK_ALPHA = 0.15;
+    const PUFF_CHANCE = 0.5;
+    const PUFF_RADIUS = 14;
+    const PUFF_GROW = 3;          // puffs grow to 3x their starting radius
+    const PUFF_LIFE = 1.2;
+    const PUFF_RISE = 0.4;        // px per frame
+    const PUFF_ALPHA = 0.25;
+    const SHAKE = 0.8;            // engine shake, px
+    const LEAVE_STAGGER = 0.06;   // 60ms between letters on the way out
+    const PEEL_ACCEL = 1.2;       // px per frame^2
+    const VEL_LIMIT = 140;
+    const VEL_EASE = 0.2;
+    const VEL_TRIGGER = 4;
+    const MAX_MARKS = 4000;       // safety caps
+    const MAX_PUFFS = 1000;
+
+    // ======================================================================
+    // Elements
+    // ======================================================================
+    const stage = document.getElementById('stage');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const scroller = document.getElementById('scroller');
+    const track = document.getElementById('scroller-track');
+    const replayBtn = document.getElementById('replay');
+    const toggleBtn = document.getElementById('toggle');
+    const toggleIcon = toggleBtn.querySelector('.icon');
+    const toggleLabel = toggleBtn.querySelector('.label');
+
+    const ICON_PAUSE = '<svg viewBox="0 0 24 24" focusable="false"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg>';
+    const ICON_PLAY = '<svg viewBox="0 0 24 24" focusable="false"><path d="M8 5.5v13a1 1 0 0 0 1.5.87l11-6.5a1 1 0 0 0 0-1.74l-11-6.5A1 1 0 0 0 8 5.5z" fill="currentColor"/></svg>';
+
+    const motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+
+    // ======================================================================
+    // State
+    // ======================================================================
+    let W = 0, H = 0, dpr = 1;          // canvas size in CSS px, pixel ratio
+    let fontSize = 100, baseY = 0;      // headline size and baseline
+    let t = 0;                          // seconds the loop has run
+    let mode = 'out';                   // 'in' (arriving/parked) or 'out' (leaving/gone)
+    let stillMode = false;              // reduced-motion still frame is showing
+    let userPaused = false;
+    let onScreen = true;
+    let rafId = 0, lastNow = 0;
+    let useScroller = false, scrollerH = 0, scrollOffset = 0, lastScroll = 0, velocity = 0;
+    const ALPHA_STEPS = 100;            // opacity steps used to batch marks and smoke
+
+    // One object per letter. state: wait | drive | skid | settle | park | peel | gone
+    const letters = Array.from(TEXT, (ch, i) => ({
+      ch, i,
+      w: 0, park: 0,
+      x: -1e5, prevX: -1e5, vx: 0,
+      state: 'gone',
+      startAt: 0, peelAt: Infinity,
+      skidFromOff: 0, skidDist: 0, skidDur: 0, skidT: 0, markFrom: null,
+      settleT: 0, peelSpeed: 0,
+      angle: 0, sx: 1, sy: 1
+    }));
+    const marks = [];   // { x1, x2, y, born }
+    const puffs = [];   // { x, y, born }
+
+    const clamp = (v, lo, hi) => (v < lo ? lo : v > hi ? hi : v);
+    const easeOutQuad = (p) => 1 - (1 - p) * (1 - p);
+    const easeInOutCubic = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+
+    // ======================================================================
+    // Font and layout
+    // ======================================================================
+    function applyFont(size) {
+      ctx.font = '900 ' + size + 'px ' + FAMILY;
+      // Ask for the wide ("expanded") cut. Browsers that don't understand
+      // the keyword in this spot simply ignore it and keep the line above.
+      ctx.font = '900 expanded ' + size + 'px ' + FAMILY;
+      if ('fontStretch' in ctx) ctx.fontStretch = 'expanded';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+    }
+
+    function lineWidth(size) {
+      return ctx.measureText(TEXT).width + (letters.length - 1) * LETTER_GAP * size;
+    }
+
+    function layout() {
+      if (!W || !H) return;
+      let size = Math.min(H * 0.34, W * 0.26);
+      applyFont(size);
+      for (let k = 0; k < 4; k++) {               // shrink if wider than 84% of the screen
+        const lw = lineWidth(size);
+        if (lw <= W * 0.84 + 0.5) break;
+        size *= (W * 0.84) / lw;
+        applyFont(size);
+      }
+      fontSize = size;
+
+      const rowStart = (W - lineWidth(size)) / 2;
+      for (const L of letters) {
+        const left = rowStart + ctx.measureText(TEXT.slice(0, L.i)).width + L.i * LETTER_GAP * size;
+        L.w = ctx.measureText(L.ch).width;
+        L.park = left + L.w / 2;
+        if (L.state === 'park') L.x = L.park;
+      }
+
+      // Put the middle of the row (between the top of the tallest letter
+      // and the bottom of the lowest) at half the height.
+      const m = ctx.measureText(TEXT);
+      const ascent = Number.isFinite(m.actualBoundingBoxAscent) ? m.actualBoundingBoxAscent : size * 0.72;
+      const descent = Number.isFinite(m.actualBoundingBoxDescent) ? m.actualBoundingBoxDescent : 0;
+      baseY = H / 2 + (ascent - descent) / 2;
+    }
+
+    function resize() {
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      if (w !== W || h !== H || ratio !== dpr) {
+        W = w; H = h; dpr = ratio;
+        canvas.width = Math.max(1, Math.round(W * dpr));
+        canvas.height = Math.max(1, Math.round(H * dpr));
+      }
+      layout();
+      updateScrollMode();
+      if (!rafId) render();   // keep a correct picture while paused
+    }
+
+    // ======================================================================
+    // Entrance and exit
+    // ======================================================================
+    const startX = (L) => -1.5 * L.w;   // right edge one letter width off the left side
+
+    function startEntrance() {
+      mode = 'in';
+      for (const L of letters) {
+        L.state = 'wait';
+        L.startAt = t + ARRIVE_STAGGER * L.i;
+        L.peelAt = Infinity;
+        L.x = L.prevX = startX(L);
+        L.vx = 0;
+        L.markFrom = null;
+        L.angle = 0; L.sx = 1; L.sy = 1;
+      }
+    }
+
+    function startPeel() {
+      mode = 'out';
+      const last = letters.length - 1;
+      for (const L of letters) {
+        if (L.state === 'wait' || L.state === 'gone') {
+          L.state = 'gone';              // never showed up, nothing to drive away
+          L.peelAt = Infinity;
+        } else {
+          L.peelAt = t + LEAVE_STAGGER * (last - L.i);   // rightmost first
+        }
+      }
+    }
+
+    function beginSkid(L, from, elapsed) {
+      const to = L.park + OVERSHOOT * L.w;
+      const dist = to - from;
+      if (dist <= 0) { beginSettle(L); return; }
+      L.state = 'skid';
+      L.skidFromOff = from - L.park;
+      L.skidDist = dist;
+      // 2 x distance / start speed keeps the start speed equal to the driving speed
+      L.skidDur = (2 * dist) / (DRIVE_SPEED * 60);
+      L.skidT = Math.min(elapsed, L.skidDur);
+      L.markFrom = from;
+    }
+
+    function beginSettle(L) {
+      L.state = 'settle';
+      L.settleT = 0;
+      L.angle = 0; L.sx = 1; L.sy = 1;
+    }
+
+    function parkAll() {
+      mode = 'in';
+      for (const L of letters) {
+        L.state = 'park';
+        L.x = L.prevX = L.park;
+        L.vx = 0;
+        L.peelAt = Infinity;
+        L.angle = 0; L.sx = 1; L.sy = 1;
+      }
+    }
+
+    // ======================================================================
+    // Per-frame updates
+    // ======================================================================
+    function updateParticles(f) {
+      let k = 0;
+      while (k < marks.length && t - marks[k].born >= MARK_LIFE) k++;
+      if (k) marks.splice(0, k);
+      k = 0;
+      while (k < puffs.length && t - puffs[k].born >= PUFF_LIFE) k++;
+      if (k) puffs.splice(0, k);
+      for (const p of puffs) p.y -= PUFF_RISE * f;
+    }
+
+    function addPuff(x, y) {
+      puffs.push({ x, y, born: t });
+      if (puffs.length > MAX_PUFFS) puffs.splice(0, puffs.length - MAX_PUFFS);
+    }
+
+    function addMark(x1, x2) {
+      if (Math.abs(x2 - x1) < 0.01) return;
+      marks.push({ x1, x2, y: baseY, born: t });
+      if (marks.length > MAX_MARKS) marks.splice(0, marks.length - MAX_MARKS);
+    }
+
+    function updateLetters(dt, f) {
+      for (const L of letters) {          // left to right
+        L.prevX = L.x;
+        L.markFrom = null;
+        let fresh = false;                // skid began during this frame
+        let skidded = false;
+
+        // Time to peel out?
+        if (L.peelAt <= t && L.state !== 'peel' && L.state !== 'gone') {
+          L.state = 'peel';
+          L.peelSpeed = Math.max(0, L.vx);   // parked letters start from rest
+          L.peelAt = Infinity;
+          L.angle = 0; L.sx = 1; L.sy = 1;
+        }
+
+        if (L.state === 'wait') {
+          if (t >= L.startAt) {
+            L.state = 'drive';
+            L.x = L.prevX = startX(L);
+            if (L.x >= L.park - SKID_RUNWAY) { beginSkid(L, L.x, 0); fresh = true; }
+          }
+        } else if (L.state === 'drive') {
+          L.x += DRIVE_SPEED * f;
+          const from = L.park - SKID_RUNWAY;
+          if (L.x >= from) {
+            // carry the bit we drove past the skid point into the skid
+            beginSkid(L, from, (L.x - from) / (DRIVE_SPEED * 60));
+            fresh = true;
+          }
+        }
+
+        if (L.state === 'skid') {
+          if (!fresh) L.skidT += dt;
+          const p = L.skidDur > 0 ? Math.min(1, L.skidT / L.skidDur) : 1;
+          L.x = L.park + L.skidFromOff + L.skidDist * easeOutQuad(p);
+          const s = Math.sin(Math.PI * p);
+          L.angle = TILT * s;             // clockwise
+          L.sx = 1 - SQUASH * s;
+          L.sy = 1 + SQUASH * s;
+          skidded = true;
+          if (p >= 1) beginSettle(L);
+        } else if (L.state === 'settle') {
+          L.settleT += dt;
+          const p = Math.min(1, L.settleT / SETTLE_TIME);
+          L.x = L.park + OVERSHOOT * L.w * (1 - easeInOutCubic(p));
+          if (p >= 1) { L.state = 'park'; L.x = L.park; }
+        } else if (L.state === 'park') {
+          L.x = L.park;
+        } else if (L.state === 'peel') {
+          L.peelSpeed += PEEL_ACCEL * f;
+          L.x += L.peelSpeed * f;
+          L.angle = -TILT * Math.min(1, L.peelSpeed / DRIVE_SPEED) / 2;   // lean back
+          if (L.x - L.w * 0.6 > W) L.state = 'gone';
+        }
+
+        L.vx = f > 0 ? (L.x - L.prevX) / f : 0;
+
+        // Skid marks (two tyres) and smoke
+        if (skidded) {
+          const from = L.markFrom !== null ? Math.max(L.prevX, L.markFrom) : L.prevX;
+          const o = TIRE * L.w;
+          addMark(from - o, L.x - o);
+          addMark(from + o, L.x + o);
+          if (Math.random() < PUFF_CHANCE) addPuff(L.x - o, baseY);
+        } else if (L.state === 'peel') {
+          if (Math.random() < Math.min(1, PUFF_CHANCE * 2)) addPuff(L.x - TIRE * L.w, baseY);
+        }
+      }
+    }
+
+    // ======================================================================
+    // Drawing: marks, then smoke, then letters
+    // ======================================================================
+    function drawMarks() {
+      if (!marks.length) return;
+      ctx.strokeStyle = INK_SOFT;
+      ctx.lineWidth = MARK_WIDTH;
+      ctx.lineCap = 'butt';
+      // Marks are stored oldest first, so equal opacities sit next to each
+      // other: one path per opacity step keeps the drawing batched.
+      let level = -1;
+      ctx.beginPath();
+      for (const m of marks) {
+        const q = Math.round(MARK_ALPHA * (1 - (t - m.born) / MARK_LIFE) * ALPHA_STEPS);
+        if (q !== level) {
+          if (level > 0) { ctx.globalAlpha = level / ALPHA_STEPS; ctx.stroke(); }
+          ctx.beginPath();
+          level = q;
+        }
+        ctx.moveTo(m.x1, m.y);
+        ctx.lineTo(m.x2, m.y);
+      }
+      if (level > 0) { ctx.globalAlpha = level / ALPHA_STEPS; ctx.stroke(); }
+    }
+
+    function drawStillMarks() {
+      ctx.strokeStyle = INK_SOFT;
+      ctx.lineWidth = MARK_WIDTH;
+      ctx.lineCap = 'butt';
+      ctx.globalAlpha = STILL_MARK_ALPHA;
+      for (const L of letters) {
+        const o = TIRE * L.w;
+        for (const x of [L.park - o, L.park + o]) {
+          ctx.beginPath();
+          ctx.moveTo(x - SKID_RUNWAY, baseY);
+          ctx.lineTo(x, baseY);
+          ctx.stroke();
+        }
+      }
+    }
+
+    function drawPuffs() {
+      if (!puffs.length) return;
+      ctx.fillStyle = INK_SOFT;
+      let level = -1;
+      ctx.beginPath();
+      for (const p of puffs) {
+        const age = clamp((t - p.born) / PUFF_LIFE, 0, 1);
+        const q = Math.round(PUFF_ALPHA * (1 - age) * ALPHA_STEPS);
+        if (q !== level) {
+          if (level > 0) { ctx.globalAlpha = level / ALPHA_STEPS; ctx.fill(); }
+          ctx.beginPath();
+          level = q;
+        }
+        const r = PUFF_RADIUS * (1 + (PUFF_GROW - 1) * age);
+        ctx.moveTo(p.x + r, p.y);
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      }
+      if (level > 0) { ctx.globalAlpha = level / ALPHA_STEPS; ctx.fill(); }
+    }
+
+    function drawLetters() {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = INK;
+      for (const L of letters) {
+        if (L.state === 'wait' || L.state === 'gone') continue;
+        if (L.x + L.w < 0 || L.x - L.w > W) continue;   // off-screen
+        let y = baseY;
+        if (L.state === 'park' && !stillMode) {
+          y += SHAKE * Math.sin(t * 38 + L.i * 1.7);     // engine idle
+        }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (L.state === 'peel') {
+          // lean back around the rear tyre, like a car lifting its nose
+          const o = TIRE * L.w;
+          ctx.translate(L.x - o, y);
+          ctx.rotate(L.angle);
+          ctx.fillText(L.ch, o, 0);
+        } else if (L.angle !== 0 || L.sx !== 1 || L.sy !== 1) {
+          // tilt and squash around the middle of the baseline
+          ctx.translate(L.x, y);
+          ctx.rotate(L.angle);
+          ctx.scale(L.sx, L.sy);
+          ctx.fillText(L.ch, 0, 0);
+        } else {
+          ctx.fillText(L.ch, L.x, y);
+        }
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function render() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      // Marks and smoke are "ink": where they overlap they multiply, like riso print.
+      ctx.globalCompositeOperation = 'multiply';
+      if (stillMode) {
+        drawStillMarks();
+      } else {
+        drawMarks();
+        drawPuffs();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      drawLetters();
+    }
+
+    // ======================================================================
+    // Scrolling
+    // ======================================================================
+    function readScroll() {
+      return useScroller
+        ? scroller.scrollTop + scrollOffset
+        : (window.scrollY || window.pageYOffset || 0);
+    }
+
+    // If the page can barely scroll, switch on the invisible scroller.
+    function updateScrollMode() {
+      const before = readScroll();
+      const doc = document.documentElement;
+      const pageHeight = Math.max(doc.scrollHeight, document.body ? document.body.scrollHeight : 0);
+      const viewport = window.innerHeight || H;
+      const shortPage = pageHeight - viewport < viewport * 0.5;
+
+      const wasScroller = useScroller;
+      useScroller = shortPage;
+      scroller.hidden = !shortPage;
+      if (shortPage) {
+        const h = scroller.clientHeight || H;
+        // Only (re)build the scroll area when it is new or changed size,
+        // so a stray resize event doesn't interrupt someone mid-scroll.
+        if (!wasScroller || h !== scrollerH) {
+          scrollerH = h;
+          track.style.height = (h * 3) + 'px';    // three screens tall
+          scroller.scrollTop = h;                 // start in the middle
+          scrollOffset = before - scroller.scrollTop;
+        }
+      }
+      if (wasScroller !== useScroller) lastScroll = readScroll();
+    }
+
+    // Quietly jump back by one screen near either end, and remember the jump.
+    scroller.addEventListener('scroll', () => {
+      const h = scroller.clientHeight;
+      if (!h) return;
+      const top = scroller.scrollTop;
+      if (top < h * 0.5 || top > h * 1.5) {
+        scroller.scrollTop = top < h * 0.5 ? top + h : top - h;
+        scrollOffset += top - scroller.scrollTop;
+      }
+    }, { passive: true });
+
+    function readVelocity(dt) {
+      const pos = readScroll();
+      const raw = clamp((pos - lastScroll) / Math.max(dt * 60, 0.25), -VEL_LIMIT, VEL_LIMIT);
+      lastScroll = pos;
+      velocity += (raw - velocity) * VEL_EASE;
+      if (velocity > VEL_TRIGGER && mode === 'in') startPeel();
+      else if (velocity < -VEL_TRIGGER && mode === 'out') startEntrance();
+    }
+
+    // Keyboard users: arrow keys / Page keys / Space drive the invisible scroller.
+    document.addEventListener('keydown', (e) => {
+      if (!useScroller || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      const onControl = e.target && e.target.closest && e.target.closest('button, a, input, textarea, select');
+      const page = scroller.clientHeight * 0.8;
+      let step = 0;
+      if (e.key === 'ArrowDown') step = 60;
+      else if (e.key === 'ArrowUp') step = -60;
+      else if (e.key === 'PageDown') step = page;
+      else if (e.key === 'PageUp') step = -page;
+      else if (e.key === ' ' && !onControl) step = e.shiftKey ? -page : page;
+      if (!step) return;
+      e.preventDefault();
+      scroller.scrollTop += step;
+    });
+
+    // ======================================================================
+    // The one animation loop
+    // ======================================================================
+    const shouldRun = () => !userPaused && onScreen && !document.hidden;
+
+    function frame(now) {
+      rafId = 0;
+      if (!shouldRun()) return;
+      let dt = (now - lastNow) / 1000;
+      lastNow = now;
+      dt = dt > 0 ? Math.min(dt, 0.05) : 0;
+      const f = Math.min(dt * 60, 2.5);
+      t += dt;
+
+      readVelocity(dt);
+      updateParticles(f);
+      updateLetters(dt, f);
+      render();
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (rafId || !shouldRun()) return;
+      lastNow = performance.now();
+      lastScroll = readScroll();
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+
+    // ======================================================================
+    // Controls
+    // ======================================================================
+    function setPaused(paused) {
+      userPaused = paused;
+      toggleIcon.innerHTML = paused ? ICON_PLAY : ICON_PAUSE;
+      toggleLabel.textContent = paused ? 'Play' : 'Pause';
+      if (paused) stop(); else start();
+    }
+
+    function leaveStillFrame() {
+      if (!stillMode) return;
+      stillMode = false;
+      startEntrance();
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      if (userPaused) {
+        if (stillMode) leaveStillFrame();
+        setPaused(false);
+      } else {
+        setPaused(true);
+      }
+    });
+
+    replayBtn.addEventListener('click', () => {
+      stillMode = false;
+      startEntrance();
+      if (userPaused) setPaused(false);
+    });
+
+    // Click or tap (fires on release) anywhere on the stage replays the entrance.
+    stage.addEventListener('click', () => {
+      if (userPaused) return;
+      startEntrance();
+    });
+
+    // ======================================================================
+    // Start-up
+    // ======================================================================
+    window.addEventListener('resize', resize);
+    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(stage);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        if (onScreen) start(); else stop();
+      }).observe(stage);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop(); else start();
+    });
+
+    function showStillFrame() {
+      stillMode = true;
+      parkAll();
+      marks.length = 0;
+      puffs.length = 0;
+      setPaused(true);
+      render();
+    }
+
+    if (motionQuery) {
+      const onMotionChange = (e) => { if (e.matches) showStillFrame(); };
+      if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+      else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+    }
+
+    // Lay out again once the Anybody font has arrived.
+    function onFontReady() {
+      layout();
+      if (!rafId) render();
+    }
+    if (document.fonts) {
+      if (document.fonts.load) document.fonts.load('900 100px "Anybody"', TEXT).then(onFontReady, () => {});
+      if (document.fonts.ready) document.fonts.ready.then(onFontReady, () => {});
+      if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', onFontReady);
+    }
+
+    resize();
+    if (motionQuery && motionQuery.matches) {
+      showStillFrame();
+    } else {
+      setPaused(false);
+      startEntrance();
+      start();
+    }
+  })();
+  </script>
+</body>
+</html>

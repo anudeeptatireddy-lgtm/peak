@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Neon Sign</title>
+  <meta name="description" content="A neon-tube sign that buzzes on letter by letter and glows when you hover or tap a letter.">
+
+  <!-- The "Anybody" font from Google Fonts. If it can't load, a system sans-serif is used instead. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+
+  <style>
+    /* ---------- Colors: the "Riso" palette ---------- */
+    :root {
+      --bg: #F4F2FF;        /* background */
+      --ink: #1A1240;       /* main text */
+      --ink-soft: #4E4777;  /* secondary text */
+      --pink: #EC1C7F;      /* accent 1 */
+      --blue: #2A47EA;      /* accent 2 */
+      --orange: #FF7A00;    /* accent 3 */
+      --sans: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* The full-screen area that holds the sign */
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100vh;      /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      overflow: hidden;
+    }
+
+    /* The canvas the sign is painted on. It is transparent, so the page color shows through. */
+    .sign {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: transparent;
+      touch-action: pan-y;               /* lets people scroll up and down on touch screens */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Hidden on screen, but still read out by screen readers */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Hint text and the Play/Pause button along the bottom */
+    .controls {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 24px;
+      bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px));
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px 20px;
+      pointer-events: none;              /* only the button itself catches clicks */
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.4;
+      font-stretch: 112%;
+      text-align: center;
+    }
+
+    .toggle {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 20px 0 16px;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      background: #FFFFFF;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .toggle:hover {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    /* A clear ring when the button is reached with the keyboard */
+    .toggle:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .toggle svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      flex: none;
+    }
+
+    .toggle[data-state="playing"] .icon-play,
+    .toggle[data-state="paused"] .icon-pause {
+      display: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .toggle { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <!-- What the sign says, for screen readers -->
+    <h1 class="visually-hidden">open late</h1>
+
+    <!-- The sign is painted here. It's decoration, so screen readers skip it. -->
+    <canvas class="sign" id="sign" aria-hidden="true"></canvas>
+
+    <div class="controls">
+      <p class="hint">Hover or tap a letter to make it glow brighter.</p>
+      <button class="toggle" id="toggle" type="button" data-state="playing">
+        <svg class="icon-pause" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+          <rect x="2" y="1" width="3.5" height="12" rx="1"></rect>
+          <rect x="8.5" y="1" width="3.5" height="12" rx="1"></rect>
+        </svg>
+        <svg class="icon-play" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+          <path d="M3 1.6v10.8a.8.8 0 0 0 1.2.7l8.8-5.4a.8.8 0 0 0 0-1.4L4.2.9A.8.8 0 0 0 3 1.6z"></path>
+        </svg>
+        <span class="toggle-label">Pause</span>
+      </button>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    // ---------- Settings (all taken from the brief) ----------
+    const SIGN_TEXT = 'open late';
+    const ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];   // word k uses ACCENTS[k mod 3]
+    const INK = '#1A1240';                               // main text color
+    const FONT_STACK = '"Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    const FONT_WEIGHT = 500;
+    const SIZE_OF_HEIGHT = 0.2;      // font size = height x 0.2
+    const MAX_WIDTH_SHARE = 0.84;    // ...but never wider than 84% of the width
+    const MIDDLE_AT = 0.46;          // middle of the sign sits at 46% of the height
+
+    const TUBE_WIDTH = 5;            // the tube outline
+    const GLOW_PASSES = 4;           // halo passes, widest first
+    const GLOW_SPREAD = 1.8;
+    const GLOW_STRENGTH = 0.6;
+    const HOT_CORE_MIX = 0.55;       // tube color mixed 55% toward the main text color
+
+    const FIRST_DELAY = 0.5;         // seconds before the first letter warms up
+    const LETTER_STEP = 0.35;        // seconds between letters
+    const WARM_TIME = LETTER_STEP * 0.6;
+
+    const FLICKER = 0.3;
+    const DIM_LEVEL = 0.25;          // a flickering letter drops to this brightness...
+    const DIM_TIME = 0.12;           // ...for this long (seconds)
+    const MIN_FLICKER_GAP = 1 / 3;   // safety: never more than 3 flickers a second
+
+    const HOVER_EASE = 0.15;
+    const HOVER_GLOW = 0.6;          // glow x (1 + 0.6 x boost)
+    const TAP_FADE = 1.2;            // seconds for a tapped letter to fade back
+
+    const MAX_DPR = 2;
+    const FONT_WAIT_MS = 1500;       // start anyway if the font is slow to arrive
+
+    // ---------- Page elements ----------
+    const stage = document.querySelector('.stage');
+    const canvas = document.getElementById('sign');
+    const ctx = canvas.getContext('2d');
+    const button = document.getElementById('toggle');
+    const buttonLabel = button.querySelector('.toggle-label');
+
+    // ---------- Color helpers ----------
+    function hexToRgb(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function mix(fromHex, toHex, amount) {
+      const a = hexToRgb(fromHex);
+      const b = hexToRgb(toHex);
+      const c = a.map((v, i) => Math.round(v + (b[i] - v) * amount));
+      return `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+    }
+
+    // ---------- The letters (one neon tube each) ----------
+    const letters = [];
+    let offset = 0;
+    SIGN_TEXT.split(' ').forEach((word, k) => {
+      const color = ACCENTS[k % ACCENTS.length];
+      const core = mix(color, INK, HOT_CORE_MIX);
+      for (let j = 0; j < word.length; j++) {
+        const i = letters.length;
+        letters.push({
+          ch: word[j],
+          pos: offset + j,                          // where it sits in the full text
+          color,
+          core,
+          start: FIRST_DELAY + i * LETTER_STEP,     // when it starts warming up
+          checked: false,                           // has its warm-up stutter roll happened?
+          x: 0, w: 0, top: 0, bottom: 0,            // its box, in CSS pixels
+          brightness: 0,
+          hover: 0,                                 // eased hover boost
+          tap: 0                                    // tap boost, fades over 1.2s
+        });
+      }
+      offset += word.length + 1;
+    });
+    const ALL_ON_AT = letters[letters.length - 1].start + WARM_TIME;
+
+    // ---------- State ----------
+    let W = 0;                 // canvas size in CSS pixels
+    let H = 0;
+    let baseline = 0;
+    let t = 0;                 // seconds the loop has run
+    let lastTime = null;
+    let rafId = 0;
+    let hovered = -1;
+    let flickerIndex = -1;
+    let flickerUntil = 0;
+    let lastFlickerAt = -Infinity;
+
+    const motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    let reduceMotion = !!(motionQuery && motionQuery.matches);
+    let playing = !reduceMotion;         // reduced motion: start paused
+    let showFullyLit = reduceMotion;     // reduced motion still frame: the sign fully lit
+    let onScreen = true;
+    let fontSettled = false;
+
+    // ---------- Layout ----------
+    function fontAt(size) {
+      return `italic ${FONT_WEIGHT} ${size.toFixed(2)}px ${FONT_STACK}`;
+    }
+
+    function layout() {
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      if (!w || !h) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const pw = Math.round(w * dpr);
+      const ph = Math.round(h * dpr);
+      if (canvas.width !== pw || canvas.height !== ph) {
+        canvas.width = pw;
+        canvas.height = ph;
+      }
+      W = w;
+      H = h;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);   // from here on, all math is in CSS pixels
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+
+      let size = h * SIZE_OF_HEIGHT;
+      ctx.font = fontAt(size);
+      let lineWidth = ctx.measureText(SIGN_TEXT).width;
+      if (lineWidth > w * MAX_WIDTH_SHARE) {
+        size *= (w * MAX_WIDTH_SHARE) / lineWidth;
+        ctx.font = fontAt(size);
+        lineWidth = ctx.measureText(SIGN_TEXT).width;
+      }
+
+      const m = ctx.measureText(SIGN_TEXT);
+      const ascent = typeof m.actualBoundingBoxAscent === 'number' ? m.actualBoundingBoxAscent : size * 0.72;
+      const descent = typeof m.actualBoundingBoxDescent === 'number' ? m.actualBoundingBoxDescent : size * 0.22;
+      // Put the middle of the ink (halfway between ascent and descent) at 46% of the height.
+      baseline = h * MIDDLE_AT + (ascent - descent) / 2;
+
+      const left = (w - lineWidth) / 2;
+      const pad = TUBE_WIDTH;
+      for (const L of letters) {
+        L.x = left + ctx.measureText(SIGN_TEXT.slice(0, L.pos)).width;
+        L.w = ctx.measureText(L.ch).width;
+        L.top = baseline - ascent - pad;
+        L.bottom = baseline + descent + pad;
+      }
+
+      if (!rafId) draw(showFullyLit);
+    }
+
+    function letterAt(x, y) {
+      for (let i = 0; i < letters.length; i++) {
+        const L = letters[i];
+        if (x >= L.x && x < L.x + L.w && y >= L.top && y <= L.bottom) return i;
+      }
+      return -1;
+    }
+
+    // ---------- Flicker ----------
+    function canFlicker() {
+      return !reduceMotion && flickerIndex < 0 && t - lastFlickerAt >= MIN_FLICKER_GAP;
+    }
+
+    function startFlicker(i) {
+      if (!canFlicker()) return;
+      flickerIndex = i;
+      flickerUntil = t + DIM_TIME;
+      lastFlickerAt = t;
+    }
+
+    function brightnessOf(L, i) {
+      let b = (t - L.start) / WARM_TIME;          // warm-up: rises from 0 to 1
+      b = b < 0 ? 0 : b > 1 ? 1 : b;
+      if (i === flickerIndex && t < flickerUntil) b = Math.min(b, DIM_LEVEL);
+      return b;
+    }
+
+    // ---------- One step of the animation ----------
+    function update(dt, f) {
+      if (flickerIndex >= 0 && t >= flickerUntil) flickerIndex = -1;
+
+      // Halfway through each letter's warm-up: one roll to see if it stutters.
+      for (let i = 0; i < letters.length; i++) {
+        const L = letters[i];
+        if (!L.checked && t >= L.start + WARM_TIME / 2) {
+          L.checked = true;
+          if (!reduceMotion && Math.random() < FLICKER) startFlicker(i);
+        }
+      }
+
+      // Once every letter is on: now and then, one random letter dims.
+      if (t >= ALL_ON_AT && canFlicker() && Math.random() < FLICKER * 8 * dt / 60) {
+        startFlicker(Math.floor(Math.random() * letters.length));
+      }
+
+      const ease = Math.min(1, HOVER_EASE * f);
+      for (let i = 0; i < letters.length; i++) {
+        const L = letters[i];
+        L.brightness = brightnessOf(L, i);
+        L.hover += ((i === hovered ? 1 : 0) - L.hover) * ease;
+        if (L.tap > 0) L.tap = Math.max(0, L.tap - dt / TAP_FADE);
+      }
+    }
+
+    // ---------- Drawing ----------
+    function draw(fullyLit) {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = 1;
+      ctx.clearRect(0, 0, W, H);
+      if (!W || !H) return;
+
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+
+      // 1) The halo: 4 soft passes, widest first, added together ("lighter").
+      ctx.globalCompositeOperation = 'lighter';
+      for (let pass = GLOW_PASSES; pass >= 1; pass--) {
+        ctx.lineWidth = TUBE_WIDTH + pass * GLOW_SPREAD * TUBE_WIDTH;
+        const passAlpha = GLOW_STRENGTH * (1 - (pass - 1) / GLOW_PASSES) / GLOW_PASSES;
+        let current = null;
+        for (const L of letters) {
+          const b = fullyLit ? 1 : L.brightness;
+          const boost = fullyLit ? 0 : Math.max(L.hover, L.tap);
+          const alpha = passAlpha * b * (1 + HOVER_GLOW * boost);
+          if (alpha <= 0.001) continue;
+          if (L.color !== current) {
+            current = L.color;
+            ctx.strokeStyle = current;
+          }
+          ctx.globalAlpha = Math.min(1, alpha);
+          ctx.strokeText(L.ch, L.x, baseline);
+        }
+      }
+
+      // 2) The tube itself: a hot core, multiplied like ink where colors overlap.
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.lineWidth = TUBE_WIDTH;
+      let current = null;
+      for (const L of letters) {
+        const b = fullyLit ? 1 : L.brightness;
+        if (b <= 0.001) continue;
+        if (L.core !== current) {
+          current = L.core;
+          ctx.strokeStyle = current;
+        }
+        ctx.globalAlpha = b;
+        ctx.strokeText(L.ch, L.x, baseline);
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // ---------- The one animation loop ----------
+    function shouldRun() {
+      return playing && onScreen && fontSettled;
+    }
+
+    function frame(now) {
+      rafId = 0;
+      if (!shouldRun()) return;
+      let dt = lastTime === null ? 0 : (now - lastTime) / 1000;
+      lastTime = now;
+      dt = Math.min(Math.max(dt, 0), 0.05);
+      const f = Math.min(dt * 60, 2.5);
+      t += dt;
+      update(dt, f);
+      draw(false);
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function sync() {
+      if (shouldRun()) {
+        if (!rafId) {
+          lastTime = null;
+          rafId = requestAnimationFrame(frame);
+        }
+      } else {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+        }
+        draw(showFullyLit);
+      }
+    }
+
+    // ---------- Play / Pause ----------
+    function renderButton() {
+      button.dataset.state = playing ? 'playing' : 'paused';
+      buttonLabel.textContent = playing ? 'Pause' : 'Play';
+    }
+
+    function setPlaying(next) {
+      playing = next;
+      if (playing) {
+        showFullyLit = false;
+      } else {
+        // Never freeze on a dimmed letter.
+        flickerIndex = -1;
+        letters.forEach((L, i) => { L.brightness = brightnessOf(L, i); });
+      }
+      renderButton();
+      sync();
+    }
+
+    button.addEventListener('click', () => setPlaying(!playing));
+
+    if (motionQuery) {
+      const onMotionChange = (e) => {
+        reduceMotion = e.matches;
+        if (reduceMotion) {
+          showFullyLit = true;
+          setPlaying(false);
+        }
+      };
+      if (motionQuery.addEventListener) motionQuery.addEventListener('change', onMotionChange);
+      else if (motionQuery.addListener) motionQuery.addListener(onMotionChange);
+    }
+
+    // ---------- Hover and tap ----------
+    function toLocal(e) {
+      const r = canvas.getBoundingClientRect();
+      return [e.clientX - r.left, e.clientY - r.top];
+    }
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
+      const [x, y] = toLocal(e);
+      hovered = letterAt(x, y);
+    });
+
+    canvas.addEventListener('pointerleave', () => { hovered = -1; });
+
+    let press = null;
+    canvas.addEventListener('pointerdown', (e) => {
+      if (!e.isPrimary || e.pointerType === 'mouse') return;
+      press = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    });
+
+    canvas.addEventListener('pointerup', (e) => {
+      if (!press || e.pointerId !== press.id) return;
+      const moved = Math.hypot(e.clientX - press.x, e.clientY - press.y);
+      press = null;
+      if (moved > 12 || !rafId) return;           // a scroll, or the sign is paused
+      const [x, y] = toLocal(e);
+      const i = letterAt(x, y);
+      if (i >= 0) letters[i].tap = 1;             // brighten, then fade back over 1.2s
+    });
+
+    canvas.addEventListener('pointercancel', () => { press = null; });
+
+    // ---------- Resizing, fonts, and pausing when off-screen ----------
+    window.addEventListener('resize', layout);
+    if ('ResizeObserver' in window) new ResizeObserver(layout).observe(stage);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        sync();
+      }).observe(canvas);
+    }
+
+    document.addEventListener('visibilitychange', () => { lastTime = null; });
+
+    function settleFont() {
+      if (fontSettled) return;
+      fontSettled = true;
+      sync();
+    }
+
+    if (document.fonts && document.fonts.load) {
+      document.fonts
+        .load(`italic ${FONT_WEIGHT} 100px "Anybody"`, SIGN_TEXT)
+        .catch(() => [])
+        .then(() => { layout(); settleFont(); });
+      if (document.fonts.ready) document.fonts.ready.then(() => layout());
+      if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', () => layout());
+      setTimeout(settleFont, FONT_WAIT_MS);
+    } else {
+      fontSettled = true;
+    }
+
+    // ---------- Start ----------
+    renderButton();
+    layout();
+    sync();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#F4F2FF">
+  <meta name="description" content="A headline with flames licking up from its letters. Move your cursor near the word to fan the flames.">
+  <title>Burning headline</title>
+
+  <!-- The "Anybody" font from Google Fonts (variable width 50–150, weight 100–900). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+
+  <style>
+    /* ---------- "Riso" palette ---------- */
+    :root {
+      --paper: #F4F2FF;     /* background */
+      --ink: #1A1240;       /* main text */
+      --ink-soft: #4E4777;  /* secondary text */
+      --pink: #EC1C7F;      /* accent 1 */
+      --blue: #2A47EA;      /* accent 2 */
+      --orange: #FF7A00;    /* accent 3 */
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color-scheme: light;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    body {
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------- The stage: full-screen canvas plus a few overlays ---------- */
+    .stage {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fire {
+      display: block;
+      width: 100%;
+      height: 100vh;    /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      touch-action: pan-y;               /* sideways drags fan the flames, vertical swipes scroll */
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .bar {
+      position: absolute;
+      inset: 0 0 auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      pointer-events: none;              /* let the pointer reach the canvas... */
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--paper);          /* keeps the label readable if flames rise this high */
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 650;
+      font-stretch: 115%;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Three overlapping ink dots, multiplied like a riso print. */
+    .mark {
+      position: relative;
+      flex: none;
+      width: 28px;
+      height: 14px;
+    }
+
+    .mark i {
+      position: absolute;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      mix-blend-mode: multiply;
+    }
+
+    .mark i:nth-child(1) { left: 0;    background: var(--pink); }
+    .mark i:nth-child(2) { left: 7px;  background: var(--blue); }
+    .mark i:nth-child(3) { left: 14px; background: var(--orange); }
+
+    .btn {
+      pointer-events: auto;              /* ...but keep the button clickable */
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      font: 700 15px/1 var(--font);
+      font-stretch: 110%;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--blue); }
+
+    .btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    .btn .icon-play { display: none; }
+    .btn[data-state="paused"] .icon-play { display: block; }
+    .btn[data-state="paused"] .icon-pause { display: none; }
+
+    .foot {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 16px 16px 24px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .hint,
+    .note {
+      margin: 0 auto;
+      max-width: 34em;
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .note {
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    .hint-touch { display: none; }
+
+    @media (hover: none) and (pointer: coarse) {
+      .hint-mouse { display: none; }
+      .hint-touch { display: inline; }
+    }
+
+    @media (min-width: 700px) {
+      .bar { padding: 24px 32px; }
+      .foot { padding-bottom: 32px; }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" id="stage">
+    <!-- Decorative: the word is drawn here, and also given to screen readers in the h1 below. -->
+    <canvas class="fire" id="fire" aria-hidden="true"></canvas>
+
+    <h1 class="sr-only">hot</h1>
+
+    <div class="bar">
+      <p class="tag"><span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>Burning headline</p>
+      <button class="btn" id="toggle" type="button" data-state="playing">
+        <svg class="icon-pause" viewBox="0 0 14 14" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1"/><rect x="8.5" y="1" width="3.5" height="12" rx="1"/></svg>
+        <svg class="icon-play" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.6v10.8a.8.8 0 0 0 1.2.7l8.6-5.4a.8.8 0 0 0 0-1.4L4.2.9A.8.8 0 0 0 3 1.6z"/></svg>
+        <span class="label">Pause flames</span>
+      </button>
+    </div>
+
+    <div class="foot">
+      <p class="hint">
+        <span class="hint-mouse">Move your cursor near the word to fan the flames.</span>
+        <span class="hint-touch">Drag sideways near the word to fan the flames.</span>
+      </p>
+      <p class="note" id="note" hidden>Your device asks for less motion, so the flames start still. Press Play for a calm, gently flowing version.</p>
+    </div>
+  </main>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* =========================================================
+       Settings you can tweak
+       ========================================================= */
+    const WORD = 'hot';
+    const INK = '#1A1240';                                   // headline colour
+    const ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];       // cool tips -> hot base
+    const FONT_FAMILY = '"Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+
+    const SPREAD = 0.8;         // how far flames wobble sideways (cells)
+    const INTENSITY = 1.2;      // overall strength of the fire and the pointer fan
+    const COOLING = 0.05;       // heat lost per row (bigger = shorter flames)
+    const DETAIL = 1;           // "medium" detail divisor
+    const FAN_RADIUS = 200;     // px: how close the pointer must be to fan the flames
+    const MAX_DPR = 2;          // cap for sharp screens, keeps phones smooth
+    const CALM_EASE = 0.15;     // reduced motion: shown heat moves 15% toward new heat per frame
+    const STILL_STEPS = 90;     // reduced motion still frame: flames after 90 steps from cold
+
+    /* =========================================================
+       Elements
+       ========================================================= */
+    const stage = document.getElementById('stage');
+    const canvas = document.getElementById('fire');
+    const ctx = canvas.getContext('2d');
+    const btn = document.getElementById('toggle');
+    const btnLabel = btn.querySelector('.label');
+    const note = document.getElementById('note');
+
+    // Hidden canvas: the word drawn here marks which heat cells are fuel.
+    const fuelCanvas = document.createElement('canvas');
+    const fuelCtx = fuelCanvas.getContext('2d', { willReadFrequently: true });
+
+    // Small offscreen image: one pixel per heat cell, scaled up over the main canvas.
+    const heatCanvas = document.createElement('canvas');
+    const heatCtx = heatCanvas.getContext('2d');
+
+    /* =========================================================
+       Colour: heat (0..1) -> RGBA, mixed in OKLab
+       ========================================================= */
+    const LITTLE_ENDIAN = new Uint8Array(new Uint32Array([0x01020304]).buffer)[0] === 0x04;
+
+    function pack(r, g, b, a) {
+      return LITTLE_ENDIAN
+        ? ((a << 24) | (b << 16) | (g << 8) | r) >>> 0
+        : ((r << 24) | (g << 16) | (b << 8) | a) >>> 0;
+    }
+
+    function hexToRgb(hex) {
+      const n = parseInt(hex.slice(1), 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function toLinear(c) {
+      c /= 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+
+    function toSrgb(c) {
+      const v = c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
+      return Math.round(Math.min(1, Math.max(0, v)) * 255);
+    }
+
+    function rgbToOklab([r8, g8, b8]) {
+      const r = toLinear(r8), g = toLinear(g8), b = toLinear(b8);
+      const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+      const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+      const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+      return [
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+      ];
+    }
+
+    function oklabToRgb([L, A, B]) {
+      const l = Math.pow(L + 0.3963377774 * A + 0.2158037573 * B, 3);
+      const m = Math.pow(L - 0.1055613458 * A - 0.0638541728 * B, 3);
+      const s = Math.pow(L - 0.0894841775 * A - 1.2914855480 * B, 3);
+      return [
+        toSrgb( 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+        toSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+        toSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s),
+      ];
+    }
+
+    function mix(a, b, t) {
+      return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+    }
+
+    // 256-step lookup table so each frame is just one array read per cell.
+    const LUT = (() => {
+      const rgb = ACCENTS.map(hexToRgb);
+      const lab = rgb.map(rgbToOklab);
+      const lut = new Uint32Array(256);
+      for (let k = 0; k < 256; k++) {
+        const h = k / 255;
+        let c, a;
+        if (h <= 0.35) {             // first accent fades in
+          c = rgb[0];
+          a = h / 0.35;
+        } else if (h <= 0.7) {       // first -> second accent
+          c = oklabToRgb(mix(lab[0], lab[1], (h - 0.35) / 0.35));
+          a = 1;
+        } else {                     // second -> third accent
+          c = oklabToRgb(mix(lab[1], lab[2], (h - 0.7) / 0.3));
+          a = 1;
+        }
+        lut[k] = pack(c[0], c[1], c[2], Math.round(a * 255));
+      }
+      return lut;
+    })();
+
+    /* =========================================================
+       State
+       ========================================================= */
+    let W = 0, H = 0, dpr = 1;            // canvas size in CSS pixels
+    let cell = 5, cols = 0, rows = 0;      // heat grid
+    let heat = new Float32Array(0);        // simulated heat
+    let shown = new Float32Array(0);       // heat on screen (smoothed under reduced motion)
+    let fuel = new Uint8Array(0);          // 1 where the letters cover the cell centre
+    let fuelIdx = new Int32Array(0);       // list of fuel cells, for speed
+    let image = null, image32 = null;
+    let fontSize = 0;
+
+    const reduceQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reduced = reduceQuery.matches;
+    let playing = !reduced;                // reduced motion starts paused
+    let onScreen = true;
+    let initialized = false;
+    let rafId = 0;
+    let lastTime = 0;
+    let dt = 0;                            // seconds since last frame (clamped); the heat step itself is per frame
+
+    const pointer = { x: 0, y: 0, active: false };
+    const touchIds = new Set();
+
+    /* =========================================================
+       Font helper: Anybody, weight 900, "expanded"
+       ========================================================= */
+    function setFont(c, size) {
+      const px = size.toFixed(2) + 'px ';
+      c.font = '900 ' + px + FONT_FAMILY;
+      if ('fontStretch' in c) {
+        c.fontStretch = 'expanded';
+      } else {
+        c.font = '900 expanded ' + px + FONT_FAMILY;   // ignored by browsers that cannot parse it
+      }
+    }
+
+    /* =========================================================
+       Build the grid and the fuel (everything starts cold)
+       ========================================================= */
+    function rebuild() {
+      const rect = canvas.getBoundingClientRect();
+      W = Math.max(1, rect.width);
+      H = Math.max(1, rect.height);
+      dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1);
+
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);   // from here on, all maths is in CSS pixels
+
+      cell = W < 700 ? 8 : 5;
+      cols = Math.ceil(W / cell);
+      rows = Math.ceil(H / cell);
+
+      heat = new Float32Array(cols * rows);
+      shown = new Float32Array(cols * rows);
+      fuel = new Uint8Array(cols * rows);
+
+      heatCanvas.width = cols;
+      heatCanvas.height = rows;
+      image = heatCtx.createImageData(cols, rows);
+      image32 = new Uint32Array(image.data.buffer);
+
+      buildFuel();
+
+      if (playing) render();
+      else stillFrame();
+    }
+
+    function buildFuel() {
+      const fw = Math.ceil(W), fh = Math.ceil(H);
+      fuelCanvas.width = fw;
+      fuelCanvas.height = fh;
+
+      // Font size = 30% of the height, shrunk if the word is wider than 78% of the width.
+      fontSize = H * 0.3;
+      setFont(fuelCtx, fontSize);
+      const width = fuelCtx.measureText(WORD).width;
+      if (width > W * 0.78) {
+        fontSize *= (W * 0.78) / width;
+        setFont(fuelCtx, fontSize);
+      }
+
+      const cx = W / 2, cy = H * 0.62;
+      fuelCtx.textAlign = 'center';
+      fuelCtx.textBaseline = 'middle';
+      fuelCtx.fillStyle = '#000';
+      fuelCtx.clearRect(0, 0, fw, fh);
+      fuelCtx.fillText(WORD, cx, cy);
+
+      // Only read back the pixels around the word.
+      const m = fuelCtx.measureText(WORD);
+      let x0 = 0, y0 = 0, x1 = fw, y1 = fh;
+      if (Number.isFinite(m.actualBoundingBoxAscent)) {
+        x0 = Math.max(0, Math.floor(cx - m.actualBoundingBoxLeft) - 4);
+        x1 = Math.min(fw, Math.ceil(cx + m.actualBoundingBoxRight) + 4);
+        y0 = Math.max(0, Math.floor(cy - m.actualBoundingBoxAscent) - 4);
+        y1 = Math.min(fh, Math.ceil(cy + m.actualBoundingBoxDescent) + 4);
+      }
+      const bw = x1 - x0, bh = y1 - y0;
+      const list = [];
+      if (bw > 0 && bh > 0) {
+        const data = fuelCtx.getImageData(x0, y0, bw, bh).data;
+        for (let y = 0; y < rows; y++) {
+          const py = Math.floor((y + 0.5) * cell);
+          if (py < y0 || py >= y1) continue;
+          for (let x = 0; x < cols; x++) {
+            const px = Math.floor((x + 0.5) * cell);
+            if (px < x0 || px >= x1) continue;
+            if (data[((py - y0) * bw + (px - x0)) * 4 + 3] >= 128) {
+              const i = y * cols + x;
+              fuel[i] = 1;
+              list.push(i);
+            }
+          }
+        }
+      }
+      fuelIdx = Int32Array.from(list);
+    }
+
+    /* =========================================================
+       One heat step
+       ========================================================= */
+    function step(useFan) {
+      const h = heat, f = fuel, n = cols, lastCol = cols - 1;
+
+      // 1. Every fuel cell burns at full heat.
+      for (let k = 0; k < fuelIdx.length; k++) h[fuelIdx[k]] = 1;
+
+      const fan = useFan && pointer.active;
+      const R = FAN_RADIUS, R2 = R * R, px = pointer.x, py = pointer.y;
+
+      // 2. Rows from the top down: each other cell takes the heat of the cell below,
+      //    nudged sideways, minus a little random cooling.
+      for (let y = 0; y < rows - 1; y++) {
+        const row = y * n, below = row + n;
+        const dy = (y + 0.5) * cell - py;
+        const rowFanned = fan && dy > -R && dy < R;
+
+        for (let x = 0; x < n; x++) {
+          const i = row + x;
+          if (f[i]) continue;
+
+          let shift = (Math.random() - 0.5) * 2 * SPREAD;
+          let loss = Math.random() * INTENSITY * COOLING / DETAIL;
+
+          if (rowFanned) {
+            const dx = px - (x + 0.5) * cell;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < R2) {
+              const near = 1 - Math.sqrt(d2) / R;
+              shift += Math.sign(dx) * INTENSITY * near;            // lean toward the pointer
+              loss *= 1 - Math.min(0.8, INTENSITY * near * 0.5);    // and burn taller
+            }
+          }
+
+          // A positive shift pulls heat from the lower-left, so the flame drifts right as it rises.
+          let sx = x - Math.round(shift);
+          if (sx < 0) sx = 0; else if (sx > lastCol) sx = lastCol;
+
+          const v = h[below + sx] - loss;
+          h[i] = v > 0 ? v : 0;
+        }
+      }
+    }
+
+    // Under reduced motion the shown heat only eases 15% of the way to the new heat.
+    function ease() {
+      if (!reduced) return;
+      const s = shown, h = heat;
+      for (let i = 0; i < s.length; i++) s[i] += (h[i] - s[i]) * CALM_EASE;
+    }
+
+    /* =========================================================
+       Drawing
+       ========================================================= */
+    function render() {
+      // Heat -> colour, one pixel per cell.
+      const src = reduced ? shown : heat;
+      const out = image32, lut = LUT;
+      for (let i = 0; i < src.length; i++) {
+        const v = src[i];
+        out[i] = v <= 0 ? 0 : lut[v >= 1 ? 255 : (v * 255 + 0.5) | 0];
+      }
+      heatCtx.putImageData(image, 0, 0);
+
+      ctx.clearRect(0, 0, W, H);
+
+      // Flames: scaled up smoothly and multiplied like ink on paper.
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(heatCanvas, 0, 0, cols * cell, rows * cell);
+
+      // Headline on top, in the main text colour.
+      ctx.globalCompositeOperation = 'source-over';
+      setFont(ctx, fontSize);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = INK;
+      ctx.fillText(WORD, W / 2, H * 0.62);
+    }
+
+    // The still frame: flames after 90 steps from cold, without the pointer.
+    function stillFrame() {
+      heat.fill(0);
+      shown.fill(0);
+      for (let s = 0; s < STILL_STEPS; s++) {
+        step(false);
+        ease();
+      }
+      render();
+    }
+
+    /* =========================================================
+       The one animation loop
+       ========================================================= */
+    function frame(now) {
+      rafId = 0;
+      dt = Math.min(0.05, Math.max(0, (now - lastTime) / 1000));
+      lastTime = now;
+
+      step(true);
+      ease();
+      render();
+
+      if (canRun()) rafId = requestAnimationFrame(frame);
+    }
+
+    function canRun() {
+      return initialized && playing && onScreen && !document.hidden;
+    }
+
+    function start() {
+      if (rafId || !canRun()) return;
+      lastTime = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+
+    /* =========================================================
+       Play / Pause
+       ========================================================= */
+    function updateControls() {
+      btn.dataset.state = playing ? 'playing' : 'paused';
+      btnLabel.textContent = playing ? 'Pause flames' : 'Play flames';
+      note.hidden = !(reduced && !playing);
+    }
+
+    function setPlaying(value) {
+      playing = value;
+      updateControls();
+      if (playing) start();
+      else stop();
+    }
+
+    btn.addEventListener('click', () => setPlaying(!playing));
+
+    function onReduceChange(e) {
+      reduced = e.matches;
+      shown.set(heat);                 // no jump when switching modes
+      if (reduced) setPlaying(false);
+      else updateControls();
+    }
+    if (reduceQuery.addEventListener) reduceQuery.addEventListener('change', onReduceChange);
+    else if (reduceQuery.addListener) reduceQuery.addListener(onReduceChange);
+
+    /* =========================================================
+       Pointer: a mouse fans while it is over the canvas,
+       a finger while it drags sideways.
+       ========================================================= */
+    function setPointer(e) {
+      const r = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - r.left;
+      pointer.y = e.clientY - r.top;
+      pointer.active = true;
+    }
+
+    function endTouch(e) {
+      if (e.pointerType !== 'touch') return;
+      touchIds.delete(e.pointerId);
+      if (touchIds.size === 0) pointer.active = false;
+    }
+
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') touchIds.add(e.pointerId);
+      else setPointer(e);
+    }, { passive: true });
+
+    stage.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch' && !touchIds.has(e.pointerId)) return;
+      setPointer(e);
+    }, { passive: true });
+
+    stage.addEventListener('pointerup', endTouch, { passive: true });
+    stage.addEventListener('pointercancel', endTouch, { passive: true });   // a vertical swipe became a scroll
+    stage.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'touch') endTouch(e);
+      else pointer.active = false;
+    }, { passive: true });
+
+    /* =========================================================
+       Resize, visibility and start-up
+       ========================================================= */
+    let rebuildQueued = 0;
+    function scheduleRebuild() {
+      if (rebuildQueued || !initialized) return;
+      rebuildQueued = requestAnimationFrame(() => {
+        rebuildQueued = 0;
+        const r = canvas.getBoundingClientRect();
+        const d = Math.min(MAX_DPR, window.devicePixelRatio || 1);
+        if (r.width !== W || r.height !== H || d !== dpr) rebuild();
+      });
+    }
+
+    function init() {
+      if (initialized) return;
+      initialized = true;
+      updateControls();
+      rebuild();
+
+      if ('ResizeObserver' in window) new ResizeObserver(scheduleRebuild).observe(canvas);
+      window.addEventListener('resize', scheduleRebuild);
+
+      // Pause when the canvas is scrolled off-screen.
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((entries) => {
+          onScreen = entries[entries.length - 1].isIntersecting;
+          if (onScreen) start();
+          else stop();
+        }).observe(canvas);
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      start();
+    }
+
+    updateControls();
+
+    // Wait (briefly) for the Anybody font so the word does not swap fonts mid-burn.
+    // If it arrives later, rebuild the grid and fuel once it has loaded.
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('900 expanded 100px "Anybody"', WORD).then(
+        () => { if (initialized) rebuild(); else init(); },
+        () => init()
+      );
+      setTimeout(init, 1500);
+    } else {
+      init();
+    }
+  })();
+  </script>
+</body>
+</html>

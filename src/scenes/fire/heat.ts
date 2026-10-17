@@ -45,20 +45,23 @@ export class HeatGrid {
     const loss = (o.cooling * o.burn) / Math.max(0.05, o.height);
     for (let y = 0; y < rows - 1; y++)
       for (let x = 0; x < cols; x++) {
+        const i = y * cols + x;
+        // Fuel stays at its seed heat and draws no random numbers.
+        if (fuel[i]) continue;
         let shift = (rand() - 0.5) * 2 * o.turbulence;
         let keep = 1;
         if (fan && fan.strength > 0) {
-          const d = Math.hypot(x - fan.x, y - fan.y);
+          // Distances are measured from cell centers.
+          const d = Math.hypot(x + 0.5 - fan.x, y + 0.5 - fan.y);
           if (d < fan.radius) {
             const near = 1 - d / fan.radius;
-            shift += Math.sign(fan.x - x) * fan.strength * near;
+            shift += Math.sign(fan.x - (x + 0.5)) * fan.strength * near;
             keep = 1 - Math.min(FIXED.FAN_LIFT_MAX, fan.strength * near * 0.5);
           }
         }
-        const sx = Math.min(cols - 1, Math.max(0, x + Math.round(shift)));
+        // A positive shift takes heat from the lower left, so the flame drifts right as it rises.
+        const sx = Math.min(cols - 1, Math.max(0, x - Math.round(shift)));
         const below = heat[(y + 1) * cols + sx]!;
-        const i = y * cols + x;
-        if (fuel[i]) continue;
         heat[i] = Math.max(0, below - rand() * loss * keep);
       }
   }

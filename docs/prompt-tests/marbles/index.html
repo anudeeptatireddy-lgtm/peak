@@ -1,728 +1,760 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Text to marbles</title>
-<meta name="description" content="A headline made of glass marbles. Click to shatter it, click again to rebuild it.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
-<style>
-  /* "Riso" palette. The script reads these too, so change colours here only. */
-  :root {
-    --bg: #F4F2FF;
-    --ink: #1A1240;
-    --ink-2: #4E4777;
-    --pink: #EC1C7F;
-    --blue: #2A47EA;
-    --orange: #FF7A00;
-    color-scheme: light;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Text to marbles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap">
+  <style>
+    :root {
+      /* "Riso" palette */
+      --bg: #F4F2FF;
+      --ink: #1A1240;
+      --ink-2: #4E4777;
+      --pink: #EC1C7F;
+      --blue: #2A47EA;
+      --orange: #FF7A00;
+      --font: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
 
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
 
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.45;
-    -webkit-text-size-adjust: 100%;
-  }
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
 
-  /* The full-screen stage that holds the marble canvas */
-  .stage {
-    position: relative;
-    height: 100vh;      /* fallback for older browsers */
-    height: 100svh;
-    min-height: 540px;
-    overflow: hidden;
-  }
+    .stage { position: relative; }
 
-  #scene {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    touch-action: pan-y;               /* vertical swipes still scroll the page */
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-tap-highlight-color: transparent;
-  }
+    /* The full-screen, transparent drawing surface. */
+    #marbles {
+      display: block;
+      width: 100%;
+      height: 100vh;      /* fallback for older browsers */
+      height: 100svh;
+      min-height: 540px;
+      background: transparent;
+      cursor: pointer;
+      touch-action: pan-y; /* vertical swipes still scroll the page */
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  /* Title, hint and buttons along the top */
-  .bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px 24px;
-    padding: 20px 28px;
-    pointer-events: none;              /* let clicks fall through to the canvas */
-  }
-  .controls { display: flex; gap: 8px; pointer-events: auto; }
+    /* Hint text and buttons float over the top of the canvas. */
+    .hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px 16px;
+      padding: 20px 24px;
+      pointer-events: none; /* clicks fall through to the canvas... */
+    }
 
-  .name {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 800;
-    font-stretch: 125%;
-    letter-spacing: 0.01em;
-  }
-  .hint {
-    margin: 2px 0 0;
-    color: var(--ink-2);
-    font-size: 0.95rem;
-  }
+    .hint {
+      margin: 0;
+      max-width: 38ch;
+      color: var(--ink-2);
+      font-size: 1rem;
+      font-weight: 500;
+      font-stretch: 110%;
+      line-height: 1.4;
+    }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 44px;
-    padding: 0 18px;
-    font: inherit;
-    font-size: 0.95rem;
-    font-weight: 700;
-    font-stretch: 112%;
-    color: var(--ink);
-    background: var(--bg);
-    border: 2px solid var(--ink);
-    border-radius: 999px;
-    cursor: pointer;
-  }
-  .btn:hover { background: var(--ink); color: var(--bg); }
-  .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
-  #toggle { min-width: 7.5em; }
+    .controls {
+      display: flex;
+      gap: 10px;
+      pointer-events: auto; /* ...except on the buttons */
+    }
 
-  .btn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
-  .btn .icon-play { display: none; }
-  .btn.is-paused .icon-play { display: block; }
-  .btn.is-paused .icon-pause { display: none; }
+    .btn {
+      min-width: 7.5em;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-stretch: 115%;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .btn:hover { background: #E4E0FF; }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: #2E2463; }
+    .btn:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 3px;
+    }
+    .btn:active { transform: translateY(1px); }
 
-  .notes {
-    max-width: 62ch;
-    margin: 0;
-    padding: 32px 28px 48px;
-    color: var(--ink-2);
-  }
-  .notes h2 {
-    margin: 0 0 8px;
-    color: var(--ink);
-    font-size: 1.1rem;
-    font-weight: 800;
-    font-stretch: 125%;
-  }
-  .notes p { margin: 0; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
 
-  .sr-only {
-    position: absolute !important;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
+    @media (max-width: 699px) {
+      .hud { padding: 14px 16px; }
+      .hint { font-size: 0.95rem; }
+    }
 
-  @media (max-width: 699px) {
-    .bar { padding: 16px; }
-    .notes { padding: 24px 16px 40px; }
-  }
-</style>
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+      .btn:active { transform: none; }
+    }
+  </style>
 </head>
 <body>
-<main>
-  <section class="stage">
-    <h1 class="sr-only">marbles</h1>
-    <canvas id="scene" aria-hidden="true"></canvas>
+  <main>
+    <section class="stage" aria-labelledby="headline">
+      <h1 id="headline" class="sr-only">marbles</h1>
+      <p class="sr-only">The word is drawn with small glass marbles. Use the Shatter button to drop them into a pile, and the Rebuild button to put the word back together.</p>
 
-    <div class="bar">
-      <div class="intro">
-        <p class="name">Text to marbles</p>
-        <p class="hint">Click or tap to shatter. Click again to rebuild.</p>
+      <!-- Decorative: hidden from screen readers. -->
+      <canvas id="marbles" aria-hidden="true"></canvas>
+
+      <div class="hud">
+        <p class="hint" id="hint">Click anywhere to shatter the word.</p>
+        <div class="controls">
+          <button type="button" class="btn btn-primary" id="toggle-btn">Shatter</button>
+          <button type="button" class="btn" id="pause-btn">Pause</button>
+        </div>
       </div>
-      <div class="controls">
-        <button type="button" class="btn" id="toggle">Shatter</button>
-        <button type="button" class="btn" id="play">
-          <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>
-          <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 2.2v11.6c0 .6.7 1 1.2.7l9.2-5.8c.5-.3.5-1.1 0-1.4L5.2 1.5C4.7 1.2 4 1.6 4 2.2z"/></svg>
-          <span class="label">Pause</span>
-        </button>
-      </div>
-    </div>
+    </section>
+  </main>
 
-    <p class="sr-only" id="status" role="status" aria-live="polite"></p>
-  </section>
-</main>
+  <script>
+  (function () {
+    'use strict';
 
-<footer class="notes">
-  <h2>How to play</h2>
-  <p>Click or tap the word to shatter it, and again to put it back together. While the marbles are piled up, move your mouse through them to shove them around. On a phone, press and hold for a moment, then drag. Leave them alone and they rebuild themselves after 10 seconds.</p>
-</footer>
+    /* ------------------------------------------------------------------
+       Settings (straight from the brief)
+       ------------------------------------------------------------------ */
+    var WORD = 'marbles';
+    var FONT_STACK = '"Anybody", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+    var BG = '#F4F2FF';
+    var TEXT = '#1A1240';
+    var ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
 
-<script>
-(function () {
-  'use strict';
+    var GRAVITY = 0.5;            // px per frame², scaled by f
+    var RESTITUTION = 0.45;       // speed kept along a hit
+    var ROLL_FRICTION = 0.985;    // horizontal speed kept per frame on the floor
+    var AIR_DRAG = 0.999;         // speed kept per frame while shattered
+    var SPRING = 0.08;            // rebuild spring strength
+    var SPRING_DAMPING = 0.82;    // rebuild damping
+    var PUSH_RADIUS = 70;         // pointer reach, px
+    var PUSH_FORCE = 8 * 0.1;     // pointer strength
+    var AUTO_REBUILD_SECONDS = 10;
+    var HOLD_MS = 250;            // finger must be held still this long to shove
+    var TAP_SLOP = 10;            // px a press may wiggle and still count as a click/tap
+    var FLOOR_MARBLES = 7;        // reduced-motion still frame: marbles resting on the floor
 
-  // ---------- Settings (all numbers come from the brief) ----------
-  const WORD = 'marbles';
-  const GRAVITY = 0.5;            // px per frame², multiplied by f
-  const RESTITUTION = 0.45;       // share of speed kept along a hit
-  const ROLLING_FRICTION = 0.985; // horizontal speed kept per frame on the floor
-  const AIR_DRAG = 0.999;         // speed kept per frame while flying
-  const SPRING = 0.08;            // how hard marbles are pulled home
-  const SPRING_DAMPING = 0.82;
-  const PUSH_RADIUS = 70;         // px around the pointer that get shoved
-  const PUSH_STRENGTH = 8 * 0.1;
-  const HOLD_TO_PUSH_MS = 250;    // a finger must be held still this long to push
-  const TAP_SLOP = 10;            // px a tap may wander and still count as a tap
-  const AUTO_REBUILD_SECONDS = 10;
-  const STILL_FRAME_ON_FLOOR = 7; // marbles resting on the floor in the still frame
-  const TAU = Math.PI * 2;
-
-  // ---------- Page elements ----------
-  const canvas = document.getElementById('scene');
-  const ctx = canvas.getContext('2d');
-  const sampler = document.createElement('canvas'); // hidden canvas, never added to the page
-  const sctx = sampler.getContext('2d', { willReadFrequently: true });
-  const toggleBtn = document.getElementById('toggle');
-  const playBtn = document.getElementById('play');
-  const playLabel = playBtn.querySelector('.label');
-  const statusEl = document.getElementById('status');
-
-  // ---------- Colours, read from the CSS variables ----------
-  const rootStyle = getComputedStyle(document.documentElement);
-  const cssColor = (name, fallback) => rootStyle.getPropertyValue(name).trim() || fallback;
-  const BG = cssColor('--bg', '#F4F2FF');
-  const INK = cssColor('--ink', '#1A1240');
-  const ACCENTS = [cssColor('--pink', '#EC1C7F'), cssColor('--blue', '#2A47EA'), cssColor('--orange', '#FF7A00')];
-
-  function hexToRgb(hex) {
-    let h = hex.replace('#', '');
-    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
-    const n = parseInt(h, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-  function luminance(rgb) {
-    const [r, g, b] = rgb.map((v) => {
-      v /= 255;
-      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  }
-  const bgRgb = hexToRgb(BG);
-  const inkRgb = hexToRgb(INK);
-  const bgIsDarker = luminance(bgRgb) < luminance(inkRgb);
-  const darkRgb = bgIsDarker ? bgRgb : inkRgb;   // darker of background and text
-  const lightRgb = bgIsDarker ? inkRgb : bgRgb;  // lighter of background and text
-  const SHADOW = 'rgba(' + darkRgb.join(',') + ',0.18)';
-  const HIGHLIGHT = 'rgba(' + lightRgb.join(',') + ',0.75)';
-
-  // ---------- State ----------
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let W = 0, H = 0, dpr = 1;   // canvas size in CSS pixels, and pixel ratio
-  let radius = 8;
-  let marbles = [];            // { x, y, vx, vy, hx, hy, c }  (h = home, c = accent index)
-  let shattered = false;
-  let shatterClock = 0;        // seconds spent shattered (only counts while animating)
-  let playing = !reducedMotion.matches;
-  let stillFrame = reducedMotion.matches; // showing the reduced-motion still frame
-  let onScreen = true;
-  let rafId = 0;
-  let lastTime = null;
-
-  // ---------- Finding the marbles' homes ----------
-  function setSamplerFont(size) {
-    sctx.font = '900 ' + size + 'px "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
-    if ('fontStretch' in sctx) sctx.fontStretch = 'expanded'; // must come after .font
-  }
-
-  // Walk a square grid row by row from the top-left; keep points inside the letters.
-  function gridSample(alpha, spacing, limit) {
-    const points = [];
-    for (let y = 0; y < H; y += spacing) {
-      const row = y * W;
-      for (let x = 0; x < W; x += spacing) {
-        if (alpha[(row + x) * 4 + 3] > 127) {
-          points.push(x, y);
-          if (points.length / 2 >= limit) return points;
-        }
-      }
+    /* Shadow uses the darker of background/text, highlight the lighter. */
+    function hexToRgb(hex) {
+      var v = parseInt(hex.slice(1), 16);
+      return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
     }
-    return points;
-  }
-
-  function sampleHomes() {
-    if (!W || !H) return;
-    const small = W < 700;
-    radius = small ? 3.5 : 8;
-    const maxMarbles = small ? 400 : 900;
-    const maxTextWidth = W * (small ? 0.94 : 0.88);
-
-    // Draw the word once on the hidden canvas (resizing it also resets it).
-    sampler.width = W;
-    sampler.height = H;
-    let size = Math.min(H * 0.42, W * 0.24);
-    setSamplerFont(size);
-    const textWidth = sctx.measureText(WORD).width;
-    if (textWidth > maxTextWidth) {
-      size *= maxTextWidth / textWidth;
-      setSamplerFont(size);
+    function luminance(c) {
+      function ch(x) { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); }
+      return 0.2126 * ch(c[0]) + 0.7152 * ch(c[1]) + 0.0722 * ch(c[2]);
     }
-    sctx.textAlign = 'center';
-    sctx.textBaseline = 'middle';
-    sctx.fillStyle = '#000';
-    sctx.fillText(WORD, W / 2, H * 0.42);
-    const alpha = sctx.getImageData(0, 0, W, H).data;
+    var bgRgb = hexToRgb(BG);
+    var textRgb = hexToRgb(TEXT);
+    var bgIsDarker = luminance(bgRgb) < luminance(textRgb);
+    var darkRgb = bgIsDarker ? bgRgb : textRgb;
+    var lightRgb = bgIsDarker ? textRgb : bgRgb;
+    var SHADOW_COLOR = 'rgba(' + darkRgb.join(',') + ',0.18)';
+    var HIGHLIGHT_COLOR = 'rgba(' + lightRgb.join(',') + ',0.75)';
 
-    // Too many marbles? Widen the grid 1px at a time (up to 6 diameters).
-    let spacing = Math.round(2 * radius * 1.05);
-    const maxSpacing = 6 * 2 * radius;
-    let homes = gridSample(alpha, spacing, maxMarbles + 1);
-    while (homes.length / 2 > maxMarbles && spacing < maxSpacing) {
-      spacing += 1;
-      homes = gridSample(alpha, spacing, maxMarbles + 1);
-    }
-    const count = Math.min(homes.length / 2, maxMarbles);
+    /* ------------------------------------------------------------------
+       Elements
+       ------------------------------------------------------------------ */
+    var canvas = document.getElementById('marbles');
+    var ctx = canvas.getContext('2d');
+    var textCanvas = document.createElement('canvas'); // hidden, never added to the page
+    var tctx = textCanvas.getContext('2d', { willReadFrequently: true });
+    var hintEl = document.getElementById('hint');
+    var toggleBtn = document.getElementById('toggle-btn');
+    var pauseBtn = document.getElementById('pause-btn');
 
-    // Marble i keeps its position, speed and colour and gets home i.
-    for (let i = 0; i < count; i++) {
-      const hx = homes[i * 2];
-      const hy = homes[i * 2 + 1];
-      if (i < marbles.length) {
-        marbles[i].hx = hx;
-        marbles[i].hy = hy;
+    /* ------------------------------------------------------------------
+       State (all sizes in CSS pixels)
+       ------------------------------------------------------------------ */
+    var W = 0, H = 0, dpr = 1;
+    var R = 8, D = 16;            // marble radius and diameter
+    var n = 0;                    // marble count
+    var X = new Float32Array(0), Y = new Float32Array(0);    // positions
+    var VX = new Float32Array(0), VY = new Float32Array(0);  // velocities
+    var HX = new Float32Array(0), HY = new Float32Array(0);  // homes
+    var COLOR = new Uint8Array(0);                           // accent index 0..2
+
+    // Spatial hash grid (cell = one diameter)
+    var cols = 1, rows = 1;
+    var cellStart = new Int32Array(2);
+    var cellFill = new Int32Array(1);
+    var cellItems = new Int32Array(0);
+    var cellOf = new Int32Array(0);
+
+    var WHOLE = 'whole', SHATTERED = 'shattered';
+    var mode = WHOLE;
+    var shatteredFor = 0;         // seconds spent shattered (for the auto-rebuild)
+
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    var userPaused = reducedMotion.matches;
+    var stillFrame = reducedMotion.matches; // showing the reduced-motion still frame
+    var onScreen = true;
+    var rafId = 0;
+    var lastTime = 0;
+
+    // Pointer
+    var pointerX = 0, pointerY = 0;
+    var mouseOver = false;
+    var press = null; // the current press: { id, type, startX, startY, x, y, moved, held, timer }
+
+    /* ------------------------------------------------------------------
+       Sampling the headline into marble homes
+       ------------------------------------------------------------------ */
+    function setFont(c, size) {
+      c.font = '900 ' + size + 'px ' + FONT_STACK;
+      if ('fontStretch' in c) {
+        c.fontStretch = 'expanded';
       } else {
-        marbles.push({ x: hx, y: hy, vx: 0, vy: 0, hx: hx, hy: hy, c: Math.floor(Math.random() * 3) });
+        c.font = '900 expanded ' + size + 'px ' + FONT_STACK; // ignored if not understood
       }
     }
-    marbles.length = count; // drop any extra old marbles
-  }
 
-  function snapHome() {
-    for (const m of marbles) {
-      m.x = m.hx; m.y = m.hy; m.vx = 0; m.vy = 0;
+    // Grid points (row by row from the top-left) whose alpha is above 127.
+    function collect(data, w, y0, y1, spacing) {
+      var pts = [];
+      for (var y = Math.ceil(y0 / spacing) * spacing; y < y1; y += spacing) {
+        var rowBase = (y - y0) * w;
+        for (var x = 0; x < w; x += spacing) {
+          if (data[(rowBase + x) * 4 + 3] > 127) pts.push(x, y);
+        }
+      }
+      return pts;
     }
-  }
 
-  // Reduced-motion still frame: the word assembled, last 7 marbles resting on the floor.
-  function placeStillFrame() {
-    snapHome();
-    const n = marbles.length;
-    const k = Math.min(STILL_FRAME_ON_FLOOR, n);
-    const diameter = 2 * radius;
-    for (let t = 0; t < k; t++) {
-      const m = marbles[n - k + t];
-      m.x = W / 2 + (t - (k - 1) / 2) * diameter;
-      m.y = H - radius;
+    function resample() {
+      if (!W || !H) return;
+      var w = W, h = H;
+      textCanvas.width = w;
+      textCanvas.height = h;
+
+      // Font size, shrunk to fit if needed.
+      var size = Math.min(h * 0.42, w * 0.24);
+      setFont(tctx, size);
+      var maxWidth = w * (w < 700 ? 0.94 : 0.88);
+      var textWidth = tctx.measureText(WORD).width;
+      if (textWidth > maxWidth) {
+        size *= maxWidth / textWidth;
+        setFont(tctx, size);
+      }
+      tctx.textAlign = 'center';
+      tctx.textBaseline = 'middle';
+      tctx.fillStyle = '#000';
+      var centerY = h * 0.42;
+      tctx.fillText(WORD, w / 2, centerY);
+
+      // Only read the band of rows the text can reach; the rest is empty anyway.
+      var y0 = Math.max(0, Math.floor(centerY - size));
+      var y1 = Math.min(h, Math.ceil(centerY + size));
+      var pts = [];
+      var maxCount = w < 700 ? 400 : 900;
+      if (y1 > y0) {
+        var data = tctx.getImageData(0, y0, w, y1 - y0).data;
+        var spacing = Math.round(2 * R * 1.05);
+        var maxSpacing = 6 * D;
+        pts = collect(data, w, y0, y1, spacing);
+        while (pts.length / 2 > maxCount && spacing < maxSpacing) {
+          spacing += 1;
+          pts = collect(data, w, y0, y1, spacing);
+        }
+      }
+      applyHomes(pts, Math.min(pts.length / 2, maxCount));
+
+      if (stillFrame) {
+        placeStillFrame();
+      } else if (!rafId) {
+        settleWhileStopped();
+      }
+      draw();
     }
-  }
 
-  function refreshHomes() {
-    sampleHomes();
-    if (stillFrame) placeStillFrame();
-    else if (!playing && !shattered) snapHome(); // paused: nothing would carry them home
-    draw();
-  }
-
-  // ---------- Canvas size ----------
-  function resize(force) {
-    const w = canvas.clientWidth;
-    const h = canvas.clientHeight;
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    if (!w || !h) return;
-    if (!force && w === W && h === H && ratio === dpr) return;
-    W = w; H = h; dpr = ratio;
-    canvas.width = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // from here on, draw in CSS pixels
-    refreshHomes();
-  }
-
-  let resizeTimer = 0;
-  function scheduleResize() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => resize(false), 100);
-  }
-
-  // ---------- Physics ----------
-  function stepRebuild(f) {
-    const pull = SPRING * f;
-    const damping = Math.pow(SPRING_DAMPING, f);
-    for (const m of marbles) {
-      m.vx = (m.vx + (m.hx - m.x) * pull) * damping;
-      m.vy = (m.vy + (m.hy - m.y) * pull) * damping;
-      m.x += m.vx * f;
-      m.y += m.vy * f;
+    // Marble i keeps its position, velocity and color and gets home i.
+    function applyHomes(pts, count) {
+      var nX = new Float32Array(count), nY = new Float32Array(count);
+      var nVX = new Float32Array(count), nVY = new Float32Array(count);
+      var nHX = new Float32Array(count), nHY = new Float32Array(count);
+      var nC = new Uint8Array(count);
+      var keep = Math.min(n, count);
+      for (var i = 0; i < count; i++) {
+        nHX[i] = pts[2 * i];
+        nHY[i] = pts[2 * i + 1];
+        if (i < keep) {
+          nX[i] = X[i]; nY[i] = Y[i];
+          nVX[i] = VX[i]; nVY[i] = VY[i];
+          nC[i] = COLOR[i];
+        } else {
+          // New marble: starts at home, picks its accent once.
+          nX[i] = nHX[i]; nY[i] = nHY[i];
+          nC[i] = Math.floor(Math.random() * 3);
+        }
+      }
+      X = nX; Y = nY; VX = nVX; VY = nVY; HX = nHX; HY = nHY; COLOR = nC;
+      n = count;
+      cellItems = new Int32Array(n);
+      cellOf = new Int32Array(n);
     }
-  }
 
-  function stepShattered(f) {
-    // 1) the pointer pushes nearby marbles straight away from it
-    if (pointer.active) {
-      const r2 = PUSH_RADIUS * PUSH_RADIUS;
-      for (const m of marbles) {
-        const dx = m.x - pointer.x;
-        const dy = m.y - pointer.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 > 0 && d2 < r2) {
-          const d = Math.sqrt(d2);
-          const s = PUSH_STRENGTH * (1 - d / PUSH_RADIUS) * f / d;
-          m.vx += dx * s;
-          m.vy += dy * s;
+    // Reduced-motion still frame: word assembled, last 7 marbles resting on the floor.
+    function placeStillFrame() {
+      for (var i = 0; i < n; i++) {
+        X[i] = HX[i]; Y[i] = HY[i]; VX[i] = 0; VY[i] = 0;
+      }
+      var k = Math.min(FLOOR_MARBLES, n);
+      var startX = W / 2 - (k * D) / 2 + R;
+      for (var m = 0; m < k; m++) {
+        var j = n - k + m;
+        X[j] = startX + m * D;
+        Y[j] = H - R;
+      }
+      mode = WHOLE;
+    }
+
+    // When the loop isn't running, make the frozen picture make sense at the new size.
+    function settleWhileStopped() {
+      var i;
+      if (mode === WHOLE) {
+        for (i = 0; i < n; i++) { X[i] = HX[i]; Y[i] = HY[i]; VX[i] = 0; VY[i] = 0; }
+      } else {
+        for (i = 0; i < n; i++) {
+          if (X[i] < R) X[i] = R;
+          if (X[i] > W - R) X[i] = W - R;
+          if (Y[i] > H - R) Y[i] = H - R;
         }
       }
     }
-    // 2) gravity, 3) air drag, 4) move
-    const g = GRAVITY * f;
-    const drag = Math.pow(AIR_DRAG, f);
-    for (const m of marbles) {
-      m.vy += g;
-      m.vx *= drag;
-      m.vy *= drag;
-      m.x += m.vx * f;
-      m.y += m.vy * f;
-    }
-    // 5) marble-to-marble collisions, 6) walls and floor
-    collide();
-    walls(f);
-  }
 
-  // Spatial hash grid (cell = one diameter), rebuilt every frame.
-  let gridHead = new Int32Array(0);
-  let gridNext = new Int32Array(0);
-  let cellX = new Int32Array(0);
-  let cellY = new Int32Array(0);
+    /* ------------------------------------------------------------------
+       Canvas size
+       ------------------------------------------------------------------ */
+    function resize() {
+      var w = canvas.clientWidth;
+      var h = canvas.clientHeight;
+      var newDpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (w === W && h === H && newDpr === dpr) return;
+      W = w; H = h; dpr = newDpr;
 
-  function collide() {
-    const n = marbles.length;
-    if (n < 2) return;
-    const diameter = 2 * radius;
-    const minDist2 = diameter * diameter;
-    const cols = Math.max(1, Math.ceil(W / diameter));
-    const rows = Math.max(1, Math.ceil(H / diameter));
-    const cells = cols * rows;
-    if (gridHead.length < cells) gridHead = new Int32Array(cells);
-    if (gridNext.length < n) {
-      gridNext = new Int32Array(n);
-      cellX = new Int32Array(n);
-      cellY = new Int32Array(n);
-    }
-    gridHead.fill(-1, 0, cells);
-    for (let i = 0; i < n; i++) {
-      const m = marbles[i];
-      let gx = Math.floor(m.x / diameter);
-      let gy = Math.floor(m.y / diameter);
-      gx = gx < 0 ? 0 : gx >= cols ? cols - 1 : gx;
-      gy = gy < 0 ? 0 : gy >= rows ? rows - 1 : gy;
-      cellX[i] = gx;
-      cellY[i] = gy;
-      const c = gy * cols + gx;
-      gridNext[i] = gridHead[c];
-      gridHead[c] = i;
+      canvas.width = Math.max(1, Math.round(W * dpr));
+      canvas.height = Math.max(1, Math.round(H * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+
+      R = W < 700 ? 3.5 : 8;
+      D = 2 * R;
+      cols = Math.max(1, Math.ceil(W / D));
+      rows = Math.max(1, Math.ceil(H / D));
+      cellStart = new Int32Array(cols * rows + 1);
+      cellFill = new Int32Array(cols * rows);
+
+      resample();
     }
 
-    const mass = radius * radius;              // mass = radius² (all marbles match)
-    const invMassSum = 1 / mass + 1 / mass;
-    const shareA = mass / (mass + mass);       // A moves by m_B / (m_A + m_B) of the overlap
-    const shareB = 1 - shareA;
+    /* ------------------------------------------------------------------
+       Physics
+       ------------------------------------------------------------------ */
+    function pushActive() {
+      return mouseOver || (press !== null && press.held);
+    }
 
-    for (let i = 0; i < n; i++) {
-      const a = marbles[i];
-      const gx0 = Math.max(cellX[i] - 1, 0), gx1 = Math.min(cellX[i] + 1, cols - 1);
-      const gy0 = Math.max(cellY[i] - 1, 0), gy1 = Math.min(cellY[i] + 1, rows - 1);
-      for (let gy = gy0; gy <= gy1; gy++) {
-        for (let gx = gx0; gx <= gx1; gx++) {
-          for (let j = gridHead[gy * cols + gx]; j !== -1; j = gridNext[j]) {
-            if (j <= i) continue; // each pair once, i < j
-            const b = marbles[j];
-            const dx = b.x - a.x;
-            const dy = b.y - a.y;
-            const dist2 = dx * dx + dy * dy;
-            if (dist2 >= minDist2) continue;
-            let dist = Math.sqrt(dist2);
-            let nx, ny;
-            if (dist > 1e-6) { nx = dx / dist; ny = dy / dist; }
-            else { nx = 1; ny = 0; dist = 0; }
-            // push apart so they just touch
-            const overlap = diameter - dist;
-            a.x -= nx * overlap * shareA;
-            a.y -= ny * overlap * shareA;
-            b.x += nx * overlap * shareB;
-            b.y += ny * overlap * shareB;
-            // bounce if they are moving toward each other
-            const along = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
-            if (along < 0) {
-              const impulse = -(1 + RESTITUTION) * along / invMassSum;
-              a.vx -= impulse * nx / mass;
-              a.vy -= impulse * ny / mass;
-              b.vx += impulse * nx / mass;
-              b.vy += impulse * ny / mass;
+    function stepRebuild(f) {
+      var k = SPRING * f;
+      var damp = Math.pow(SPRING_DAMPING, f);
+      for (var i = 0; i < n; i++) {
+        VX[i] = (VX[i] + (HX[i] - X[i]) * k) * damp;
+        VY[i] = (VY[i] + (HY[i] - Y[i]) * k) * damp;
+        X[i] += VX[i] * f;
+        Y[i] += VY[i] * f;
+      }
+    }
+
+    function stepShattered(f) {
+      var i;
+
+      // 1) Pointer push
+      if (pushActive()) {
+        for (i = 0; i < n; i++) {
+          var dx = X[i] - pointerX, dy = Y[i] - pointerY;
+          var d2 = dx * dx + dy * dy;
+          if (d2 > 0 && d2 < PUSH_RADIUS * PUSH_RADIUS) {
+            var d = Math.sqrt(d2);
+            var s = PUSH_FORCE * (1 - d / PUSH_RADIUS) * f;
+            VX[i] += (dx / d) * s;
+            VY[i] += (dy / d) * s;
+          }
+        }
+      }
+
+      // 2) Gravity
+      var g = GRAVITY * f;
+      for (i = 0; i < n; i++) VY[i] += g;
+
+      // 3) Air drag
+      var drag = Math.pow(AIR_DRAG, f);
+      for (i = 0; i < n; i++) { VX[i] *= drag; VY[i] *= drag; }
+
+      // 4) Move
+      for (i = 0; i < n; i++) { X[i] += VX[i] * f; Y[i] += VY[i] * f; }
+
+      // 5) Collisions between marbles
+      collide();
+
+      // 6) Walls: floor and sides, no ceiling
+      var roll = Math.pow(ROLL_FRICTION, f);
+      var left = Math.fround(R), right = Math.fround(W - R), floor = Math.fround(H - R);
+      for (i = 0; i < n; i++) {
+        if (X[i] < left) {
+          X[i] = left;
+          if (VX[i] < 0) VX[i] = -VX[i] * RESTITUTION;
+        } else if (X[i] > right) {
+          X[i] = right;
+          if (VX[i] > 0) VX[i] = -VX[i] * RESTITUTION;
+        }
+        if (Y[i] >= floor) {
+          Y[i] = floor;
+          if (VY[i] > 0) VY[i] = -VY[i] * RESTITUTION;
+          VX[i] *= roll;
+        }
+      }
+    }
+
+    function clampCol(c) { return c < 0 ? 0 : (c >= cols ? cols - 1 : c); }
+    function clampRow(r) { return r < 0 ? 0 : (r >= rows ? rows - 1 : r); }
+
+    // Rebuild the grid: marbles listed in index order inside each cell.
+    function buildGrid() {
+      var cells = cols * rows;
+      var i, c;
+      cellStart.fill(0);
+      for (i = 0; i < n; i++) {
+        c = clampRow(Math.floor(Y[i] / D)) * cols + clampCol(Math.floor(X[i] / D));
+        cellOf[i] = c;
+        cellStart[c + 1]++;
+      }
+      for (c = 0; c < cells; c++) cellStart[c + 1] += cellStart[c];
+      cellFill.set(cellStart.subarray(0, cells));
+      for (i = 0; i < n; i++) cellItems[cellFill[cellOf[i]]++] = i;
+    }
+
+    function collide() {
+      buildGrid();
+      var m1 = R * R, m2 = R * R;              // mass = radius²
+      var invMassSum = 1 / m1 + 1 / m2;
+      var share1 = m2 / (m1 + m2), share2 = m1 / (m1 + m2);
+      var minDist = R + R, minDist2 = minDist * minDist;
+
+      for (var i = 0; i < n; i++) {
+        var cx0 = clampCol(Math.floor((X[i] - D) / D)), cx1 = clampCol(Math.floor((X[i] + D) / D));
+        var cy0 = clampRow(Math.floor((Y[i] - D) / D)), cy1 = clampRow(Math.floor((Y[i] + D) / D));
+        for (var cy = cy0; cy <= cy1; cy++) {
+          for (var cx = cx0; cx <= cx1; cx++) {
+            var c = cy * cols + cx;
+            for (var k = cellStart[c], end = cellStart[c + 1]; k < end; k++) {
+              var j = cellItems[k];
+              if (j <= i) continue;
+              var dx = X[j] - X[i], dy = Y[j] - Y[i];
+              var d2 = dx * dx + dy * dy;
+              if (d2 >= minDist2) continue;
+              var d = Math.sqrt(d2), nx, ny;
+              if (d > 0) { nx = dx / d; ny = dy / d; } else { nx = 1; ny = 0; }
+
+              // Push apart so they just touch, split by mass.
+              var overlap = minDist - d;
+              X[i] -= nx * overlap * share1; Y[i] -= ny * overlap * share1;
+              X[j] += nx * overlap * share2; Y[j] += ny * overlap * share2;
+
+              // Bounce if moving toward each other.
+              var vn = (VX[j] - VX[i]) * nx + (VY[j] - VY[i]) * ny;
+              if (vn < 0) {
+                var impulse = -(1 + RESTITUTION) * vn / invMassSum;
+                VX[i] -= (impulse / m1) * nx; VY[i] -= (impulse / m1) * ny;
+                VX[j] += (impulse / m2) * nx; VY[j] += (impulse / m2) * ny;
+              }
             }
           }
         }
       }
     }
-  }
 
-  function walls(f) {
-    const r = radius;
-    const roll = Math.pow(ROLLING_FRICTION, f);
-    for (const m of marbles) {
-      if (m.x < r) {
-        m.x = r;
-        if (m.vx < 0) m.vx = -m.vx * RESTITUTION;
-      } else if (m.x > W - r) {
-        m.x = W - r;
-        if (m.vx > 0) m.vx = -m.vx * RESTITUTION;
+    function step(dt) {
+      var f = Math.min(dt * 60, 2.5);
+      if (mode === SHATTERED) {
+        shatteredFor += dt;
+        if (shatteredFor >= AUTO_REBUILD_SECONDS) rebuild();
       }
-      if (m.y >= H - r) { // floor (there is no ceiling)
-        m.y = H - r;
-        if (m.vy > 0) m.vy = -m.vy * RESTITUTION;
-        m.vx *= roll;
-      }
+      if (mode === SHATTERED) stepShattered(f);
+      else stepRebuild(f);
     }
-  }
 
-  // ---------- Drawing: shadows, then bodies, then highlights ----------
-  function draw() {
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.clearRect(0, 0, W, H);
-    if (!marbles.length) return;
-    const r = radius;
+    /* ------------------------------------------------------------------
+       Drawing: three batched layers
+       ------------------------------------------------------------------ */
+    var TAU = Math.PI * 2;
 
-    // 1) every shadow as one path
-    const drop = r * 0.35;
-    ctx.fillStyle = SHADOW;
-    ctx.beginPath();
-    for (const m of marbles) {
-      ctx.moveTo(m.x + r, m.y + drop);
-      ctx.arc(m.x, m.y + drop, r, 0, TAU);
-    }
-    ctx.fill();
+    function draw() {
+      var i, r = R;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.clearRect(0, 0, W, H);
 
-    // 2) bodies: one path per accent colour, multiplied like ink
-    ctx.globalCompositeOperation = 'multiply';
-    for (let c = 0; c < ACCENTS.length; c++) {
-      ctx.fillStyle = ACCENTS[c];
+      // 1) Shadows: one path
+      var so = 0.35 * r;
       ctx.beginPath();
-      for (const m of marbles) {
-        if (m.c !== c) continue;
-        ctx.moveTo(m.x + r, m.y);
-        ctx.arc(m.x, m.y, r, 0, TAU);
+      for (i = 0; i < n; i++) {
+        ctx.moveTo(X[i] + r, Y[i] + so);
+        ctx.arc(X[i], Y[i] + so, r, 0, TAU);
       }
+      ctx.fillStyle = SHADOW_COLOR;
+      ctx.fill();
+
+      // 2) Bodies: one path per accent, multiplied like ink
+      ctx.globalCompositeOperation = 'multiply';
+      for (var c = 0; c < ACCENTS.length; c++) {
+        ctx.beginPath();
+        for (i = 0; i < n; i++) {
+          if (COLOR[i] !== c) continue;
+          ctx.moveTo(X[i] + r, Y[i]);
+          ctx.arc(X[i], Y[i], r, 0, TAU);
+        }
+        ctx.fillStyle = ACCENTS[c];
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
+      // 3) Highlights: one path
+      var hr = 0.32 * r, ho = 0.3 * r;
+      ctx.beginPath();
+      for (i = 0; i < n; i++) {
+        ctx.moveTo(X[i] - ho + hr, Y[i] - ho);
+        ctx.arc(X[i] - ho, Y[i] - ho, hr, 0, TAU);
+      }
+      ctx.fillStyle = HIGHLIGHT_COLOR;
       ctx.fill();
     }
 
-    // 3) every highlight as one path
-    ctx.globalCompositeOperation = 'source-over';
-    const hr = r * 0.32;
-    const off = r * 0.3;
-    ctx.fillStyle = HIGHLIGHT;
-    ctx.beginPath();
-    for (const m of marbles) {
-      ctx.moveTo(m.x - off + hr, m.y - off);
-      ctx.arc(m.x - off, m.y - off, hr, 0, TAU);
+    /* ------------------------------------------------------------------
+       The one animation loop
+       ------------------------------------------------------------------ */
+    function shouldRun() {
+      return !userPaused && onScreen && !document.hidden;
     }
-    ctx.fill();
-  }
 
-  // ---------- The one animation loop ----------
-  function shouldRun() {
-    return playing && onScreen && !document.hidden;
-  }
-
-  function updateLoop() {
-    if (shouldRun()) {
-      if (!rafId) {
-        lastTime = null;
-        rafId = requestAnimationFrame(frame);
-      }
-    } else if (rafId) {
-      cancelAnimationFrame(rafId);
+    function frame(t) {
       rafId = 0;
+      var dt = lastTime ? Math.max(0, Math.min((t - lastTime) / 1000, 0.05)) : 1 / 60;
+      lastTime = t;
+      step(dt);
+      draw();
+      if (shouldRun()) rafId = requestAnimationFrame(frame);
     }
-  }
 
-  function frame(now) {
-    rafId = requestAnimationFrame(frame);
-    const elapsed = lastTime === null ? 0 : (now - lastTime) / 1000;
-    lastTime = now;
-    const dt = Math.min(elapsed, 0.05);
-    const f = Math.min(dt * 60, 2.5);
-
-    if (shattered) {
-      shatterClock += Math.min(elapsed, 0.25);
-      if (shatterClock >= AUTO_REBUILD_SECONDS) rebuild();
-    }
-    if (shattered) stepShattered(f);
-    else stepRebuild(f);
-    draw();
-  }
-
-  // ---------- Shatter / rebuild ----------
-  function announce(text) {
-    statusEl.textContent = text;
-  }
-
-  function shatter() {
-    shattered = true;
-    shatterClock = 0;
-    for (const m of marbles) {
-      m.vx = (Math.random() - 0.5) * 5;
-      m.vy = -Math.random() * 5;
-    }
-    toggleBtn.textContent = 'Rebuild';
-    announce('The word shattered into marbles.');
-  }
-
-  function rebuild() {
-    shattered = false;
-    toggleBtn.textContent = 'Shatter';
-    announce('The marbles rebuilt the word.');
-  }
-
-  function toggle() {
-    stillFrame = false;
-    if (shattered) rebuild();
-    else shatter();
-    if (!playing) setPlaying(true); // you asked for motion, so show it
-  }
-
-  function setPlaying(value) {
-    playing = value;
-    if (playing) stillFrame = false;
-    playBtn.classList.toggle('is-paused', !playing);
-    playLabel.textContent = playing ? 'Pause' : 'Play';
-    updateLoop();
-  }
-
-  // ---------- Pointer: click/tap toggles, hovering (or press-and-hold) shoves ----------
-  const pointer = { x: 0, y: 0, active: false };
-  let press = null; // the button or finger currently down on the canvas
-  let holdTimer = 0;
-
-  function canvasPoint(e) {
-    const rect = canvas.getBoundingClientRect();
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }
-
-  function endPress(type) {
-    clearTimeout(holdTimer);
-    press = null;
-    if (type === 'touch') pointer.active = false;
-  }
-
-  canvas.addEventListener('pointerdown', (e) => {
-    if (press || !e.isPrimary) return;
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    const p = canvasPoint(e);
-    press = { id: e.pointerId, type: e.pointerType, startX: p.x, startY: p.y, moved: 0, holding: false };
-    pointer.x = p.x;
-    pointer.y = p.y;
-    if (e.pointerType === 'touch') {
-      clearTimeout(holdTimer);
-      holdTimer = setTimeout(() => {
-        // a finger held still for 0.25s starts pushing (only useful while shattered)
-        if (press && press.type === 'touch' && press.moved <= TAP_SLOP && shattered) {
-          press.holding = true;
-          pointer.active = true;
+    function updateLoop() {
+      if (shouldRun()) {
+        if (!rafId) {
+          lastTime = 0;
+          rafId = requestAnimationFrame(frame);
         }
-      }, HOLD_TO_PUSH_MS);
-    } else {
-      pointer.active = true;
+      } else if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
     }
-  });
 
-  canvas.addEventListener('pointermove', (e) => {
-    const p = canvasPoint(e);
-    const isPress = press && e.pointerId === press.id;
-    if (isPress) {
-      press.moved = Math.max(press.moved, Math.hypot(p.x - press.startX, p.y - press.startY));
-      if (press.type === 'touch' && !press.holding && press.moved > TAP_SLOP) clearTimeout(holdTimer);
+    /* ------------------------------------------------------------------
+       Shatter / rebuild / pause
+       ------------------------------------------------------------------ */
+    function shatter() {
+      for (var i = 0; i < n; i++) {
+        VX[i] = (Math.random() - 0.5) * 5;
+        VY[i] = -Math.random() * 5;
+      }
+      mode = SHATTERED;
+      shatteredFor = 0;
+      updateUI();
     }
-    if (e.pointerType === 'touch') {
-      if (isPress) { pointer.x = p.x; pointer.y = p.y; }
-    } else {
-      // a mouse or pen pushes whenever it is over the canvas
-      pointer.x = p.x;
-      pointer.y = p.y;
-      pointer.active = true;
+
+    function rebuild() {
+      mode = WHOLE;
+      updateUI();
     }
-  });
 
-  canvas.addEventListener('pointerup', (e) => {
-    if (!press || e.pointerId !== press.id) return;
-    const wasTap = !press.holding && press.moved <= TAP_SLOP;
-    endPress(e.pointerType);
-    if (wasTap) toggle(); // click / tap acts on release
-  });
+    function toggle() {
+      if (userPaused) setPaused(false); // an explicit click means "go"
+      if (mode === SHATTERED) rebuild();
+      else shatter();
+    }
 
-  canvas.addEventListener('pointercancel', (e) => {
-    if (press && e.pointerId === press.id) endPress(e.pointerType);
-    if (e.pointerType === 'touch') pointer.active = false;
-  });
-
-  canvas.addEventListener('pointerleave', (e) => {
-    if (e.pointerType === 'touch') return;
-    pointer.active = false;
-    if (press && e.pointerId === press.id) endPress(e.pointerType);
-  });
-
-  // Once a finger is holding the pile, stop the page from scrolling under it.
-  canvas.addEventListener('touchmove', (e) => {
-    if (press && press.holding && e.cancelable) e.preventDefault();
-  }, { passive: false });
-
-  canvas.addEventListener('contextmenu', (e) => {
-    if (press && press.type === 'touch') e.preventDefault();
-  });
-
-  // ---------- Buttons ----------
-  toggleBtn.addEventListener('click', toggle);
-  playBtn.addEventListener('click', () => setPlaying(!playing));
-
-  // ---------- Pausing when hidden, resizing, fonts ----------
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver((entries) => {
-      onScreen = entries[entries.length - 1].isIntersecting;
+    function setPaused(paused) {
+      userPaused = paused;
+      if (!paused) stillFrame = false;
+      updateUI();
       updateLoop();
-    }).observe(canvas);
-  }
-  document.addEventListener('visibilitychange', updateLoop);
+    }
 
-  if ('ResizeObserver' in window) new ResizeObserver(scheduleResize).observe(canvas);
-  window.addEventListener('resize', scheduleResize);
+    function updateUI() {
+      var fine = finePointer.matches;
+      toggleBtn.textContent = mode === SHATTERED ? 'Rebuild' : 'Shatter';
+      pauseBtn.textContent = userPaused ? 'Play' : 'Pause';
+      var hint;
+      if (stillFrame) {
+        hint = 'Paused because your device prefers less motion. Press Play, or ' +
+               (fine ? 'click' : 'tap') + ' the word to shatter it.';
+      } else if (mode === SHATTERED) {
+        hint = fine
+          ? 'Move your cursor to shove the pile. Click to rebuild.'
+          : 'Press and hold to shove the pile. Tap to rebuild.';
+      } else {
+        hint = fine ? 'Click anywhere to shatter the word.' : 'Tap to shatter the word.';
+      }
+      hintEl.textContent = hint;
+    }
 
-  const onMotionChange = (e) => { if (e.matches) setPlaying(false); };
-  if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', onMotionChange);
-  else if (reducedMotion.addListener) reducedMotion.addListener(onMotionChange);
+    toggleBtn.addEventListener('click', toggle);
+    pauseBtn.addEventListener('click', function () { setPaused(!userPaused); });
 
-  // ---------- Start ----------
-  resize(true);          // the word starts whole, every marble at home
-  setPlaying(playing);   // starts the loop (or stays paused for reduced motion)
+    /* ------------------------------------------------------------------
+       Pointer: mouse shoves on hover, a finger after press-and-hold
+       ------------------------------------------------------------------ */
+    function localPoint(e) {
+      var rect = canvas.getBoundingClientRect();
+      return [e.clientX - rect.left, e.clientY - rect.top];
+    }
 
-  // Re-sample once Anybody has loaded (until then the fallback font is used).
-  if (document.fonts && document.fonts.load) {
-    document.fonts.load('900 100px "Anybody"', WORD).then((faces) => {
-      if (faces && faces.length) refreshHomes();
-    }).catch(() => {});
-  }
-})();
-</script>
+    function endPress() {
+      if (press) {
+        clearTimeout(press.timer);
+        press = null;
+      }
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      var p = localPoint(e);
+      endPress();
+      press = { id: e.pointerId, type: e.pointerType, startX: p[0], startY: p[1],
+                x: p[0], y: p[1], moved: false, held: false, timer: 0 };
+      if (e.pointerType === 'mouse') {
+        pointerX = p[0]; pointerY = p[1]; mouseOver = true;
+      } else {
+        var thisPress = press;
+        thisPress.timer = setTimeout(function () {
+          if (press === thisPress && !thisPress.moved && mode === SHATTERED) {
+            thisPress.held = true;
+            pointerX = thisPress.x; pointerY = thisPress.y;
+          }
+        }, HOLD_MS);
+      }
+    });
+
+    canvas.addEventListener('pointermove', function (e) {
+      var p = localPoint(e);
+      if (e.pointerType === 'mouse') {
+        pointerX = p[0]; pointerY = p[1]; mouseOver = true;
+      }
+      if (press && e.pointerId === press.id) {
+        press.x = p[0]; press.y = p[1];
+        if (Math.hypot(p[0] - press.startX, p[1] - press.startY) > TAP_SLOP) press.moved = true;
+        if (press.type !== 'mouse') {
+          if (press.held) { pointerX = p[0]; pointerY = p[1]; }
+          else if (press.moved) clearTimeout(press.timer); // it's a swipe, not a hold
+        }
+      }
+    });
+
+    canvas.addEventListener('pointerup', function (e) {
+      if (!press || e.pointerId !== press.id) return;
+      var isTap = !press.moved && !press.held; // a drag or a press-and-hold is not a click
+      endPress();
+      if (isTap) toggle();
+    });
+
+    canvas.addEventListener('pointercancel', function (e) {
+      if (press && e.pointerId === press.id) endPress();
+    });
+
+    canvas.addEventListener('pointerleave', function (e) {
+      if (e.pointerType === 'mouse') mouseOver = false;
+      if (press && e.pointerId === press.id) endPress();
+    });
+
+    // Once a finger is holding (shoving), stop that touch from scrolling the page.
+    canvas.addEventListener('touchmove', function (e) {
+      if (press && press.held && e.cancelable) e.preventDefault();
+    }, { passive: false });
+
+    /* ------------------------------------------------------------------
+       Pause when hidden or scrolled away; follow reduced-motion changes
+       ------------------------------------------------------------------ */
+    document.addEventListener('visibilitychange', updateLoop);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        onScreen = entries[entries.length - 1].isIntersecting;
+        updateLoop();
+      }).observe(canvas);
+    }
+
+    function onReducedMotionChange() {
+      if (reducedMotion.matches && !userPaused) setPaused(true);
+    }
+    if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', onReducedMotionChange);
+    else if (reducedMotion.addListener) reducedMotion.addListener(onReducedMotionChange);
+
+    function onPointerTypeChange() { updateUI(); }
+    if (finePointer.addEventListener) finePointer.addEventListener('change', onPointerTypeChange);
+    else if (finePointer.addListener) finePointer.addListener(onPointerTypeChange);
+
+    /* ------------------------------------------------------------------
+       Start
+       ------------------------------------------------------------------ */
+    resize(); // samples the homes; every marble starts at home (or the still frame)
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(function () { resize(); }).observe(canvas);
+    }
+    window.addEventListener('resize', resize);
+
+    // Sample again once the Anybody font has loaded.
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('900 100px "Anybody"', WORD).then(function () {
+        resample();
+      }, function () { /* offline: keep the fallback font */ });
+    }
+
+    updateUI();
+    updateLoop();
+  })();
+  </script>
 </body>
 </html>

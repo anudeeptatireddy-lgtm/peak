@@ -1,5 +1,5 @@
 {
-  "hide": ".bar",
+  "hide": ".hud",
   "expect": "fail",
-  "reason": "Run 1 matched at 3 of 4 moments; the frame 0.25s after the shatter differed (6% desktop, 3% phone) because the prompt didn’t fix the collision order or number precision. Prompt fixed 2026-10-17; retest pending."
+  "reason": "Failed its one retest (shatter frame 6%/3%). Cause found after: the agent sampled the word before the font loaded, which used extra random numbers, so every kick differed. Prompt fixed 2026-10-17; awaiting the owner’s OK for another retest."
 }

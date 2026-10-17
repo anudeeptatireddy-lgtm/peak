@@ -1,5 +1,5 @@
 {
-  "hide": ".controls",
+  "hide": ".bar",
   "expect": "fail",
-  "reason": "Run 1: parked frame identical, but the entrance started at page load instead of after the font loaded, and replays started a frame apart. Prompt fixed 2026-10-17; retest pending."
+  "reason": "Failed its one retest on desktop (arrival 4%, replay 3%; the phone size passes). The agent drew letters with the multiply blend; the prompt now says source-over. Awaiting the owner’s OK for another retest."
 }
