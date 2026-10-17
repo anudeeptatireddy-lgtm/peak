@@ -710,6 +710,336 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Fridge magnets
+
+## What I want
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The word to spell is "hello" (spaces leave gaps). Its letters' slots are a centered row at 50% of the height: slot i is where letter i sits in that row, measured with measureText at the letter size plus 0.1 × the size between letters.
+- There are also 6 extra magnets with random lowercase letters: for each, call Math.random() once to pick from "abcdefghijklmnopqrstuvwxyz" (floor(random × 26)); they have no slot.
+- Magnets are single letters in Anybody weight 900, canvas fontStretch "normal", font size 12% of the canvas height (scaled down if the word's row would be wider than 86% of the width). Each is drawn centered on its position (textAlign center, textBaseline middle), turned by its angle: first a shadow (the same letter in the main text color at 0.3 opacity, offset 0.035 × the size down and right), then the letter in its accent color.
+- Each frame, every free magnet within 160px of the pointer accelerates toward it by 0.4 × (1 − distance ÷ 160) px per frame² × f; then velocity ×= 0.88^f and position += velocity × f, kept inside the canvas (half the font size from each edge).
+- A word magnet that comes within 36px of its slot clicks into place: it locks, stops feeling the pull, and each frame moves 0.22 × f of the way to its slot while its angle eases to 0 by 0.15 × f of the way.
+- Shaking scatters everything: keep the pointer's positions from the last 0.5s; if its average speed there is above 26px per frame and its horizontal direction reversed at least 3 times, every magnet unlocks and gets a random velocity: x = (random − 0.5) × 2 × 16, y = (random − 0.5) × 2 × 16. On touch, a double tap (two taps within 0.35s) scatters instead.
+- At the start, scatter every magnet (word letters first, then extras): x = margin + random × (width − 2 × margin), y = margin + random × (height − 2 × margin), angle = (random − 0.5) × 2 × 0.35 radians, color = accent floor(random × 3) (Math.random() in that order; margin = the font size). Free magnets keep their angle.
+- Reduced-motion still frame: the word spelled out, every word magnet straight in its slot, plus the first 2 extra magnets at their scattered positions and angles (the rest hidden).
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw locked magnets after free ones, so the word stays on top.
+- Lay the slots out again (keeping every magnet where it is) on every resize and once the Anybody font has finished loading.
+
+## How people interact
+- A mouse pulls whenever it is over the canvas; a finger after it has been held still for 0.25s (press and hold, then drag), so swipes still scroll (touch-action: pan-y).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`fridge prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Fridge magnets
+
+Chunky magnet letters lie scattered at angles. When my cursor comes near, letters slide toward it like magnets. When I bring them near the middle line they click into place one by one to spell the word. Shaking the cursor fast scatters them again.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Word to spell: "hello"
+- Magnet size: 12%
+- Magnet pull: 0.4
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`marbles prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Text to marbles
 
