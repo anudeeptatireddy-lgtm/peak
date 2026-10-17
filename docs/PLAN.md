@@ -258,7 +258,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **6.9 `fold`** · SCENES.md #43 (inner scroller on scene pages, like `velocity`)
 - [x] **6.10 `glitch`** · SCENES.md #44 (⚠ flash test; featured)
 
-- [ ] **Wave 6 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene; scroll the home page: every featured slot should now show its real scene.
+- [x] **Wave 6 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene; scroll the home page: every featured slot should now show its real scene.
 
 ---
 
@@ -271,7 +271,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **7.5 `jelly`** · SCENES.md #49
 - [x] **7.6 `loaders`** · SCENES.md #50
 
-- [ ] **Wave 7 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone. All 50 scenes now exist.
+- [x] **Wave 7 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone. All 50 scenes now exist.
 
 ## Wave 7b: Industry heroes (owner added scope, 2026-10-17)
 
@@ -287,9 +287,9 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 ## Wave 8: Gallery, Tour, guides, word bank, drops, About
 
-- [ ] **8.1 Gallery grid and previews** · PRD §13, §6.7 (item 6)
+- [x] **8.1 Gallery grid and previews** · PRD §13, §6.7 (item 6)
   - Done when: all 50 scenes appear as live previews in `quality: 'preview'`, each tile in its own world (a patchwork); at most 4 animate at once (debug counter); off-screen tiles show still frames.
-- [ ] **8.2 Gallery filters and sort** · PRD §13
+- [x] **8.2 Gallery filters and sort** · PRD §13
   - Done when: tag filters and sort work, state is in the URL, the empty state (if any filter yields nothing) says what to do next.
 - [ ] **8.3 Tour page** · PRD §6.7 (item 2)
   - Do: `/tour`: all 50 scenes full-screen in catalog order, colors blending between every one (reuse `journey.ts`), caption and "Tweak it and get the prompt" per scene, an "N of 50" counter. Mount within one screen, destroy beyond two.

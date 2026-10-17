@@ -297,3 +297,9 @@ Three fresh agents (about 90k tokens each) built the pages from the default prom
 
 ## 2026-10-18: latte prompt test; Wave 7b wrap-up
 Desktop matched at once; the phone showed a real bug in our scene (the cup was wider than a phone screen). Fixed the scene and made the prompt say how the cup is capped; the existing agent page (which had capped the cup on its own) now matches at both sizes. `tailor` stays logged as a failure on the measure (it matches by eye). Fogged and latte also logged. Wave 7b is built and tested: `fogged` (pass), `tailor` (fails on the measure, matches by eye), `latte` (pass).
+
+## 2026-10-18: housekeeping log (written overnight)
+- **Where Wave 7b came from and who approved it.** On 2026-10-17 the owner pasted a list of 24 industry hero animations (now `docs/INDUSTRY_HEROES.md`) and, when asked, approved adding three to the scope: Tailor's cut, Fogged bottle and Latte pour. The owner chose to build them after Wave 7 and to put them in the gallery only, never on the home page. The other 21 stay on the list, unbuilt.
+- **Wave 7b scenes (numbers 51 to 53 in `docs/SCENES.md`):** `fogged` (Fogged bottle, Aurora), `tailor` (Tailor's cut, Newsprint), `latte` (Latte pour, Spice Dunes).
+- **Test-mode timestep is 16ms, not 1/60s.** The owner asked for 1/60s. Playwright's fake clock fires animation frames every 16ms and the prototype pages measure exactly that, so a 1/60s step in our engine made `ripple`, `flow` and `drop` stop matching their prototypes. The test mode (`src/engine/testmode.ts`) therefore uses a fixed 16ms step plus seeded random numbers.
+- **`drop` desktop parity stays skipped.** Our side is now fully deterministic, but the result still varies between runs; the variation starts in the demo's own frame loop, which starts at a real-time moment (tied to browser observers) that our code cannot control. The phone size passes in every run. Fixing it needs a way to start the demo's loop on a known frame.
