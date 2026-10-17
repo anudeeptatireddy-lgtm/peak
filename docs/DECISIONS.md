@@ -256,3 +256,6 @@ Audited every page at 390 and 360 wide (sideways scroll, tap-target size, text s
 
 ## 2026-10-17: home page lineup changed by the owner
 The owner asked to take `lava` and `glitch` off the home page (they go in the gallery with the other scenes) and to bring back the black hole. The two slots keep their worlds (Lava Lamp, Vapor Mall) but now show `blackhole` and `confetti`. The other ten slots are unchanged. `lava` and `glitch` still exist on their own scene pages and appear in the gallery in Wave 8.
+
+## 2026-10-17: scope change by the owner: three industry heroes
+The owner added three scenes from `docs/INDUSTRY_HEROES.md`: Tailor's cut, Fogged bottle and Latte pour. Total scenes: 53 (the 50 plus these). Order: after Wave 7 (new "Wave 7b" in PLAN.md), starting with Fogged bottle. They appear **in the gallery only, never on the home page**; the home page keeps its 12 featured scenes. The other 21 candidates stay on the list, unbuilt, until the owner picks more. Each of the three follows the usual rules (every number a slider, flash safety, phone version, still frame, prompt test).

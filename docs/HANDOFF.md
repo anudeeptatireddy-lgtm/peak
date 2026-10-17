@@ -2,6 +2,10 @@
 
 Work stopped at a clean point because the owner is switching Claude accounts. Everything below is committed in "handoff: save state" and pushed to `main`. Pushing deploys to Vercel. The pushed code is tested, but the live smoke run for this deploy hasn't been done yet (see action 2).
 
+## Added scope (2026-10-17)
+
+Three extra scenes after Wave 7, gallery only: fogged bottle, tailor's cut, latte pour (PLAN Wave 7b; specs in docs/INDUSTRY_HEROES.md). Not on the home page.
+
 ## Exact step
 
 Steps 6.3 `tilt`, 6.4 `kaleido` and 6.5 `morph` are done. Next: 6.6 `moire` (flash test, like `fireworks`), then 6.7 to 6.10 and the Wave 6 wrap-up. The project folder is now `~/peak` (it was `~/Documents/peak`). The Wave 5 wrap-up is done; its live smoke run passed (80 passed, 20 skipped) and was repeated after step 6.5.

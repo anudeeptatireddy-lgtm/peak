@@ -273,6 +273,16 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 
 - [ ] **Wave 7 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new scene on desktop and phone. All 50 scenes now exist.
 
+## Wave 7b: Industry heroes (owner added scope, 2026-10-17)
+
+Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gallery only: **never on the home page**. Each needs its own entry in `docs/SCENES.md` (numbers 51 to 53), the usual definition of done (§8.4), and a prompt test (all three are Hard or fan out many moving parts, so test them).
+
+- [ ] **7b.1 `fogged`** · INDUSTRY_HEROES #10 Fogged bottle (cursor-driven; start here: quickest and most striking)
+- [ ] **7b.2 `tailor`** · INDUSTRY_HEROES #1 Tailor's cut (plays on load; hard: cloth, shears, fall)
+- [ ] **7b.3 `latte`** · INDUSTRY_HEROES #3 Latte pour (plays on load; hard: liquid and foam)
+- [ ] **Wave 7b wrap-up:** run the wrap-up routine. Prompt tests for all three. Things for the owner to try: open each from the gallery on desktop and phone.
+
+
 ---
 
 ## Wave 8: Gallery, Tour, guides, word bank, drops, About
