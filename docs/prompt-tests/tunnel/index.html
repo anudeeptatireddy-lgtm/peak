@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infinite tunnel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --text: #1A1240;
+    --text2: #4E4777;
+    --a1: #EC1C7F;
+    --a2: #2A47EA;
+    --a3: #FF7A00;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body { font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .stage {
+    position: relative;
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+    touch-action: pan-y;
+    background: var(--bg);
+  }
+  @supports not (height: 100svh) { .stage { height: 100vh; } }
+  canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: block;
+    touch-action: pan-y;
+    -webkit-user-select: none; user-select: none;
+  }
+  .copy {
+    position: absolute; left: 24px; right: 24px; bottom: 28px;
+    display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;
+    pointer-events: none;
+  }
+  h1 {
+    margin: 0 0 6px;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 800;
+    font-stretch: 125%;
+    font-variation-settings: "wdth" 125;
+    line-height: 1;
+    color: var(--text);
+  }
+  p { margin: 0; color: var(--text2); font-size: 1rem; max-width: 34ch; line-height: 1.4; }
+  button {
+    pointer-events: auto;
+    font: inherit; font-weight: 700;
+    font-size: 1rem;
+    min-height: 44px; min-width: 96px;
+    padding: 10px 22px;
+    border: 2px solid var(--text);
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    cursor: pointer;
+  }
+  button:hover { background: var(--bg); color: var(--text); }
+  button:focus-visible { outline: 3px solid var(--a2); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <section class="stage" id="stage" aria-label="Infinite tunnel animation">
+    <canvas id="c" aria-hidden="true"></canvas>
+    <div class="copy">
+      <div>
+        <h1>Infinite tunnel</h1>
+        <p>Move your cursor to steer. Press and hold to speed up.</p>
+      </div>
+      <button type="button" id="toggle" aria-pressed="false">Pause</button>
+    </div>
+  </section>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  // ---------- Simplex noise 2D (seed 41) ----------
+  function makeNoise(seed) {
+    var s = seed >>> 0;
+    function rnd() { // mulberry32
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+    var p = new Uint8Array(256), i;
+    for (i = 0; i < 256; i++) p[i] = i;
+    for (i = 255; i > 0; i--) {
+      var j = Math.floor(rnd() * (i + 1));
+      var tmp = p[i]; p[i] = p[j]; p[j] = tmp;
+    }
+    var perm = new Uint8Array(512);
+    for (i = 0; i < 512; i++) perm[i] = p[i & 255];
+    var grad = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+    var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
+    return function (xin, yin) {
+      var n0 = 0, n1 = 0, n2 = 0;
+      var sk = (xin + yin) * F2;
+      var i0 = Math.floor(xin + sk), j0 = Math.floor(yin + sk);
+      var t = (i0 + j0) * G2;
+      var x0 = xin - (i0 - t), y0 = yin - (j0 - t);
+      var i1, j1;
+      if (x0 > y0) { i1 = 1; j1 = 0; } else { i1 = 0; j1 = 1; }
+      var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
+      var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
+      var ii = i0 & 255, jj = j0 & 255;
+      var g, tt;
+      tt = 0.5 - x0 * x0 - y0 * y0;
+      if (tt > 0) { g = grad[perm[ii + perm[jj]] & 7]; tt *= tt; n0 = tt * tt * (g[0] * x0 + g[1] * y0); }
+      tt = 0.5 - x1 * x1 - y1 * y1;
+      if (tt > 0) { g = grad[perm[ii + i1 + perm[jj + j1]] & 7]; tt *= tt; n1 = tt * tt * (g[0] * x1 + g[1] * y1); }
+      tt = 0.5 - x2 * x2 - y2 * y2;
+      if (tt > 0) { g = grad[perm[ii + 1 + perm[jj + 1]] & 7]; tt *= tt; n2 = tt * tt * (g[0] * x2 + g[1] * y2); }
+      return 70 * (n0 + n1 + n2);
+    };
+  }
+  var noise = makeNoise(41);
+
+  // ---------- Setup ----------
+  var BG = '#F4F2FF';
+  var ACCENTS = ['#EC1C7F', '#2A47EA', '#FF7A00'];
+  var RINGS = 60, SIDES = 48, STRIPES = 12, RADIUS = 400;
+  var NOISE_SCALE = 0.0003, BASE_SPEED = 600, MAX_BOOST = 2.5;
+  var EASE = 0.06;
+
+  var stage = document.getElementById('stage');
+  var canvas = document.getElementById('c');
+  var ctx = canvas.getContext('2d');
+  var btn = document.getElementById('toggle');
+  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  var W = 0, H = 0, dpr = 1;
+  function resize() {
+    var r = stage.getBoundingClientRect();
+    W = Math.max(1, r.width); H = Math.max(1, r.height);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    if (!running) drawFrame(still);
+  }
+
+  // ---------- State ----------
+  var travel = 0, frac = 0, ringCount = 0;
+  var boost = 1, boostTarget = 1;
+  var camX = 0, camY = 0, tgtX = 0, tgtY = 0;
+  var pointerOver = false, pointerNX = 0, pointerNY = 0;
+  var t = 0, last = 0;
+  var running = false, visible = true, userPaused = false, rafId = 0;
+  var still = mq.matches;
+
+  // ---------- Drawing ----------
+  var TWO_PI = Math.PI * 2;
+  var cosT = new Float64Array(SIDES + 1), sinT = new Float64Array(SIDES + 1);
+  for (var q = 0; q <= SIDES; q++) { cosT[q] = Math.cos(TWO_PI * q / SIDES); sinT[q] = Math.sin(TWO_PI * q / SIDES); }
+
+  function drawFrame(isStill) {
+    var f = isStill ? 0.25 : frac;
+    var tr = isStill ? 0 : travel;
+    var cx0 = isStill ? 0 : camX, cy0 = isStill ? 0 : camY;
+    var v = isStill ? BASE_SPEED : BASE_SPEED * boost;
+    var gap = Math.max(120, v / 3);
+    var rc = isStill ? 0 : ringCount;
+    var short = Math.min(W, H);
+    var focal = short * 1;
+    var ox = W / 2, oy = H / 2;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'multiply';
+
+    // camera's own spot on the path
+    var camPX = noise(tr * NOISE_SCALE, 0) * 0.6 * RADIUS;
+    var camPY = noise(tr * NOISE_SCALE, 11.3) * 0.6 * RADIUS;
+
+    // compute ring data
+    var ringsData = [];
+    for (var k = 1; k <= RINGS + 1; k++) {
+      var z = (k - f) * gap;
+      var d = tr + z;
+      ringsData.push({
+        z: z,
+        sx: noise(d * NOISE_SCALE, 0) * 0.6 * RADIUS - camPX - cx0,
+        sy: noise(d * NOISE_SCALE, 11.3) * 0.6 * RADIUS - camPY - cy0,
+        rot: 0.8 * Math.PI * noise(d * NOISE_SCALE * 0.5, 37.5)
+      });
+    }
+
+    var paths = [new Path2D(), new Path2D(), new Path2D()];
+    var stripePath = new Path2D();
+    var hasStripe = false;
+
+    function proj(ring, ang, out) {
+      var a = ang + ring.rot;
+      var x = ring.sx + Math.cos(a) * RADIUS;
+      var y = ring.sy + Math.sin(a) * RADIUS;
+      out[0] = ox + x * focal / ring.z;
+      out[1] = oy + y * focal / ring.z;
+    }
+    var pa = [0, 0], pb = [0, 0];
+
+    for (var kk = RINGS; kk >= 1; kk--) {
+      var ring = ringsData[kk - 1];
+      if (ring.z < 20) continue;
+      var path = paths[(rc + kk) % 3];
+      var c = Math.cos(ring.rot), s = Math.sin(ring.rot);
+      var scl = focal / ring.z;
+      for (var i = 0; i <= SIDES; i++) {
+        var lx = cosT[i] * RADIUS, ly = sinT[i] * RADIUS;
+        var px = ox + (ring.sx + lx * c - ly * s) * scl;
+        var py = oy + (ring.sy + lx * s + ly * c) * scl;
+        if (i === 0) path.moveTo(px, py); else path.lineTo(px, py);
+      }
+      path.closePath();
+
+      var next = ringsData[kk];
+      for (var st = 0; st < STRIPES; st++) {
+        var ang = TWO_PI * st / STRIPES;
+        proj(ring, ang, pa);
+        proj(next, ang, pb);
+        stripePath.moveTo(pa[0], pa[1]);
+        stripePath.lineTo(pb[0], pb[1]);
+        hasStripe = true;
+      }
+    }
+
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 3;
+
+    if (hasStripe) {
+      ctx.globalAlpha = 0.6;
+      ctx.strokeStyle = ACCENTS[1];
+      ctx.stroke(stripePath);
+      ctx.globalAlpha = 1;
+    }
+    for (var ci = 0; ci < 3; ci++) {
+      ctx.strokeStyle = ACCENTS[ci];
+      ctx.stroke(paths[ci]);
+    }
+
+    // fog at vanishing point
+    ctx.globalCompositeOperation = 'source-over';
+    var rad = 0.35 * short;
+    var grad = ctx.createRadialGradient(ox, oy, 0, ox, oy, rad);
+    grad.addColorStop(0, 'rgba(244,242,255,0.85)');
+    grad.addColorStop(1, 'rgba(244,242,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // ---------- Loop ----------
+  function frame(now) {
+    rafId = 0;
+    if (!running) return;
+    var dt = Math.min((now - last) / 1000, 0.05);
+    if (dt < 0) dt = 0;
+    last = now;
+    t += dt;
+    var f = Math.min(dt * 60, 2.5);
+
+    var k = 1 - Math.pow(1 - EASE, f);
+    boost += (boostTarget - boost) * k;
+
+    var v = BASE_SPEED * boost;
+    var gap = Math.max(120, v / 3);
+    travel += v * dt;
+    frac += v * dt / gap;
+    while (frac >= 1) { frac -= 1; ringCount++; }
+
+    if (pointerOver) {
+      tgtX = 0.4 * RADIUS * pointerNX;
+      tgtY = 0.4 * RADIUS * pointerNY;
+    } else {
+      tgtX = noise(t * 0.25, 0) * 0.4 * RADIUS;
+      tgtY = noise(t * 0.25, 11.3) * 0.4 * RADIUS;
+    }
+    camX += (tgtX - camX) * k;
+    camY += (tgtY - camY) * k;
+
+    drawFrame(false);
+    schedule();
+  }
+  function schedule() { if (!rafId && running) rafId = requestAnimationFrame(frame); }
+
+  function updateButton() {
+    btn.textContent = userPaused ? 'Play' : 'Pause';
+    btn.setAttribute('aria-pressed', userPaused ? 'true' : 'false');
+    btn.setAttribute('aria-label', userPaused ? 'Play animation' : 'Pause animation');
+  }
+
+  function sync() {
+    var should = !userPaused && visible && !document.hidden;
+    if (should && !running) {
+      running = true;
+      last = performance.now();
+      schedule();
+    } else if (!should && running) {
+      running = false;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+    }
+    if (!running && userPaused && mq.matches) drawFrame(true);
+  }
+
+  btn.addEventListener('click', function () {
+    userPaused = !userPaused;
+    if (userPaused) {
+      if (mq.matches) { still = true; }
+    } else {
+      still = false;
+    }
+    updateButton();
+    sync();
+    if (!running) drawFrame(still);
+  });
+
+  // ---------- Input ----------
+  var holdTimer = 0;
+  function setPointer(e) {
+    var r = canvas.getBoundingClientRect();
+    pointerNX = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
+    pointerNY = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
+  }
+  canvas.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') return;
+    pointerOver = true; setPointer(e);
+  });
+  canvas.addEventListener('pointerenter', function (e) {
+    if (e.pointerType === 'touch') return;
+    pointerOver = true; setPointer(e);
+  });
+  canvas.addEventListener('pointerleave', function () { pointerOver = false; });
+  canvas.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'touch') {
+      clearTimeout(holdTimer);
+      holdTimer = setTimeout(function () { boostTarget = MAX_BOOST; }, 250);
+    } else if (e.button === 0) {
+      boostTarget = MAX_BOOST;
+      pointerOver = true; setPointer(e);
+    }
+  });
+  function release() { clearTimeout(holdTimer); boostTarget = 1; }
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);
+  window.addEventListener('pointerup', release);
+  window.addEventListener('blur', release);
+  canvas.addEventListener('contextmenu', function (e) { if (boostTarget > 1) e.preventDefault(); });
+
+  // ---------- Lifecycle ----------
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+      sync();
+    }, { threshold: 0 }).observe(stage);
+  }
+  document.addEventListener('visibilitychange', sync);
+  window.addEventListener('resize', resize);
+
+  mq.addEventListener && mq.addEventListener('change', function (e) {
+    if (e.matches) { userPaused = true; still = true; updateButton(); sync(); drawFrame(true); }
+  });
+
+  // start
+  userPaused = mq.matches;
+  still = mq.matches;
+  updateButton();
+  resize();
+  if (still) drawFrame(true);
+  sync();
+  if (!running) drawFrame(still);
+})();
+</script>
+</body>
+</html>

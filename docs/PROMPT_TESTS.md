@@ -45,11 +45,11 @@ How every scene's prompt is tested (owner, 2026-10-16): the Detailed + New page 
 | 37 | `tilt` | | | not tested (by owner rule: Medium, not Spicy, and this wave already has an easy scene proven against the demo) | | |
 | 38 | `kaleido` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 39 | `morph` | | | not tested (by owner rule: Medium, not Spicy) | | |
-| 40 | `moire` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
-| 41 | `tunnel` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
+| 40 | `moire` | 2026-10-18 | Detailed · New page · I'm new | **Pass** | Matches on palette, amount, layout and motion at both sizes. The agent also added a Play/Pause button, which the test hides. | None needed. |
+| 41 | `tunnel` | 2026-10-18 | Detailed · New page · I'm new | **Pass after fixing our scene** | First run: our ink amount was 2.5× the built page. Cause was a bug in OUR scene, found by the picture: the center fog faded toward black, so on light worlds it showed as a dark gray smudge. After the fix both sizes match; one steering frame has its ink center 5.1% off (the noise path differs), judged fine by eye. | Fog now fades the same color to transparent (rgba), not toward gray. PRD §8.7: ink centers 5–10% apart are judged by eye. |
 | 42 | `lava` | | | not tested (by owner rule: Medium, not Spicy) | | |
 | 43 | `fold` | | | not tested (by owner rule: Medium, not Spicy) | | |
-| 44 | `glitch` | | | not yet tested (Spicy: test with the Wave 6 batch) | | |
+| 44 | `glitch` | 2026-10-18 | Detailed · New page · I'm new | **Pass** | Matches on palette, amount, layout, motion and reaction (hover burst) at both sizes. | None needed. |
 | 45 | `magnetic` | | | not tested (by owner rule: Easy, not Spicy) | | |
 | 46 | `countdown` | | | not tested (by owner rule: Medium, not Spicy)| | |
 | 47 | `trail` | | | not tested (by owner rule: Easy, not Spicy) | | |

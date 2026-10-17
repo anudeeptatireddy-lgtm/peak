@@ -68,6 +68,9 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 | 48 | `curtain` | Page transitions | Interface | Cherry Cola | Medium |
 | 49 | `jelly` | Jelly cards | Interface | Lava Lamp | Easy |
 | 50 | `loaders` | Loading pack | Interface | Glacier | Easy |
+| 51 | `fogged` | Fogged bottle | Industry | Aurora | Medium |
+| 52 | `tailor` | Tailor's cut | Industry | Newsprint | Hard |
+| 53 | `latte` | Latte pour | Industry | Spice Dunes | Hard |
 
 Every world hosts three scenes except Glacier and Neon Arcade, which host four, so the gallery reads as a patchwork of color (PRD §6.7). The 12 scenes featured on the home page are listed in PRD §6.1.
 
@@ -542,3 +545,23 @@ Every world hosts three scenes except Glacier and Neon Arcade, which host four, 
 - **Still:** every loader at a mid frame.
 - **Mobile:** two columns of three.
 - **Tags:** Landing pages, Portfolio. Difficulty: Easy. Time: ~10 min.
+
+---
+
+## Industry heroes (51–53, gallery only; owner added 2026-10-17)
+Three of the candidates in `docs/INDUSTRY_HEROES.md`. They appear in the gallery only, never on the home page. "BRAND" is whatever name the visitor types.
+
+### 51. `fogged`: Fogged bottle
+- **Use case:** a perfume, skincare or drinks brand reveal. **World:** Aurora. **Technique:** a low-resolution fog mask, a blurred copy of the scene behind it, a soft wipe brush, regrowth from the edges, simple drips.
+- **What happens:** The screen is a pane of fogged glass: the colorful scene behind it (with the name on it) is blurred and washed white. The cursor wipes the fog away in a soft-edged trail, revealing sharp color and the name. Small beads form where you wipe and run down, leaving thin clear lines. Over a few seconds the fog creeps back in from the edges of every wiped area.
+- **Interactions:** move to wipe (a finger drag on phones, sideways).
+- **Params:** `text` Name: 1–16 chars ("Your brand"). `fog` Fog thickness: 0–1 (0.8). `wipe` Wipe width: 2–20% of the width (6). `returnTime` Fog return: 2–20s (6). `drip` Drip chance: 0–1 (0.3). `blur` Blur behind the fog: 2–40px (16). Advanced: `creep` Edge creep, `dripSpeed` Drip speed.
+- **Still:** one wiped band across the middle with the name readable and two drips running down.
+- **Mobile:** drag sideways to wipe.
+- **Tags:** Reveals, Brands. Difficulty: Medium. Time: ~30 min.
+
+### 52. `tailor`: Tailor's cut
+- **Use case:** a fashion or tailoring brand intro. **World:** Newsprint. **Technique:** a hanging cloth sheet, a chalk line, shears, a cut that splits the cloth into two falling halves. (Spec to be filled in when this step starts: see INDUSTRY_HEROES #1.)
+
+### 53. `latte`: Latte pour
+- **Use case:** a café brand intro. **World:** Spice Dunes. **Technique:** a top-down cup, a milk stream, foam drawn into the name. (Spec to be filled in when this step starts: see INDUSTRY_HEROES #3.)

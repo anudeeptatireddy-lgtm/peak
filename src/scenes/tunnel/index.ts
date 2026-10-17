@@ -5,6 +5,7 @@ import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
 import { makeNoise } from '../../kits/field';
+import { parseHex } from '../../theme/color';
 import type { Theme } from '../../theme/worlds';
 import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
@@ -204,9 +205,11 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   };
 }
 
-/** `#rrggbb` or `rgb()` color with an opacity, for the gradient stops. */
+/** A hex color with an opacity, written as rgba() so the gradient fades the same color (not toward gray). */
 function withAlpha(color: string, alpha: number): string {
-  return `color-mix(in srgb, ${color} ${Math.round(alpha * SHARED.PERCENT)}%, transparent)`;
+  const q = parseHex(color);
+  const to = (v: number) => Math.round(v * FIXED.CHANNEL);
+  return `rgba(${to(q.r)}, ${to(q.g)}, ${to(q.b)}, ${alpha})`;
 }
 
 const scene: SceneModule = { meta, params, followUps, create };

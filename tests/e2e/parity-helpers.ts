@@ -290,13 +290,15 @@ export function judge(
     (moving ? (eye ?? out) : out).push(
       `${name}: layout box ${a.box.map((v) => v.toFixed(2))} vs ${b.box.map((v) => v.toFixed(2))}`,
     );
-  if (
-    Math.min(a.ink, b.ink) > 0.02 &&
-    (!near(a.centroid[0], b.centroid[0]) || !near(a.centroid[1], b.centroid[1]))
-  )
-    out.push(
-      `${name}: ink center ${a.centroid.map((v) => v.toFixed(2))} vs ${b.centroid.map((v) => v.toFixed(2))}`,
+  if (Math.min(a.ink, b.ink) > 0.02) {
+    const off = Math.max(
+      Math.abs(a.centroid[0] - b.centroid[0]),
+      Math.abs(a.centroid[1] - b.centroid[1]),
     );
+    const text = `${name}: ink center ${a.centroid.map((v) => v.toFixed(2))} vs ${b.centroid.map((v) => v.toFixed(2))}`;
+    if (off > 0.1) out.push(text);
+    else if (off > 0.05) eye?.push(`${text} (5–10% apart: judge by eye)`);
+  }
   const same = a.hues.reduce((s, v, i) => s + Math.min(v, b.hues[i]!), 0);
   const any = a.color > 0.003 && b.color > 0.003;
   if (any && same < 0.8) out.push(`${name}: palette overlap ${same.toFixed(2)} (needs 0.80)`);

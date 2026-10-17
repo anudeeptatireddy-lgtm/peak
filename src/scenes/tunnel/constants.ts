@@ -31,6 +31,8 @@ export const FIXED = {
   NOISE_SEED: 41,
   /** Rings pass no closer together in time than 1 ÷ RATE_CAP, times this (so rounding can never allow a fourth). */
   INTERVAL_MARGIN: 1.000001,
+  /** Highest value of a color channel in rgba(). */
+  CHANNEL: 255,
 } as const;
 
 export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
@@ -49,4 +51,5 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   STILL_FRAC: 'The still frame shows the tunnel at a fixed point between two rings.',
   NOISE_SEED: 'Any fixed number: it makes the path the same every time.',
   INTERVAL_MARGIN: 'Rounding safety so the rate cap holds exactly.',
+  CHANNEL: 'Unit conversion: colors in rgba() use 0 to 255.',
 };

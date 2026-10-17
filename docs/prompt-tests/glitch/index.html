@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F4F2FF;
+    --text: #1A1240;
+    --text2: #4E4777;
+    --a1: #EC1C7F;
+    --a2: #2A47EA;
+    --a3: #FF7A00;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font-family: "Anybody", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 540px;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: transparent;
+    touch-action: pan-y;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .ui {
+    position: absolute;
+    left: 0; right: 0; bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 0 16px;
+    pointer-events: none;
+  }
+  .hint { margin: 0; color: var(--text2); font-size: 1rem; text-align: center; }
+  button {
+    pointer-events: auto;
+    font: inherit;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg);
+    border: 2px solid var(--text);
+    border-radius: 999px;
+    min-height: 44px;
+    min-width: 96px;
+    padding: 8px 22px;
+    cursor: pointer;
+  }
+  button:hover { background: #E7E3FF; }
+  button:focus-visible { outline: 3px solid var(--a2); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+  <h1 class="sr-only">glitch</h1>
+  <canvas id="c" aria-hidden="true"></canvas>
+  <div class="ui">
+    <p class="hint">Hover or tap the headline.</p>
+    <button type="button" id="toggle">Pause</button>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var COLORS = { text: "#1A1240", a1: "#EC1C7F", a2: "#2A47EA", a3: "#FF7A00" };
+  var WORD = "glitch";
+  var SLICES = 8;
+  var BURST = 0.3;
+  var SPLIT = 6;
+  var ALPHA = 0.85;
+
+  var stage = document.getElementById("stage");
+  var canvas = document.getElementById("c");
+  var ctx = canvas.getContext("2d");
+  var btn = document.getElementById("toggle");
+
+  var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var reduced = mq.matches;
+
+  var W = 0, H = 0, dpr = 1;
+  var fs = 0, textW = 0;
+  var fontReady = false;
+
+  var running = !reduced;
+  var onScreen = true;
+  var pageVisible = !document.hidden;
+  var rafId = 0;
+  var last = 0;
+  var t = 0;
+
+  var burst = null;        // {start, jumps}
+  var changes = [];        // times of picture changes
+  var nextAuto = t + 4 * (0.5 + Math.random());
+  var pointerOver = false;
+  var hoverPending = false;
+
+  // offscreen channel cache
+  var chans = [null, null, null];
+  var chanKey = "";
+  var chanW = 0, chanH = 0, chanPad = 0;
+
+  function fontString(size) {
+    return "900 " + size + "px Anybody, system-ui, sans-serif";
+  }
+
+  function setFont(c, size) {
+    c.font = fontString(size);
+    try { c.fontStretch = "normal"; } catch (e) {}
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+  }
+
+  function resize() {
+    var r = stage.getBoundingClientRect();
+    W = Math.max(1, r.width);
+    H = Math.max(1, r.height);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    layout();
+    chanKey = "";
+    if (!isActive()) drawStill();
+  }
+
+  function layout() {
+    fs = Math.min(H * 0.3, W * 0.9 / WORD.length * 1.6);
+    setFont(ctx, fs);
+    textW = ctx.measureText(WORD).width;
+  }
+
+  function isActive() { return running && !reduced && onScreen && pageVisible; }
+
+  // ---------- safety: at most 3 picture changes in any window under 1s ----------
+  function canStart(now, len) {
+    var ts = changes.filter(function (x) { return x > now - 2; });
+    ts.push(now, now + len);
+    ts.sort(function (a, b) { return a - b; });
+    for (var i = 0; i + 3 < ts.length; i++) {
+      if (ts[i + 3] - ts[i] < 1) return false;
+    }
+    return true;
+  }
+
+  function startBurst() {
+    if (reduced || !running || burst) return false;
+    if (!canStart(t, BURST)) return false;
+    var jumps = [];
+    for (var i = 0; i < SLICES; i++) {
+      var jumps_yes = Math.random() < 0.5;
+      var far = (Math.random() * 2 - 1) * 0.5 * 0.4 * fs;
+      jumps.push(jumps_yes ? far : 0);
+    }
+    burst = { start: t, jumps: jumps };
+    changes = changes.filter(function (x) { return x > t - 2; });
+    changes.push(t, t + BURST);
+    hoverPending = false;
+    return true;
+  }
+
+  function inHeadline(x, y) {
+    return Math.abs(x - W / 2) <= textW / 2 && Math.abs(y - H / 2) <= fs / 2;
+  }
+
+  function localPos(e) {
+    var r = canvas.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  canvas.addEventListener("pointermove", function (e) {
+    var p = localPos(e);
+    var inside = inHeadline(p.x, p.y);
+    if (inside && !pointerOver) hoverPending = true;
+    if (!inside) hoverPending = false;
+    pointerOver = inside;
+    if (inside && hoverPending && !burst) startBurst();
+    canvas.style.cursor = inside ? "pointer" : "default";
+  });
+  canvas.addEventListener("pointerleave", function () {
+    pointerOver = false;
+    hoverPending = false;
+  });
+  canvas.addEventListener("click", function (e) {
+    var p = localPos(e);
+    if (inHeadline(p.x, p.y)) startBurst();
+  });
+
+  // ---------- drawing ----------
+  function ensureChannels() {
+    var key = [fs.toFixed(2), textW.toFixed(2), dpr, fontReady].join("|");
+    if (key === chanKey) return;
+    chanKey = key;
+    chanPad = 0.6 * fs;
+    chanW = Math.ceil(textW + 2 * chanPad);
+    chanH = Math.ceil(fs + 2 * chanPad);
+    var cols = [COLORS.a1, COLORS.a2, COLORS.a3];
+    for (var i = 0; i < 3; i++) {
+      var oc = chans[i] || document.createElement("canvas");
+      oc.width = Math.ceil(chanW * dpr);
+      oc.height = Math.ceil(chanH * dpr);
+      var o = oc.getContext("2d");
+      o.setTransform(dpr, 0, 0, dpr, 0, 0);
+      o.clearRect(0, 0, chanW, chanH);
+      setFont(o, fs);
+      o.fillStyle = cols[i];
+      o.fillText(WORD, chanW / 2, chanH / 2);
+      chans[i] = oc;
+    }
+  }
+
+  function clear() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, W, H);
+  }
+
+  function drawClean() {
+    setFont(ctx, fs);
+    ctx.fillStyle = COLORS.text;
+    ctx.fillText(WORD, W / 2, H / 2);
+  }
+
+  function drawStill() {
+    clear();
+    drawClean();
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = ALPHA;
+    var cols = [COLORS.a1, COLORS.a2, COLORS.a3];
+    var offs = [-SPLIT, 0, SPLIT];
+    for (var i = 0; i < 3; i++) {
+      ctx.fillStyle = cols[i];
+      ctx.fillText(WORD, W / 2 + offs[i], H / 2);
+    }
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+  }
+
+  function drawBurst(e) {
+    ensureChannels();
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = ALPHA;
+    var offs = [-SPLIT * e, 0, SPLIT * e];
+    var left = W / 2 - chanW / 2;
+    var top = H / 2 - chanH / 2;
+    var pw = chans[0].width, ph = chans[0].height;
+    for (var c = 0; c < 3; c++) {
+      for (var i = 0; i < SLICES; i++) {
+        var sy0 = Math.round(ph * i / SLICES);
+        var sy1 = Math.round(ph * (i + 1) / SLICES);
+        var dy0 = top + chanH * i / SLICES;
+        var dh = chanH * (sy1 - sy0) / ph;
+        ctx.drawImage(chans[c], 0, sy0, pw, sy1 - sy0,
+          left + offs[c] + burst.jumps[i] * e, dy0, chanW, dh);
+      }
+    }
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(now) {
+    rafId = 0;
+    if (!isActive()) return;
+    var dt = Math.min((now - last) / 1000, 0.05);
+    if (!(dt >= 0)) dt = 0;
+    last = now;
+    t += dt;
+
+    if (burst && t - burst.start >= BURST) {
+      burst = null;
+      nextAuto = t + 4 * (0.5 + Math.random());
+    }
+    if (!burst) {
+      if (hoverPending && pointerOver) startBurst();
+      else if (t >= nextAuto) startBurst();
+    }
+
+    clear();
+    if (burst) {
+      var p = (t - burst.start) / BURST;
+      drawBurst(Math.sin(Math.PI * Math.min(p, 1)));
+    } else {
+      drawClean();
+    }
+    schedule();
+  }
+
+  function schedule() {
+    if (!rafId && isActive()) {
+      rafId = requestAnimationFrame(frame);
+    }
+  }
+
+  function sync() {
+    if (isActive()) {
+      last = performance.now();
+      schedule();
+    } else {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+      burst = null;
+      drawStill();
+    }
+  }
+
+  function updateButton() {
+    btn.textContent = running ? "Pause" : "Play";
+    btn.setAttribute("aria-label", running ? "Pause animation" : "Play animation");
+  }
+
+  btn.addEventListener("click", function () {
+    running = !running;
+    updateButton();
+    sync();
+  });
+
+  function onMotionChange() {
+    reduced = mq.matches;
+    if (reduced) running = false;
+    burst = null;
+    updateButton();
+    sync();
+  }
+  if (mq.addEventListener) mq.addEventListener("change", onMotionChange);
+  else if (mq.addListener) mq.addListener(onMotionChange);
+
+  document.addEventListener("visibilitychange", function () {
+    pageVisible = !document.hidden;
+    sync();
+  });
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      onScreen = entries[entries.length - 1].isIntersecting;
+      sync();
+    }, { threshold: 0 }).observe(stage);
+  }
+
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(resize).observe(stage);
+  } else {
+    window.addEventListener("resize", resize);
+  }
+
+  updateButton();
+  resize();
+  sync();
+
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load(fontString(100), WORD).then(function () {
+      fontReady = true;
+      layout();
+      chanKey = "";
+      if (!isActive()) drawStill();
+    }, function () {});
+    document.fonts.ready.then(function () {
+      fontReady = true;
+      layout();
+      chanKey = "";
+      if (!isActive()) drawStill();
+    });
+  }
+})();
+</script>
+</body>
+</html>
