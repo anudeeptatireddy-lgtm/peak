@@ -1,5 +1,7 @@
 # peak: project memory for Claude Code
 
+At the start of every session, read docs/PROJECT_CONTEXT.md and docs/HANDOFF.md.
+
 ## What this is
 peak is a website that closes the gap between people and Claude Code. Visitors see an animation they love, tweak it with sliders, copy a ready-made prompt, and build their own version with Claude Code. It also teaches animation vocabulary, helps first-timers set up Claude Code, fix problems, and put their page online. peak launches with 50 animations. As you scroll the home page, the whole site blends through 16 color "worlds", and the accent colors slowly drift inside each one.
 
