@@ -13460,6 +13460,300 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Cursor trail
+
+## What I want
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A full-screen canvas (100svh, at least 540px), transparent, cleared every frame. A chain of 40 points: point 0 (the head) follows a target, and every other point follows the one before it. Width of point i (0 = head, 39 = tail) is 14px × (1 − 0.8 × i ÷ 39). Ribbon: a smooth Catmull-Rom curve through the points (3 samples per link), drawn as a strip: offset each sample by half its width along the curve's normal on both sides and fill the shape, as small quads one per link. Colors: blend through the accents along the trail, the first accent at the head, the second at 0.5 of the way, the third at the tail, mixed in OKLab. A glow: first draw the same trail again, 2.2 × as wide, at 0.6 × 0.35 opacity with the blend mode above (a flat second accent color, or the first for one accent); then draw the trail itself with normal blending (source-over). Leave the normal cursor visible.
+- Each frame, with f = min(dt × 60, 2.5) and k = 1 − (1 − 0.3)^f: the head moves toward the target by lerp(head, target, k), and then each point i from 1 to the tail moves toward the already-moved point i − 1 by lerp(point i, point i − 1, k). The target is the pointer while it is over the canvas (a finger while it touches). When nobody is pointing it swims by itself: x = center x + width × 0.3 × sin(t × 0.6 × 1), y = center y + height × 0.3 × sin(t × 0.6 × 1.37 + 0.8). All points start at the center.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: run the swimming 240 frames at f = 1 and dt = 1/60 from the start, then draw the trail.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; dragging a finger sideways leads the trail, otherwise it swims.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`trail prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Cursor trail
+
+A glowing ribbon follows my cursor, curling smoothly behind it and tapering at the tail. When I stop, the tail catches up and coils. When I leave it alone it swims around by itself. My normal cursor stays visible.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+- Look: Ribbon
+- Length: 40
+- Width: 14px
+- Follow tightness: 0.3
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`tumble prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Falling letters
 
