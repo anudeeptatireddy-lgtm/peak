@@ -39,7 +39,13 @@ export class Burst {
    * Adds `count` pieces at (x, y). Math.random() calls per piece, in order:
    * angle, speed, spin, flutter phase, shape, color.
    */
-  fire(x: number, y: number, o: BurstOptions, inks: number, rand: () => number = Math.random): void {
+  fire(
+    x: number,
+    y: number,
+    o: BurstOptions,
+    inks: number,
+    rand: () => number = Math.random,
+  ): void {
     for (let i = 0; i < o.count; i++) {
       const ang = o.direction + (rand() - 0.5) * o.spread;
       const sp = o.speed + rand() * o.speedRange;
@@ -59,7 +65,14 @@ export class Burst {
   }
 
   /** One frame: gravity, drag, move, spin, flutter; drops pieces below `floor`. */
-  step(f: number, gravity: number, drag: number, wobble: number, flutterSpeed: number, floor: number): void {
+  step(
+    f: number,
+    gravity: number,
+    drag: number,
+    wobble: number,
+    flutterSpeed: number,
+    floor: number,
+  ): void {
     const d = drag ** f;
     for (const p of this.pieces) {
       p.vy += gravity * f;

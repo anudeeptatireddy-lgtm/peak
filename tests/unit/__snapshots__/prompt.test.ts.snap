@@ -62,6 +62,312 @@ One index.html file, CSS and JS inline, no libraries.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Celebration burst
+
+## What I want
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Size the canvas for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- A big message, "Happy birthday!", sits centered in a full-screen section (100svh, at least 540px) as real text above the confetti canvas: font size clamp(2.2rem, 9vw, 8rem), Anybody weight 900, font-stretch 125%, line-height 1, centered, in the main text color, wrapping only between words. The confetti canvas covers the section behind it (transparent, cleared every frame).
+- Pieces are mixed: each picks square, ribbon or circle. Every piece is 9px; a ribbon is 2.6 × as tall as it is wide. A square or ribbon tumbles like a card: its width is size × cos(phase), and it is turned by its angle. A circle's radius is size ÷ 2 × max(0.2, |cos(phase)|). Fill pieces in their accent color, one path per accent.
+- A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
+- Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
+- An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
+
+## How people interact
+- The canvas listens for clicks and taps (touch-action: pan-y so swipes still scroll); the message doesn’t block them (pointer-events: none on the message).
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`confetti prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Celebration burst
+
+A big message in the middle of the screen. Clicking fires confetti from the click point, and an automatic burst fires every few seconds. Pieces tumble, flutter and fall off the screen.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Message: "Happy birthday!"
+- Pieces per burst: 220
+- Gravity: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`echo prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Echo trail
 
