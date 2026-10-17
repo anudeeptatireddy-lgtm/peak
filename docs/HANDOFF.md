@@ -1,10 +1,10 @@
-# Handoff: 2026-10-17 (updated after step 6.5)
+# Handoff: 2026-10-18 (end of Wave 8)
 
-Work stopped at a clean point because the owner is switching Claude accounts. Everything below is committed in "handoff: save state" and pushed to `main`. Pushing deploys to Vercel. The pushed code is tested, but the live smoke run for this deploy hasn't been done yet (see action 2).
+Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, still `noindex`).
 
 ## Exact step
 
-All 50 scenes plus the three gallery-only industry heroes (`fogged`, `tailor`, `latte`) are built. Wave 7 and Wave 7b are wrapped up (full suite 608 passed; live smoke 80, live phone and gallery checks 72 passed). Wave 8: **8.1 and 8.2 (gallery and its filters/sort) are done.** 8.3 and 8.4 (Tour, Shuffle, Autoplay) are done. Next: **8.5**; older note: 8.3 Tour (`/tour`, all scenes in catalog order using `src/scenes/catalog.ts`; the industry heroes (51-53) are gallery-only, so the Tour plays the first 50), then 8.4 Tour Shuffle and Autoplay, 8.5 Home (latest drop; home stays the 12 featured scenes, now with the black hole and confetti in the lava and glitch slots), then the guides (8.6 to 8.9: facts must come from official docs with a Last checked date), words (8.10 to 8.12), drops (8.13), About (8.14: ask the owner for details in one message), 404 (8.15).
+Waves 1 to 8 are done. **Wave 8 (Gallery, Tour, guides, words, drops, About, 404) is wrapped up.** Next: **Wave 9** (polish, performance and the launch checklist; see `docs/PLAN.md`). Do not remove `noindex` or do anything launch-related until the owner says so.
 
 The project folder is `~/peak`.
 
@@ -17,10 +17,6 @@ The project folder is `~/peak`.
 ## Side-by-side pictures (ours vs the fresh build)
 
 Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.png` and `side-by-side-mobile.png`, for all 17 prompt-tested scenes. Left picture: built from the prompt. Right: peak. Examples: `docs/prompt-tests/cloth/`, `smoke/`, `flow/`, `warp/`, `marbles/`, `skid/`. They are rewritten every time `tests/e2e/prompt-parity.spec.ts` runs.
-
-## Wave 6 prompt tests (done 2026-10-18: moire, tunnel and glitch pass)
-
-By the owner's rule: all Spicy scenes plus one easy one. Spicy: `moire`, `tunnel`, `glitch`. Easy one: none needed (`overprint` and `halftone` are proven against the demo). Three fresh agents, about 150k tokens each, about 450k in total. Not started.
 
 ## Retest estimate
 
@@ -41,15 +37,10 @@ By the owner's rule: all Spicy scenes plus one easy one. Spicy: `moire`, `tunnel
 
 ## Waiting on the owner
 
-- **Smoke retest** (one fresh agent, about 150k tokens). Skipped for now.
-- **About page details** (name, one-line bio, what you're looking for, contact link, social links). Asked at step 8.14.
+- **About page details** (name, one-line bio, why you made peak, what you're looking for, contact link, social links). `/about` shows marked `[PLACEHOLDER]`s until then (list in DECISIONS, 8.14).
+- **Two `[OWNER: verify …]` items in the guides:** which repositories and plans can publish with GitHub Pages (Put it online); the Safari Web Inspector menu names and shortcut (Fix it).
+- **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
+- **`tailor` decision:** matches by eye but not on the measure. Accept as is, or retest.
+- **Review "Overnight choices for owner review"** in `docs/DECISIONS.md`.
 - **Friend test** with 3-5 people at Checkpoint 9.
 - **Unchanged:** nothing paid, no domain purchase, no cookies or personal data.
-
-## Draft owner update (Waves 5 to 7b, not sent yet)
-
-> All 50 animations are built, plus three extra gallery-only ones (Fogged bottle, Tailor's cut, Latte pour). The gallery is live at https://peak-teal.vercel.app/gallery with filters and sort. The home page keeps its 12 featured scenes (the black hole and confetti are back in two slots).
-> Try on a phone: (1) Gallery: pick Events, then try Easiest first. (2) Fogged bottle: drag a finger sideways across it. (3) Tilt the phone on Holographic card after tapping "Use motion".
-> The site now has a phone-readiness test (no sideways scroll, 44px taps) on every page and scene.
-> Prompt tests: all new scenes pass except Tailor's cut, which matches by eye but not on the measure; Smoke still waits on a retest.
-> Needs you: OK to retest Smoke (about 100-150k tokens), and your About-page details when you are ready.

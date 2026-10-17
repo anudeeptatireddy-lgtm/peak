@@ -321,7 +321,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 - [x] **8.15 404**
   - Done when: a small playful animation (reuse a scene in preview quality) and links to Home, Gallery, Start here.
 
-- [ ] **Wave 8 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: browse the gallery and the Tour (try Shuffle and Autoplay) on laptop and phone. Read all three guides as if you'd never used Claude Code and note anything confusing.
+- [x] **Wave 8 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: browse the gallery and the Tour (try Shuffle and Autoplay) on laptop and phone. Read all three guides as if you'd never used Claude Code and note anything confusing.
 
 ---
 

@@ -330,3 +330,15 @@ Desktop matched at once; the phone showed a real bug in our scene (the cup was w
 - `/about` uses the `tilt` card as its header. **Placeholders still to fill in (owner):** `[YOUR NAME]` (the card's name), `[ONE-LINE BIO]` (also the card's second line), `[WHY I MADE PEAK: …]`, `[WHAT YOU'RE LOOKING FOR, e.g. internships, freelance, collaborators]`, `[CONTACT LINK]`, `[SOCIAL LINKS]`. Nothing personal was invented (the card's own default job title was replaced by the bio placeholder).
 - `/404` shows the `tumble` scene (falling letters) spelling "404" in preview quality, with links to Home, Gallery and Start here.
 - Small fix: "Seen in" links on `/words` now meet the 44px tap-target rule on phones.
+
+## Overnight choices for owner review
+Choices made on the 2026-10-18 overnight run, in the order they were made. Each is easy to change.
+1. **Tour worlds:** the Tour gives each scene its own world, except where two neighbors share one (`confetti` then `goo`, `overprint` then `halftone`); there the second gets a different world so the colors change at every boundary (8.3).
+2. **Tour length:** the Tour plays the first 50 scenes; the three industry heroes stay gallery-only (8.3).
+3. **Guides:** no install commands were copied from memory or docs; the guides point to the official pages instead. Two `[OWNER: verify …]` notes are left visible (GitHub Pages availability; Safari menu names) (8.6 to 8.9).
+4. **Words:** exactly the 24 terms in the PRD; no extras were added. Each demo is a small canvas piece, one slider at most (8.10, 8.11).
+5. **Launch drop:** "Hello, peak" is attached to the `particles` scene, dated 2026-10-18 (8.13).
+6. **Home:** the "Latest drop" row sits between How it works and Start here (8.5).
+7. **About:** every personal detail is a marked placeholder; the tilt card shows `[YOUR NAME]` and `[ONE-LINE BIO]` (8.14).
+8. **404:** reuses `tumble` spelling "404" (8.15).
+9. **Tests updated, not loosened:** the home journey test now expects 15 sections (the new drop row); the tour "most mounted" check can reach 7 under heavy machine load and passes alone (timing, not a leak).

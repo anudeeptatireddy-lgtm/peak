@@ -23,13 +23,13 @@ test('--ground changes from world to world as you scroll', async ({ page }) => {
   await page.goto('/');
   const grounds: string[] = [];
   const count = await page.locator('[data-journey]').count();
-  expect(count).toBe(14);
+  expect(count).toBe(15);
   for (let i = 0; i < count; i++) {
     await scrollToSection(page, i);
     grounds.push(await cssVar(page, '--ground'));
   }
   expect(grounds.slice(0, 3)).toEqual(['#FFE3F1', '#E8C9A0', '#1E1412']);
-  expect(new Set(grounds).size).toBe(13); // 12 featured worlds + Matcha (twice)
+  expect(new Set(grounds).size).toBe(13); // 12 featured worlds + Matcha (three sections)
 });
 
 test('blends smoothly between neighbors (no hard cuts)', async ({ page }) => {
