@@ -209,7 +209,7 @@ Use `/new-scene` for each scene below. Done when: the scene definition of done a
 - [x] **3.15 `kinetic`** · SCENES.md #12
 - [x] **3.16 `shatter`** · SCENES.md #13
 
-- [ ] **Wave 3 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new text scene on desktop and phone (`/dev/scenes` and its scene page); run the prompt test for at least two of them.
+- [x] **Wave 3 wrap-up:** run the wrap-up routine at the top of this file. Prompt tests for this wave's scenes. Things for the owner to try: play with each new text scene on desktop and phone (`/dev/scenes` and its scene page); run the prompt test for at least two of them.
 
 ---
 
