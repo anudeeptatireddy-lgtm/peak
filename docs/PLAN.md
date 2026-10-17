@@ -307,11 +307,11 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 - [x] **8.8 Fix it** · PRD §11.2 (every symptom has a copyable "what to tell Claude Code" message)
 - [x] **8.9 Put it online** · PRD §11.3
   - Done when (each guide): all sections from the PRD present; every external fact has a source link; Lighthouse content-page budgets met (§19).
-- [ ] **8.10 Words content and page** · PRD §12
+- [x] **8.10 Words content and page** · PRD §12
   - Done when: 24 terms with definition, say-it sentence, seen-in links; search filters as you type; A–Z anchors; deep links like `/words#damping` scroll to and highlight the term. If the 50 scenes need terms the list lacks (for example noise or metaball), propose them to the owner before adding.
-- [ ] **8.11 Mini demos**
+- [x] **8.11 Mini demos**
   - Done when: each term has a mini demo using the engine and scheduler, paused until on screen, still frame under reduced motion; the page stays within the content-page performance budget (only visible demos run).
-- [ ] **8.12 Link it up**
+- [x] **8.12 Link it up**
   - Done when: every scene's `terms` resolve to real words (validator test); scene info popovers and How it works chips link to the right anchors.
 - [ ] **8.13 Drops** · PRD §14
   - Done when: `/drops`, `/drops/[slug]`, `/rss.xml` work; the home page shows the latest drop; one launch drop exists.

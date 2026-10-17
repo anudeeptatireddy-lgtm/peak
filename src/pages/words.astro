@@ -1,12 +1,283 @@
 ---
+// Words (PRD §12): the vocabulary that makes animation prompts work. Every word has a
+// plain definition, a live demo, a sentence to say to Claude Code, and links to the
+// scenes that use it. Search filters as you type; /words#damping scrolls to and
+// highlights one word.
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import CopyMessage from '../components/guide/CopyMessage.astro';
+import { demoSlider } from '../demos';
+import { WORD_IDS } from '../words/list';
+import type { SceneModule } from '../scenes/types';
+
+const mods = Object.values(
+  import.meta.glob<{ default: SceneModule }>('../scenes/*/index.ts', { eager: true }),
+).map((m) => m.default);
+
+const entries = (await getCollection('words')).sort((a, b) => a.id.localeCompare(b.id));
+const seenIn = (id: string) =>
+  mods
+    .filter((m) => m.meta.terms.includes(id) || m.params.some((p) => 'term' in p && p.term === id))
+    .map((m) => ({ slug: m.meta.slug, title: m.meta.title }));
+const words = entries.map((e) => ({
+  id: e.id,
+  ...e.data,
+  seen: seenIn(e.id),
+  slider: demoSlider(e.data.demo),
+}));
+const letters = [...new Set(words.map((w) => w.term[0]!.toUpperCase()))];
+const known = new Set<string>(WORD_IDS);
 ---
 
-<Base title="Words">
-  <Placeholder
-    title="Words"
-    lede="The words that make animation prompts work, each with a tiny live demo."
-    wave={8}
-  />
+<Base
+  title="Words"
+  description="The words that make animation prompts work, each with a tiny live demo."
+>
+  <div class="words wrap">
+    <header class="head">
+      <h1 class="display">Words</h1>
+      <p class="body measure soft">
+        {words.length} words that make an animation prompt work. Each has a small demo you can play
+        with and a sentence you can paste into Claude Code.
+      </p>
+      <label class="search">
+        <span class="small soft">Search the words</span>
+        <input type="search" data-search placeholder="Try damping" autocomplete="off" />
+      </label>
+      <nav class="az" aria-label="Jump to a letter">
+        {letters.map((l) => (
+          <a href={`#letter-${l}`}>{l}</a>
+        ))}
+      </nav>
+    </header>
+
+    <p class="empty body" data-empty hidden>
+      No word matches that. Try a shorter search.
+    </p>
+
+    <ul class="list" data-list>
+      {words.map((w, i) => (
+        <li
+          class="word"
+          id={w.id}
+          data-term={w.term.toLowerCase()}
+          data-text={`${w.term} ${w.definition}`.toLowerCase()}
+          data-known={known.has(w.id)}
+        >
+          {(i === 0 || words[i - 1]!.term[0]!.toUpperCase() !== w.term[0]!.toUpperCase()) && (
+            <span id={`letter-${w.term[0]!.toUpperCase()}`} class="anchor" />
+          )}
+          <div class="demo" data-demo={w.demo} aria-hidden="true" />
+          <div class="text">
+            <h2>{w.term}</h2>
+            <p class="body">{w.definition}</p>
+            {w.slider && (
+              <label class="slider">
+                <span class="small soft">{w.slider.label}</span>
+                <input
+                  type="range"
+                  data-slider
+                  min={w.slider.min}
+                  max={w.slider.max}
+                  step={w.slider.step}
+                  value={w.slider.default}
+                />
+              </label>
+            )}
+            <CopyMessage label="Say it in a prompt" text={w.sayIt} />
+            {w.seen.length > 0 && (
+              <p class="small soft seen">
+                Seen in:{' '}
+                {w.seen.map((s, k) => (
+                  <>
+                    {k > 0 && ', '}
+                    <a href={`/scenes/${s.slug}`}>{s.title}</a>
+                  </>
+                ))}
+              </p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
 </Base>
+
+<script>
+  import { mountScene, type MountedScene } from '../engine/mount';
+  import { setMaxActive } from '../engine/scheduler';
+  import { demoFor, hasDemo } from '../demos';
+  import { getWorld } from '../theme/worlds';
+
+  setMaxActive(4);
+  const items = [...document.querySelectorAll<HTMLElement>('.word')];
+  const list = document.querySelector<HTMLElement>('[data-list]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const search = document.querySelector<HTMLInputElement>('[data-search]')!;
+  const theme = getWorld('riso');
+
+  // ---- Search: filters as you type ----
+  const filter = () => {
+    const q = search.value.trim().toLowerCase();
+    for (const li of items) li.hidden = q !== '' && !(li.dataset.text ?? '').includes(q);
+    empty.hidden = items.some((li) => !li.hidden);
+    list.hidden = !empty.hidden;
+  };
+  search.addEventListener('input', filter);
+
+  // ---- Demos run only while on screen ----
+  const live = new Map<HTMLElement, MountedScene>();
+  const loading = new Set<HTMLElement>();
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        const host = e.target as HTMLElement;
+        if (e.isIntersecting) mount(host);
+        else unmount(host);
+      }
+    },
+    { rootMargin: '30% 0px' },
+  );
+  function mount(host: HTMLElement): void {
+    const id = host.dataset.demo ?? '';
+    if (live.has(host) || loading.has(host) || !hasDemo(id)) return;
+    loading.add(host);
+    queueMicrotask(() => {
+      loading.delete(host);
+      if (live.has(host) || !host.isConnected) return;
+      const li = host.closest<HTMLElement>('.word')!;
+      const slider = li.querySelector<HTMLInputElement>('[data-slider]');
+      const m = mountScene(host, demoFor(id), { quality: 'preview', theme });
+      if (slider) m.setParams?.({ value: Number(slider.value) });
+      live.set(host, m);
+    });
+  }
+  function unmount(host: HTMLElement): void {
+    loading.delete(host);
+    live.get(host)?.destroy();
+    live.delete(host);
+  }
+  for (const li of items) {
+    const host = li.querySelector<HTMLElement>('[data-demo]')!;
+    io.observe(host);
+    li.querySelector<HTMLInputElement>('[data-slider]')?.addEventListener('input', (e) => {
+      live.get(host)?.setParams?.({ value: Number((e.target as HTMLInputElement).value) });
+    });
+  }
+
+  // ---- Deep links: /words#damping scrolls to and highlights the word ----
+  const highlight = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    for (const li of items) li.classList.toggle('is-target', li.id === id);
+    document.getElementById(id)?.scrollIntoView({ block: 'start' });
+  };
+  addEventListener('hashchange', highlight);
+  if (location.hash) highlight();
+  (window as unknown as { __words?: object }).__words = { live: () => live.size };
+</script>
+
+<style>
+  .words {
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .head {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .search {
+    display: grid;
+    gap: 0.25rem;
+    max-width: 24rem;
+  }
+  .search input {
+    min-height: 44px;
+    padding: 0 0.75rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: var(--ground);
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+  }
+  .az {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  .az a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    color: var(--ink);
+  }
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2rem;
+  }
+  .list[hidden],
+  .word[hidden] {
+    display: none;
+  }
+  .word {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 14px;
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .word.is-target,
+  .word:target {
+    outline: 2px solid var(--ink);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+  .anchor {
+    position: absolute;
+    top: -4rem;
+  }
+  .demo {
+    position: relative;
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--ink) 5%, var(--ground));
+    touch-action: pan-y;
+  }
+  .text {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+  .text h2 {
+    margin: 0;
+  }
+  .slider {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .slider input {
+    min-height: 44px;
+    width: 100%;
+  }
+  .seen a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+  }
+  @media (min-width: 800px) {
+    .word {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      align-items: start;
+    }
+  }
+</style>

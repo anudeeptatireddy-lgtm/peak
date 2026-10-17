@@ -316,3 +316,8 @@ Desktop matched at once; the phone showed a real bug in our scene (the cup was w
 - **Still marked `[OWNER: verify …]`** (visible in the guides): (1) which repositories and plans can publish with GitHub Pages (GitHub's pages I fetched did not say); (2) the current Safari menu names and shortcut for the Web Inspector console (Apple's current page only covers turning on the Develop menu; the shortcut comes from Apple's older guide).
 - The three guides are written in plain English for a beginner; the "what to tell Claude Code" messages in Fix it are our own advice, not claims about Claude Code.
 - Prettier ignores `src/content/guides/*.mdx`: it indents JSX children, which MDX reads as a code block and silently drops.
+
+## 2026-10-18: 8.10 to 8.12 word bank
+- `/words` lists the 24 word-bank terms (definition, a say-it sentence with a copy button, links to the scenes that use it, a live demo). Search filters as you type; A to Z links; `/words#damping` scrolls to and highlights a word. No extra terms were added (the PRD says to propose, not add).
+- 24 mini demos live in `src/demos/defs.ts`, wrapped as scene modules by `src/demos/framework.ts`, so they run through the one scheduler, pause when off screen (IntersectionObserver), show a still frame under reduced motion and clean up on destroy. At most four run at once. Sliders only where they teach.
+- "Seen in" is computed at build time from each scene's `terms` and its params' `term`. A unit test checks every term any scene uses is a real word.
