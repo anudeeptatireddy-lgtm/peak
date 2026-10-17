@@ -203,3 +203,6 @@ Both match on desktop and miss at phone size (cloth 2.16%, smoke 4.3%, limit 2%)
 - Easing reuses `kits/easing.ts`: smooth = ease-in-out cubic, bouncy = ease-out back (overshoot 1.70158), snappy = ease-out expo.
 - Each extra ink starts "Ink lag" later and is drawn "Ink shrink" smaller (added so the three multiplied inks show as rings instead of one dark blob at rest). The morph ends when the last ink arrives.
 - A click or tap ends the wait or morph and starts morphing to the shape after it. Not prompt-tested (Medium, not Spicy).
+
+## 2026-10-17: tilt on phones
+The card's name and title sat at the bottom, hidden behind the phone bottom sheet. They are now at the top of the card, and the card is never taller than 60% of the stage. A sweep of all 48 pages at 390px found no sideways overflow.

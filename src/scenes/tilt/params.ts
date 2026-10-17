@@ -17,7 +17,7 @@ export const params: Param[] = [
     default: '[YOUR NAME]',
     key: true,
     phrase: (v: string, all) =>
-      `A card centered in a full-screen section (100svh, at least 540px): width min(${all.cardWidth}px, ${pct(FIXED.MAX_WIDTH_SHARE)}% of the section width), height = width × ${all.aspect}, corner radius ${all.radius}px, main surface color, main text color. Name "${v}" and, under it, the title "${all.role}".`,
+      `A card centered in a full-screen section (100svh, at least 540px): width min(${all.cardWidth}px, ${pct(FIXED.MAX_WIDTH_SHARE)}% of the section width, and no more than ${pct(FIXED.MAX_HEIGHT_SHARE)}% of the section height ÷ ${all.aspect}), height = width × ${all.aspect}, corner radius ${all.radius}px, main surface color, main text color. Name "${v}" and, under it, the title "${all.role}", both at the top of the card.`,
   },
   {
     kind: 'text',

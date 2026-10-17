@@ -43,6 +43,8 @@ export const FIXED = {
   BUTTON_PAD: 1.25,
   /** Corner radius of the "Use motion" button: any value this large makes a pill. */
   PILL: 999,
+  /** The card is never taller than this share of the stage height, so it fits above a phone's bottom sheet. */
+  MAX_HEIGHT_SHARE: 0.6,
 } as const;
 
 export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
@@ -67,4 +69,5 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   LINE_HEIGHT: 'Typography of the card: tight lines for a heavy name.',
   BUTTON_PAD: 'Comfortable side padding for a touch button.',
   PILL: 'Rounds the button fully; any number beyond half its height works.',
+  MAX_HEIGHT_SHARE: 'Keeps the whole card visible above the phone bottom sheet; a layout margin.',
 };

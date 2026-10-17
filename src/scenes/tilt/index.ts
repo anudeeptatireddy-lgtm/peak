@@ -45,7 +45,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     height: `${SHARED.PERCENT}%`,
     boxSizing: 'border-box',
   });
@@ -80,7 +80,11 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
   const ratio = (a: number) => (n('maxTilt') > 0 ? clamp(a / n('maxTilt'), -1, 1) : 0);
 
   function layout(): void {
-    cardW = Math.min(n('cardWidth'), W * FIXED.MAX_WIDTH_SHARE);
+    cardW = Math.min(
+      n('cardWidth'),
+      W * FIXED.MAX_WIDTH_SHARE,
+      (H * FIXED.MAX_HEIGHT_SHARE) / n('aspect'),
+    );
     const pad = cardW * FIXED.PADDING;
     Object.assign(card.style, {
       width: `${cardW}px`,
