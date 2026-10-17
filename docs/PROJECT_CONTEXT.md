@@ -150,3 +150,28 @@ Launch (end of Wave 9):
 - Write docs/TESTING_WITH_FRIENDS.md: a 60–90 minute script where testers find an animation, tweak it, build it with Claude Code, and put it online, plus notes templates and a 5-question survey.
 - Run the full end-to-end suite against the live site.
 - Send me a final report: the live link, what's done, any failed prompt tests, any placeholders left, and anything I still need to do.
+
+---
+
+# Update 1
+
+Status update since the handoff prompt was written. This replaces section 9, step 1.
+
+## Where we are
+- Part 1 (parity) and Part 2 (sharpening) are done. Waves 1–5 are done. Wave 6 steps 6.1 (overprint) and 6.2 (halftone) are done. docs/HANDOFF.md has the details.
+- npm run check passes. The full e2e suite passes except the prompt tests for flow, warp, marbles and skid.
+- Half-done then: cloth and smoke prompt-test pages not compared; goo retest.
+- The Wave 5 wrap-up wasn't done: deploy, live tests, owner update.
+
+## Next, in order
+1. Compare cloth, smoke and goo, and log the results.
+2. Finish the Wave 5 wrap-up.
+3. Continue Wave 6: 6.3 tilt, 6.4 kaleido, 6.5 morph, 6.6 moiré with its flash test. Then keep going through the plan.
+
+## Owner's answers
+1. No third retest of flow, warp, marbles and skid yet. First, using the outputs already there (no new runs), explain why each one failed, in one or two lines each: was the look or behavior actually wrong (colors, size, density, speed, how it reacts to clicks and holds), or did it only fail because random numbers and timing differ?
+2. Change the pass rule for prompt tests, but not for parity tests (ours vs the prototype stays pixel-based). A prompt test passes when the fresh build matches on things you can measure: the same palette, element counts within ±10%, speeds and settle times within ±20%, the same reaction to every interaction, and the same layout. Add a side-by-side screenshot for the owner to judge by eye. Write this rule into docs/PRD.md and docs/PROMPT_TESTS.md, then re-judge all previous prompt tests with it using the outputs already there, without new runs.
+3. After that, only retest scenes that fail because of a real difference in look or behavior. Fix their phrases first, then retest one scene to confirm the fix works before retesting the rest. Tell the owner the estimated token cost before any retest over 100k tokens.
+4. Fix the flaky drop test properly: give the scheduler a test mode with a fixed 1/60s timestep and seeded randomness, so physics runs the same every time. Unskip the drop test and use this mode in all parity tests.
+5. About page: the owner will send details when step 8.14 is reached.
+6. Friend test: later, as planned.
