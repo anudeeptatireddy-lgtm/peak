@@ -118,9 +118,9 @@ const linked = (s: string) =>
             data-pane="tweak"
           >
             <div class="world-picker">
-              <h3 class="small soft" id="worlds-label">
+              <h2 class="small soft" id="worlds-label">
                 World
-              </h3>
+              </h2>
               <div class="swatches" role="radiogroup" aria-labelledby="worlds-label" data-swatches>
                 {WORLD_ORDER.map((id) => {
                   const t = getWorld(id);
@@ -295,13 +295,13 @@ const linked = (s: string) =>
               <span class="small soft" data-word-count></span>
             </div>
             <pre class="prompt" tabindex="0" aria-label="Your prompt" data-prompt></pre>
-            <h3 class="h3">Next steps</h3>
+            <h2 class="h3">Next steps</h2>
             <p class="small soft">
               Paste these into the same Claude Code session after it builds the first version.
             </p>
             <ol class="followups" data-followups></ol>
             <div class="did-it-work">
-              <h3 class="h3">Did it work?</h3>
+              <h2 class="h3">Did it work?</h2>
               <div class="row">
                 <button class="btn btn--secondary" type="button" data-feedback="it_worked">
                   It worked
@@ -327,7 +327,7 @@ const linked = (s: string) =>
                 <p set:html={linked(s)} />
               ))}
             </div>
-            <h3 class="h3">Words in this scene</h3>
+            <h2 class="h3">Words in this scene</h2>
             <ul class="chips" role="list">
               {m.terms.map((t) => (
                 <li>
@@ -337,7 +337,7 @@ const linked = (s: string) =>
                 </li>
               ))}
             </ul>
-            <h3 class="h3">What else you could make with this</h3>
+            <h2 class="h3">What else you could make with this</h2>
             <ul class="else" role="list">
               {m.whatElse.map((s) => (
                 <li>{s}</li>

@@ -329,7 +329,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 - [x] **9.1 Sound** · PRD §9.8
   - Done when: the header toggle works and is remembered; each scene's hooks play synthesized sounds only after a user gesture; nothing plays when off.
-- [ ] **9.2 Accessibility pass** · PRD §17, §8.2
+- [x] **9.2 Accessibility pass** · PRD §17, §8.2
   - Do: keyboard-only walkthrough of every page; screen-reader labels; contrast across all 16 worlds and blends; a flash audit of every ⚠ scene at maximum params; an automated a11y check in e2e on every route (images/controls have accessible names, headings in order, no duplicate ids, focus visible).
   - Done when: all checks pass; findings and fixes logged in `docs/DECISIONS.md`.
 - [ ] **9.3 Performance pass** · PRD §19
