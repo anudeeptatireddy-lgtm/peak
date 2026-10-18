@@ -9,6 +9,7 @@ import type { Theme } from '../theme/worlds';
 import { fontsReady } from './fonts';
 import { isPaused, prefersReducedMotion } from './motion';
 import { register } from './scheduler';
+import { sound } from './sound';
 
 export interface MountOptions {
   params?: Record<string, unknown>;
@@ -26,8 +27,6 @@ export interface MountedScene {
   destroy(): void;
 }
 
-const silent: SoundHooks = { play() {} };
-
 export function mountScene(
   host: HTMLElement,
   mod: SceneModule,
@@ -40,7 +39,7 @@ export function mountScene(
     reducedMotion: prefersReducedMotion(),
     isSmall: (host.clientWidth || window.innerWidth) < 700,
     quality: opts.quality ?? 'full',
-    sound: opts.sound ?? silent,
+    sound: opts.sound ?? sound,
   });
   const reg = register(host, instance);
   let destroyed = false;

@@ -108,6 +108,9 @@ const isCurrent = (href: string) => path === href || path.startsWith(`${href}/`)
 <script>
   import { onPausedChange, togglePaused } from '../engine/motion';
   import { getPref, onPref, setPref, type PrefKey } from '../state/prefs';
+  import { installButtonClicks } from '../engine/sound';
+
+  installButtonClicks();
 
   const header = document.querySelector<HTMLElement>('[data-header]')!;
 

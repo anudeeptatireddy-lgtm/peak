@@ -353,3 +353,7 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 - **Put it online:** replaced with the owner's verified wording: GitHub Pages is available in public repositories on GitHub Free; private repositories need a paid plan (GitHub Pro, Team or Enterprise). Source added: GitHub Docs, "Creating a GitHub Pages site". (I re-fetched the page: it confirms the Free-plan/public rule; the plan names come from the owner.)
 - **Fix it:** Safari > Settings > Advanced > "Show features for web developers" (Apple Developer's "Enabling features for web developers", re-fetched and matching). The unverified shortcut sentence was removed rather than kept. Source added.
 - "Last checked" stays 2026-10-18 (today). No `[OWNER: verify …]` notes remain in the guides.
+
+## 2026-10-18: 9.1 Sound
+- `src/engine/sound.ts`: six synthesized voices (click, pop, drop, pluck, whoosh, tick) made with the Web Audio API, no audio files. Sound is off by default, remembered in `localStorage` (the header toggle already existed), and silent until the visitor's first touch or key press. `mountScene` uses it by default, so every scene's existing `ctx.sound.play(...)` calls now work. Master volume is 0.25.
+- New hooks: `countdown` plays a tick when digits flip; `warp` plays a whoosh when you press and hold. Buttons make a soft click (one listener on the page; `data-no-sound` opts out). A unit test checks every sound name a scene uses has a voice.

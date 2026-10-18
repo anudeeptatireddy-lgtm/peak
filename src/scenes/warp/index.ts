@@ -25,6 +25,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   const ptr = createPointer(host);
   let stars: Star[] = [];
   let speed = Number(p.cruise);
+  let pressed = false;
   let mx = 0;
   let my = 0;
   let rest = { x: 0, y: 0 };
@@ -125,7 +126,10 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     update(dt) {
       ptr.sync();
       ptr.takeTaps();
-      const target = ptr.down && ptr.active ? Number(p.warpSpeed) : Number(p.cruise);
+      const nowPressed = ptr.down && ptr.active;
+      if (nowPressed && !pressed) ctx.sound.play('whoosh');
+      pressed = nowPressed;
+      const target = nowPressed ? Number(p.warpSpeed) : Number(p.cruise);
       const rate = target > speed ? Number(p.accel) : Number(p.decel);
       speed += (target - speed) * (1 - Math.exp(-dt * rate));
       for (const s of stars) {

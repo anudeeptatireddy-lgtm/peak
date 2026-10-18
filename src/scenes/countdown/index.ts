@@ -248,15 +248,18 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     const parts = split(ms);
     if (parts.map((x) => x.length).join() !== digitsKey) build(parts);
     const chars = parts.join('');
+    let flipped = false;
     cards.forEach((card, i) => {
       const ch = chars[i]!;
       if (ch !== card.cur) {
         card.prev = card.cur;
         card.cur = ch;
         card.t0 = animate ? time : -Infinity;
+        flipped = true;
       }
       card.render(card, animate ? clamp((time - card.t0) / n('flipTime')) : 1);
     });
+    if (flipped && animate) ctx.sound.play('tick');
     const running = ms > 0;
     done = !running;
     msg.style.visibility = done ? 'visible' : 'hidden';
