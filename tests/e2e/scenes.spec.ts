@@ -52,6 +52,10 @@ for (const slug of SCENES) {
 
     test('keeps vertical scrolling for touch', async ({ page }) => {
       await page.goto(`/dev/scenes?s=${slug}`);
+      // The scene sets this when it mounts, so wait for the mount instead of racing it.
+      await expect
+        .poll(() => page.evaluate(() => (window as any).__peak?.scheduler().registered ?? 0))
+        .toBeGreaterThan(0);
       const touchAction = await page.evaluate(
         () => getComputedStyle(document.querySelector('[data-stage]')!).touchAction,
       );
