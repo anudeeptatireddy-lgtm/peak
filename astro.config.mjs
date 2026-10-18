@@ -3,11 +3,17 @@ import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-// PUBLIC_SITE_URL is set at deploy time (PRD §23). Without it the sitemap is skipped.
-const site = process.env.PUBLIC_SITE_URL || undefined;
+// PUBLIC_SITE_URL is set at deploy time (PRD §23); it defaults to the live address so canonical
+// links and share images are absolute. The sitemap stays off until launch (PLAN 9.7): set
+// PEAK_SITEMAP=1 (or flip this line) then.
+const site = process.env.PUBLIC_SITE_URL || 'https://peak-teal.vercel.app';
+const sitemapOn = process.env.PEAK_SITEMAP === '1';
 
 export default defineConfig({
   site,
   output: 'static',
-  integrations: [mdx(), sitemap({ filter: (page) => !page.includes('/dev/') })],
+  integrations: [
+    mdx(),
+    ...(sitemapOn ? [sitemap({ filter: (page) => !page.includes('/dev/') })] : []),
+  ],
 });

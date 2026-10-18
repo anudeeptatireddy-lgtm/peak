@@ -25,7 +25,7 @@ const linked = (s: string) =>
   });
 ---
 
-<Base title={m.title} description={m.summary} world={m.world}>
+<Base title={m.title} description={m.summary} world={m.world} image={`/og/${m.slug}.png`}>
   <div class="scene-page" data-scene-page data-slug={m.slug} data-world={m.world}>
     <header class="title-block wrap">
       <h1 class="display">{m.title}</h1>

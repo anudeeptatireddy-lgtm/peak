@@ -368,3 +368,9 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 - **Chunks:** home's static JavaScript is about 13 KB gzipped (budget 60 KB). Scenes load through lazy imports, one chunk each; `tests/e2e/chunks.spec.ts` checks a guide page loads no scene chunks and a scene page does not load the other 50.
 - **Found and fixed:** the home page mounted each scene once and never destroyed it, so a long scroll piled up scenes. It now destroys a scene once it is 2.5 screens away (and re-mounts when it comes back), like the Tour. Test: at most 7 mounted while scrolling the whole page, and back to 4 or fewer at the top.
 - Tour and gallery running limits (2 and 4) were already tested and still pass.
+
+## 2026-10-18: 9.4 SEO and share images
+- Every page now has a canonical link (trailing slash removed) and Open Graph and Twitter tags. The site address defaults to https://peak-teal.vercel.app (`astro.config.mjs`; `PUBLIC_SITE_URL` still overrides it).
+- 55 share images (1200x630) are committed in `public/og/`: one per scene (the stage's still frame in its own world, with the title), `home.png` and `default.png`. Made by `scripts/make-og.mjs` (`npm run build && node scripts/make-og.mjs`; uses Playwright and test mode, no new packages). Scene pages use their own image, home its own, other pages the generic one.
+- **Deliberately not done (launch step, per the owner's instruction to stop before launch):** the sitemap is still off (`@astrojs/sitemap` only runs when `PEAK_SITEMAP=1`) and the site is still `noindex` with robots disallowing everything. Step 9.7 should set `PEAK_SITEMAP=1` (or remove the condition) together with removing noindex.
+- Tests: `tests/e2e/seo.spec.ts`.

@@ -17,6 +17,8 @@ interface Props {
   /** Header and footer. Dev pages can turn them off. */
   chrome?: boolean;
   noindex?: boolean;
+  /** Share image path under /og/ (defaults to the generic one). */
+  image?: string;
 }
 
 const {
@@ -25,6 +27,7 @@ const {
   world = 'riso',
   chrome = true,
   noindex = false,
+  image = '/og/default.png',
 } = Astro.props;
 
 // Pinned worlds render their colors inline so the first paint is already right.
@@ -35,6 +38,10 @@ const inlineVars =
     : Object.entries(themeVars(getWorld(initialWorld)))
         .map(([k, v]) => `${k}: ${v}`)
         .join('; ');
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname.replace(/(.)\/$/, '$1'), Astro.site).href
+  : undefined;
+const imageUrl = Astro.site ? new URL(image, Astro.site).href : image;
 const pageTitle = title === 'peak' ? 'peak' : `${title} · peak`;
 // Vercel Web Analytics (page views only, no cookies) loads only on Vercel builds,
 // so local previews and tests never request the analytics script.
@@ -48,6 +55,19 @@ const onVercel = process.env.VERCEL === '1';
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:site_name" content="peak" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
     {(noindex || !INDEXABLE) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
