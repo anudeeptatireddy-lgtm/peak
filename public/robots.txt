@@ -1,3 +1,5 @@
-# The site is still being built. This opens up at launch (PLAN 9.7).
+# peak is open to search engines.
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://peak-teal.vercel.app/sitemap-index.xml

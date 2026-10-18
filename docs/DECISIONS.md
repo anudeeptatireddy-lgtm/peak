@@ -385,3 +385,6 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 
 ## 2026-10-18: end-of-run test notes (Wave 9, before launch)
 - Full e2e: 749 passed, 2 failed (both `flow`, desktop, under full load). One was a real test race: "keeps vertical scrolling for touch" read the stage's style before the scene had mounted. The test now waits for the mount (not a loosened check). The other, "destroy leaves no listeners behind", reported a console error I could not capture; it passed 3 more times alone and in a 2x repeat of the whole scenes file (424 of 424). Not reproduced; keep an eye on it.
+
+## 2026-10-18: 9.7 Launch (owner said "go now")
+`INDEXABLE` is true (no noindex on normal pages; the 404 keeps it), robots.txt allows all and names the sitemap, the sitemap is on (`PEAK_SITEMAP=0` turns it off), canonical links and share images use https://peak-teal.vercel.app. Still open: a custom domain (costs money, not done), About placeholders.

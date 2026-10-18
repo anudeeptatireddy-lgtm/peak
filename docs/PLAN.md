@@ -341,7 +341,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 - [x] **9.6 Friend test kit**
   - Do: Create `docs/TESTING_WITH_FRIENDS.md`: a 60–90 minute session script for someone who has never used Claude Code. Tasks: 1) "Find an animation you'd use for something real in your life." 2) "Make it yours with the sliders." 3) "Get it running on your computer with Claude Code." 4) "Put it online and send me the link." What the owner should do (stay quiet, don't help unless they're stuck for 3+ minutes), what to note (every pause, question, and error), and a notes template per tester. Plus a 5-question follow-up survey.
   - Done when: the file exists and is linked from `README.md`.
-- [ ] **9.7 Launch: open the site to search engines**
+- [x] **9.7 Launch: open the site to search engines**
   - Do: remove the `noindex` tag and the disallow rule (robots.txt now allows all and points to the sitemap).
   - Done when: e2e confirms no `noindex` anywhere and the sitemap and canonical URLs use the live address.
 - [ ] **9.8 Launch: share previews and Lighthouse**

@@ -1,5 +1,4 @@
-// Site-wide switches. INDEXABLE stays false until launch (PLAN 9.7): every page
-// carries a noindex tag and robots.txt disallows everything.
+// Site-wide switches. The site is open to search engines (launched 2026-10-18, PLAN 9.7).
 
-export const INDEXABLE = false;
+export const INDEXABLE = true;
 export const SITE_NAME = 'peak';
