@@ -1,10 +1,10 @@
-# Handoff: 2026-10-18 (end of Wave 8)
+# Handoff: 2026-10-18 (Wave 9 done up to launch)
 
 Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, still `noindex`).
 
 ## Exact step
 
-Waves 1 to 8 are done. **Wave 8 (Gallery, Tour, guides, words, drops, About, 404) is wrapped up.** Next: **Wave 9** (polish, performance and the launch checklist; see `docs/PLAN.md`). Do not remove `noindex` or do anything launch-related until the owner says so.
+Waves 1 to 8 are done, and **Wave 9 steps 9.1 to 9.6 are done** (sound, accessibility, performance, share images and canonical links, copy review, friend test kit). **Stopped before the launch steps** as the owner asked. Next: **9.7** (remove `noindex`, open `robots.txt`, turn the sitemap on by setting `PEAK_SITEMAP=1` in `astro.config.mjs`, update `tests/e2e/indexing.spec.ts`), then 9.8 (Lighthouse and share-preview check) and 9.9 (final deploy and report). The site is still `noindex` and the sitemap is still off.
 
 The project folder is `~/peak`.
 
@@ -40,6 +40,7 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 - **About page details** (name, one-line bio, why you made peak, what you're looking for, contact link, social links). `/about` shows marked `[PLACEHOLDER]`s until then (list in DECISIONS, 8.14).
 - **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
 - **`tailor` decision:** matches by eye but not on the measure. Accept as is, or retest.
+- **Say when to launch** (steps 9.7 to 9.9). Nothing launch-related has been done.
 - **Review "Overnight choices for owner review"** in `docs/DECISIONS.md`.
 - **Friend test** with 3-5 people at Checkpoint 9.
 - **Unchanged:** nothing paid, no domain purchase, no cookies or personal data.
