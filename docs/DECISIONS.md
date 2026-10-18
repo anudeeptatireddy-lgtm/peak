@@ -348,3 +348,8 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 - **Cause:** on load the sections are briefly short (118 to 292px) while styles arrive, so many look "near" and 7 scenes mount. When the layout settles to full screens, `measure()` re-measured but nothing pruned; pruning ran only on a scroll event, so the extra scenes stayed mounted until the first scroll (for example while autoplay waited 12 seconds). The same gap hit any layout change (rotating a phone, the browser toolbar moving).
 - **Fix:** the resize observer now runs `watch()` after `measure()`. Limits are unchanged.
 - **Tests:** `tour mounting under stress` (no far scene mounted once load settles; fast scroll plus shuffle plus autoplay never leaves far scenes mounted). Without the fix the first one fails on the phone project; with it, 60 of 60 passed (3 tests x 2 projects x 10 runs in a row).
+
+## 2026-10-18: the two [OWNER: verify] notes are resolved
+- **Put it online:** replaced with the owner's verified wording: GitHub Pages is available in public repositories on GitHub Free; private repositories need a paid plan (GitHub Pro, Team or Enterprise). Source added: GitHub Docs, "Creating a GitHub Pages site". (I re-fetched the page: it confirms the Free-plan/public rule; the plan names come from the owner.)
+- **Fix it:** Safari > Settings > Advanced > "Show features for web developers" (Apple Developer's "Enabling features for web developers", re-fetched and matching). The unverified shortcut sentence was removed rather than kept. Source added.
+- "Last checked" stays 2026-10-18 (today). No `[OWNER: verify …]` notes remain in the guides.

@@ -38,7 +38,6 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 ## Waiting on the owner
 
 - **About page details** (name, one-line bio, why you made peak, what you're looking for, contact link, social links). `/about` shows marked `[PLACEHOLDER]`s until then (list in DECISIONS, 8.14).
-- **Two `[OWNER: verify …]` items in the guides:** which repositories and plans can publish with GitHub Pages (Put it online); the Safari Web Inspector menu names and shortcut (Fix it).
 - **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
 - **`tailor` decision:** matches by eye but not on the measure. Accept as is, or retest.
 - **Review "Overnight choices for owner review"** in `docs/DECISIONS.md`.
