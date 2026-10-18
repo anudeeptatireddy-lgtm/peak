@@ -134,7 +134,7 @@ const railItems = [
 </Base>
 
 <script>
-  import { mountScene } from '../engine/mount';
+  import { mountScene, type MountedScene } from '../engine/mount';
   import { setMaxActive } from '../engine/scheduler';
   import { loadScene, hasScene } from '../scenes/registry';
   import { journeyState, journeyTheme, type Boundary } from '../theme/journey';
@@ -176,21 +176,42 @@ const railItems = [
   new ResizeObserver(measure).observe(document.body);
   measure();
 
-  // Mount each scene when it comes within a screen of the viewport.
-  const io = new IntersectionObserver(
+  // Mount each scene when it comes within a screen of the viewport, and destroy it again once it
+  // is more than two and a half screens away, so a long scroll never piles up scenes in memory.
+  const live = new Map<HTMLElement, MountedScene>();
+  const loading = new Set<HTMLElement>();
+  const mount = (stage: HTMLElement) => {
+    const slug = stage.dataset.mount ?? '';
+    if (live.has(stage) || loading.has(stage) || !hasScene(slug)) return;
+    loading.add(stage);
+    loadScene(slug).then((mod) => {
+      if (!loading.delete(stage)) return; // it went far away while loading
+      live.set(stage, mountScene(stage, mod));
+    });
+  };
+  const near = new IntersectionObserver(
     (entries) => {
-      for (const e of entries) {
-        if (!e.isIntersecting) continue;
-        io.unobserve(e.target);
-        const stage = e.target as HTMLElement;
-        const slug = stage.dataset.mount ?? '';
-        if (!hasScene(slug)) continue;
-        loadScene(slug).then((mod) => mountScene(stage, mod));
-      }
+      for (const e of entries) if (e.isIntersecting) mount(e.target as HTMLElement);
     },
     { rootMargin: '100% 0px' },
   );
-  document.querySelectorAll<HTMLElement>('[data-mount]').forEach((el) => io.observe(el));
+  const far = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) continue;
+        const stage = e.target as HTMLElement;
+        loading.delete(stage);
+        live.get(stage)?.destroy();
+        live.delete(stage);
+      }
+    },
+    { rootMargin: '250% 0px' },
+  );
+  document.querySelectorAll<HTMLElement>('[data-mount]').forEach((el) => {
+    near.observe(el);
+    far.observe(el);
+  });
+  (window as unknown as { __home?: object }).__home = { mounted: () => live.size };
 </script>
 
 <style>

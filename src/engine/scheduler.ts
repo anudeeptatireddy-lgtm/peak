@@ -33,6 +33,9 @@ let running = 0;
 let frames = 0;
 let io: IntersectionObserver | null = null;
 let pauseBound = false;
+/** Scripting time of the last frames (all running scenes' update calls), for the performance test. */
+const frameMs: number[] = [];
+const FRAME_SAMPLES = 240;
 
 function observer(): IntersectionObserver {
   if (io) return io;
@@ -76,7 +79,10 @@ function frame(now: number): void {
   frames++;
   for (const s of scrollSources) s.velocity.tick(s.read(), dt);
   running = list.length;
+  const t0 = performance.now();
   for (const e of list) e.scene.update(dt, clock);
+  frameMs.push(performance.now() - t0);
+  if (frameMs.length > FRAME_SAMPLES) frameMs.shift();
 }
 
 function stop(): void {
@@ -161,6 +167,7 @@ export function debugInfo() {
     registered: entries.size,
     visible: [...entries].filter((e) => e.visible).length,
     frames,
+    frameMs: [...frameMs],
   };
 }
 
