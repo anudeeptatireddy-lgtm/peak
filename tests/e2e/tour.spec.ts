@@ -150,3 +150,53 @@ test.describe('tour', () => {
     await expect(page.locator('[data-count-label]')).toHaveText(label!);
   });
 });
+
+test.describe('tour mounting under stress', () => {
+  /** Mounted scenes that sit more than two screens from the viewport (they must not exist). */
+  const farMounted = (page: Page) =>
+    page.evaluate(() => {
+      const vh = innerHeight;
+      return [...document.querySelectorAll<HTMLElement>('[data-journey]')].filter((s) => {
+        const r = s.getBoundingClientRect();
+        const far = r.bottom < -vh * 2 || r.top > vh * 3;
+        return far && s.querySelector('[data-mount]')!.childElementCount > 0;
+      }).length;
+    });
+
+  test('no far scene stays mounted after load settles', async ({ page }) => {
+    await page.goto('/tour');
+    await page.waitForTimeout(1200);
+    expect(await farMounted(page)).toBe(0);
+    expect(
+      await page.evaluate(() => (window as any).__tour.mounted() as number),
+    ).toBeLessThanOrEqual(5);
+  });
+
+  test('fast scrolling, shuffle and autoplay together never leave far scenes mounted', async ({
+    page,
+  }) => {
+    await page.goto('/tour');
+    await page.getByRole('button', { name: 'Autoplay' }).click();
+    const vh = await page.evaluate(() => innerHeight);
+    let running = 0;
+    for (let i = 0; i < 40; i += 1) {
+      await page.evaluate((y) => scrollTo({ top: y, behavior: 'instant' }), ((i * 7) % 40) * vh);
+      if (i === 12 || i === 27)
+        await page
+          .getByRole('button', { name: /Shuffle|Reset/ })
+          .first()
+          .click();
+      await page.waitForTimeout(25);
+      running = Math.max(
+        running,
+        await page.evaluate(() => (window as any).__peak.scheduler().running as number),
+      );
+    }
+    // Let loads and the last scroll settle, then nothing far may still be mounted.
+    await expect.poll(() => farMounted(page), { timeout: 10000 }).toBe(0);
+    expect(running).toBeLessThanOrEqual(2);
+    expect(
+      await page.evaluate(() => (window as any).__tour.mounted() as number),
+    ).toBeLessThanOrEqual(6);
+  });
+});

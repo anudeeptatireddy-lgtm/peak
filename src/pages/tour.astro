@@ -124,7 +124,12 @@ const catalog = items.map((i) => i.meta.slug);
     label.textContent = `${current + 1} of ${sections.length}`;
   };
   addEventListener('scroll', update, { passive: true });
-  new ResizeObserver(measure).observe(document.body);
+  // A layout change (styles arriving, rotating the phone, the toolbar moving) also changes which
+  // scenes are near, so it must prune as well as re-measure.
+  new ResizeObserver(() => {
+    measure();
+    watch();
+  }).observe(document.body);
 
   // ---- Mount within one screen, destroy beyond two ----
   const live = new Map<string, MountedScene>();

@@ -342,3 +342,9 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 7. **About:** every personal detail is a marked placeholder; the tilt card shows `[YOUR NAME]` and `[ONE-LINE BIO]` (8.14).
 8. **404:** reuses `tumble` spelling "404" (8.15).
 9. **Tests updated, not loosened:** the home journey test now expects 15 sections (the new drop row); the tour "most mounted" check can reach 7 under heavy machine load and passes alone (timing, not a leak).
+
+## 2026-10-18: Tour mounting bug (diagnosed, not "flaky")
+- **Symptom:** the "most scenes mounted" check sometimes saw 7 (limit 6), only in WebKit (the phone project). The real budget, **2 scenes running at once, was never broken**; the 6 is the size of the mount window.
+- **Cause:** on load the sections are briefly short (118 to 292px) while styles arrive, so many look "near" and 7 scenes mount. When the layout settles to full screens, `measure()` re-measured but nothing pruned; pruning ran only on a scroll event, so the extra scenes stayed mounted until the first scroll (for example while autoplay waited 12 seconds). The same gap hit any layout change (rotating a phone, the browser toolbar moving).
+- **Fix:** the resize observer now runs `watch()` after `measure()`. Limits are unchanged.
+- **Tests:** `tour mounting under stress` (no far scene mounted once load settles; fast scroll plus shuffle plus autoplay never leaves far scenes mounted). Without the fix the first one fails on the phone project; with it, 60 of 60 passed (3 tests x 2 projects x 10 runs in a row).
