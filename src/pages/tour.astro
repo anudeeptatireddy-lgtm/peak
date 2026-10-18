@@ -40,7 +40,7 @@ const catalog = items.map((i) => i.meta.slug);
           <p class="lede">{it.meta.summary}</p>
           <div class="actions">
             <a class="btn btn--secondary" href={`/scenes/${it.meta.slug}`}>
-              Tweak it and get the prompt
+              Tweak it and get the prompt<span class="sr-only"> for {it.meta.title}</span>
             </a>
           </div>
         </div>

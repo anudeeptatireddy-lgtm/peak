@@ -70,6 +70,6 @@ test('a copy button copies exactly the message shown', async ({ page, context, b
   const box = page.locator('.copy-message').first();
   const shown = await box.locator('pre').textContent();
   await box.getByRole('button', { name: 'Copy message' }).click();
-  await expect(box.locator('[data-copy-status]')).toHaveText('Copied.');
+  await expect(box.locator('[data-copy-status]')).toHaveText('Message copied.');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(shown);
 });

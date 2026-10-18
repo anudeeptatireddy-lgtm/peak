@@ -33,7 +33,7 @@ const { label = 'What to tell Claude Code', text } = Astro.props;
     const status = box.querySelector<HTMLElement>('[data-copy-status]')!;
     try {
       await navigator.clipboard.writeText(text);
-      flash(status, 'Copied.');
+      flash(status, 'Message copied.');
     } catch {
       // No clipboard permission: select the text so Ctrl or Cmd + C works.
       const range = document.createRange();

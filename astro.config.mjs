@@ -12,6 +12,8 @@ const sitemapOn = process.env.PEAK_SITEMAP === '1';
 export default defineConfig({
   site,
   output: 'static',
+  // Straight quotes everywhere, so guides match the buttons and headings elsewhere.
+  markdown: { smartypants: false },
   integrations: [
     mdx(),
     ...(sitemapOn ? [sitemap({ filter: (page) => !page.includes('/dev/') })] : []),
