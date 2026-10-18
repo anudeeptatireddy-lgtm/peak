@@ -379,3 +379,6 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 - Read every page's headings, buttons and messages (home, gallery, tour, guides, words, drops, About, a scene page, 404). Headings and buttons are sentence case (world names such as "Neon Arcade" stay capitalized: they are names). No lorem ipsum anywhere (`tests/unit/copy.test.ts` checks).
 - Fixes: the guide copy button's message now reads "Message copied." (it said "Copied."), matching "Prompt copied." and "Link copied." in the playground; "Tweak it and get the prompt" links on Home and the Tour now carry the scene name for screen readers (hidden text, the visible words are unchanged); guides now use straight apostrophes like the rest of the site (MDX typography off).
 - **Owner placeholders still in the site** (all deliberately marked, none invented): `[YOUR NAME]` (the footer's "Made by" line and the About card), `[ONE-LINE BIO]`, `[WHY I MADE PEAK: …]`, `[WHAT YOU'RE LOOKING FOR, …]`, `[CONTACT LINK]`, `[SOCIAL LINKS]`. A test fails if one is added without being listed here.
+
+## 2026-10-18: 9.6 Friend test kit
+`docs/TESTING_WITH_FRIENDS.md` (session script, four tasks with timings, quiet-observer rules, notes template, five-question survey) is linked from `README.md`. Checkpoint 9 (running the test) is the owner's.

@@ -31,3 +31,7 @@ Then open http://localhost:4321.
 - [`docs/PLAN.md`](docs/PLAN.md): the build order (type `/next` in Claude Code to do the next step)
 - [`docs/DECISIONS.md`](docs/DECISIONS.md): decisions and open questions
 - [`CLAUDE.md`](CLAUDE.md): how Claude Code works on this project
+
+## Testing with friends
+
+Before sharing the site widely, run the friend test with 3 to 5 people who have never used Claude Code: see [docs/TESTING_WITH_FRIENDS.md](docs/TESTING_WITH_FRIENDS.md).
