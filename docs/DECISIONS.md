@@ -455,3 +455,5 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 | This docs update | about 0.15 to 0.25M (done) |
 
 - **2026-10-20, owner OK:** build `wafershine` after the realism pilot and launch (estimate 0.4 to 0.55M tokens). Ask for the reference (a video of a CD or DVD back tilted under a lamp) only when it is next to build. No prompt test without a separate OK.
+
+- **2026-10-20, owner:** Batch 2 is an idea bank. Only `wafershine` is scheduled (after the pilot and launch). The ordered list in PLAN is a suggestion only; nothing else from Batch 2 is scheduled without the owner's OK. The plan and handoff docs were merged from `realism-pilot` into `main` (docs only); the pilot's scene code stays on the branch until the owner approves it.
