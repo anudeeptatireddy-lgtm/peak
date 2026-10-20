@@ -87,6 +87,26 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 | 67 | `epicycles` | Epicycles | Animated | Neon Arcade | Medium |
 | 68 | `clayframes` | Clay Frames | Animated | Lava Lamp | Medium |
 | 69 | `stringart` | String Art | Animated | Newsprint | Medium |
+| 70 | `shoreline` | Shoreline | Realistic | Spice Dunes | Spicy |
+| 71 | `duskfacade` | Dusk Facade | Realistic | Vapor Mall | Medium |
+| 72 | `microprint` | Microprint | Realistic | Matcha | Medium |
+| 73 | `rakedgarden` | Raked Garden | Realistic | Newsprint | Medium |
+| 74 | `ceilingstars` | Ceiling Stars | Realistic | Abyss | Medium |
+| 75 | `wafershine` | Wafer Shine ⚠ | Realistic | Blueprint | Medium |
+| 76 | `thinice` | Thin Ice | Realistic | Glacier | Spicy |
+| 77 | `growthrings` | Growth Rings | Realistic | Golden Hour | Medium |
+| 78 | `startrails` | Star Trails | Realistic | Doomsday | Medium |
+| 79 | `pinwall` | Pin Wall | Realistic | Riso | Medium |
+| 80 | `signalpaths` | Signal Paths | Animated | Aurora | Medium |
+| 81 | `platformarrival` | Platform Arrival | Animated | Cherry Cola | Medium |
+| 82 | `doorwave` | Door Wave | Animated | Dreamhouse | Medium |
+| 83 | `resonanceplate` | Resonance Plate | Animated | Glacier | Spicy |
+| 84 | `torchmap` | Torch Map ⚠ | Animated | Toxic | Medium |
+| 85 | `doubling` | Doubling | Animated | Golden Hour | Medium |
+| 86 | `peekaboo` | Peekaboo | Animated | Matcha | Medium |
+| 87 | `gatherround` | Gather Round | Animated | Aurora | Medium |
+| 88 | `tokenstream` | Token Stream | Animated | Neon Arcade | Medium |
+| 89 | `infinitezoom` | Infinite Zoom | Animated | Vapor Mall | Spicy |
 
 Every world hosts three scenes except Glacier and Neon Arcade, which host four, so the gallery reads as a patchwork of color (PRD §6.7). The 12 scenes featured on the home page are listed in PRD §6.1.
 
@@ -756,6 +776,216 @@ Sixteen more scenes. **Not a build wave:** only the two pilots (`velvet` 55 and 
 - **Still:** the finished piece with threads at rest.
 - **Mobile:** 120 nails and 700 threads.
 - **Tags:** Animated, Portfolio, Brands. Difficulty: Medium. Time: ~40 min.
+
+---
+
+## Batch 2 (70–89; owner added 2026-10-20)
+Twenty more scenes, **specs only**: nothing is built. They join the **Drops backlog** (`docs/PLAN.md`) after launch, one per week through `/new-scene`, in the order set there (the top five first). Before any of them is built the owner gets its token estimate and says OK. Prompt tests are opt-in per scene, with a token estimate first. "NAME" is the brand name the visitor types (param `text`, 1–16 chars, default "Your brand"); like every scene each also has an Advanced group (every other number that shapes it, with defaults, plus `quality`).
+
+**Rules for all of them.** Same definition of done as every scene (PRD §8.4). Every number is a param or a `FIXED` constant with a reason (§8.5). Each has a phone version and a reduced-motion still frame, supports pause, and cleans up on destroy. REALISTIC scenes (70–79) follow the Realism standard (PRD §8.8): WebGL shaders allowed (no libraries), procedural textures by default, a side-by-side against the owner's reference, cut if still fake after two rounds; their Quick prompt is exempt from the 150-word limit and keeps the full shading recipe. The owner is asked for each reference only when that scene is next to build (it goes in the git-ignored `reference/realism/<slug>/`). ANIMATED scenes (80–89) have a designed, graphic look, but the motion must feel physical: overshoot, wobble, settle, react to neighbors. Flashing: nothing flashes more than 3 times a second whatever the cursor or tilt does (§8.2); `wafershine` and `torchmap` are marked ⚠ and get a flash test. Tilt on phones needs the usual "Use motion" opt-in (iOS asks permission from a tap) and always has a drag or scroll alternative. Difficulty: the owner's "hard" is Spicy here.
+
+**Names and ids.** The owner's suggested ids had hyphens; ids in this repo are lowercase letters only, so `wafer-shine` is `wafershine`, `raked-garden` is `rakedgarden`, and so on. Two titles were renamed because they are film, game or brand names: "Fog of War" is now **Torch Map** (`torchmap`), and "Gathering" is now **Gather Round** (`gatherround`). All twenty titles and ids are checked by `tests/unit/names.test.ts`. Microprint is an original document design and must never imitate real currency (no real banknote layout, portraits, seals, serial-number format or denominations).
+
+**New use-case tags** (recorded now; each is added to the gallery filters only when its first scene ships, so there are no empty filters; at that point older scenes that fit are tagged too): Tech & AI, Travel, Real estate, Wellness, Gaming, Finance, Kids, Nonprofits.
+
+**Worlds** are proposals. **Defaults** were picked to look best inside each slider's range and are listed in parentheses.
+
+### REALISTIC
+
+### 70. `shoreline`: Shoreline
+- **Use case:** travel, resorts, coastal real estate. **World:** Spice Dunes. **Trigger:** scroll moves the tide. **Technique:** a water-thickness map advancing and retreating over a sand height field, foam from noise at the leading edge, a wetness texture that dries over time, refraction of the sand under thin water.
+- **What happens:** A top-down view of a beach. Thin sheets of seawater slide up the sand with a lacy foam edge and drain back. Each retreat leaves the sand dark and glossy around NAME drawn in it, so the name sharpens with every wave.
+- **Real details:** wet sand darker and glossy before drying lighter; foam lace breaking into bubbles; the water's thin leading edge bending the sand beneath it.
+- **Interactions:** scroll moves the tide in and out (drag sideways on phones); with no scroll a slow tide continues on its own.
+- **Params:** `text` Name. `reach` Wave reach: 10–80% of the screen (45). `foam` Foam lace: 0–1 (0.6). `dryTime` Dry time: 2–30s (12). `grain` Sand grain: 0–1 (0.5). Advanced: tide period, foam bubble size, wet-sand darkness, water clarity, sun angle, quality.
+- **Reference to ask for (when it is next):** a top-down video of waves on wet sand.
+- **Still:** the name sharp in wet sand with a thin foam line at the edge. **Mobile:** same on scroll; balanced tier, fewer foam bubbles.
+- **Tags:** Realistic, Travel, Real estate. Difficulty: Spicy. Time: ~90 min.
+
+### 71. `duskfacade`: Dusk Facade
+- **Use case:** real estate, hotels, city guides. **World:** Vapor Mall. **Trigger:** scroll moves dusk into night. **Technique:** a straight-on building grid with per-window interior shaders (lamp, curtains, plant, passing shadow), a sky gradient with reflections on unlit glass, a soft glow spill onto the wall.
+- **What happens:** A straight-on view of an apartment building at dusk. As you scroll, the sky deepens and windows switch on one by one, each with its own warm interior. The lit windows spell NAME, and by full night it reads clearly.
+- **Real details:** every window different; sky reflections on unlit glass; a faint glow spilling onto the wall around lit windows.
+- **Interactions:** scroll (or drag sideways) moves time from dusk to night; on phones tilt shifts the reflections after "Use motion".
+- **Params:** `text` Name. `floors` Floors: 6–30 (14). `warmth` Light warmth: 2200–4000K (2900). `variety` Window variety: 0–1 (0.7). `switchOn` Switch-on speed: 0.2–3s (1.2). Advanced: windows per floor, glass reflectivity, glow spill, sky colors, shadow chance, quality.
+- **Reference to ask for (when it is next):** a straight-on photo of an apartment building at dusk.
+- **Still:** full night with NAME lit. **Mobile:** fewer floors, simpler interiors.
+- **Tags:** Realistic, Real estate, Travel. Difficulty: Medium. Time: ~75 min.
+
+### 72. `microprint`: Microprint
+- **Use case:** banks, fintech, insurance, security. **World:** Matcha. **Trigger:** cursor-driven. **Technique:** a procedural engraved-pattern field (guilloche-style wavy lines) drawn as tiny repeated NAME text along each line, a magnifying loupe pass with lens distortion and a slight color fringe, paper fibers under the ink.
+- **What happens:** Engraved, certificate-style paper with fine wavy security patterns. The cursor is a jeweler's loupe: under magnification every line turns out to be tiny repeated text of NAME, and a central engraved emblem resolves into the name in micro-lettering.
+- **Real details:** lens distortion at the loupe edge with a slight color fringe; ink sitting on paper fibers with tiny breaks; the soft shadow of the loupe rim.
+- **Rule:** an original document design only. It must never imitate real currency (no real banknote layout, portrait, seal, serial format or denomination); the emblem is an abstract original rosette.
+- **Interactions:** move the cursor (drag or tilt on phones) to move the loupe.
+- **Params:** `text` Name. `loupe` Loupe size: 60–300px (160). `zoom` Magnification: 2–12× (6). `sharpness` Ink sharpness: 0–1 (0.7). `paper` Paper texture: 0–1 (0.5). Advanced: line spacing, wave amplitude, color fringe, rim shadow, ink color, quality.
+- **Reference to ask for (when it is next):** close-up photos of fine engraved paper under a magnifier (not real currency).
+- **Still:** the loupe resting over the emblem. **Mobile:** drag or tilt to move the loupe; balanced tier.
+- **Tags:** Realistic, Finance, Tech & AI. Difficulty: Medium. Time: ~75 min.
+
+### 73. `rakedgarden`: Raked Garden
+- **Use case:** spas, wellness and meditation apps, hotels. **World:** Newsprint. **Trigger:** cursor-driven. **Technique:** a height map lit by a low sun, a rake stamp that carves parallel grooves, groove paths bent around invisible letters by a distance field, grain spill noise at groove edges.
+- **What happens:** Fine pale gravel from above. The cursor drags a wooden rake that carves parallel grooves. The grooves bend smoothly around invisible letters, so NAME appears as smooth, untouched islands with raked lines flowing around them like water around stones.
+- **Real details:** each groove shadowed on one side and highlighted on the other by a low sun; grains spilling and settling at groove edges; slightly uneven tooth spacing.
+- **Interactions:** move the cursor to rake (drag on phones).
+- **Params:** `text` Name. `teeth` Rake teeth: 3–12 (7). `depth` Groove depth: 0–1 (0.6). `grain` Grain size: 0–1 (0.4). `sunAngle` Sun angle: 10–60° (28). Advanced: tooth spacing variation, spill amount, sun direction, bend smoothness, quality.
+- **Reference to ask for (when it is next):** photos of raked gravel or sand in low sunlight.
+- **Still:** a fully raked garden with NAME as smooth islands. **Mobile:** drag to rake; coarser height map.
+- **Tags:** Realistic, Wellness, Travel. Difficulty: Medium. Time: ~70 min.
+
+### 74. `ceilingstars`: Ceiling Stars
+- **Use case:** kids' brands, bedtime and sleep apps, toy stores. **World:** Abyss. **Trigger:** cursor-driven. **Technique:** a per-sticker charge value raised by a soft flashlight beam and decaying like real phosphorescence (fast then lingering), a bumpy plaster normal map, sticker shapes with peeling edges.
+- **What happens:** A dark bedroom ceiling. The cursor is a warm flashlight beam. Glow-in-the-dark star stickers it passes keep glowing after the beam moves on. The stickers spell NAME, so sweeping the beam charges the name, which slowly fades if left alone.
+- **Real details:** a soft beam with a bright core and gradual falloff; glow that fades like real glow-in-the-dark plastic; bumpy plaster and slightly peeling sticker edges.
+- **Interactions:** move the cursor (drag or tilt on phones) to move the flashlight.
+- **Params:** `text` Name. `beam` Beam size: 60–400px (200). `charge` Charge speed: 0–1 (0.5). `fadeTime` Fade time: 3–60s (20). `glowColor` Glow color, green to blue: 0–1 (0.2). Advanced: star size, star count, plaster roughness, beam warmth, afterglow tail, quality.
+- **Reference to ask for (when it is next):** a video of glow stickers fading in the dark.
+- **Still:** NAME fully charged and glowing. **Mobile:** drag or tilt; fewer, larger stars.
+- **Tags:** Realistic, Kids, Wellness. Difficulty: Medium. Time: ~70 min.
+
+### 75. `wafershine`: Wafer Shine ⚠
+- **Use case:** AI and chip startups, deep tech, hardware. **World:** Blueprint. **Trigger:** cursor-driven (the cursor sets the viewing angle). **Technique:** a grid of tiny chips; diffraction colors from the real grating equation (sin θ = m λ ÷ d) per wavelength, a mirror reflection of a soft studio light, dust and chipped edges; NAME is patterned into the chips with a different grid spacing.
+- **What happens:** A polished silicon wafer covered in a grid of tiny chips. Moving the cursor changes the viewing angle, and rainbow bands sweep across the grid like light on the back of a CD. NAME is patterned into the chips, so at certain angles it shimmers out in rainbow while the rest stays mirror-gray.
+- **Real details:** rainbow colors calculated from grid spacing and angle with the diffraction formula; a mirror reflection of a soft studio light; microscopic dust and chipped edges.
+- **Flash safety:** brightness change is rate-limited, so fast cursor or tilt movement can never cause more than 3 flashes per second, and no large area ever flashes (PRD §8.2). A flash test like moiré's runs at the most extreme settings and fastest movement.
+- **Interactions:** move the cursor to change the angle; on phones tilt after "Use motion" (drag as the alternative).
+- **Params:** `text` Name. `spacing` Grid spacing: 600–3000nm (1600). `angleRange` Light angle range: 5–45° (25). `sharpness` Reflection sharpness: 0–1 (0.6). `dust` Dust: 0–1 (0.3). Advanced: chip size, name grid offset, light size, chip edge chipping, rainbow saturation, brightness change limit, quality.
+- **Reference to ask for (when it is next):** a video of a CD or DVD back tilted under a lamp.
+- **Still:** NAME in rainbow at its best angle. **Mobile:** tilt or drag; balanced tier.
+- **Tags:** Realistic, Tech & AI. Difficulty: Medium. Time: ~75 min.
+
+### 76. `thinice`: Thin Ice
+- **Use case:** adventure games, outdoor brands, winter travel. **World:** Glacier. **Trigger:** cursor-driven (speed matters). **Technique:** a crack-growth graph along hidden paths that follow NAME, fracture planes drawn as bright lines that catch light at angles, a frost layer that grows back, trapped bubbles at several depths.
+- **What happens:** A frozen lake from above: dark, clear ice with trapped bubbles and frost. Moving the cursor fast sends cracks racing out along hidden paths, so NAME appears as white fracture lines. Moving slowly lets frost creep back over the cracks.
+- **Real details:** white fracture planes that catch the light at angles; cracks that branch and stop at random; columns of trapped bubbles at different depths.
+- **Interactions:** move the cursor fast to crack (swipe fast on phones).
+- **Params:** `text` Name. `crackSpeed` Crack speed: 0–1 (0.6). `branching` Branching: 0–1 (0.5). `frost` Frost regrowth: 2–60s (20). `clarity` Ice clarity: 0–1 (0.7). Advanced: bubble count and depth, crack width, fracture brightness, light angle, quality.
+- **Reference to ask for (when it is next):** photos of cracked lake ice, or ice from a freezer tray.
+- **Still:** NAME fully cracked. **Mobile:** swipe fast; fewer bubbles.
+- **Tags:** Realistic, Travel, Gaming. Difficulty: Spicy. Time: ~90 min. Realism risk: medium-high (cut if still fake after two rounds).
+
+### 77. `growthrings`: Growth Rings
+- **Use case:** environmental nonprofits, sustainability, furniture, wellness. **World:** Golden Hour. **Trigger:** scroll-driven (time-lapse). **Technique:** ring radii from a growth-year series with varying widths, a distance field from NAME that bends the rings like grain around a knot, light and dark early and late wood per ring, a heartwood core, radial cracks and saw marks.
+- **What happens:** A freshly cut cross-section of a tree trunk. Scrolling passes the years: new rings grow outward, each a slightly different width. The rings bend around NAME the way grain bends around a knot, so the name forms inside the grain as the tree grows.
+- **Real details:** light and dark wood within each ring; fine radial cracks and saw marks; a darker heartwood core.
+- **Interactions:** scroll (or drag sideways) passes the years.
+- **Params:** `text` Name. `rings` Rings: 20–300 (120). `variation` Ring variation: 0–1 (0.5). `bend` Grain bend: 0–1 (0.6). `tone` Wood tone: 0–1 (0.5). Advanced: crack count, saw-mark strength, heartwood size, bark edge, light angle, quality.
+- **Reference to ask for (when it is next):** a photo of a cut tree stump or wood slice.
+- **Still:** the full-grown trunk with NAME in the grain. **Mobile:** same on scroll; coarser texture.
+- **Tags:** Realistic, Nonprofits, Wellness. Difficulty: Medium. Time: ~70 min.
+
+### 78. `startrails`: Star Trails
+- **Use case:** travel, camping, astronomy, retreats. **World:** Doomsday. **Trigger:** scroll advances the hours. **Technique:** stars on circles around a pole star over a drawn exposure time, star color from blue-white to orange, haze that dims arcs near the horizon, photo grain, a mountain silhouette; a few bright stars placed as NAME keep their formation as the sky rotates.
+- **What happens:** A night sky over a dark mountain silhouette, like a long-exposure photo. Every star draws an arc around the pole star. A few bright stars arranged as NAME keep their formation as they wheel, and at one moment the name sits upright above the peaks.
+- **Real details:** star colors from blue-white to orange; arcs dimming near the horizon haze; faint sky glow and photo grain.
+- **Interactions:** scroll (or drag sideways) advances the hours.
+- **Params:** `text` Name. `hours` Hours: 0–8 (4). `stars` Stars: 500–5000 (2500). `haze` Haze: 0–1 (0.4). `grain` Grain: 0–1 (0.4). Advanced: pole position, arc brightness, star color spread, glow color, mountain shape, quality.
+- **Reference to ask for (when it is next):** a long-exposure star-trail photo the owner takes or finds under a free license.
+- **Still:** NAME upright above the peaks. **Mobile:** same on scroll; fewer stars (a third).
+- **Tags:** Realistic, Travel. Difficulty: Medium. Time: ~60 min.
+
+### 79. `pinwall`: Pin Wall
+- **Use case:** AI and tech startups, product launches, agencies. **World:** Riso. **Trigger:** cursor-driven. **Technique:** a height field of pins driven by a spring each, a pressed-in NAME as a permanent target height, per-pin shading from height (highlight shift, soft shadows from raised pins onto lower ones).
+- **What happens:** A wall of thousands of polished metal pins seen head-on. The cursor presses them from behind, and they slide forward in a soft bulge that follows you. NAME stays permanently pressed out, and the pins around it ripple as the bulge passes.
+- **Real details:** each pin head with a tiny metal highlight that shifts with its height; soft shadows from raised pins onto lower ones; a slight lag and wobble as the pins settle.
+- **Interactions:** move the cursor to press (drag on phones).
+- **Params:** `text` Name. `spacing` Pin spacing: 4–14px (8). `depth` Press depth: 0–1 (0.7). `settle` Settle speed: 0–1 (0.5). `shine` Metal shine: 0–1 (0.7). Advanced: bulge width, spring stiffness, damping, shadow softness, pin head size, quality.
+- **Reference to ask for (when it is next):** a video of a pin-impression toy being pressed.
+- **Still:** NAME pressed out, everything else flat. **Mobile:** drag to press; larger pins (spacing floor raised).
+- **Tags:** Realistic, Tech & AI. Difficulty: Medium. Time: ~70 min.
+
+### ANIMATED
+
+### 80. `signalpaths`: Signal Paths
+- **Use case:** AI startups, data tools, developer platforms. **World:** Aurora. **Trigger:** cursor-driven. **Technique:** a graph of nodes with faint edges, pulses with a bright head and soft tail travelling along edges, edge weights that grow with use ("learning") and fade, and weights seeded so the strongest routes converge on NAME.
+- **What happens:** A field of glowing nodes with faint connections. Moving the cursor fires signals along the connections; paths that fire often grow thicker and brighter, like learning. After a few seconds of movement, the strongest paths have routed themselves into NAME.
+- **Design:** pulses with a bright head and a soft tail; connections that thicken smoothly; a calm dark palette with one accent. Pulses are small and capped, so nothing flashes more than 3 times a second.
+- **Interactions:** move the cursor to fire signals (drag on phones; an idle demo plays when untouched).
+- **Params:** `text` Name. `nodes` Nodes: 50–600 (250). `speed` Signal speed: 0.5–4 (2). `learning` Learning rate: 0–1 (0.5). `fade` Fade: 0–1 (0.4). Advanced: connection range, pulse tail length, glow, thickness limit, quality.
+- **Still:** NAME traced in bright paths. **Mobile:** 120 nodes; drag to fire.
+- **Tags:** Animated, Tech & AI. Difficulty: Medium. Time: ~40 min.
+
+### 81. `platformarrival`: Platform Arrival
+- **Use case:** travel, rail and booking sites, tourism boards. **World:** Cherry Cola. **Trigger:** scroll slows the train. **Technique:** parallax layers scrolling at different speeds, speed streaks at full speed, an eased stop with a rock back, a platform and station sign sliding in.
+- **What happens:** The view from a train window: flat, layered landscapes racing past at different speeds. Scrolling slows the train, a platform slides in, and a station sign glides into place showing NAME as the train stops with a small bounce.
+- **Design:** stretched layers and speed lines at full speed; a smooth ease into the stop with a rock back; bold travel-poster colors.
+- **Interactions:** scroll (or drag sideways) slows the train to a stop.
+- **Params:** `text` Name. `layers` Layers: 3–8 (5). `topSpeed` Top speed: 0–1 (0.7). `bounce` Stop bounce: 0–1 (0.5). `landscape` Landscape: plains / hills / coast (hills). Advanced: streak length, rock-back amount, sign swing, layer colors, quality.
+- **Still:** stopped at the platform, sign in view. **Mobile:** fewer layers.
+- **Tags:** Animated, Travel. Difficulty: Medium. Time: ~45 min.
+
+### 82. `doorwave`: Door Wave
+- **Use case:** real estate, property apps, coworking. **World:** Dreamhouse. **Trigger:** cursor-driven. **Technique:** an isometric block of doors, each a spring that swings open with overshoot when the cursor is near, warm light spilling onto the walkway, some rooms holding a letter so the central open doors spell NAME.
+- **What happens:** An isometric apartment block with dozens of front doors. As the cursor passes, doors swing open in a wave around it, revealing lit rooms, some holding a letter. With the doors near the center open, the letters line up to spell NAME across the building.
+- **Design:** doors swing with a small overshoot; warm light spills onto the walkways; consistent isometric angles and a limited palette.
+- **Interactions:** move the cursor (drag across the building on phones, or scroll to sweep).
+- **Params:** `text` Name. `floors` Floors: 3–12 (6). `doorSpeed` Door speed: 0.1–1s (0.4). `radius` Wave radius: 50–400px (200). `overshoot` Overshoot: 0–1 (0.5). Advanced: door width, light warmth, light spill, spring damping, quality.
+- **Still:** the center doors open, NAME visible. **Mobile:** fewer floors and doors.
+- **Tags:** Animated, Real estate. Difficulty: Medium. Time: ~50 min.
+
+### 83. `resonanceplate`: Resonance Plate
+- **Use case:** wellness, sound baths, music and meditation apps. **World:** Glacier. **Trigger:** cursor-driven (horizontal position tunes the pitch). **Technique:** sand grains moving toward the zero lines of a square plate's vibration modes (Chladni figures, computed from the plate equation cos(nπx)cos(mπy) − cos(mπx)cos(nπy)), with a pitch mapped to the mode, a slight magnetic lock to the pitch whose pattern is NAME (a distance field blended into the mode).
+- **What happens:** A metal plate covered in fine sand vibrates. Moving the cursor left and right changes the pitch, and the sand dances into the plate's real vibration patterns. At one special pitch, the pattern resolves into NAME.
+- **Design:** grains jitter and migrate to the still lines; patterns morph smoothly as the pitch changes; a gentle magnetic lock near the brand's pitch.
+- **Interactions:** move the cursor left and right (drag on phones).
+- **Params:** `text` Name. `grains` Grains: 2000–30000 (12000). `strength` Vibration strength: 0–1 (0.6). `pitchRange` Pitch range (highest mode number): 4–16 (10). `lock` Lock strength: 0–1 (0.6). Advanced: jitter, grain size, plate edge, name pitch position, morph speed, quality.
+- **Still:** the sand settled into NAME. **Mobile:** 5000 grains; drag to tune.
+- **Tags:** Animated, Wellness. Difficulty: Spicy. Time: ~75 min.
+
+### 84. `torchmap`: Torch Map ⚠ (renamed from "Fog of War")
+- **Use case:** games, game studios, esports, escape rooms. **World:** Toxic. **Trigger:** cursor-driven. **Technique:** a stylized top-down map under a fog grid, a torch radius that clears fog with a soft edge, a memory layer for explored cells, NAME laid out as a path of stone tiles, a small non-flashing celebration at the end.
+- **What happens:** A stylized top-down map hidden under dark fog. The cursor carries a torch that clears fog around it, and explored areas stay dimly revealed. NAME is laid out as a path of stone tiles, uncovered piece by piece.
+- **Design:** a gently flickering torch radius (never more than 3 flickers per second, and only a small change in size, so nothing flashes); explored areas remembered in muted color; a celebration when the last letter is found that is a slow glow and drifting sparks, with no flashing.
+- **Flash safety:** a flash test checks the torch flicker and the celebration at their most extreme settings (PRD §8.2).
+- **Interactions:** move the cursor (drag to explore on phones).
+- **Params:** `text` Name. `torch` Torch radius: 40–300px (140). `fog` Fog thickness: 0–1 (0.85). `memory` Memory dimness: 0–1 (0.5). `mapSize` Map size: 1–3 screens (2). Advanced: flicker amount (capped), tile size, map colors, sparkle count, quality.
+- **Still:** the map fully explored, NAME revealed. **Mobile:** drag to explore; map size capped at 2 screens.
+- **Tags:** Animated, Gaming. Difficulty: Medium. Time: ~50 min.
+
+### 85. `doubling`: Doubling
+- **Use case:** fintech, savings and investing apps. **World:** Golden Hour. **Trigger:** scroll-driven. **Technique:** coin objects that split in two each step with a spin, sliding into stacks with spring settling, stack heights following the silhouette of NAME, a counter that eases between numbers.
+- **What happens:** A single coin on a table. Each scroll step splits every coin in two, and the coins slide into neat stacks. The stacks' heights form a rising chart that ends as the silhouette of NAME.
+- **Design:** coins split with a small spin; stacks wobble, then settle; a counter eases between numbers.
+- **Interactions:** scroll (or drag sideways) advances the doublings.
+- **Params:** `text` Name. `doublings` Doublings: 4–12 (8). `splitSpeed` Split speed: 0.1–1s (0.4). `wobble` Wobble: 0–1 (0.5). `coinSize` Coin size: 6–24px (12). Advanced: stack spacing, spin amount, settle damping, counter style, quality.
+- **Still:** the finished stacks forming NAME. **Mobile:** same on scroll; fewer doublings shown.
+- **Tags:** Animated, Finance. Difficulty: Medium. Time: ~45 min.
+
+### 86. `peekaboo`: Peekaboo
+- **Use case:** kids' brands, toys, children's learning apps. **World:** Matcha. **Trigger:** cursor-driven. **Technique:** chunky NAME letters with original animal characters in layers behind them, eyes that track the cursor with a lag, a duck-and-peek state machine with squash and stretch, each animal with its own timing.
+- **What happens:** Big chunky letters spell NAME, with little original animals hiding behind them. Their eyes follow the cursor; when it gets close they duck behind the letters, then peek out the other side once it moves away.
+- **Design:** eyes track with a slight lag; a quick squash on ducking; each animal has its own timing. All animals are original designs, not known characters.
+- **Interactions:** move the cursor; on phones tap near a letter to make the animals hide, and tilt to look around after "Use motion".
+- **Params:** `text` Name. `animals` Animals: 3–15 (8). `shyness` Shyness distance: 40–300px (150). `peekDelay` Peek delay: 0.2–3s (1). `bounce` Bounce: 0–1 (0.5). Advanced: eye lag, squash amount, animal sizes, color variety, quality.
+- **Still:** the animals peeking out. **Mobile:** tap or tilt; fewer animals.
+- **Tags:** Animated, Kids. Difficulty: Medium. Time: ~50 min.
+
+### 87. `gatherround`: Gather Round (renamed from "Gathering")
+- **Use case:** nonprofits, community groups, civic campaigns. **World:** Aurora. **Trigger:** scroll-driven. **Technique:** top-down figures steered to target points sampled from NAME with separation so they step around each other, varied speeds and paths, a counter of how many are standing together.
+- **What happens:** A few small figures walk onto an empty plaza seen from above. As you scroll, more arrive from every edge, each finding a spot, until together they form NAME. A counter shows how many are standing together.
+- **Design:** varied walking speeds and paths; figures stepping around each other; gentle color variety within one palette.
+- **Interactions:** scroll (or drag sideways) brings more people.
+- **Params:** `text` Name. `crowd` Crowd size: 100–3000 (800). `walkSpeed` Walking speed: 0.5–2 (1). `variety` Variety: 0–1 (0.6). `tightness` Formation tightness: 0–1 (0.7). Advanced: figure size, separation strength, color count, counter style, quality.
+- **Still:** the full crowd forming NAME. **Mobile:** 300 people.
+- **Tags:** Animated, Nonprofits. Difficulty: Medium. Time: ~45 min.
+
+### 88. `tokenstream`: Token Stream
+- **Use case:** AI startups, developer tools, education. **World:** Neon Arcade. **Trigger:** scroll-driven. **Technique:** a sentence split into colored chunks, chunks flying into a stack, a weighing shuffle, then docking into NAME with a snap and a small overshoot, thin lines linking related chunks.
+- **What happens:** A sentence appears, then splits into colored chunks the way an AI model breaks text into tokens. The chunks fly into a stack, shuffle as if being weighed, and reassemble into NAME.
+- **Design:** each chunk keeps its color the whole way; a satisfying snap as each one docks; thin lines linking related chunks.
+- **Interactions:** scroll (or drag sideways) drives the stages.
+- **Params:** `text` Name. `chunk` Chunk size: 1–6 letters (3). `shuffle` Shuffle time: 0.2–2s (0.8). `lines` Line opacity: 0–1 (0.4). `overshoot` Snap overshoot: 0–0.5 (0.2). Advanced: sentence shown, stack layout, chunk colors, line count, quality.
+- **Still:** the assembled name with its colored chunks. **Mobile:** same on scroll.
+- **Tags:** Animated, Tech & AI. Difficulty: Medium. Time: ~40 min.
+
+### 89. `infinitezoom`: Infinite Zoom
+- **Use case:** real estate, travel, tech, agencies. **World:** Vapor Mall. **Trigger:** scroll-driven. **Technique:** a recursive scene where NAME is made of flat-illustrated buildings, a camera zoom into one window where the same scene reappears at a smaller scale, an exact scale-by-N loop so there is no visible seam, with a slight rotation.
+- **What happens:** NAME is made of buildings seen from above. Scrolling zooms into one window, where a picture on a tiny room's wall shows NAME made of buildings again. The zoom loops forever with no visible seam.
+- **Design:** a seamless loop with no visible cut; a slight rotation while zooming; crisp, flat illustration that holds up at every scale.
+- **Interactions:** scroll (or drag sideways) zooms in and out forever.
+- **Params:** `text` Name. `zoomSpeed` Zoom speed: 0.2–3 (1). `depth` Loop depth: 2–6 levels (4). `rotation` Rotation: 0–30° (10). `detail` Detail: 0–1 (0.6). Advanced: window position, building density, level scale factor, line weight, quality.
+- **Still:** the top-level view of NAME. **Mobile:** same on scroll; fewer levels drawn at once.
+- **Tags:** Animated, Real estate, Tech & AI. Difficulty: Spicy. Time: ~75 min.
 
 ---
 

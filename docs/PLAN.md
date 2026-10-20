@@ -359,12 +359,12 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 - [x] **10.0 Tour bug.** Done 2026-10-18: diagnosed (layout settled after load, nothing pruned), fixed, stress tests added, 60 of 60 passing (3 tests, both browser projects, 10 runs in a row); limits unchanged.
 - [ ] **10.0b Wave 9 leftovers.** 9.8 (share previews and Lighthouse) and 9.9 (final deploy and report) are both launch steps. The site is already live because the owner said "go now" on 2026-10-18 (step 9.7). **On hold until the owner says to finish them.**
-- [ ] **10.1 Realism kit** · PRD §8.8
+- [x] **10.1 Realism kit** · PRD §8.8
   - Do: `src/kits/gl.ts` (a tiny WebGL helper: compile and link shaders, a full-screen pass, textures and framebuffers, loss-of-context handling), a `quality` tier (full, balanced, phone; phones get balanced; drops a tier when frames run long), a Canvas 2D / still-frame fallback hook, and a script that renders `reference-vs-ours.png` (our still next to a reference image at the same crop) into the git-ignored `reference/realism/<slug>/`.
   - Done when: unit tests for the helper's pure parts; a demo shader runs in `/dev/scenes`; the fallback shows the still frame when WebGL is off (e2e); no new dependency; `git check-ignore reference/realism/x` confirms the ignore rule.
 - [ ] **10.2 Ask the owner for reference media** for `velvet` and `soap` (what to film: DECISIONS 2026-10-20). Keep working while waiting, but the side-by-side needs them.
-- [ ] **10.3 Pilot `velvet`** (SCENES #55) to the realism standard: module, shader with fiber-direction sheen, params, prompt with the shading recipe (Quick keeps the full recipe), follow-ups, How it works, still, phone tier, schema tests, `reference-vs-ours.png` (not committed). At most two rounds against the reference. **No prompt test yet.**
-- [ ] **10.4 Pilot `soap`** (SCENES #56), same standard (thin-film interference from thickness, drainage, breath, pop). **No prompt test yet.**
+- [x] **10.3 Pilot `velvet`** (round 1 built; waiting for the owner's reference) (SCENES #55) to the realism standard: module, shader with fiber-direction sheen, params, prompt with the shading recipe (Quick keeps the full recipe), follow-ups, How it works, still, phone tier, schema tests, `reference-vs-ours.png` (not committed). At most two rounds against the reference. **No prompt test yet.**
+- [x] **10.4 Pilot `soap`** (round 1 built; waiting for the owner's reference) (SCENES #56), same standard (thin-film interference from thickness, drainage, breath, pop). **No prompt test yet.**
 - [ ] **Checkpoint 10 (Owner): judge the two side-by-sides.** If either still looks fake after two rounds, it is cut and the owner is told. Wait for the verdict.
 - [ ] **10.5 Prompt tests for the two pilots, only after the owner approves their look** (per-scene estimate in DECISIONS). No other new prompt tests without the owner's OK.
 - [ ] **10.6 Re-check the existing REALISTIC scenes** that actually exist (`latte`, `fogged`, `tailor`) against §8.8 with reference media: list any that look cartoony with a fix plan. Do not rebuild without the owner's OK.
@@ -373,10 +373,27 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 ---
 
 ## Drops backlog (after launch; one per week through `/new-scene`)
-The other fourteen new scenes (SCENES 54 and 57 to 69). **Not a wave.** The owner (or the weekly task) picks one each week and runs `/new-scene`; each ships as a drop (PRD §14: a content entry in `src/content/drops/`). Each scene gets its own token estimate and the owner's OK first. Realistic ones also need the owner's reference media, a §8.8 side-by-side and the owner's verdict; they are released only if the pilot passes. Prompt tests only with the owner's OK.
+Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, SCENES 70 to 89; owner added 2026-10-20). **Not a wave, and nothing here delays the current work, which stays in this order:** the Tour fix (done), Wave 9 up to launch (done up to launch; 9.7 happened on 2026-10-18 and 9.8 and 9.9 are on hold), the realism pilot (`velvet` and `soap`, waiting for the owner's references and verdict), then launch. After that the owner (or the weekly task) picks one scene a week and runs `/new-scene`; each ships as a drop (PRD §14: a content entry in `src/content/drops/`). **Before building any backlog scene I give the owner its token estimate and wait for the OK.** Each realistic scene also needs its reference (asked for only when it is next), a §8.8 side-by-side and the owner's verdict, and is released only if the pilot passes. Prompt tests are opt-in per scene, with an estimate first.
 
-- [ ] REALISTIC (only if the pilot passes): `slatted` (54), `inkbloom` (57), `goldleaf` (58), `fizz` (59), `snowledge` (60), `raking` (61)
-- [ ] ANIMATED: `pendulum` (62), `anamorphic` (63), `domino` (64), `coilstairs` (65), `clockwork` (66), `epicycles` (67), `clayframes` (68), `stringart` (69)
+**Order (the owner can change it):** Batch 2's top five first, then the rest of both batches alternating REALISTIC and ANIMATED.
+
+1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
+2. [ ] `microprint` (72, REALISTIC)
+3. [ ] `rakedgarden` (73, REALISTIC)
+4. [ ] `resonanceplate` (83, ANIMATED)
+5. [ ] `infinitezoom` (89, ANIMATED)
+
+Then, alternating (R = REALISTIC, A = ANIMATED):
+
+6. [ ] R `slatted` (54) · 7. [ ] A `signalpaths` (80) · 8. [ ] R `duskfacade` (71) · 9. [ ] A `pendulum` (62)
+10. [ ] R `shoreline` (70) · 11. [ ] A `platformarrival` (81) · 12. [ ] R `raking` (61) · 13. [ ] A `doorwave` (82)
+14. [ ] R `growthrings` (77) · 15. [ ] A `anamorphic` (63) · 16. [ ] R `inkbloom` (57) · 17. [ ] A `torchmap` (84, ⚠ flash test)
+18. [ ] R `startrails` (78) · 19. [ ] A `domino` (64) · 20. [ ] R `goldleaf` (58) · 21. [ ] A `doubling` (85)
+22. [ ] R `pinwall` (79) · 23. [ ] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [ ] A `peekaboo` (86)
+26. [ ] R `ceilingstars` (74) · 27. [ ] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [ ] A `gatherround` (87)
+30. [ ] R `thinice` (76) · 31. [ ] A `epicycles` (67) · 32. [ ] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
+
+New use-case gallery tags (Tech & AI, Travel, Real estate, Wellness, Gaming, Finance, Kids, Nonprofits): each filter chip is added when the first scene with that tag ships (not before), and older scenes that fit get the tag then.
 
 ## Backlog: needs a spec from the owner
 Jello wordmark (public name must avoid the "Jello" trademark) and the 21 unbuilt industry hero ideas in `docs/INDUSTRY_HEROES.md`. Not in `docs/SCENES.md`; nothing is built or invented until the owner supplies a spec. See `docs/SCENES.md`.

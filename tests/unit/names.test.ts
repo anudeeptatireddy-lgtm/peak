@@ -16,6 +16,12 @@ const BANNED = [
   'tupperware',
   'sharpie',
   'post-it',
+  // Film, game and brand names that came up in the specs (owner, 2026-10-20).
+  'fogofwar',
+  'gathering',
+  'coinstar',
+  'tiktok',
+  'pokemon',
 ];
 const has = (text: string, word: string) =>
   new RegExp(`(^|[^a-z])${word}([^a-z]|$)`, 'i').test(text);
@@ -25,7 +31,7 @@ describe('names', () => {
     const rows = [
       ...readFileSync('docs/SCENES.md', 'utf8').matchAll(/^\| \d+ \| `([^`]+)` \| ([^|]+) \|/gm),
     ];
-    expect(rows.length).toBeGreaterThanOrEqual(69);
+    expect(rows.length).toBeGreaterThanOrEqual(89);
     for (const [, slug, title] of rows)
       for (const b of BANNED) {
         expect(has(slug!, b), `${slug}: ${b}`).toBe(false);
