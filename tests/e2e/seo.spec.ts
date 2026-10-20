@@ -11,7 +11,6 @@ const PAGES = [
   '/ship',
   '/words',
   '/drops',
-  '/about',
   '/scenes/ripple',
 ];
 

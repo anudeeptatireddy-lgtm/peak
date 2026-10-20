@@ -457,3 +457,10 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 - **2026-10-20, owner OK:** build `wafershine` after the realism pilot and launch (estimate 0.4 to 0.55M tokens). Ask for the reference (a video of a CD or DVD back tilted under a lamp) only when it is next to build. No prompt test without a separate OK.
 
 - **2026-10-20, owner:** Batch 2 is an idea bank. Only `wafershine` is scheduled (after the pilot and launch). The ordered list in PLAN is a suggestion only; nothing else from Batch 2 is scheduled without the owner's OK. The plan and handoff docs were merged from `realism-pilot` into `main` (docs only); the pilot's scene code stays on the branch until the owner approves it.
+
+## 2026-10-20: About page hidden until the owner sends details
+- The About page was live with placeholders (`[YOUR NAME]`, `[ONE-LINE BIO]` and so on). Until the owner sends their details it is hidden: `src/pages/about.astro` is now `src/pages/_about.astro` (an underscore keeps it out of the routes but keeps the page for later), so `/about` is the real 404 page (status 404, noindex); the footer's About link and its "Made by [YOUR NAME]" credit (the same placeholder, visible on every page) are removed; the sitemap filter drops `/about` too (the header never linked to it). `/about` was also removed from the e2e route lists (pages, phone, a11y, SEO).
+- **To bring it back:** rename `_about.astro` to `about.astro`, restore the footer lines (git history, commit "hide About"), remove the `/about` part of the sitemap filter in `astro.config.mjs`, put `/about` back in the route lists, and delete `tests/e2e/about-hidden.spec.ts`. The owner's details are still listed as waiting in `docs/HANDOFF.md`.
+- **Test:** `tests/e2e/about-hidden.spec.ts` (404 status and page, no About link or placeholder in the header or footer on four pages, no `/about` in the sitemap).
+- **Folder check:** the repo is `/Users/madhutatireddy/peak` (remote `https://github.com/anudeeptatireddy-lgtm/peak.git`). `/Users/madhutatireddy/Documents/peak` is not a git repo: it holds only a stale `docs/HANDOFF.md` and an empty `node_modules/.vite` cache. Nothing was deleted.
+
