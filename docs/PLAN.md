@@ -393,6 +393,8 @@ Then, alternating (R = REALISTIC, A = ANIMATED):
 26. [ ] R `ceilingstars` (74) · 27. [ ] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [ ] A `gatherround` (87)
 30. [ ] R `thinice` (76) · 31. [ ] A `epicycles` (67) · 32. [ ] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
 
+**Batch 3 (SCENES 90 to 100; owner added 2026-10-21) is also an idea bank:** nothing is scheduled without the owner's OK and a token estimate. Listed in no particular order: R `sequinflip` (90), R `flakecoat` (91), R `rubbing` (92), R `glassswirl` (93, Spicy), R `hairshine` (94), A `laserchase` (95), A `cheesepull` (96), A `scrubwave` (97), A `curveshot` (98), A `riffle` (99), A `shadefan` (100). Its new tags (Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive) follow the same rule as below.
+
 New use-case gallery tags (Tech & AI, Travel, Real estate, Wellness, Gaming, Finance, Kids, Nonprofits): each filter chip is added when the first scene with that tag ships (not before), and older scenes that fit get the tag then.
 
 ## Backlog: needs a spec from the owner

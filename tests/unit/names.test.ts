@@ -22,6 +22,10 @@ const BANNED = [
   'coinstar',
   'tiktok',
   'pokemon',
+  // Brand and film names avoided in Batch 3 (2026-10-21).
+  'swatch',
+  'pounce',
+  'bendit',
 ];
 const has = (text: string, word: string) =>
   new RegExp(`(^|[^a-z])${word}([^a-z]|$)`, 'i').test(text);

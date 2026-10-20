@@ -1,6 +1,6 @@
 # Handoff: 2026-10-20 (launched; realism proposal waiting for the owner's OK)
 
-Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, still `noindex`).
+Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, live and open to search engines since 2026-10-18).
 
 ## Exact step
 
@@ -36,6 +36,8 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 - **All five Wave 5 prompt-test agents finished.** Every final page is saved in the repo (`draft-index.html` for cloth, smoke and the goo retest), so nothing depends on the temporary scratchpad folder any more.
 
 ## Waiting on the owner
+
+- **Batch 3 (SCENES 90 to 100, added 2026-10-21)** is an idea bank like Batch 2: nothing is scheduled without your OK and a token estimate.
 
 - **The owner's reference clips** for `velvet` and `soap` (in `reference/realism/<scene>/`, git-ignored). Then I make the side-by-sides.
 - **The footer's "Made by" credit stays removed, and `/about` stays hidden (404),** until the owner sends their About details (restore steps in DECISIONS, 2026-10-20).

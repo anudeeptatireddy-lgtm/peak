@@ -464,3 +464,9 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 - **Test:** `tests/e2e/about-hidden.spec.ts` (404 status and page, no About link or placeholder in the header or footer on four pages, no `/about` in the sitemap).
 - **Folder check:** the repo is `/Users/madhutatireddy/peak` (remote `https://github.com/anudeeptatireddy-lgtm/peak.git`). `/Users/madhutatireddy/Documents/peak` is not a git repo: it holds only a stale `docs/HANDOFF.md` and an empty `node_modules/.vite` cache. Nothing was deleted.
 
+## 2026-10-21: Batch 3, eleven more scene specs (docs only; nothing built)
+- **Owner OK:** add the eleven Batch 3 ideas (SCENES 90 to 100) to `docs/SCENES.md` and the Drops backlog, bringing peak to 100 scenes. 5 REALISTIC (`sequinflip`, `flakecoat`, `rubbing`, `glassswirl`, `hairshine`) and 6 ANIMATED (`laserchase`, `cheesepull`, `scrubwave`, `curveshot`, `riffle`, `shadefan`). Nine work by moving the cursor alone. One Spicy (`glassswirl`), one Easy (`shadefan`), the rest Medium.
+- **Idea bank:** like Batch 2, nothing is scheduled. Each needs a token estimate and the owner's OK before building; REALISTIC ones need a reference (asked for only when next) and a §8.8 side-by-side.
+- **Names:** "Swatch" (watch brand), "Pounce" (cat-treat brand) and a "Bend it" title (film) were avoided; added to the banned list in `tests/unit/names.test.ts`. `rubbing`'s medallion must be an original design, never real currency.
+- **New tags recorded:** Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive. Each joins the gallery filters only when its first scene ships.
+

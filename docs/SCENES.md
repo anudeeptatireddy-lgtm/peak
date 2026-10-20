@@ -107,6 +107,17 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 | 87 | `gatherround` | Gather Round | Animated | Aurora | Medium |
 | 88 | `tokenstream` | Token Stream | Animated | Neon Arcade | Medium |
 | 89 | `infinitezoom` | Infinite Zoom | Animated | Vapor Mall | Spicy |
+| 90 | `sequinflip` | Sequin Flip | Realistic | Neon Arcade | Medium |
+| 91 | `flakecoat` | Flake Coat | Realistic | Cherry Cola | Medium |
+| 92 | `rubbing` | Coin Rubbing | Realistic | Newsprint | Medium |
+| 93 | `glassswirl` | Glass Swirl | Realistic | Cherry Cola | Spicy |
+| 94 | `hairshine` | Hair Shine | Realistic | Dreamhouse | Medium |
+| 95 | `laserchase` | Laser Chase | Animated | Matcha | Medium |
+| 96 | `cheesepull` | Cheese Pull | Animated | Golden Hour | Medium |
+| 97 | `scrubwave` | Scrub Wave | Animated | Abyss | Medium |
+| 98 | `curveshot` | Curve Shot | Animated | Glacier | Medium |
+| 99 | `riffle` | Riffle | Animated | Spice Dunes | Medium |
+| 100 | `shadefan` | Shade Fan | Animated | Vapor Mall | Easy |
 
 Every world hosts three scenes except Glacier and Neon Arcade, which host four, so the gallery reads as a patchwork of color (PRD §6.7). The 12 scenes featured on the home page are listed in PRD §6.1.
 
@@ -986,6 +997,126 @@ Twenty more scenes, **specs only**: nothing is built. They join the **Drops back
 - **Params:** `text` Name. `zoomSpeed` Zoom speed: 0.2–3 (1). `depth` Loop depth: 2–6 levels (4). `rotation` Rotation: 0–30° (10). `detail` Detail: 0–1 (0.6). Advanced: window position, building density, level scale factor, line weight, quality.
 - **Still:** the top-level view of NAME. **Mobile:** same on scroll; fewer levels drawn at once.
 - **Tags:** Animated, Real estate, Tech & AI. Difficulty: Spicy. Time: ~75 min.
+
+---
+
+## Batch 3 (90–100; owner added 2026-10-21)
+Eleven more scenes, bringing peak to 100. **Specs only: nothing is built.** They are an idea bank in the **Drops backlog** (`docs/PLAN.md`): nothing here is scheduled without the owner's OK and a token estimate first, and prompt tests are opt-in per scene with an estimate. The same rules as Batch 2 apply (see its intro above): PRD §8.4 definition of done, every number a param or a reasoned `FIXED` constant (§8.5), phone version, reduced-motion still, pause, clean destroy, an Advanced group (every other number plus `quality`). REALISTIC scenes (90–94) follow the Realism standard (PRD §8.8): hand-written WebGL allowed, a side-by-side against the owner's reference (asked for only when the scene is next, kept in the git-ignored `reference/realism/<slug>/`), cut if still fake after two rounds, full shading recipe kept in the Quick prompt. ANIMATED scenes (95–100) have a designed look with physical motion. Nothing flashes more than 3 times a second (§8.2). Difficulty: the owner's "hard" is Spicy; this batch has one Spicy scene and favors Medium, as the owner asked. Nine of the eleven work by moving the cursor alone.
+
+**Names.** Three first-draft names were changed because they are brands or a film title: "Swatch" (a watch brand) became **Shade Fan**, "Pounce" (a cat-treat brand) became **Laser Chase**, and a "Bend it…" title (a film) became **Curve Shot**. `tests/unit/names.test.ts` checks the titles and ids.
+
+**New use-case tags** (recorded now; each joins the gallery filters only when its first scene ships, and older scenes that fit get tagged then): Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive.
+
+**Worlds** are proposals. **Defaults** are in parentheses.
+
+### REALISTIC
+
+### 90. `sequinflip`: Sequin Flip
+- **Use case:** fashion, party wear, nightlife. **World:** Neon Arcade. **Trigger:** cursor-driven. **Technique:** a hex grid of reversible sequin discs, each with a flip state springing between two faces, per-disc tilt for the light, a glossy specular highlight that moves with the cursor-as-light, and a slight overlap shadow between discs.
+- **What happens:** A panel of reversible sequins. Brushing the cursor across it flips the sequins it passes to their second color, leaving a trail you can draw with; each disc catches the light as it tilts over. NAME starts drawn in the second face.
+- **Real details:** each disc tilts through edge-on as it flips, overlapping discs shade the ones below, the highlight is sharp and small like real metal-coated plastic.
+- **Interactions:** move to brush (the brushing direction decides which face shows: down flips to face B, up flips back), no click needed. Phones: drag sideways (vertical swipes still scroll).
+- **Params:** `text` Name. `size` Sequin size: 6–24px (12). `reach` Brush reach: 10–80px (28). `flipSpeed` Flip speed: 0.05–0.5 (0.18). `sparkle` Sparkle: 0–1 (0.6). Advanced: overlap, tilt range, highlight size, face colors (from the accents), shadow strength, quality.
+- **Still:** NAME half-flipped in a swirl. **Mobile:** fewer, larger sequins; balanced tier.
+- **Tags:** Realistic, Fashion. Difficulty: Medium. Time: ~50 min.
+
+### 91. `flakecoat`: Flake Coat
+- **Use case:** car dealers, detailing, automotive launches. **World:** Cherry Cola. **Trigger:** cursor-driven (the cursor is the light). **Technique:** a curved panel (car-door profile) shaded with a base coat, a field of tiny randomly oriented metallic flakes that sparkle when their normal lines up with the light, and a glossy clear coat with a soft reflection of a studio light bar.
+- **What happens:** A curved car-door panel in metallic paint. Moving the cursor moves the light: the highlight band slides along the curve and millions of tiny flakes glint under the clear coat. NAME is a subtle pinstripe decal that catches the light at the right angle.
+- **Real details:** flakes glint individually (not a uniform glitter), the clear-coat reflection is sharp while the color underneath is soft, the color shifts slightly darker at grazing angles.
+- **Interactions:** move to move the light; on phones tilt after "Use motion" (drag as the alternative).
+- **Params:** `text` Name. `flakes` Flake density: 0–1 (0.6). `sparkle` Flake sparkle: 0–1 (0.5). `gloss` Clear-coat gloss: 0–1 (0.8). `depth` Color depth: 0–1 (0.5). Advanced: panel curve, light bar size, flake size, grazing darkening, decal opacity, quality.
+- **Reference to ask for (when it is next):** a video of a metallic car panel with a phone light moving across it.
+- **Still:** the highlight on the panel's shoulder line. **Mobile:** tilt or drag; balanced tier.
+- **Tags:** Realistic, Automotive. Difficulty: Medium. Time: ~55 min.
+
+### 92. `rubbing`: Coin Rubbing
+- **Use case:** schools, museums, kids' learning, stationery. **World:** Newsprint. **Trigger:** cursor-driven. **Technique:** a paper texture with tooth (fine noise), a hidden height map (an embossed leaf, coin-like medallion or map), and graphite deposited where the cursor passes, strongest on the raised parts, with directional stroke grain.
+- **What happens:** A blank sheet of paper. Moving the cursor shades it like the side of a pencil, and a hidden embossed design appears in the strokes, sharp on the raised edges, the way a crayon rubbing over a coin works. NAME is embossed under the paper.
+- **Real details:** graphite sits on the peaks of the paper tooth, strokes leave visible directional grain, the raised edges catch more graphite than the flat parts, a faint sheen where shading is heavy.
+- **Must not imitate real currency:** the medallion is an original design (no real coin, seal or banknote).
+- **Interactions:** move to shade; slow movement shades darker. Phones: drag sideways. A "New sheet" button clears it.
+- **Params:** `text` Name. `softness` Pencil softness: 0–1 (0.6). `width` Stroke width: 8–60px (26). `fill` Shading speed: 0.02–0.4 (0.12). `tooth` Paper tooth: 0–1 (0.5). `design` Hidden design: leaf / medallion / map (leaf). Advanced: emboss height, stroke grain angle, sheen, paper color warmth, quality.
+- **Reference to ask for (when it is next):** a photo of a pencil or crayon rubbing over a leaf or coin.
+- **Still:** the design half revealed. **Mobile:** drag; balanced tier.
+- **Tags:** Realistic, Education, Kids. Difficulty: Medium. Time: ~45 min.
+
+### 93. `glassswirl`: Glass Swirl
+- **Use case:** wine bars, restaurants, drinks brands. **World:** Cherry Cola. **Trigger:** cursor circles. **Technique:** a stemmed glass drawn with refraction (the background bends through it), a 2D height-field liquid surface whose level climbs the glass wall with swirl speed, and thin "legs" (Marangoni tears) forming at the rim and running down the glass as droplets.
+- **What happens:** A glass of dark red drink. Circling the cursor around it swirls the drink: the liquid climbs the side of the glass, and when you stop, thin legs run back down the inside. NAME is etched on the glass.
+- **Real details:** refraction through the bowl and the liquid, a bright rim highlight on the meniscus, legs that bead and run at different speeds, the color darker where the liquid is deeper.
+- **Interactions:** circle the cursor near the glass (speed sets the swirl). Phones: drag in a circle. No click needed.
+- **Params:** `text` Name. `fill` Fill level: 0.2–0.7 (0.4). `swirl` Swirl strength: 0–1 (0.6). `thickness` Thickness: 0–1 (0.4). `legs` Legs: 0–30 (12). `clarity` Glass clarity: 0–1 (0.85). Advanced: refraction index, meniscus height, leg speed range, rim highlight, liquid color depth, quality.
+- **Reference to ask for (when it is next):** a slow-motion phone video of a glass of red drink being swirled and then set down.
+- **Still:** the legs mid-run after a swirl. **Mobile:** drag in a circle; balanced tier.
+- **Tags:** Realistic, Food & drink. Difficulty: Spicy. Time: ~75 min.
+
+### 94. `hairshine`: Hair Shine
+- **Use case:** salons, hair care, beauty brands. **World:** Dreamhouse. **Trigger:** cursor-driven (the cursor is the light). **Technique:** a long lock drawn as hundreds of curved strands; anisotropic hair shading (a primary white shine and a shifted, colored secondary shine along the strand tangent, Kajiya–Kay style); strands part softly around a close cursor on springs and fall back.
+- **What happens:** A long, glossy lock of hair. Moving the cursor moves the light, and a band of shine runs along the strands, the way it does in a shampoo ad. Getting close parts the hair gently, and it falls back into place. NAME is written on a small tag below.
+- **Real details:** the shine is a band across the strands (not a spot), with a second, warmer band below it; strands overlap and shadow each other; a few flyaway strands.
+- **Interactions:** move to move the light; near the hair, the cursor parts it. Phones: drag.
+- **Params:** `text` Name. `strands` Strands: 100–1200 (500). `shine` Shine width: 0–1 (0.4). `secondShine` Second shine: 0–1 (0.5). `wave` Waviness: 0–1 (0.3). `part` Parting: 0–1 (0.5). Advanced: shine shift, flyaways, spring stiffness, damping, hair color depth, quality.
+- **Reference to ask for (when it is next):** a video of straight, glossy hair with a light moving past it.
+- **Still:** the shine across the middle of the lock. **Mobile:** fewer strands; balanced tier.
+- **Tags:** Realistic, Beauty. Difficulty: Medium. Time: ~55 min.
+
+### ANIMATED
+
+### 95. `laserchase`: Laser Chase
+- **Use case:** pet shops, vets, pet apps. **World:** Matcha. **Trigger:** cursor-driven. **Technique:** a small state machine (stalk, wiggle, pounce, bored, wash) for a flat-illustrated cat built from shapes, a spring-driven pounce arc, and a red dot drawn at the cursor.
+- **What happens:** A red dot follows the cursor. A cartoon cat stalks it, crouches and wiggles, and pounces when the dot stops moving; if the dot stays still too long, the cat loses interest and sits down to wash. NAME sits on the cat's food bowl.
+- **Design:** squash and stretch on the pounce, a tail that lags behind, ears that follow the dot.
+- **Interactions:** move; nothing to click. Phones: drag a finger (vertical swipes still scroll).
+- **Params:** `text` Name. `speed` Cat speed: 0.5–3 (1.2). `patience` Wait before pouncing: 0.1–2s (0.6). `pounce` Pounce distance: 40–300px (160). `bored` Time to get bored: 2–15s (6). Advanced: wiggle speed, tail lag, squash amount, cat size, quality.
+- **Still:** the cat mid-pounce toward the dot. **Mobile:** same with a smaller cat.
+- **Tags:** Animated, Pets, Just for fun. Difficulty: Medium. Time: ~45 min.
+
+### 96. `cheesepull`: Cheese Pull
+- **Use case:** pizzerias, food delivery, restaurants. **World:** Golden Hour. **Trigger:** press and drag. **Technique:** a slice and the pie as shapes, and cheese strands as verlet ropes joining them that stretch, thin as they lengthen, sag with gravity and break past a length.
+- **What happens:** Drag a pizza slice away from the pie. Cheese strands stretch between them, thinning and sagging, and snap one by one if you pull far enough. Let go and the slice drops back into place. NAME is on the pizza box lid behind.
+- **Design:** strands that bead and droop, a little bounce when the slice lands, crumbs that hop.
+- **Interactions:** press and drag (phones: press and hold, then drag); a double-click resets.
+- **Params:** `text` Name. `strands` Strands: 4–30 (12). `stretch` Stretchiness: 0–1 (0.6). `sag` Sag: 0–1 (0.5). `snap` Snap length: 1–6× (3.5). Advanced: thinning, return spring, crumb count, slice size, quality.
+- **Still:** strands at full stretch. **Mobile:** press and hold, then drag.
+- **Tags:** Animated, Food & drink. Difficulty: Medium. Time: ~45 min.
+
+### 97. `scrubwave`: Scrub Wave
+- **Use case:** musicians, labels, podcasts, music schools. **World:** Abyss. **Trigger:** cursor-driven. **Technique:** a waveform of bars (from seeded noise shaped like a song's loudness), a playhead that follows the cursor x on a spring, bars near the playhead springing up, and optional synthesized chords (Web Audio, off until the visitor turns sound on; PRD §9.8).
+- **What happens:** A song's waveform runs across the screen. Hovering scrubs a playhead to the cursor, and the bars near it bounce up like a meter; with sound on, a soft chord plays for each section you pass. NAME is the track title above.
+- **Design:** bars with overshoot and settle, a glowing playhead, section markers.
+- **Safety:** no flashing; brightness changes are gentle (§8.2).
+- **Interactions:** move; sound is opt-in through the site's sound toggle. Phones: drag sideways.
+- **Params:** `text` Track title. `bars` Bars: 40–200 (96). `bounce` Bounce: 0–1 (0.5). `chords` Chord set: bright / moody / dreamy (dreamy). `glow` Playhead glow: 0–1 (0.5). Advanced: spring stiffness, damping, bar gap, section count, quality.
+- **Still:** the waveform with the playhead at 40%. **Mobile:** fewer bars.
+- **Tags:** Animated, Music. Difficulty: Medium. Time: ~40 min.
+
+### 98. `curveshot`: Curve Shot
+- **Use case:** sports clubs, academies, sports apps. **World:** Glacier. **Trigger:** cursor aims, click kicks. **Technique:** a flat-illustrated pitch with a goal and a wall of defenders; a dotted preview path; a ball with spin following a curved path (a sideways spin force); the net as a spring grid that bulges.
+- **What happens:** A ball sits in front of a goal and a wall of defenders. Moving the cursor previews a curling path; clicking kicks the ball, which bends around the wall with spin, and the net bulges where it lands. NAME is on the advertising board behind the goal.
+- **Design:** defenders that jump as the ball passes, the net that ripples and settles, the ball that squashes on the kick.
+- **Interactions:** move to aim; click or tap to kick. Phones: tap where to aim, then tap the ball.
+- **Params:** `text` Name. `spin` Spin: 0–1 (0.6). `power` Power: 0.3–1 (0.7). `wall` Wall height: 0–1 (0.5). `give` Net give: 0–1 (0.6). Advanced: gravity, ball size, net stiffness, defender jump, quality.
+- **Still:** the ball mid-curve with its dotted path. **Mobile:** two-tap aim and kick.
+- **Tags:** Animated, Sports. Difficulty: Medium. Time: ~50 min.
+
+### 99. `riffle`: Riffle
+- **Use case:** publishers, schools, libraries, authors. **World:** Spice Dunes. **Trigger:** cursor-driven. **Technique:** a thick book seen at an angle; page edges as a stack of curves; the page under the cursor curls (a bent-page curve), and moving along the stack flips pages; a corner doodle advances one frame per page.
+- **What happens:** A thick book seen from the edge. Sliding the cursor along the pages riffles them like a flipbook, and a little doodle in the corner animates as the pages go by; faster movement flips faster. NAME is on the cover.
+- **Design:** pages that fan with a slight delay after each other, a soft shadow inside the curl, the stack settling when you stop.
+- **Interactions:** move along the page edge; nothing to click. Phones: drag along the pages.
+- **Params:** `text` Name. `pages` Pages: 20–120 (60). `curl` Page curl: 0–1 (0.5). `speed` Riffle speed: 0.2–3 (1). `doodle` Doodle: walker / bouncing ball / growing plant (bouncing ball). Advanced: page stiffness, fan delay, shadow strength, book angle, quality.
+- **Still:** the pages fanned open midway, doodle mid-step. **Mobile:** same with fewer pages.
+- **Tags:** Animated, Education. Difficulty: Medium. Time: ~45 min.
+
+### 100. `shadefan`: Shade Fan
+- **Use case:** cosmetics, nail salons, paint and fashion brands. **World:** Vapor Mall. **Trigger:** cursor-driven. **Technique:** a stack of color cards pinned at one corner that fans open around the cursor's angle on springs; the card under the cursor lifts with a shadow and shows its shade name and hex code.
+- **What happens:** A stack of shade cards fans open around the cursor, like a paint fan deck or a lipstick shade chart. The card under the cursor lifts and shows its name and hex code. Shades are built from the world's accents (tints and shades in OKLab). NAME is printed on the pivot.
+- **Design:** cards that fan with a stagger and overshoot, a soft lift shadow, names that never fail contrast (`ensureContrast`).
+- **Interactions:** move; nothing to click. Phones: drag around the pivot.
+- **Params:** `text` Name. `cards` Cards: 6–30 (16). `angle` Fan angle: 30–330° (160). `lift` Lift: 0–1 (0.5). `spring` Springiness: 0.05–0.4 (0.15). Advanced: stagger, card size, shadow, damping, quality.
+- **Still:** fully fanned with one card lifted. **Mobile:** smaller fan.
+- **Tags:** Animated, Beauty, Fashion. Difficulty: Easy. Time: ~30 min.
 
 ---
 
