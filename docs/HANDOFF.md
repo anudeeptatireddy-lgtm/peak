@@ -37,6 +37,7 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 
 ## Waiting on the owner
 
+- **Next backlog scene is `wafershine`** (OK'd 2026-10-20): ask for the CD or DVD reference video only when it is next to build, after the pilot and launch.
 - **About page details** (name, one-line bio, why you made peak, what you're looking for, contact link, social links). `/about` shows marked `[PLACEHOLDER]`s until then (list in DECISIONS, 8.14).
 - **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
 - **`tailor` decision:** matches by eye but not on the measure. Accept as is, or retest.

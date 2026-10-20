@@ -454,3 +454,4 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 | **All 20 of Batch 2** | **about 6.0 to 8.5M** |
 | This docs update | about 0.15 to 0.25M (done) |
 
+- **2026-10-20, owner OK:** build `wafershine` after the realism pilot and launch (estimate 0.4 to 0.55M tokens). Ask for the reference (a video of a CD or DVD back tilted under a lamp) only when it is next to build. No prompt test without a separate OK.

@@ -377,7 +377,7 @@ Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, S
 
 **Order (the owner can change it):** Batch 2's top five first, then the rest of both batches alternating REALISTIC and ANIMATED.
 
-1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test)
+1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
 3. [ ] `rakedgarden` (73, REALISTIC)
 4. [ ] `resonanceplate` (83, ANIMATED)
