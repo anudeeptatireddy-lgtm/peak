@@ -71,6 +71,22 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 | 51 | `fogged` | Fogged bottle | Industry | Aurora | Medium |
 | 52 | `tailor` | Tailor's cut | Industry | Newsprint | Hard |
 | 53 | `latte` | Latte pour | Industry | Spice Dunes | Hard |
+| 54 | `slatted` | Slatted Sun | Realistic | Golden Hour | Spicy |
+| 55 | `velvet` | Velvet Brush | Realistic | Cherry Cola | Spicy |
+| 56 | `soap` | Soap Film | Realistic | Abyss | Spicy |
+| 57 | `inkbloom` | Ink Bloom | Realistic | Newsprint | Spicy |
+| 58 | `goldleaf` | Gold Leaf | Realistic | Doomsday | Spicy |
+| 59 | `fizz` | Fizz | Realistic | Toxic | Spicy |
+| 60 | `snowledge` | Snow Ledge | Realistic | Glacier | Spicy |
+| 61 | `raking` | Raking Light | Realistic | Riso | Spicy |
+| 62 | `pendulum` | Pendulum Field | Animated | Aurora | Medium |
+| 63 | `anamorphic` | Anamorphic | Animated | Vapor Mall | Medium |
+| 64 | `domino` | Domino Run | Animated | Matcha | Medium |
+| 65 | `slinky` | Slinky Stairs | Animated | Dreamhouse | Medium |
+| 66 | `clockwork` | Clockwork | Animated | Blueprint | Spicy |
+| 67 | `epicycles` | Epicycles | Animated | Neon Arcade | Medium |
+| 68 | `claymation` | Claymation | Animated | Lava Lamp | Medium |
+| 69 | `stringart` | String Art | Animated | Newsprint | Medium |
 
 Every world hosts three scenes except Glacier and Neon Arcade, which host four, so the gallery reads as a patchwork of color (PRD §6.7). The 12 scenes featured on the home page are listed in PRD §6.1.
 
@@ -577,3 +593,164 @@ Three of the candidates in `docs/INDUSTRY_HEROES.md`. They appear in the gallery
 - **Still:** the finished latte art with two faint curls of steam above.
 - **Mobile:** tilt the phone after tapping "Use motion".
 - **Tags:** Brands, Intros. Difficulty: Spicy (hard). Time: ~40 min.
+
+---
+
+## Realistic and animated additions (54–69; owner added 2026-10-20)
+Sixteen more scenes, **gallery only** (never the home page; the Tour stays the first 50). "NAME" is the brand name the visitor types (param `text`, 1–16 chars, default "Your brand"). Worlds are proposals; the owner can change them. **Realistic scenes (54–61) are held to the Realism standard (PRD §8.8):** WebGL shading with a Canvas 2D or still-frame fallback, three quality tiers (full, balanced, phone), a side-by-side against the owner's reference photo or video, and a prompt that spells out the shading recipe. Build order: the pilot `velvet` (55) and `soap` (56) first; the rest wait for the owner's verdict. Every scene has a quality tier param `quality` Quality: full / balanced / phone (auto) among its Advanced settings. Existing REALISTIC scenes: `fogged` (51), `tailor` (52), `latte` (53), re-checked against §8.8 (see `docs/DECISIONS.md`).
+
+### REALISTIC
+
+### 54. `slatted`: Slatted Sun
+- **Use case:** a hero for a design studio, architecture, interiors or hospitality brand. **World:** Golden Hour. **Technique:** a shader that traces the sun through a row of slats with cut-outs onto a wall, with a penumbra that widens with distance, a warm-to-cool light gradient and dust motes drawn only inside the beams.
+- **What happens:** A warm plaster wall with slatted blinds. Scrolling tilts the slats open; stripes of sunlight pass through cut-outs in the slats and, at one exact angle, snap into NAME projected sharp on the wall, then stretch and blur as the slats keep turning. The cursor moves the sun.
+- **Interactions:** scroll (or drag sideways on phones) tilts the slats; move the cursor to move the sun.
+- **Real details:** shadow edges soft far from the slats and sharp close to them; a warm-to-cool gradient across the light; dust motes visible only inside the beams; plaster micro-texture on the wall; slight wood grain and a soft edge highlight on each slat.
+- **Params:** `text` Name. `slatAngle` Slat angle: 0–90° (45). `warmth` Light warmth: 2500–6500K (3800). `softness` Edge softness: 0–1 (0.5). `dust` Dust amount: 0–1 (0.4). `slatCount` Slats: 5–20 (12). `sunHeight` Sun height: 10–80° (35). `snapAngle` Angle where NAME snaps sharp: 0–90° (40). `plaster` Wall texture: 0–1 (0.5). Advanced: slat thickness, cut-out size, light intensity, ambient light, dust size and drift speed, beam falloff, quality.
+- **Still:** the slats at the snap angle with NAME sharp on the wall and a few motes in the beams.
+- **Mobile:** drag sideways to tilt; the phone tier drops dust to a few motes and uses a half-resolution shadow pass.
+- **Tags:** Realistic, Brands, Landing pages. Difficulty: Spicy. Time: ~60 min.
+
+### 55. `velvet`: Velvet Brush (pilot)
+- **Use case:** a fashion, luxury or furniture brand intro. **World:** Cherry Cola. **Technique:** a per-pixel fiber-direction field, an anisotropic sheen shader against a light direction, a fiber noise layer, and a slow relax of the field back to rest.
+- **What happens:** The whole screen is crushed velvet. Moving the cursor brushes the pile, leaving lighter and darker trails where the fibers flip. NAME is already pre-brushed the other way, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+- **Interactions:** move or drag to brush; on phones a finger drag brushes (after the usual press and hold, or immediately in Just play).
+- **Real details:** sheen that changes with fiber direction relative to the light; fiber-level noise; a slight dent (a small darkening and normal shift) along fast strokes; soft pile-edge shading where fibers lie over each other.
+- **Params:** `text` Name. `pileLength` Pile length: 0–1 (0.5). `sheen` Sheen: 0–1 (0.6). `brushWidth` Brush width: 2–20% of the width (7). `relax` Relax time: 2–30s (10). `lightAngle` Light angle: 0–360° (45). `lightHeight` Light height: 10–80° (40). `dent` Dent along fast strokes: 0–1 (0.4). Advanced: fiber noise scale, fiber noise strength, sheen sharpness, ambient light, base color depth, brush softness, brush pressure from speed, quality.
+- **Still:** a broad brushed swoop with NAME visible as a sheen shift.
+- **Mobile:** drag to brush; the phone tier halves the field resolution and drops the dent pass.
+- **Tags:** Realistic, Brands, Portfolio. Difficulty: Spicy. Time: ~60 min.
+
+### 56. `soap`: Soap Film (pilot)
+- **Use case:** a wellness, beauty or cleaning brand reveal. **World:** Abyss. **Technique:** a film-thickness field (height map) feeding a thin-film interference shader (reflected color computed from thickness and viewing angle), drainage so the top thins first, a swirl flow, and a pop into droplets.
+- **What happens:** A soap film is stretched across a thin dark wire bent into NAME. Its colors come from real thin-film interference, calculated from the film's thickness. The film drains, so the top thins to black first. The cursor is a breath: the film bulges and swirls, and if you blow too hard it pops into droplets, then a fresh film slides across.
+- **Interactions:** move to breathe on the film (a finger drag on phones); press to blow harder.
+- **Real details:** interference colors that really cycle with thickness (magenta, gold, cyan bands) and fade to black as it thins; slow marbling swirls; a bright specular reflection of a window-like light; a thick drip edge at the wire; droplets that wobble and fall.
+- **Params:** `text` Name. `thickness` Film thickness: 200–1200nm (600). `drainage` Drainage speed: 0.1–3× (1). `swirl` Swirl: 0–1 (0.5). `popSensitivity` Pop sensitivity: 0–1 (0.5). `wireWidth` Wire width: 1–8px (3). `refractive` Film refractive index: 1.2–1.5 (1.33). `reflection` Window reflection: 0–1 (0.6). `breath` Breath strength: 0–2 (1). Advanced: viscosity, film regrowth time, droplet count and size, light angle, color saturation, noise scale, quality.
+- **Still:** a film with the full color gradient, the top thinning to black, NAME clear along the wire.
+- **Mobile:** drag to breathe; the phone tier halves film resolution and caps droplets.
+- **Tags:** Realistic, Brands, Backgrounds. Difficulty: Spicy. Time: ~60 min.
+
+### 57. `inkbloom`: Ink Bloom
+- **Use case:** a calligraphy, tea, stationery or ceramics brand. **World:** Newsprint. **Technique:** a paper fiber field (anisotropic diffusion), a wetness map that ink diffuses along, pigment that settles into the grain and dries to darker edges (a coffee-ring effect).
+- **What happens:** A brush touches wet rice paper and NAME blooms, feathering out along the paper fibers. The edges dry darker, like a coffee ring, and pigment settles into the grain. The cursor re-wets the paper, so the ink moves again.
+- **Interactions:** move to re-wet the paper; click to touch down a fresh drop; Restart to write NAME again.
+- **Real details:** feathering that follows visible fibers; darker dried edges; granulation where pigment settles; slight paper translucency (a soft texture showing through); a faint water ring.
+- **Params:** `text` Name. `wetness` Wetness: 0–1 (0.6). `inkLoad` Ink load: 0–1 (0.6). `fiber` Fiber strength: 0–1 (0.6). `dryTime` Dry time: 2–40s (12). `brush` Re-wet width: 2–20% (6). `edgeDark` Edge darkening: 0–1 (0.5). `granulation` Granulation: 0–1 (0.4). `paperTone` Paper warmth: 0–1 (0.5). Advanced: diffusion rate, fiber noise scale, ink color, translucency, drip chance, quality.
+- **Still:** NAME fully bloomed and dry, edges dark, a faint ring beside it.
+- **Mobile:** drag to re-wet; phone tier halves the diffusion grid.
+- **Tags:** Realistic, Brands, Portfolio. Difficulty: Spicy. Time: ~60 min.
+
+### 58. `goldleaf`: Gold Leaf
+- **Use case:** a jewelry, spirits, luxury or restaurant brand. **World:** Doomsday. **Technique:** leaf pieces as thin cloth-like quads with flutter physics and a tear model, a crinkled normal map, a metallic shader with the cursor as the light, burnishing that smooths the leaf on the letters.
+- **What happens:** Gold leaf drifts down onto a dark board. The cursor is a soft brush: loose leaf flutters, tears and flakes away, and the leaf on the letters burnishes into a crinkled, gleaming NAME. The cursor is also the light.
+- **Interactions:** move to brush and to move the light; click to puff a gust.
+- **Real details:** crinkle highlights that change as the light moves; ragged torn edges; a slightly reddish base showing through thin spots; tiny flakes that tumble and settle; the board's dark matte grain.
+- **Params:** `text` Name. `crinkle` Crinkle: 0–1 (0.6). `flakes` Flake count: 20–600 (250). `drift` Drift: 0–1 (0.4). `shine` Shine: 0–1 (0.7). `leafSize` Leaf size: 10–80px (34). `tear` Tear amount: 0–1 (0.5). `burnish` Burnish speed: 0.1–3× (1). `lightHeight` Light height: 10–80° (35). Advanced: flutter strength, edge roughness, base color, metal tint, grain, gust force, quality.
+- **Still:** NAME burnished and gleaming with a few loose flakes mid-air.
+- **Mobile:** drag as the brush and light; phone tier caps flakes at a third.
+- **Tags:** Realistic, Brands. Difficulty: Spicy. Time: ~70 min.
+
+### 59. `fizz`: Fizz
+- **Use case:** a drinks, brewery, soda or energy brand. **World:** Toxic. **Technique:** bubble particles spawned along the letter mask with growth, wobble and drag; a refraction shader per bubble (bright rim, dark edge, small highlight); a liquid backdrop with light shafts; a tap burst.
+- **What happens:** A close-up inside a soda, no glass rim. Bubbles form only along the letters, swell, wobble and break away in rising streams; bigger bubbles rise faster. A fast cursor flick taps the glass and releases a burst, then NAME slowly re-forms.
+- **Interactions:** a fast flick taps the glass; move gently to nudge bubbles.
+- **Real details:** each bubble with a bright rim, a darker inner edge and a tiny window highlight; bubbles that merge; speed that rises with size; slight wobble; a faint liquid color gradient and rising light shafts; tiny micro-bubbles in the haze.
+- **Params:** `text` Name. `rate` Bubble rate: 0.2–3× (1). `maxSize` Max size: 4–40px (18). `riseSpeed` Rise speed: 0.2–3× (1). `tapStrength` Tap strength: 0–2 (1). `wobble` Wobble: 0–1 (0.4). `haze` Micro-bubble haze: 0–1 (0.4). `liquidColor` Liquid tint: 0–1 (0.5). `reform` Re-form time: 2–20s (8). Advanced: merge chance, drag, rim brightness, highlight size, shaft strength, quality.
+- **Still:** NAME fully formed with bubbles breaking away at the top of the letters.
+- **Mobile:** a flick taps the glass; phone tier halves bubble count and skips the haze pass.
+- **Tags:** Realistic, Brands. Difficulty: Spicy. Time: ~60 min.
+
+### 60. `snowledge`: Snow Ledge
+- **Use case:** an outdoor, winter, travel or cozy-lifestyle brand. **World:** Glacier. **Technique:** a falling-flake particle system settling into a height field built over an invisible letter mask, with overhangs, a subsurface-scatter-style shader (bluish shadows, a soft glow where light passes through), and wind that lifts powder and slides clumps.
+- **What happens:** Snow falls onto invisible letters and piles into soft caps on every top edge, with overhangs, bluish shadows and a soft glow where light passes through. The cursor is wind: powder puffs off and clumps slide off. NAME is readable only by where the snow rests.
+- **Interactions:** move for wind; click for a gust; Restart to snow again.
+- **Real details:** soft rounded caps with a crisp thin top edge; bluish shadow in hollows; sparkle on a few crystals; powder that puffs in the air; clumps that crack and slide; slightly uneven depth.
+- **Params:** `text` Name. `snowfall` Snowfall: 0–1 (0.5). `stickiness` Stickiness: 0–1 (0.6). `wind` Wind: 0–2 (1). `flakeSize` Flake size: 1–8px (3). `depth` Pile depth: 0–1 (0.5). `glow` Light glow: 0–1 (0.5). `sparkle` Sparkle: 0–1 (0.3). `lightAngle` Light angle: 0–360° (60). Advanced: slide threshold, overhang limit, powder puff size, shadow blue, ambient light, quality.
+- **Still:** snow caps on every letter with a few flakes in the air.
+- **Mobile:** drag for wind; phone tier uses fewer flakes and a coarser height field.
+- **Tags:** Realistic, Brands. Difficulty: Spicy. Time: ~70 min.
+
+### 61. `raking`: Raking Light
+- **Use case:** a stationery, print, editorial, architecture or luxury brand. **World:** Riso. **Technique:** a heightfield for thick cotton paper (tooth and fibers) with NAME pressed in as a blind emboss, lit by a low raking lamp with normal-mapped shading and soft shadow rims.
+- **What happens:** Blank, thick cotton paper. The cursor is a low lamp sweeping across it, and NAME, pressed into the paper with no ink, appears only through the shadows and highlights the light creates. Scrolling moves the lamp like the sun across a day.
+- **Interactions:** move the cursor to move the lamp; scroll sweeps the lamp across a day.
+- **Real details:** paper tooth and fibers; soft highlight rims on the raised edges; a warm lamp falloff; a faint shadow pooled on the far side of each pressed edge; slightly uneven impression depth.
+- **Params:** `text` Name. `embossDepth` Emboss depth: 0–1 (0.5). `lampHeight` Lamp height: 5–60° (20). `roughness` Paper roughness: 0–1 (0.5). `warmth` Light warmth: 2500–6500K (3500). `lampSize` Lamp softness: 0–1 (0.5). `fibers` Visible fibers: 0–1 (0.4). `impression` Impression unevenness: 0–1 (0.3). `daySweep` Day sweep by scroll: 0–1 (0.7). Advanced: tooth scale, rim width, falloff exponent, ambient light, paper tone, quality.
+- **Still:** the lamp low on one side with NAME readable through shadow and highlight only.
+- **Mobile:** drag to move the lamp; phone tier uses a half-resolution height field.
+- **Tags:** Realistic, Brands, Portfolio. Difficulty: Spicy. Time: ~60 min.
+
+### ANIMATED
+
+### 62. `pendulum`: Pendulum Field
+- **Use case:** a science, music, data or studio intro. **World:** Aurora. **Technique:** a grid of bobs on circular paths with slightly different periods, phased so that at one exact time all bobs pass through target points sampled from NAME; scroll scrubs time.
+- **What happens:** Hundreds of bobs swing in circles at slightly different speeds. At one exact moment they all pass through points on the letters and form NAME, then drift apart again. Scroll scrubs time.
+- **Interactions:** scroll scrubs time (drag sideways on phones); hover slows time.
+- **Params:** `text` Name. `bobs` Bobs: 100–900 (400). `radius` Swing radius: 5–60px (24). `spread` Period spread: 0–1 (0.3). `cycle` Cycle length: 4–30s (12). `bobSize` Bob size: 1–10px (3). `trail` Trail: 0–1 (0.3). `hold` Hold on the name: 0–1 (0.3). Advanced: phase jitter, easing, colors per ring.
+- **Still:** the moment NAME forms.
+- **Mobile:** 200 bobs; sideways drag scrubs.
+- **Tags:** Animated, Intros, Backgrounds. Difficulty: Medium. Time: ~30 min.
+
+### 63. `anamorphic`: Anamorphic
+- **Use case:** a creative studio or portfolio hero. **World:** Vapor Mall. **Technique:** flat-colored shards at 3D positions that project to NAME from exactly one camera position; the camera orbits with the cursor or the phone's tilt.
+- **What happens:** Flat-colored shards float in 3D. Moving the cursor (or tilting the phone) orbits the view, and at the sweet spot they line up into NAME.
+- **Interactions:** move to orbit; on phones tilt after "Use motion", or drag.
+- **Params:** `text` Name. `shards` Shards: 40–400 (160). `depth` Depth spread: 0–1 (0.6). `orbit` Orbit range: 5–60° (30). `shardSize` Shard size: 4–40px (14). `snap` Snap tolerance: 0–1 (0.3). `float` Float amount: 0–1 (0.3). `perspective` Perspective: 0.3–2 (1). Advanced: shard shapes, color count, easing.
+- **Still:** the sweet-spot view with NAME aligned.
+- **Mobile:** 80 shards; drag or tilt.
+- **Tags:** Animated, Portfolio. Difficulty: Medium. Time: ~35 min.
+
+### 64. `domino`: Domino Run
+- **Use case:** a launch, countdown or storytelling intro. **World:** Matcha. **Technique:** rigid-body dominoes along a path traced from NAME, a simple topple chain with timing, tilt and settling; faces landing up form the name.
+- **What happens:** Dominoes in a winding path trace NAME. Scrolling topples them one after another, and the faces landing up print the name. Scrolling back stands them up again.
+- **Interactions:** scroll (or drag sideways) topples the chain; click a domino to flick it.
+- **Params:** `text` Name. `dominoes` Dominoes: 60–400 (200). `size` Domino size: 6–40px (16). `spacing` Spacing: 1–3× (1.6). `speed` Topple speed: 0.3–3× (1). `tilt` Lean on topple: 0–1 (0.7). `clack` Settle bounce: 0–1 (0.3). `twoTone` Two-tone faces: on / off (on). Advanced: gravity, friction, wobble.
+- **Still:** halfway toppled, NAME half printed.
+- **Mobile:** 100 dominoes.
+- **Tags:** Animated, Intros. Difficulty: Medium. Time: ~40 min.
+
+### 65. `slinky`: Slinky Stairs
+- **Use case:** a playful brand, a kids' product or a scrolling headline. **World:** Dreamhouse. **Technique:** each letter is a spring-coil mesh with a flip-down animation along stair steps, landing and settling with a spring wobble; scroll drives progress.
+- **What happens:** Each letter is a coiled spring that flips down a staircase as you scroll and lands on the bottom step.
+- **Interactions:** scroll (or drag sideways) drives the flips; click a letter to give it a nudge.
+- **Params:** `text` Name. `coils` Coils per letter: 4–24 (12). `coilThickness` Coil thickness: 1–8px (3). `steps` Stairs: 3–10 (6). `stepHeight` Step height: 20–120px (60). `bounce` Landing bounce: 0–1 (0.5). `stagger` Stagger: 0–1 (0.4). `letterSize` Letter size: 30–200px (110). Advanced: spring stiffness, damping, flip arc.
+- **Still:** all letters landed on the bottom step, coils relaxed.
+- **Mobile:** 8 coils per letter; fewer stairs.
+- **Tags:** Animated, Headlines, Intros. Difficulty: Medium. Time: ~40 min.
+
+### 66. `clockwork`: Clockwork
+- **Use case:** a watch, engineering, craft or automotive brand. **World:** Blueprint. **Technique:** meshing gears built from NAME's outline pieces, gear-train angular-velocity rules, an escapement tick, and the cursor winding a mainspring.
+- **What happens:** NAME is built from meshing gears. Moving the cursor winds them, and an escapement ticks the letters into place one tick at a time.
+- **Interactions:** move to wind; click for one tick.
+- **Params:** `text` Name. `gears` Gears: 6–30 (14). `teeth` Teeth per gear: 8–40 (20). `wind` Wind speed: 0–2 (1). `tick` Tick rate: 0.5–3 per second (1). `backlash` Looseness: 0–1 (0.2). `gearColor` Gear tint: 0–1 (0.5). `letterBuild` Letter build speed: 0.2–3× (1). Advanced: tooth shape, axle size, escapement swing.
+- **Still:** all letters placed, gears at rest.
+- **Mobile:** 8 gears; drag to wind.
+- **Tags:** Animated, Brands. Difficulty: Spicy. Time: ~60 min.
+
+### 67. `epicycles`: Epicycles
+- **Use case:** a math, music, data or technical brand. **World:** Neon Arcade. **Technique:** a Fourier series of NAME's outline drawn as a chain of spinning circles; the cursor sets how many circles are active.
+- **What happens:** A chain of spinning circles traces NAME's outline. The cursor adds or removes circles, from blobby to crisp.
+- **Interactions:** move up and down to change circle count; click to restart the trace.
+- **Params:** `text` Name. `circles` Circles: 3–200 (60). `speed` Spin speed: 0.2–3× (1). `trail` Trail length: 0.2–1 (0.8). `showCircles` Show circles: 0–1 (0.6). `lineWidth` Line width: 1–8px (2). `glow` Glow: 0–1 (0.5). `wobble` Slow drift: 0–1 (0.1). Advanced: outline sampling density, easing, colors per ring.
+- **Still:** the finished trace with the circles faint.
+- **Mobile:** drag up and down; 80 circles at most.
+- **Tags:** Animated, Backgrounds, Intros. Difficulty: Medium. Time: ~30 min.
+
+### 68. `claymation`: Claymation
+- **Use case:** a food, kids' or craft brand. **World:** Lava Lamp. **Technique:** a stop-motion look by stepping the scene at a low frame rate with per-frame outline jitter and a finger-print dent texture; the cursor leaves thumbprints that slowly settle.
+- **What happens:** Clay letters at a choppy 12 frames per second with jittery outlines. The cursor squishes them with thumbprints.
+- **Interactions:** move or press to squish; thumbprints relax over time.
+- **Params:** `text` Name. `fps` Frame rate: 6–24 (12). `jitter` Outline jitter: 0–1 (0.5). `thumb` Thumbprint size: 10–80px (36). `relax` Relax time: 2–30s (10). `letterSize` Letter size: 40–220px (120). `clayTexture` Clay texture: 0–1 (0.5). `squish` Squish amount: 0–1 (0.6). Advanced: lighting, edge softness, color variation.
+- **Still:** one frame with two thumbprints.
+- **Mobile:** drag to squish; same frame rate.
+- **Tags:** Animated, Brands, Just for fun. Difficulty: Medium. Time: ~35 min.
+
+### 69. `stringart`: String Art
+- **Use case:** a craft, jewelry, design-studio or portfolio hero. **World:** Newsprint. **Technique:** a thread that races from nail to nail, drawing straight lines that build NAME by density as you scroll; the cursor plucks the threads with a spring.
+- **What happens:** A thread races from nail to nail and builds NAME from straight lines as you scroll. The cursor plucks the threads.
+- **Interactions:** scroll (or drag sideways) draws more thread; move to pluck.
+- **Params:** `text` Name. `nails` Nails: 60–360 (180). `threads` Thread count: 200–2400 (1200). `threadWidth` Thread width: 0.5–3px (1). `pluck` Pluck strength: 0–2 (1). `tension` Thread tension: 0.1–1 (0.5). `speed` Draw speed: 0.3–3× (1). `threadColor` Thread tint: 0–1 (0.5). Advanced: nail size, route search depth, damping.
+- **Still:** the finished piece with threads at rest.
+- **Mobile:** 120 nails and 700 threads.
+- **Tags:** Animated, Portfolio, Brands. Difficulty: Medium. Time: ~40 min.

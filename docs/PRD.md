@@ -229,6 +229,7 @@ peak launches with **50 scenes**. Each one is specified in **`docs/SCENES.md`**,
 
 - **Ported scenes** keep their physics and feel exactly, with params defaulting to their source's constants: 6 from `reference/peak-prototype.html` (`particles`, `elastic`, `velocity`, `ripple`, `flow`, `warp`) and 4 from `reference/riso-demo.html` (`drop`, `pluck`, `overprint`, `halftone`).
 - **Difficulty** is Easy, Medium or Spicy. The 10 Spicy scenes are the wildest ones.
+- **Post-launch additions (owner, 2026-10-20):** 16 more scenes, numbers 54 to 69 in `docs/SCENES.md`: 8 REALISTIC (held to §8.8) and 8 ANIMATED (a designed look with satisfying physical motion). They are gallery-only until the owner decides otherwise, the Tour stays the first 50, and nothing is added to the home page. The realism pilot (`velvet` and `soap`) decides whether the other six REALISTIC scenes are built. This extends the 50-scene scope; the launch count on the site is unchanged until then.
 - Scenes are named for what people want to make (use case), with the technique explained underneath.
 - New scenes are built on the shared kits (§16.8), so each scene module stays small.
 
@@ -265,6 +266,18 @@ A scene that fails because of a real difference in look or behavior gets its pro
 
 ### §8.4 Scene definition of done
 A scene is done only when it has: the module interface (§16.3), a params schema with labels and plain-language help text for each param, a prompt phrase for every param (§10.4), 3–5 follow-up prompts, a "How it works" explanation (3–5 short sentences, §9.5), linked word-bank terms, a still frame, `destroy()` that removes all listeners and stops all work, mobile behavior (§8.3), passing tests (§21), and a row in `docs/PROMPT_TESTS.md`. Scenes marked ⚠ also pass the flash test (§8.2). If the scene is one of the 12 featured on the home page (§6.1), it replaces its stand-in there.
+
+### §8.8 Realism standard (owner, 2026-10-20)
+Applies to every scene labeled **REALISTIC** in `docs/SCENES.md`, including the existing realistic scenes (`latte`, `fogged`, `tailor`). REALISTIC means it must look like the real material or object filmed in real life. Never cartoony.
+1. **Reference first.** Ask the owner for phone photos or videos of the real thing when it helps. They go in `reference/realism/<scene>/` (git-ignored if large). Build against them.
+2. **Rendering.** Hand-written WebGL shaders are allowed (still no three.js or any other graphics, physics or animation library; the allowlist in §16.1 does not change). Use real lighting: diffuse plus specular highlights, sheen for fabrics, light passing through translucent materials, soft shadows with properly soft edges, ambient occlusion, and a light that moves when it should. Fall back to Canvas 2D or the still frame when WebGL is unavailable. Shader helpers live in one shared kit (`src/kits/gl.ts`), so scenes stay small.
+3. **Detail layers.** Micro-texture (fibers, paper tooth, grain), imperfection (uneven edges, small randomness, dust), and physically believable motion (weight, viscosity, drag, settling).
+4. **Smart cropping.** Frame the scene close on the part that is easiest to make real. Never render something the browser cannot make convincing.
+5. **Textures.** Procedural by default, so the generated prompt can rebuild the look. Free CC0 photo-scanned textures only with the owner's OK, and only if procedural fails.
+6. **Proof.** Each REALISTIC scene gets a side-by-side image of our render and the owner's reference, at the same crop and lighting (`docs/prompt-tests/<slug>/reference-vs-ours.png`). The owner judges. If it still looks fake after two rounds, tell the owner and cut the scene. A fake-looking "realistic" scene never ships.
+7. **Prompts.** A REALISTIC scene's prompt spells out the shading recipe (layers, lighting, imperfections, key numbers) so a fresh build also looks real. Its prompt test passes only if the side-by-side looks real to the owner (the measured rule in §8.7 still runs, but the owner's eye decides).
+8. **Performance.** Three quality tiers: full, balanced, phone. Phones get the balanced tier. The frame-time budgets in §19 stay (scripting 8 ms; shader cost is judged on a mid-range phone and laptop, and a heavy tier drops to balanced automatically when frames run long).
+Realism and "every number is a setting" (§8.5) work together: shading constants that are not a visitor-facing slider live in the scene's Advanced group or its `FIXED` constants, each with a written reason, and the prompt states them.
 
 ---
 
