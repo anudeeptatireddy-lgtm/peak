@@ -1,10 +1,10 @@
-# Handoff: 2026-10-21 (backlog chunk 1 built, unreleased; waiting for the owner's OK for chunk 2)
+# Handoff: 2026-10-21 (backlog chunk 2 built, unreleased; waiting for the owner's OK for chunk 3)
 
 Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, live and open to search engines since 2026-10-18).
 
 ## Exact step
 
-**Backlog, chunk 1 done (2026-10-21):** `signalpaths`, `domino` and `pendulum` are built on `main` with the lean scene process (DECISIONS, 2026-10-21) and marked `unreleased` (try them at `/scenes/<slug>`; they are not in the gallery, Tour, word bank or sitemap). **Next:** wait for the owner's OK, then chunk 2 (`platformarrival`, `doorwave`, `resonanceplate`, proposed in PLAN) **in a fresh session** (this one's history makes every step expensive). Releasing a scene as a drop: steps in DECISIONS (2026-10-21, "Unreleased flag").
+**Backlog, chunk 2 done (2026-10-21):** `platformarrival`, `doorwave` and `resonanceplate` are built on `main` with the lean scene process and marked `unreleased`, like chunk 1 (`signalpaths`, `domino`, `pendulum`). Try them at `/scenes/<slug>`; they are not in the gallery, Tour, word bank or sitemap. `resonanceplate` is Spicy, so it needs a prompt test before release (about 0.1 to 0.15M tokens; owner's OK first). **Next:** wait for the owner's OK, then chunk 3 (`anamorphic`, `coilstairs`, `clockwork`, proposed in PLAN) **in a fresh session**. Releasing a scene as a drop: steps in DECISIONS (2026-10-21, "Unreleased flag").
 
 Earlier state:
 

@@ -1994,6 +1994,354 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Door Wave
+
+## What I want
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Put one letter in each room of the middle floor (floor index floor((floors − 1) ÷ 2) from the top), centered along the floor; spaces are empty rooms. Once the Anybody font has loaded, letters are weight 800, 0.7 × the door height, shrunk together if needed so the widest letter is at most 0.8 × the door width. Draw each letter in the text color centered in its doorway, sheared onto the wall (transform 1, 0.5, 0, 1).
+- The block has 6 floors (4 on screens under 700px wide) and 14 doors per floor (8 on small screens), but always at least the name's length + 2.
+- Draw it in 2:1 isometric: one cell along the wall moves (cell, 0.5 × cell); a floor is 1.4 cells tall; a door is 0.62 of a cell wide, centered in its cell, and 0.72 of a floor tall, standing on the floor's base line. The block is also 2 cells deep (roof and right side going back up-right along (1, −0.5)) and walkways stick out 0.6 cells toward the viewer along (−1, 0.5). Pick cell = min(width × 0.9 ÷ (doors + 2.6), height × 0.86 ÷ (doors × 0.5 + floors × 1.4 + 1.3)) and center the whole block.
+- Colors: roof accent 1, side face accent 1 mixed halfway (OKLab) with the surface color, front wall the surface color, walkways accent 2 mixed halfway with the surface color, doors accent 2 outlined 1.5px in the soft text color. Every doorway is a lit room: the surface color mixed 75% of the way to accent 3.
+- In front of each door, fill a patch of walkway in accent 3 at opacity 0.55: as wide as the door and reaching min(1, openness) × the walkway depth out from the wall. Each floor draws its rooms and letters, then its walkway and spill, then its doors, then a railing (two lines along the walkway's outer edge, 0.22 of a floor apart); floors are drawn top to bottom.
+- Each door's openness is a spring (f = min(dt × 60, 2.5)): k = (π ÷ (0.4 × 60))², velocity = (velocity + (target − openness) × k × f) × (1 − 0.3 × (1 − overshoot))^f, openness += velocity × f, and openness never goes below 0. The leaf swings on its left edge by openness × 95°: its free edge is at the hinge + door width × (cos a − sin a, 0.5 × (cos a + sin a)).
+- Overshoot is 0.5.
+- A door with a letter that opens past halfway in the wave stays fully open for 4s after the wave leaves, so a sweep spells the whole name.
+- A door's target is 1 − smoothstep(0.4 × 200, 200, distance from the cursor to the door's center). Without a pointer over the canvas, the cursor is a point on the middle floor at share q along it (q = 1 − |phase mod 2 − 1|, phase starting at 0.5); after 1s without input phase grows by dt ÷ 5, so it sweeps back and forth; scrolling adds (scroll change in px) ÷ 800 to phase. On the scene's own page the scroll is an invisible endless scroll area over the canvas.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. All doors start closed.
+- Lay out the block again on every resize and size the letters once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doorwave prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Door Wave
+
+An isometric apartment block with dozens of front doors on walkways. As the cursor passes, doors swing open with a small overshoot in a wave around it, revealing warmly lit rooms and spilling light onto the walkways. The rooms on the middle floor each hold a letter, so with those doors open they spell a name across the building.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Floors: 6
+- Door speed: 0.4s
+- Overshoot: 0.5
+- Wave radius: 200px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Ink-ball pile
 
@@ -12362,6 +12710,360 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Platform Arrival
+
+## What I want
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background (the sky) and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The station name is "Your brand". Once the Anybody font has loaded, measure it at weight 800 with font size = height × 0.09, shrunk if needed so the sign (the name plus 0.35 × font size of padding on every side) is at most 70% of the width.
+- Draw 5 landscape layers (3 on screens under 700px wide), far to near. For layer k (0 is the farthest) let s = k ÷ (layers − 1). Its base line is at height × (0.36 + 0.36 × s), its hills are height × 0.14 × (1 + s) ÷ 2 tall, and one period of its shape is width × 0.8 × (1 + s) wide. Fill everything below its ridge line (sampled every 6px) in one accent: the nearest layer accent 1, the next accent 2, then accent 3, repeating; mix each toward the background in OKLab by 0.55 × (1 − s), so far layers fade into the sky.
+- The landscape is hills: a ridge share of (0.7 sin(2πu) + 0.3 sin(2π × 2u + 1) + 1) ÷ 2, where u = (x + the layer's offset) ÷ its period + k; the ridge line is at base − hill height × ridge share.
+- Above half of top speed, draw 40 speed streaks (2px tall, in the text color, at opacity = speed share above half, rescaled to 0–1) at fixed random heights between the horizon and the nearest base line; each is width × 0.35 × that same share long and slides left with the scenery, nearer ones a little faster.
+- On top of everything, frame the view as a train window: fill the whole canvas in the surface color except a rounded rectangle inset 22px with corner radius 22px, and outline that rectangle with a 3px line in the soft text color.
+- Each frame (f = min(dt × 60, 2.5)) the scenery moves left by 0.7 × 36px × speed × f, where speed = 1 − arrival (so it runs slightly backwards while the stop bounces); layer k moves that amount × (1 − 0.85 × (1 − s)), so far layers crawl and near ones race (parallax).
+- Arrival (0 racing, 1 stopped at the sign) springs toward a goal: velocity = (velocity + (goal − arrival) × 0.012 × f) × (1 − 2 × √0.012 × (1 − 0.5))^f, arrival += velocity × f. At bounce 0 this is critically damped; higher values overshoot past the sign and rock back.
+- The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
+- The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
+- Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
+- Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
+- Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`platformarrival prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Platform Arrival
+
+The view from a train window: flat, layered landscapes in bold travel-poster colors racing past at different speeds, with speed streaks. Scrolling slows the train, a platform glides in, and a hanging station sign showing a name eases into the middle as the train stops with a small bounce. Scrolling back sends it off again.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Layers: 5
+- Landscape: Hills
+- Top speed: 0.7
+- Stop bounce: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`pluck prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Strings
 
@@ -12675,6 +13377,348 @@ Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A
 - Lowest string tension: 0.03
 - Ring time: 0.987
 - Bend before release: 1.9
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Resonance Plate
+
+## What I want
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+## Look
+- Colors ("Glacier" palette): background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the field grid: weight 900, centered, font size = grid size × 0.26, shrunk if needed so it is at most 86% of the width. Cells with alpha above 128 are letters. Compute each cell's distance to the nearest letter cell (two-pass chamfer: 1 for straight neighbors, 1.4142 for diagonal ones) and make the name field = min(1, distance ÷ (grid size × 0.5)): 0 on the letters, rising to 1 away from them.
+- Scatter 12000 grains (5000 on screens under 700px wide) at random over the plate. Draw each as a 1.4px square in the text color, all in one path.
+- The plate is a square, side = min(width, height − 56px) × 0.86, centered in the space above a 56px strip for the pitch scale. Fill it in the surface color with a 4px rim in accent 2 around it (none at 0). In the middle of the strip draw the pitch scale: a 2px line in the soft text color as wide as the plate, a 2px × 12px tick in accent 1 at the name's pitch, and a 6px-radius dot in accent 3 at the current pitch (after the lock).
+- Each frame (f = min(dt × 60, 2.5)) every grain reads the field a and its slope (central differences, halved) in the grid cell under it, then moves by (random in −1…1) × 4px × 0.6 × a × f minus the slope × 24px × 0.6 × f on each axis, and stays on the plate. So grains shake hard where the plate moves and come to rest on its still lines.
+- The plate's modes are every pair (n, m) with 0 ≤ m < n ≤ 10, each twice (sign −1 then +1), sorted by n² + m² (then by n, then sign). Mode (n, m, sign) shakes with amplitude |cos(nπx)cos(mπy) + sign × cos(mπx)cos(nπy)| ÷ 2, with x and y from 0 to 1 across the plate, computed on a 160 × 160 grid. The pitch (0–1) picks a spot along that list and blends the two nearest modes linearly.
+- The name sits at pitch 0.62. Near it the pitch is pulled in: locked pitch = pitch + (0.62 − pitch) × 0.6 × (1 − smoothstep(0, 0.08, |pitch − 0.62|)), and the field is the mode blend mixed toward the name field by 1 − smoothstep(0, 0.08, |locked pitch − 0.62|), so exactly at the name pitch the sand forms the name. Grains also slide toward the letters: each frame they move by −(slope of the name field, central differences halved) × grid size × reach × 3px × strength × that mix × f.
+- The pitch eases toward its target: pitch += (target − pitch) × (1 − e^(−3 × dt)).
+- While the pointer is over the canvas (or a finger is on it), target = pointer x ÷ width: left is low, right is high. After 1s without the pointer the plate tunes itself: the target jumps to the name pitch, then every 4s alternates between a random pitch and the name pitch.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. Pitch and target start at 0; recompute the field grid every frame.
+- Lay out again on every resize and build the name field once more when the Anybody font has finished loading; before that the name field is 1 everywhere and the name pitch shows only modes.
+- Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`resonanceplate prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Resonance Plate
+
+A square metal plate covered in fine sand, seen from above. Moving the cursor left and right changes the pitch, and the sand jitters and migrates into the plate’s real vibration patterns (Chladni figures), morphing smoothly between them. At one special pitch, with a gentle magnetic pull toward it, the sand resolves into a name.
+
+Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679BF, #2BA7D6, #E64545. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Grains: 12000
+- Vibration strength: 0.6
+- Pitch range: 10
+- Lock strength: 0.6
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

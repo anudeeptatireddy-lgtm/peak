@@ -68,3 +68,6 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 62 | `pendulum` | pending | n/a | **Pending** (unreleased) | Medium scene: prompt tests are only for Spicy scenes for now (owner, 2026-10-21). |
 | 64 | `domino` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
 | 80 | `signalpaths` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 81 | `platformarrival` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 82 | `doorwave` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 83 | `resonanceplate` | pending | n/a | **Pending** (unreleased) | **Spicy**: needs a prompt test before release. Estimate about 0.1 to 0.15M tokens (one fresh agent build plus the parity run); waiting for the owner's OK. |
