@@ -4,7 +4,7 @@ Everything is committed and pushed to `main`; pushing deploys to Vercel (https:/
 
 ## Exact step
 
-Waves 1 to 9 are built and the site **launched on 2026-10-18** (step 9.7: `noindex` removed, robots open, sitemap on). Still open from Wave 9: **9.8** (share previews and Lighthouse; the phone timing check was interrupted) and **9.9** (final deploy and checks). On 2026-10-20 the owner proposed a **Realism standard** (PRD §8.8) and 16 new scenes (SCENES 54 to 69). The docs are updated and the work is planned as **Wave 10** in `docs/PLAN.md`, but **nothing is built: waiting for the owner's OK to the token estimate** (DECISIONS, 2026-10-20). Order after OK: finish 9.8 and 9.9, then the realism kit, then the pilot (`velvet`, `soap`), then the owner's verdict.
+Waves 1 to 9 are built and the site **launched on 2026-10-18** (step 9.7: `noindex` removed, robots open, sitemap on, at the owner's "go now"). Left from Wave 9: 9.8 (share previews and Lighthouse) and 9.9 (final deploy and report), both launch steps, **on hold until the owner says**. The Tour mounting bug is fixed (see DECISIONS). On 2026-10-20 the owner set a **Realism standard** (PRD §8.8) and 16 new scenes (SCENES 54 to 69). The docs are updated; **nothing is built: waiting for the owner's OK to the token estimate** (DECISIONS, 2026-10-20). Plan: Wave 10 in `docs/PLAN.md` = realism kit, then the pilot (`velvet`, `soap`) with side-by-sides, then the owner's verdict. The other 14 scenes are a "Drops backlog" (one per week via `/new-scene`), not a wave.
 
 The project folder is `~/peak`.
 
@@ -41,7 +41,8 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 - **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
 - **`tailor` decision:** matches by eye but not on the measure. Accept as is, or retest.
 - **OK to the Wave 10 token estimate**, and phone photos or videos for `velvet` and `soap` (what to film is in DECISIONS, 2026-10-20).
-- **Which scene is the jello wordmark?** No scene has that name (nearest: `melt`, `jelly`).
+- **Backlog needing the owner's spec:** the jello wordmark (public name must avoid the trademark) and the 21 unbuilt industry ideas in `docs/INDUSTRY_HEROES.md`.
+- **Reference media for the pilot** goes in `reference/realism/` (git-ignored; never committed).
 - **Review "Overnight choices for owner review"** in `docs/DECISIONS.md`.
 - **Friend test** with 3-5 people at Checkpoint 9.
 - **Unchanged:** nothing paid, no domain purchase, no cookies or personal data.

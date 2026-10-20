@@ -82,10 +82,10 @@ The 50 scenes peak launches with. This file is the source of truth for each scen
 | 62 | `pendulum` | Pendulum Field | Animated | Aurora | Medium |
 | 63 | `anamorphic` | Anamorphic | Animated | Vapor Mall | Medium |
 | 64 | `domino` | Domino Run | Animated | Matcha | Medium |
-| 65 | `slinky` | Slinky Stairs | Animated | Dreamhouse | Medium |
+| 65 | `coilstairs` | Coil Stairs | Animated | Dreamhouse | Medium |
 | 66 | `clockwork` | Clockwork | Animated | Blueprint | Spicy |
 | 67 | `epicycles` | Epicycles | Animated | Neon Arcade | Medium |
-| 68 | `claymation` | Claymation | Animated | Lava Lamp | Medium |
+| 68 | `clayframes` | Clay Frames | Animated | Lava Lamp | Medium |
 | 69 | `stringart` | String Art | Animated | Newsprint | Medium |
 
 Every world hosts three scenes except Glacier and Neon Arcade, which host four, so the gallery reads as a patchwork of color (PRD §6.7). The 12 scenes featured on the home page are listed in PRD §6.1.
@@ -597,7 +597,9 @@ Three of the candidates in `docs/INDUSTRY_HEROES.md`. They appear in the gallery
 ---
 
 ## Realistic and animated additions (54–69; owner added 2026-10-20)
-Sixteen more scenes, **gallery only** (never the home page; the Tour stays the first 50). "NAME" is the brand name the visitor types (param `text`, 1–16 chars, default "Your brand"). Worlds are proposals; the owner can change them. **Realistic scenes (54–61) are held to the Realism standard (PRD §8.8):** WebGL shading with a Canvas 2D or still-frame fallback, three quality tiers (full, balanced, phone), a side-by-side against the owner's reference photo or video, and a prompt that spells out the shading recipe. Build order: the pilot `velvet` (55) and `soap` (56) first; the rest wait for the owner's verdict. Every scene has a quality tier param `quality` Quality: full / balanced / phone (auto) among its Advanced settings. Existing REALISTIC scenes: `fogged` (51), `tailor` (52), `latte` (53), re-checked against §8.8 (see `docs/DECISIONS.md`).
+Sixteen more scenes. **Not a build wave:** only the two pilots (`velvet` 55 and `soap` 56) are built now. The other fourteen go in a **Drops backlog** (`docs/PLAN.md`), released one per week after launch through `/new-scene`. They are gallery only (never the home page; the Tour stays the first 50). "NAME" is the brand name the visitor types (param `text`, 1–16 chars, default "Your brand"). Worlds are proposals; the owner can change them. Names were checked against the no-brand-names rule (the owner renamed Slinky Stairs to Coil Stairs and Claymation to Clay Frames because the old names are trademarks).
+
+**Realistic scenes (51–53 and 54–61) are held to the Realism standard (PRD §8.8):** WebGL shading with a Canvas 2D or still-frame fallback, three quality tiers (full, balanced, phone), a side-by-side against the owner's reference photo or video (kept in the git-ignored `reference/realism/<slug>/`, never committed), and a prompt that spells out the shading recipe (the Quick prompt is exempt from the 150-word limit and keeps the full recipe). **Prompt tests: only for the two pilots, and only after the owner approves their look.** Every scene has a quality tier param `quality` Quality: full / balanced / phone (auto) among its Advanced settings. Existing REALISTIC scenes: `fogged` (51), `tailor` (52), `latte` (53), re-checked against §8.8 (`docs/DECISIONS.md`).
 
 ### REALISTIC
 
@@ -710,7 +712,7 @@ Sixteen more scenes, **gallery only** (never the home page; the Tour stays the f
 - **Mobile:** 100 dominoes.
 - **Tags:** Animated, Intros. Difficulty: Medium. Time: ~40 min.
 
-### 65. `slinky`: Slinky Stairs
+### 65. `coilstairs`: Coil Stairs
 - **Use case:** a playful brand, a kids' product or a scrolling headline. **World:** Dreamhouse. **Technique:** each letter is a spring-coil mesh with a flip-down animation along stair steps, landing and settling with a spring wobble; scroll drives progress.
 - **What happens:** Each letter is a coiled spring that flips down a staircase as you scroll and lands on the bottom step.
 - **Interactions:** scroll (or drag sideways) drives the flips; click a letter to give it a nudge.
@@ -737,7 +739,7 @@ Sixteen more scenes, **gallery only** (never the home page; the Tour stays the f
 - **Mobile:** drag up and down; 80 circles at most.
 - **Tags:** Animated, Backgrounds, Intros. Difficulty: Medium. Time: ~30 min.
 
-### 68. `claymation`: Claymation
+### 68. `clayframes`: Clay Frames
 - **Use case:** a food, kids' or craft brand. **World:** Lava Lamp. **Technique:** a stop-motion look by stepping the scene at a low frame rate with per-frame outline jitter and a finger-print dent texture; the cursor leaves thumbprints that slowly settle.
 - **What happens:** Clay letters at a choppy 12 frames per second with jittery outlines. The cursor squishes them with thumbprints.
 - **Interactions:** move or press to squish; thumbprints relax over time.
@@ -754,3 +756,10 @@ Sixteen more scenes, **gallery only** (never the home page; the Tour stays the f
 - **Still:** the finished piece with threads at rest.
 - **Mobile:** 120 nails and 700 threads.
 - **Tags:** Animated, Portfolio, Brands. Difficulty: Medium. Time: ~40 min.
+
+---
+
+## Backlog: needs a spec from the owner
+Ideas the owner has mentioned that have **no spec in this repo yet**. Nothing is built or invented for them until the owner writes or approves a spec.
+- **Jello wordmark** (a realistic jelly or gelatin wordmark). Not in `docs/SCENES.md` or `docs/INDUSTRY_HEROES.md`. Note: "Jello" is a trademark, so the public name must be different (for example "Jelly wordmark" or "Gelatin wordmark"). The existing `jelly` scene (Jelly cards, #49) and `melt` (#7) are different scenes.
+- **The other industry heroes.** `docs/INDUSTRY_HEROES.md` is the owner's candidate list from 2026-10-17 (24 one-line ideas). Three were specced and built (`fogged`, `tailor`, `latte`, #51–53). The remaining 21 have only a one-line sketch there, not a full entry like the ones above, so they need a spec before any build.

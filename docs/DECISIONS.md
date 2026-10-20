@@ -389,25 +389,36 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 ## 2026-10-18: 9.7 Launch (owner said "go now")
 `INDEXABLE` is true (no noindex on normal pages; the 404 keeps it), robots.txt allows all and names the sitemap, the sitemap is on (`PEAK_SITEMAP=0` turns it off), canonical links and share images use https://peak-teal.vercel.app. Still open: a custom domain (costs money, not done), About placeholders.
 
-## 2026-10-20: Realism standard and 16 new scenes (owner proposal; docs updated, nothing built)
-- **PRD §8.8 added** (the eight-point Realism standard) and a note in §8.1. **SCENES.md 54 to 69 added:** 8 REALISTIC (`slatted` Slatted Sun, `velvet` Velvet Brush, `soap` Soap Film, `inkbloom` Ink Bloom, `goldleaf` Gold Leaf, `fizz` Fizz, `snowledge` Snow Ledge, `raking` Raking Light) and 8 ANIMATED (`pendulum`, `anamorphic`, `domino`, `slinky`, `clockwork`, `epicycles`, `claymation`, `stringart`). Gallery only, as with Wave 7b. Worlds are my proposals; every number is a param; each has a phone version and a still.
-- **PLAN Wave 10 added.** The owner said "after Wave 7", but Waves 7 to 9 are done, so it is Wave 10, gated on the owner's OK. Order: 10.0 finish 9.8 and 9.9, 10.1 realism kit (`src/kits/gl.ts`), 10.2 reference media, 10.3 and 10.4 the pilot, Checkpoint 10 (the owner's verdict), 10.5 re-check existing realistic scenes, then the rest.
-- **Things I changed or flagged from the proposal:** (1) the PRD says the site launches with 50 scenes; these extend that scope (noted in §8.1; the Tour stays the first 50). (2) WebGL is new to the codebase (everything so far is Canvas 2D or DOM), so it needs a shared kit and a fallback; the dependency allowlist does not change. (3) The 8 ms scripting budget does not measure GPU time; shader cost is judged on a real phone, with an automatic drop to a lighter tier. (4) Every numeric constant that is not a slider still needs a written reason (§8.5). (5) There is no "jello wordmark" scene; I need to know which one is meant.
-- **Preliminary look at the existing REALISTIC scenes, from their share images only (not a real check, no references yet):** `latte` looks cartoony (flat spiral stripes, a hard-edged cup ring, blocky foam letters); `tailor` looks cartoony (a flat red fill with no fabric shading, folds or sheen); `fogged` is unproven (the still frame is just a blur; the wiped state and drips need judging against a real fogged-glass video). Likely fix plans: latte needs a real crema (fine tiger-stripe noise with specular highlights and a soft meniscus) and a smoother foam solver; tailor needs fabric shading (a sheen for the weave, soft shadows in the folds, a visible cut edge with fraying); fogged needs condensation droplets and real refraction through wiped streaks. Not changed until the owner OKs it.
-- **What to film for the pilot (reference media, put in `reference/realism/velvet/` and `reference/realism/soap/`):** Velvet: a short video (10 to 20s) of a hand brushing crushed velvet in one direction and then against it, under one lamp from the side, plus a few close-up photos and the same cloth from straight on. Soap: a video of a soap film in a wire loop (a bubble wand works) under a window or lamp, showing the color bands, the dark thin top, and one pop; plus close photos of the colors.
-- **Token estimate (rough ranges, not promises; one fresh-agent prompt test has cost about 90 to 150k tokens so far):**
+## 2026-10-20: Realism standard, WebGL shaders and 16 new scenes (owner proposal, then adjustments; docs only, nothing built)
+**Decision: hand-written WebGL shaders are allowed** for REALISTIC scenes (owner, 2026-10-20). Still no three.js or any other graphics, physics or animation library; the dependency allowlist in the PRD does not change. Shader helpers live in one shared kit (`src/kits/gl.ts`); each scene falls back to Canvas 2D or its still frame when WebGL is unavailable; phones get the balanced quality tier.
+
+**Decision: the Realism standard is PRD §8.8** (reference first; real lighting; detail layers; smart cropping; procedural textures by default, CC0 photo textures only with the owner's OK; a side-by-side proof the owner judges, cut if it still looks fake after two rounds; prompts that spell out the shading recipe; three quality tiers). It applies to every scene labeled REALISTIC: the existing `latte`, `fogged`, `tailor` and the new ones.
+
+Adjustments applied (owner, 2026-10-20):
+1. **Renamed** Slinky Stairs to **Coil Stairs** (`coilstairs`) and Claymation to **Clay Frames** (`clayframes`): the old names are trademarks. Every new name was checked against the no-brand-names rule; `tests/unit/names.test.ts` now fails if a scene title or slug uses a banned name. Other names checked and kept: Slatted Sun, Velvet Brush, Soap Film, Ink Bloom, Gold Leaf, Fizz, Snow Ledge, Raking Light, Pendulum Field, Anamorphic, Domino Run, Clockwork, Epicycles, String Art. **Flagged for the owner (existing, not changed):** the scene "Lava lamp" and the world "Lava Lamp" use a name that is a registered trademark in some places; "Jello" (in the owner's wordmark idea) is a trademark too.
+2. **`reference/realism/` is always git-ignored**, whatever the file size (the repo is public; the files are the owner's personal photos). The side-by-side proof image is saved inside that folder too (it contains the owner's photo), shown in the session, never committed.
+3. **Jello wordmark and the industry ideas:** the jello wordmark is not in the repo and nothing was invented; it is listed under "Backlog: needs a spec from owner" in `docs/PLAN.md` and `docs/SCENES.md`. For the industry ideas: `docs/INDUSTRY_HEROES.md` does exist (the owner's 24-idea candidate list pasted on 2026-10-17); 3 were built (#51 to 53) and the other 21 are one-line sketches, so they are in the same backlog until specced. The re-check covers only scenes that exist: `latte`, `fogged`, `tailor`.
+4. **Order:** (a) the Tour bug is already done (diagnosed, fixed, test added, 60 of 60 passing, limits unchanged; entry "Tour mounting bug" above). (b) Wave 9 up to launch: nothing is left except 9.8 and 9.9, which are launch steps, and the site already launched on 2026-10-18 when the owner said "go now"; 9.8 and 9.9 are on hold until the owner says. (c) The realism pilot (`velvet`, `soap`) with side-by-sides, then wait for the verdict. (d) The other 14 new scenes are a **Drops backlog** after launch, one per week through `/new-scene`, not a wave.
+5. **Prompt tests:** only for the two pilots, after the owner approves their look. No other new prompt tests without the owner's OK. Per-scene estimates are below.
+6. **Quick prompts:** REALISTIC scenes are exempt from the 150-word limit (PRD §10.6); the Quick prompt keeps the full shading recipe and trims everything else. When the first realistic scene is built, `tests/unit/prompt.test.ts` gets this exemption by scene label (it is a rule change, so recorded here first).
+7. **Existing REALISTIC scenes, preliminary look from their share images only (no references yet; not a real check):** `latte` looks cartoony (flat spiral stripes, a hard-edged cup ring, blocky foam letters); `tailor` looks cartoony (flat red fill, no fabric shading, folds or sheen); `fogged` is unproven (its still is just a blur; the wiped state and drips need judging against real fogged glass). Likely fix plans: latte needs a real crema (fine tiger-stripe noise, specular highlights, a soft meniscus) and a smoother foam solver; tailor needs fabric shading (weave sheen, soft shadows in the folds, a frayed cut edge); fogged needs condensation droplets and real refraction through the wiped streaks. Not changed until the owner OKs it.
+- **Also flagged:** the PRD says the site launches with 50 scenes; the new scenes extend that (PRD §8.1 note). The 8 ms budget measures scripting, not GPU time, so shader cost is judged on a real phone with an automatic drop to a lighter tier. Every constant that is not a slider still needs a written reason (§8.5).
+- **What to film for the pilot (put in `reference/realism/velvet/` and `reference/realism/soap/`, never committed):** Velvet: a 10 to 20 second video of a hand brushing crushed velvet one way and then against it under one side lamp, plus close-up photos and the same cloth straight on. Soap: a video of a soap film in a wire loop (a bubble wand works) under a window or lamp showing the color bands, the dark thin top and one pop, plus close photos of the colors.
+
+**Token estimate, per scene (rough ranges, not promises; a fresh-agent prompt test has cost about 90 to 150k tokens so far, and a realistic one costs more because the agent must write shaders):**
 
 | Item | Estimate |
 |---|---|
-| 10.0 finish 9.8 and 9.9 | about 0.1M |
-| 10.1 realism kit | 0.2 to 0.3M |
-| Pilot `velvet` (build, two rounds, prompt, prompt test) | 0.5 to 0.7M |
-| Pilot `soap` | 0.5 to 0.7M |
-| **Pilot total (to Checkpoint 10)** | **about 1.3 to 1.8M** |
-| 10.5 re-check the three existing realistic scenes (review only) | about 0.1M |
-| Fix the ones that look cartoony (if the owner OKs, up to 3) | 0.3 to 0.5M each, up to about 1.5M |
-| Other six REALISTIC scenes | 0.45 to 0.65M each, about 2.7 to 3.9M |
-| Eight ANIMATED scenes (Canvas 2D; prompt tests only for Spicy and one easy, as before) | 0.15 to 0.25M each, about 1.2 to 2.0M |
-| **Everything, if every checkpoint passes** | **about 7 to 9M** |
+| 10.1 realism kit (`gl.ts`, tiers, fallback, proof script) | 0.2 to 0.3M |
+| `velvet` build (shader, two rounds against the reference, prompt with full recipe, docs, tests) | 0.35 to 0.5M |
+| `soap` build (thin-film interference, drainage, breath, pop) | 0.4 to 0.55M |
+| **To the owner's verdict (kit + both builds)** | **about 0.95 to 1.35M** |
+| `velvet` prompt test (after approval; a retry would add about 0.2M and needs the owner's OK) | 0.2 to 0.3M |
+| `soap` prompt test (same) | 0.2 to 0.3M |
+| **Whole pilot including both prompt tests** | **about 1.35 to 1.95M** |
+| 10.6 re-check of `latte`, `fogged`, `tailor` (review only, with references) | about 0.1M |
+| Fixing any that look cartoony (only with the owner's OK) | 0.3 to 0.5M each |
+| Drops backlog, per drop (no commitment; each needs its own OK): an ANIMATED scene | 0.15 to 0.25M |
+| Drops backlog, per drop: a REALISTIC scene (plus 0.2 to 0.3M if the owner approves a prompt test) | 0.35 to 0.55M |
 
-  Only the pilot is committed to on an OK; the rest waits for the verdict. If the pilot fails twice, those scenes are cut and the spend stops there.
+Only the pilot up to the verdict is asked for now. If a pilot scene still looks fake after two rounds it is cut and the spend stops there.

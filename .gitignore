@@ -33,3 +33,7 @@ coverage/
 # Parity "expected" images are rewritten from the reference page on every run
 tests/e2e/parity.spec.ts-snapshots/
 tests/e2e/prompt-parity.spec.ts-snapshots/
+
+# The owner's personal reference photos and videos for the realism scenes. The repo is public:
+# these are NEVER committed, whatever their size (PRD §8.8).
+reference/realism/
