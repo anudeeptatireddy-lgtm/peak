@@ -6,7 +6,7 @@ Everything is committed and pushed to `main`; pushing deploys to Vercel (https:/
 
 Waves 1 to 9 are built; the site launched on 2026-10-18. 9.8 and 9.9 are on hold (owner's instruction). **Wave 10 pilot round 1 is built on the branch `realism-pilot` (not on `main`)**: the realism kit, `velvet` (#55) and `soap` (#56). No reference photos yet, so no §8.8 side-by-side and **no prompt tests** (owner's rule: only after the owner approves the look). Next: the owner films the references (list in DECISIONS, 2026-10-20), I make `reference-vs-ours.png` side-by-sides, the owner judges, at most one more round, then prompt tests for the pilots only if approved. The other 14 Batch 1 scenes and the 20 Batch 2 scenes (SCENES 70 to 89, specs only; added 2026-10-20) are a Drops backlog in `docs/PLAN.md` (one per week via `/new-scene`, Batch 2's top five first, each needing a token estimate and the owner's OK before building).
 
-The project folder is `~/peak`.
+The project folder is `~/peak` (`/Users/madhutatireddy/peak`) and it is **the only repo**. `~/Documents/peak` is an old leftover folder (not a git repo; a stale handoff and an empty cache): ignore it, and do not delete it without the owner's OK.
 
 ## Update 1 status
 
@@ -37,6 +37,8 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 
 ## Waiting on the owner
 
+- **The owner's reference clips** for `velvet` and `soap` (in `reference/realism/<scene>/`, git-ignored). Then I make the side-by-sides.
+- **The footer's "Made by" credit stays removed, and `/about` stays hidden (404),** until the owner sends their About details (restore steps in DECISIONS, 2026-10-20).
 - **Next backlog scene is `wafershine`** (OK'd 2026-10-20): ask for the CD or DVD reference video only when it is next to build, after the pilot and launch.
 - **About page details** (name, one-line bio, why you made peak, what you're looking for, contact link, social links). `/about` shows marked `[PLACEHOLDER]`s until then (list in DECISIONS, 8.14).
 - **Smoke retest** (one fresh agent, about 150k tokens). Skipped; no retests are allowed without your OK.
