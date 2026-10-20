@@ -11,7 +11,10 @@ import type { SceneMeta } from '../scenes/types';
 
 const metas = Object.values(
   import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
-).map((m) => m.meta);
+)
+  .map((m) => m.meta)
+  // Unreleased scenes stay hidden until their weekly drop (SceneMeta.unreleased).
+  .filter((m) => !m.unreleased);
 
 // "Featured" is the home page lineup first, then the catalog order.
 const featuredOrder = HOME_JOURNEY.map((s) => s.scene);

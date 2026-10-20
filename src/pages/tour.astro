@@ -10,7 +10,10 @@ import type { SceneMeta } from '../scenes/types';
 const TOUR_COUNT = 50;
 const metas = Object.values(
   import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
-).map((m) => m.meta);
+)
+  .map((m) => m.meta)
+  // Unreleased scenes stay hidden until their weekly drop (SceneMeta.unreleased).
+  .filter((m) => !m.unreleased);
 const bySlug = new Map(metas.map((m) => [m.slug, m]));
 const order = CATALOG_ORDER.slice(0, TOUR_COUNT).filter((s) => bySlug.has(s));
 const worlds = tourWorlds(order.map((s) => bySlug.get(s)!.world));

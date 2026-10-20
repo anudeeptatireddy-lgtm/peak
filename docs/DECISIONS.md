@@ -470,3 +470,42 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 - **Names:** "Swatch" (watch brand), "Pounce" (cat-treat brand) and a "Bend it" title (film) were avoided; added to the banned list in `tests/unit/names.test.ts`. `rubbing`'s medallion must be an original design, never real currency.
 - **New tags recorded:** Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive. Each joins the gallery filters only when its first scene ships.
 
+## 2026-10-21: Lean scene process (owner request) and the unreleased flag
+
+**Where a scene's tokens went (rough shares, from the Wave 5 and 6 builds: about 0.15 to 0.25M for an ANIMATED scene, plus 0.1 to 0.15M for a prompt test):**
+
+| Part | Share | Why it costs |
+|---|---|---|
+| Re-reading the conversation | about 35% | every tool call re-sends the whole history; late in a long session one step costs more than an early scene did |
+| Writing code (module, params with phrases, meta, prompt) | about 20% | |
+| Screenshots and visual tuning | about 15% | each round re-reads images and context; 2 to 4 rounds per scene |
+| Browser tests | about 10% | full e2e per scene, long logs |
+| Fixing unit-test failures (constants, phrases) | about 8% | one or two loops per scene |
+| Reading specs, kits and a template scene | about 7% | repeated for every scene |
+| Docs (DECISIONS, PLAN, PROMPT_TESTS, handoff) | about 5% | |
+| Prompt test (separate) | +0.1 to 0.15M | a fresh agent builds the page from scratch |
+
+**The lean process (no rule dropped: every number a slider or reasoned constant, phone version, still frame, reduced motion, pause, clean destroy, touch without blocking scroll, accessibility, flash test for ⚠ scenes, trademark test, OG image):**
+1. **Chunks of 3 in a short session.** Start a fresh session for each chunk when this one is long (history is the biggest cost); read the spec, the kits and one template scene once per chunk.
+2. **Write each scene in one pass** (constants, params with phrases, meta, prompt, index), keeping the rules in mind up front so the constants and phrase tests pass first time.
+3. **Test only the new scene while building:** `npx vitest run` (fast, quiet output) and `npx playwright test tests/e2e/scenes.spec.ts tests/e2e/playground.spec.ts -g "<slug>"`.
+4. **One screenshot pair per scene** (desktop and phone), at most one tuning round, then move on; anything left goes in the report.
+5. **Once per chunk:** `npm run check`, the full `npm run test:e2e`, OG images, one DECISIONS entry, PROMPT_TESTS rows, PLAN ticks, HANDOFF, one commit and push.
+6. **Prompt tests only for Spicy scenes** for now; all others get a "pending" row in `docs/PROMPT_TESTS.md`.
+7. **Reuse the kits;** new kit code only when two or more scenes need it.
+
+**New per-scene estimate:** an ANIMATED Medium scene about **0.06 to 0.1M** (in a short session), so a chunk of three plus its once-per-chunk work is about **0.25 to 0.35M** (before: 0.45 to 0.75M). A Spicy scene adds about 0.05M to build and 0.1 to 0.15M for its prompt test. In a long session (like the one this was decided in) add about half again, because of the history re-read.
+
+**Unreleased flag.** `SceneMeta.unreleased: true` keeps a built scene out of the gallery, Tour, word bank and sitemap; its page still works for the owner (with noindex). New scenes are not added to `CATALOG_ORDER` until release; `tests/unit/unreleased.test.ts` checks both ways. **To release one as a weekly drop:** remove the flag, add the slug to `CATALOG_ORDER` (in SCENES order), add `src/content/drops/<date>-<slug>.md`, and update the gallery count in `tests/e2e/gallery.spec.ts`.
+
+**Backlog order (owner, 2026-10-21):** build the ANIMATED scenes from Batch 1 and Batch 2 (they need no reference media) in chunks of 3, waiting for the owner's OK after each chunk. Chunk 1: `signalpaths`, `domino`, `pendulum`. REALISTIC scenes wait for the owner's reference clips. This replaces "Batch 2 is an idea bank" (2026-10-20); Batch 3 stays an idea bank.
+
+## 2026-10-21: Backlog chunk 1 (`signalpaths`, `domino`, `pendulum`), built and unreleased
+- **Built with the lean process,** all three marked `unreleased` (pages work at `/scenes/<slug>`, noindex; not in the gallery, Tour, word bank or sitemap). Each has sliders for every number, a phone count, a still frame, clean destroy and touch that keeps vertical scrolling. Prompt tests pending (Medium scenes). Share images made for the three only (the generator redraws all of them; the others were restored unchanged).
+- **Kit:** `textMask()` in `src/kits/text.ts` draws the visitor's name fitted and centered and returns its pixels; all three scenes use it (the two-scene rule).
+- **`pendulum`:** every bob turns a whole number of times per cycle (base 4, plus up to 12 more across the name at full spread), so all bobs meet their homes on the letters at the same moment; time slows near that moment ("Hold"), hovering slows it, scrolling scrubs it. The time slider's id is `loop`, because `cycle` is reserved in the URL for Cycle worlds.
+- **`domino`:** dominoes stand along the traced letter outlines, seen from above; a front moved by scroll (or a flick, or an idle run that waits, then stands everything back up) sets each one's target angle: standing, leaning on the next, or flat. Fallen faces print the name in two tones.
+- **`signalpaths`:** connections strengthen with use and fade; signals prefer name connections, strong connections, and steps that get closer to the name ("Seek the name", added after the first screenshot showed the strongest paths forming wherever the cursor started instead of on the name). Signals stop after a distance (900px), not a hop count, because name connections are only a few pixels long. The name fills in gradually: a few seconds of movement lights parts of the letters, longer movement more of it.
+- **Tokens:** the plan meter went from 22% to 35% of the 5-hour limit for the lean-process docs, the flag and all three scenes; about 90k tokens of new work were added, against the 0.25 to 0.35M estimate for a chunk. Most of the meter went on re-reading this session's long history (about 0.55 to 0.63M tokens per step), as the breakdown predicted, so the next chunk should run in a fresh session.
+- **Flaky test seen:** `flow` desktop parity failed once in the full run (ink difference just over 0.02) and passed alone; nothing in this chunk touches `flow`.
+

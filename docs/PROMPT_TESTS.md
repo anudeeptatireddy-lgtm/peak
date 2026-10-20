@@ -65,3 +65,6 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 53 | `latte` | 2026-10-18 | Detailed · New page · I'm new | **Pass** (after fixing our scene; agent page kept) | Desktop matched on the first run. On the phone the first run failed because OUR scene was wrong: on a 390px screen the cup was wider than the screen (it ignored the width). The agent had sensibly capped the cup to fit; our scene and prompt now do too, and the same agent page then matches at both sizes. No fresh agent run was repeated (about 110k tokens); the phrase now states the cap. | Scene: the cup radius is the smaller of the height rule and a width rule. Prompt: says so. |
 | 55 | `velvet` | pending | n/a | **Pending the owner's approval of the look** | Realistic pilot (PRD §8.8): a prompt test runs only after the owner approves the render against their reference photos. |
 | 56 | `soap` | pending | n/a | **Pending the owner's approval of the look** | Realistic pilot (PRD §8.8): same rule. |
+| 62 | `pendulum` | pending | n/a | **Pending** (unreleased) | Medium scene: prompt tests are only for Spicy scenes for now (owner, 2026-10-21). |
+| 64 | `domino` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 80 | `signalpaths` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |

@@ -76,6 +76,13 @@ export interface SceneMeta {
    */
   blends?: false;
   /**
+   * true: built but not released yet. The scene page works (and is noindex), but the
+   * scene stays out of the gallery, Tour, word bank and sitemap until the owner releases
+   * it as a weekly drop (DECISIONS, 2026-10-21: remove this flag, add the slug to
+   * CATALOG_ORDER and add a drop entry).
+   */
+  unreleased?: true;
+  /**
    * true: the stage holds real controls or live text (buttons, a countdown's live region),
    * so it is not hidden from assistive technology like a decorative stage is.
    */

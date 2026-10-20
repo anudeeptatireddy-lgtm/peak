@@ -323,3 +323,44 @@ export function whenFontReady(fn: () => void): () => void {
     live = false;
   };
 }
+
+export interface MaskOptions {
+  /** Font size as a share of the height, before fitting. */
+  heightShare: number;
+  /** Widest the text may be, as a share of the width. */
+  fitShare: number;
+  weight: number;
+  /** Anybody width axis, 50–150. */
+  stretch?: number;
+  /** Text center as a share of the height. */
+  centerY?: number;
+}
+
+/**
+ * Draws `text` centered on a hidden canvas the size of the stage (font size =
+ * height × heightShare, shrunk to fit width × fitShare) and returns its RGBA pixels
+ * and the font size used. Used by name-tracing scenes (pendulum, domino, signalpaths).
+ */
+export function textMask(
+  w: number,
+  h: number,
+  text: string,
+  o: MaskOptions,
+): { data: Uint8ClampedArray; size: number } {
+  const off = offscreen(w, h);
+  const g = off.ctx;
+  let size = h * o.heightShare;
+  applyFont(g, { size, weight: o.weight }, o.stretch);
+  const width = g.measureText(text).width;
+  if (width > w * o.fitShare) {
+    size *= (w * o.fitShare) / width;
+    applyFont(g, { size, weight: o.weight }, o.stretch);
+  }
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillStyle = '#000';
+  g.fillText(text, w / 2, h * (o.centerY ?? 0.5));
+  const data = g.getImageData(0, 0, Math.round(w), Math.round(h)).data;
+  off.free();
+  return { data, size };
+}

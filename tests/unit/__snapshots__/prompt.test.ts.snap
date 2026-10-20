@@ -1658,6 +1658,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Domino Run
+
+## What I want
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.42, shrunk if needed so it is at most 86% of the width. Trace the outline of every letter (marching squares at alpha 128, simplified to within 1px) and order the outlines left to right by their leftmost point; joined end to end they are the chain.
+- Stand at most 200 dominoes (100 on screens under 700px wide) along the chain, evenly spaced: spacing = max(total outline length ÷ 200, 1.6 × domino thickness), one domino every spacing along each outline, each facing along the outline.
+- Each domino is 16px tall, 0.3 × that thick and 0.55 × that wide. Seen from above, a domino at angle a (0 standing, a quarter turn flat) covers a rectangle as wide as the domino, from its base forward along the outline by thickness × cos a + height × sin a. Below 60° draw it in the soft text color; from 60° draw its face instead, using the blend mode above.
+- A face is two-tone: the half nearer the base in the first accent, the far half in the second.
+- A front moves along the chain, measured in dominoes. For domino i, with x = front − i: its target angle is 0 when x ≤ 0, x × the lean angle while x < 1 (it leans on the next one), and flat from x = 1. Each frame its angle springs toward the target: velocity = (velocity + (target − angle) × 0.2 × 1 × f) × 0.72^f, angle += velocity × f. Topple speed 1.
+- The lean angle is 0.7 × 35°.
+- A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
+- Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`domino prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Domino Run
+
+Dominoes, seen from above, standing in a winding path along the outlines of the letters of a name. Scrolling topples them one after another, and the faces landing up print the name in color. Scrolling back stands them up again. Clicking a domino flicks it and the chain runs on by itself.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Dominoes: 200
+- Domino size: 16px
+- Topple speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Ink-ball pile
 
@@ -11678,6 +12014,354 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Pendulum Field
+
+## What I want
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.32, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than bobs. Each point is one bob's home.
+- Use at most 400 bobs (200 on screens under 700px wide).
+- Draw each bob as a dot of radius 3px in accent (m mod 3), one path per accent, using the blend mode above.
+- Behind each bob draw a trail: a line through its positions at 6 evenly spaced times from t − 0.3 × 0.5s to t, 0.8 × the bob radius wide, in its accent at opacity 0.45.
+- Each bob swings on a circle of radius r = 24px that passes through its home: position = home + r × (cos θ − 1, sin θ).
+- Each bob has a whole number of turns per cycle, m = 4 + round(x share × 0.3 × 12), where x share is its home's position across the name (0 at the leftmost point, 1 at the rightmost), and θ = 2π × m × t ÷ cycle. Because every m is a whole number, all bobs are back home at t = 0, ±1 cycle, ±2 cycles and so on.
+- The cycle is 12s long.
+- Time slows near the name: with d = the distance of t ÷ cycle from the nearest whole number, each frame t advances by dt × speed × (1 − 0.3 × 0.85 × (1 − smoothstep(0, 0.06, d))).
+- Speed is 1, or 0.35 while the pointer is over the canvas. Scrolling scrubs time: each frame t += (scroll position change in px) ÷ 300; on touch screens a sideways drag scrubs the same way (dragging right moves time forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t starts at 0 (the moment the name forms) and moves as described.
+- Lay out the name again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the moment the name forms (t = 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`pendulum prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Pendulum Field
+
+Hundreds of small bobs swinging in circles at slightly different speeds. At one exact moment they all pass through points on the letters of a name and spell it, hold for a beat, then drift apart again. Scrolling moves time forward and back, and hovering slows it down.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Bobs: 400
+- Swing radius: 24px
+- Period spread: 0.3
+- Cycle length: 12s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`pluck prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Strings
 
@@ -13611,6 +14295,342 @@ Colors: background #E6F2F8, text #0B2A3C, secondary text #3D5F73, accents #1679B
 - Your words: "break the ice"
 - Shards per word: 24
 - Blast strength: 12
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Signal Paths
+
+## What I want
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.34, shrunk if needed so it is at most 86% of the width. Sample it on a square grid (alpha above 128), starting 4px apart and widening 1px at a time until there are no more points than 0.55 × the node count; those points are the name nodes.
+- The network has 250 nodes (120 on screens under 700px wide): the name nodes, then the rest placed at random (Math.random() for x, then y) anywhere on the canvas. Join every node to its 3 nearest nodes within 110px (no duplicates). A connection between two name nodes closer than 1.6 × the sampling gap is a name connection. Each connection has a strength from 0 to 1, starting at 0.
+- Draw connections in the first accent, using the blend mode above, grouped into 4 steps of strength (one path each, using the step's middle strength s): width 0.6 + s × 3 px, opacity 0.12 + s × (1 − 0.12). Draw each node as a dot of radius 1.4px in the soft text color.
+- A signal moves along its connection at 2 × 4 px per frame (× f). Draw it as a line 18px long behind it along the connection, as wide as the head's radius, in the second accent at opacity 0.5, then a dot of radius 2.2px in the main text color at its head. On reaching the far node, it strengthens that connection and, unless it has travelled 900px in total, moves on along one of that node's other connections, picked at random with weight 1 + 4 for a name connection + 3 × the connection's strength + 6 × max(0, how much closer the next node is to the nearest name node, ÷ 110px).
+- Each use adds 0.5 × 0.12 to the connection's strength (capped at 1).
+- Every frame each connection's strength drops by 0.4 × 0.004 × f (not below 0).
+- While the pointer is over the canvas (a finger while it touches), each frame it fires signals from the nearest node within 90px: a budget grows by 0.08 × the distance the pointer moved (px, at most 90 per frame), and one signal starts per whole unit, at most 70 alive at once (extras are not started). A new signal leaves along a connection picked the same weighted way. After 1.5s with no pointer, an invisible pointer wanders by itself at (width × (0.5 + 0.35 × sin(t × 0.7)), height × (0.5 + 0.3 × sin(t × 0.7 × 1.7))) and fires the same way.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
+- Build the network again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Safety: signals are small dots and thin lines, capped in number, so nothing flashes more than 3 times a second and the background never flashes.
+- Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`signalpaths prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Signal Paths
+
+A dark field of small glowing nodes with faint connections between them. Moving my cursor fires signals along the connections, each with a bright head and a soft tail; connections that fire often grow thicker and brighter, like learning, and slowly fade otherwise. After a few seconds of movement the strongest paths spell a name. When nobody touches it, an idle demo moves an invisible cursor around.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nodes: 250
+- Signal speed: 2
+- Learning rate: 0.5
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

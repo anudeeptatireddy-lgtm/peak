@@ -1,8 +1,12 @@
-# Handoff: 2026-10-20 (launched; realism proposal waiting for the owner's OK)
+# Handoff: 2026-10-21 (backlog chunk 1 built, unreleased; waiting for the owner's OK for chunk 2)
 
 Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, live and open to search engines since 2026-10-18).
 
 ## Exact step
+
+**Backlog, chunk 1 done (2026-10-21):** `signalpaths`, `domino` and `pendulum` are built on `main` with the lean scene process (DECISIONS, 2026-10-21) and marked `unreleased` (try them at `/scenes/<slug>`; they are not in the gallery, Tour, word bank or sitemap). **Next:** wait for the owner's OK, then chunk 2 (`platformarrival`, `doorwave`, `resonanceplate`, proposed in PLAN) **in a fresh session** (this one's history makes every step expensive). Releasing a scene as a drop: steps in DECISIONS (2026-10-21, "Unreleased flag").
+
+Earlier state:
 
 Waves 1 to 9 are built; the site launched on 2026-10-18. 9.8 and 9.9 are on hold (owner's instruction). **Wave 10 pilot round 1 is built on the branch `realism-pilot` (not on `main`)**: the realism kit, `velvet` (#55) and `soap` (#56). No reference photos yet, so no §8.8 side-by-side and **no prompt tests** (owner's rule: only after the owner approves the look). Next: the owner films the references (list in DECISIONS, 2026-10-20), I make `reference-vs-ours.png` side-by-sides, the owner judges, at most one more round, then prompt tests for the pilots only if approved. The other 14 Batch 1 scenes and the 20 Batch 2 scenes (SCENES 70 to 89, specs only; added 2026-10-20) are a Drops backlog in `docs/PLAN.md` (one per week via `/new-scene`, Batch 2's top five first, each needing a token estimate and the owner's OK before building).
 
