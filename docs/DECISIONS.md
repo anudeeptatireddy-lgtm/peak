@@ -388,3 +388,26 @@ Choices made on the 2026-10-18 overnight run, in the order they were made. Each 
 
 ## 2026-10-18: 9.7 Launch (owner said "go now")
 `INDEXABLE` is true (no noindex on normal pages; the 404 keeps it), robots.txt allows all and names the sitemap, the sitemap is on (`PEAK_SITEMAP=0` turns it off), canonical links and share images use https://peak-teal.vercel.app. Still open: a custom domain (costs money, not done), About placeholders.
+
+## 2026-10-20: Realism standard and 16 new scenes (owner proposal; docs updated, nothing built)
+- **PRD §8.8 added** (the eight-point Realism standard) and a note in §8.1. **SCENES.md 54 to 69 added:** 8 REALISTIC (`slatted` Slatted Sun, `velvet` Velvet Brush, `soap` Soap Film, `inkbloom` Ink Bloom, `goldleaf` Gold Leaf, `fizz` Fizz, `snowledge` Snow Ledge, `raking` Raking Light) and 8 ANIMATED (`pendulum`, `anamorphic`, `domino`, `slinky`, `clockwork`, `epicycles`, `claymation`, `stringart`). Gallery only, as with Wave 7b. Worlds are my proposals; every number is a param; each has a phone version and a still.
+- **PLAN Wave 10 added.** The owner said "after Wave 7", but Waves 7 to 9 are done, so it is Wave 10, gated on the owner's OK. Order: 10.0 finish 9.8 and 9.9, 10.1 realism kit (`src/kits/gl.ts`), 10.2 reference media, 10.3 and 10.4 the pilot, Checkpoint 10 (the owner's verdict), 10.5 re-check existing realistic scenes, then the rest.
+- **Things I changed or flagged from the proposal:** (1) the PRD says the site launches with 50 scenes; these extend that scope (noted in §8.1; the Tour stays the first 50). (2) WebGL is new to the codebase (everything so far is Canvas 2D or DOM), so it needs a shared kit and a fallback; the dependency allowlist does not change. (3) The 8 ms scripting budget does not measure GPU time; shader cost is judged on a real phone, with an automatic drop to a lighter tier. (4) Every numeric constant that is not a slider still needs a written reason (§8.5). (5) There is no "jello wordmark" scene; I need to know which one is meant.
+- **Preliminary look at the existing REALISTIC scenes, from their share images only (not a real check, no references yet):** `latte` looks cartoony (flat spiral stripes, a hard-edged cup ring, blocky foam letters); `tailor` looks cartoony (a flat red fill with no fabric shading, folds or sheen); `fogged` is unproven (the still frame is just a blur; the wiped state and drips need judging against a real fogged-glass video). Likely fix plans: latte needs a real crema (fine tiger-stripe noise with specular highlights and a soft meniscus) and a smoother foam solver; tailor needs fabric shading (a sheen for the weave, soft shadows in the folds, a visible cut edge with fraying); fogged needs condensation droplets and real refraction through wiped streaks. Not changed until the owner OKs it.
+- **What to film for the pilot (reference media, put in `reference/realism/velvet/` and `reference/realism/soap/`):** Velvet: a short video (10 to 20s) of a hand brushing crushed velvet in one direction and then against it, under one lamp from the side, plus a few close-up photos and the same cloth from straight on. Soap: a video of a soap film in a wire loop (a bubble wand works) under a window or lamp, showing the color bands, the dark thin top, and one pop; plus close photos of the colors.
+- **Token estimate (rough ranges, not promises; one fresh-agent prompt test has cost about 90 to 150k tokens so far):**
+
+| Item | Estimate |
+|---|---|
+| 10.0 finish 9.8 and 9.9 | about 0.1M |
+| 10.1 realism kit | 0.2 to 0.3M |
+| Pilot `velvet` (build, two rounds, prompt, prompt test) | 0.5 to 0.7M |
+| Pilot `soap` | 0.5 to 0.7M |
+| **Pilot total (to Checkpoint 10)** | **about 1.3 to 1.8M** |
+| 10.5 re-check the three existing realistic scenes (review only) | about 0.1M |
+| Fix the ones that look cartoony (if the owner OKs, up to 3) | 0.3 to 0.5M each, up to about 1.5M |
+| Other six REALISTIC scenes | 0.45 to 0.65M each, about 2.7 to 3.9M |
+| Eight ANIMATED scenes (Canvas 2D; prompt tests only for Spicy and one easy, as before) | 0.15 to 0.25M each, about 1.2 to 2.0M |
+| **Everything, if every checkpoint passes** | **about 7 to 9M** |
+
+  Only the pilot is committed to on an OK; the rest waits for the verdict. If the pilot fails twice, those scenes are cut and the spend stops there.

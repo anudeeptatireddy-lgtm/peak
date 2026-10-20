@@ -353,6 +353,25 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 ---
 
+## Wave 10: Realism standard, pilot and new scenes (owner added 2026-10-20)
+
+**Gated: do not build any of this until the owner has said OK to the token estimate in `docs/DECISIONS.md` (2026-10-20 entry).** The owner asked for these to come "after Wave 7"; Waves 7 to 9 are already done, so this is Wave 10. New scenes are numbers 54 to 69 in `docs/SCENES.md`, gallery only (not the home page, not the Tour). The rules are PRD §8.8 (Realism standard). No new packages: WebGL is hand-written; no three.js or other graphics, physics or animation library.
+
+- [ ] **10.0 Finish Wave 9 as planned.** 9.8 (share previews and Lighthouse) and 9.9 (final deploy and checks) are still open; the site launched at 9.7 on 2026-10-18.
+- [ ] **10.1 Realism kit** · PRD §8.8
+  - Do: `src/kits/gl.ts` (a tiny WebGL helper: compile and link shaders, a full-screen pass, textures and framebuffers, loss-of-context handling), a `quality` tier (full, balanced, phone; phones get balanced; drops a tier when frames run long), a Canvas 2D / still-frame fallback hook, and a script that renders `reference-vs-ours.png` (our still next to a reference image at the same crop) into `docs/prompt-tests/<slug>/`. `reference/realism/` is git-ignored for large files.
+  - Done when: unit tests for the helper's pure parts; a demo shader runs in `/dev/scenes`; the fallback shows the still frame when WebGL is off (e2e); no new dependency.
+- [ ] **10.2 Ask the owner for reference media** for `velvet` and `soap` (what to film: see DECISIONS 2026-10-20). Keep working while waiting, but the side-by-side needs them.
+- [ ] **10.3 Pilot `velvet`** (SCENES #55) to the realism standard: module, shader with fiber-direction sheen, params, prompt with the shading recipe, follow-ups, How it works, still, phone tier, tests, `reference-vs-ours.png`. At most two rounds against the reference.
+- [ ] **10.4 Pilot `soap`** (SCENES #56), same standard (thin-film interference from thickness, drainage, breath, pop).
+- [ ] **Checkpoint 10 (Owner): judge the two side-by-sides.** If either still looks fake after two rounds, it is cut and the owner is told. If both pass, continue; if not, stop here.
+- [ ] **10.5 Re-check the existing REALISTIC scenes** (`latte`, `fogged`, `tailor`; there is no "jello wordmark" scene, the nearest are `melt` and `jelly`, so confirm with the owner) against §8.8 with reference media; list any that look cartoony with a fix plan. Do not rebuild without the owner's OK.
+- [ ] **10.6 Remaining REALISTIC (only if the pilot passes):** `slatted` (54), `inkbloom` (57), `goldleaf` (58), `fizz` (59), `snowledge` (60), `raking` (61), one at a time, each with its reference, side-by-side and prompt test. Token estimate first.
+- [ ] **10.7 ANIMATED:** `pendulum` (62), `anamorphic` (63), `domino` (64), `slinky` (65), `clockwork` (66), `epicycles` (67), `claymation` (68), `stringart` (69), one at a time, usual definition of done (Canvas 2D, kits, phone version, still frame).
+- [ ] **Wave 10 wrap-up:** run the wrap-up routine; prompt tests; update the gallery filters (add "Realistic" and "Animated" chips) and the OG images (`node scripts/make-og.mjs`); things for the owner to try.
+
+---
+
 ## What testers taught us
 
 (Empty for now. Add steps here after the friend tests.)
