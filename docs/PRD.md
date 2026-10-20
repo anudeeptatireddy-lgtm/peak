@@ -229,12 +229,12 @@ peak launches with **50 scenes**. Each one is specified in **`docs/SCENES.md`**,
 
 - **Ported scenes** keep their physics and feel exactly, with params defaulting to their source's constants: 6 from `reference/peak-prototype.html` (`particles`, `elastic`, `velocity`, `ripple`, `flow`, `warp`) and 4 from `reference/riso-demo.html` (`drop`, `pluck`, `overprint`, `halftone`).
 - **Difficulty** is Easy, Medium or Spicy. The 10 Spicy scenes are the wildest ones.
-- **Post-launch additions (owner, 2026-10-20):** 16 more scenes, numbers 54 to 69 in `docs/SCENES.md`: 8 REALISTIC (held to §8.8) and 8 ANIMATED (a designed look with satisfying physical motion). Only the realism pilot (`velvet` and `soap`) is built now; its verdict decides whether the other six REALISTIC scenes are made. The other fourteen go in a Drops backlog (`docs/PLAN.md`), released one per week after launch through `/new-scene` (§14), gallery only: the Tour stays the first 50 and nothing is added to the home page. This extends the 50-scene scope; the launch count on the site is unchanged until then.
+- **Post-launch additions (owner, 2026-10-20):** Batch 1 is 16 more scenes (54 to 69) and Batch 2 is 20 more (70 to 89, specs only; see `docs/SCENES.md`), all released as weekly drops after launch. Batch 1: 16 scenes, numbers 54 to 69 in `docs/SCENES.md`: 8 REALISTIC (held to §8.8) and 8 ANIMATED (a designed look with satisfying physical motion). Only the realism pilot (`velvet` and `soap`) is built now; its verdict decides whether the other six REALISTIC scenes are made. The other fourteen go in a Drops backlog (`docs/PLAN.md`), released one per week after launch through `/new-scene` (§14), gallery only: the Tour stays the first 50 and nothing is added to the home page. This extends the 50-scene scope; the launch count on the site is unchanged until then.
 - Scenes are named for what people want to make (use case), with the technique explained underneath.
 - New scenes are built on the shared kits (§16.8), so each scene module stays small.
 
 ### §8.2 Flashing safety (hard requirement)
-Applies to `neon`, `lightning`, `glitch`, `fireworks`, `fire`, `moire` and `tunnel` (marked ⚠ in SCENES.md) and to any scene that flashes or flickers:
+Applies to `neon`, `lightning`, `glitch`, `fireworks`, `fire`, `moire`, `tunnel`, and the planned `wafershine` and `torchmap` (marked ⚠ in SCENES.md) and to any scene that flashes or flickers:
 - Never more than 3 flashes per second, whatever the params are and however fast the visitor clicks. Params that set a rate are capped in the schema.
 - No large or full-screen flashes: a single brightness change never covers more than a quarter of the stage, and the background never flashes.
 - Under reduced motion, the still frame shows no flash, and flicker effects stay off even after Play is pressed.
@@ -478,7 +478,7 @@ Mini demos are tiny modules with the same interface as scenes (§16.3) but no pa
 ## §13 Gallery (`/gallery`)
 
 - A responsive grid of all 50 scenes. Tiles use their own scene's world, so the grid reads as a patchwork of color (§6.7). Each tile shows a live, low-cost preview (paused until on screen, lower particle counts) in the scene's world, the use-case title, one line, tags, difficulty, and time.
-- Filters by use case: All, Portfolio, Events, Landing pages, Backgrounds, Headlines, Just for fun. Filter state is in the URL (`?tag=events`).
+- Filters by use case: All, Portfolio, Events, Landing pages, Backgrounds, Headlines, Just for fun, Brands. More use-case tags are planned (Tech & AI, Travel, Real estate, Wellness, Gaming, Finance, Kids, Nonprofits; owner, 2026-10-20): each is added to the filters only when its first scene ships, so there are never empty filters, and older scenes that fit are tagged at the same time. Filter state is in the URL (`?tag=events`).
 - Sort: Featured (default), Newest, Easiest first.
 - Only previews in view run; at most 4 previews animate at once. Others show their still frame.
 - Avoid the generic identical-card look: tiles have no shadows or borders; each tile is the live scene itself with its caption below.

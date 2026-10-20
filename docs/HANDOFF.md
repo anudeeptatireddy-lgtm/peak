@@ -4,7 +4,7 @@ Everything is committed and pushed to `main`; pushing deploys to Vercel (https:/
 
 ## Exact step
 
-Waves 1 to 9 are built; the site launched on 2026-10-18. 9.8 and 9.9 are on hold (owner's instruction). **Wave 10 pilot round 1 is built on the branch `realism-pilot` (not on `main`)**: the realism kit, `velvet` (#55) and `soap` (#56). No reference photos yet, so no §8.8 side-by-side and **no prompt tests** (owner's rule: only after the owner approves the look). Next: the owner films the references (list in DECISIONS, 2026-10-20), I make `reference-vs-ours.png` side-by-sides, the owner judges, at most one more round, then prompt tests for the pilots only if approved. The other 14 new scenes are a Drops backlog (one per week via `/new-scene`).
+Waves 1 to 9 are built; the site launched on 2026-10-18. 9.8 and 9.9 are on hold (owner's instruction). **Wave 10 pilot round 1 is built on the branch `realism-pilot` (not on `main`)**: the realism kit, `velvet` (#55) and `soap` (#56). No reference photos yet, so no §8.8 side-by-side and **no prompt tests** (owner's rule: only after the owner approves the look). Next: the owner films the references (list in DECISIONS, 2026-10-20), I make `reference-vs-ours.png` side-by-sides, the owner judges, at most one more round, then prompt tests for the pilots only if approved. The other 14 Batch 1 scenes and the 20 Batch 2 scenes (SCENES 70 to 89, specs only; added 2026-10-20) are a Drops backlog in `docs/PLAN.md` (one per week via `/new-scene`, Batch 2's top five first, each needing a token estimate and the owner's OK before building).
 
 The project folder is `~/peak`.
 

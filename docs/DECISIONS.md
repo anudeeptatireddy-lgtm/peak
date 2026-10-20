@@ -431,3 +431,26 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 - **Where the files live:** our renders for review are saved in the git-ignored `reference/realism/<slug>/` (never committed). The two scenes are on the branch `realism-pilot`, **not on `main`**, so the live gallery does not show unapproved scenes; a Vercel preview of the branch is how the owner can look on a phone.
 - **Tests added:** `tests/e2e/realism.spec.ts` (WebGL path draws; Canvas 2D fallback draws when WebGL is blocked; a hard breath pops a soap letter at default settings and pop sensitivity 0 never pops), `tests/unit/soap-mask.test.ts`, `tests/unit/gl.test.ts`. `tests/e2e/scenes.spec.ts` now reads WebGL canvases too. Software rendering makes headless frames slow (a few frames per second); real devices use the GPU.
 - **Prompt tests:** none run (owner's rule: only after the look is approved). Rows added to `docs/PROMPT_TESTS.md` as pending.
+
+## 2026-10-20: Batch 2, twenty more scene specs (docs only; nothing built)
+- **Added:** SCENES 70 to 89 (10 REALISTIC, 10 ANIMATED) with full specs, defaults and tags; PRD §8.1, §8.2 and §13 notes; the Drops backlog order in `docs/PLAN.md`; the trademark test now also bans the film, game and brand names that came up. **Schedule:** nothing delays the current order (Tour fix done; Wave 9 done up to launch, 9.8 and 9.9 on hold; the realism pilot waiting for references and the verdict; then launch). Batch 2 joins the Drops backlog after launch: Batch 2's top five first (`wafershine`, `microprint`, `rakedgarden`, `resonanceplate`, `infinitezoom`), then the rest of both batches alternating REALISTIC and ANIMATED. Every backlog scene gets a token estimate and the owner's OK before it is built; prompt tests are opt-in per scene.
+- **Renamed:** (1) **ids**: hyphens are not allowed (ids are lowercase letters only), so `wafer-shine` is `wafershine`, `raked-garden` is `rakedgarden`, `resonance-plate` is `resonanceplate`, `infinite-zoom` is `infinitezoom`, `ceiling-stars` is `ceilingstars`, `dusk-facade` is `duskfacade`, `thin-ice` is `thinice`, `growth-rings` is `growthrings`, `star-trails` is `startrails`, `pin-wall` is `pinwall`, `signal-paths` is `signalpaths`, `platform-arrival` is `platformarrival`, `door-wave` is `doorwave`, `token-stream` is `tokenstream`. (2) **titles**: "Fog of War" is now **Torch Map** (`torchmap`) because it is a film and game name; "Gathering" is now **Gather Round** (`gatherround`) because it is the name of a famous trading-card game.
+- **Specs that would have broken a rule, and the fix:** (a) no defaults were given: every slider has one, picked to look best in its range (recorded in SCENES.md); (b) some sliders had no range (wafer grid spacing is 600 to 3000 nm, resonance pitch range is 4 to 16 modes, ceiling-star glow color is 0 to 1, platform landscape is a select); (c) flashing: `wafershine` (diffraction shimmer) and `torchmap` (torch flicker, end celebration) are marked ⚠ with flash tests, and the signal pulses, door lights and torch change are small and capped at 3 a second; (d) "hard" is Spicy; (e) tilt on phones needs the "Use motion" opt-in and always has a drag or scroll alternative; (f) Microprint is an original design and must never imitate real currency (no real layout, portrait, seal, serial format or denomination), written into its spec; (g) the owner's realistic standard for Thin Ice is medium-high, so it is the likeliest to be cut after two rounds.
+- **Tags:** the eight new use-case tags (Tech & AI, Travel, Real estate, Wellness, Gaming, Finance, Kids, Nonprofits) are recorded in SCENES.md and PRD §13 only; no gallery filter is added until the first scene with that tag ships, and older scenes that fit are tagged then.
+- **Pending owner reference files (asked only when each scene is next):** shoreline, dusk facade, microprint, raked garden, ceiling stars, wafer shine, thin ice, growth rings, star trails, pin wall (what to film is in each spec).
+- **Existing name flagged, unchanged:** "Lava lamp" (scene and world) and the owner's "jello wordmark" idea are trademark-risky; see the earlier 2026-10-20 entry.
+- **Token estimates, per backlog scene (rough ranges; each needs its own OK before building; prompt tests extra and opt-in, about 0.2 to 0.3M each for realistic and 0.1 to 0.15M for animated):**
+
+| Scene | Build estimate |
+|---|---|
+| 1 `wafershine` (diffraction shader, flash test) | 0.4 to 0.55M |
+| 2 `microprint` (engraving pattern, loupe) | 0.4 to 0.55M |
+| 3 `rakedgarden` (height map, rake) | 0.35 to 0.5M |
+| 4 `resonanceplate` (grain physics, plate modes) | 0.3 to 0.45M |
+| 5 `infinitezoom` (recursive seamless loop) | 0.3 to 0.45M |
+| Other REALISTIC (`shoreline`, `thinice`: 0.5 to 0.7M each; `duskfacade`, `growthrings`, `startrails`, `pinwall`, `ceilingstars`: 0.35 to 0.5M each) | about 2.4 to 3.4M for the seven |
+| Other ANIMATED in Batch 2 (`signalpaths`, `platformarrival`, `doorwave`, `torchmap`, `doubling`, `peekaboo`, `gatherround`, `tokenstream`) | 0.15 to 0.25M each, about 1.2 to 2.0M for the eight |
+| **Top five together** | **about 1.75 to 2.5M** |
+| **All 20 of Batch 2** | **about 6.0 to 8.5M** |
+| This docs update | about 0.15 to 0.25M (done) |
+
