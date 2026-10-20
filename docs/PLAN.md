@@ -375,7 +375,7 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 ## Drops backlog (after launch; one per week through `/new-scene`)
 Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, SCENES 70 to 89; owner added 2026-10-20). **Not a wave, and nothing here delays the current work, which stays in this order:** the Tour fix (done), Wave 9 up to launch (done up to launch; 9.7 happened on 2026-10-18 and 9.8 and 9.9 are on hold), the realism pilot (`velvet` and `soap`, waiting for the owner's references and verdict), then launch. After that the owner (or the weekly task) picks one scene a week and runs `/new-scene`; each ships as a drop (PRD §14: a content entry in `src/content/drops/`). **Before building any backlog scene I give the owner its token estimate and wait for the OK.** Each realistic scene also needs its reference (asked for only when it is next), a §8.8 side-by-side and the owner's verdict, and is released only if the pilot passes. Prompt tests are opt-in per scene, with an estimate first.
 
-**Order (the owner can change it):** Batch 2's top five first, then the rest of both batches alternating REALISTIC and ANIMATED.
+**Batch 2 is an idea bank (owner, 2026-10-20): only `wafershine` is OK'd to build (after the pilot and launch). Nothing else from Batch 2 is scheduled without the owner's OK.** The list below is only a suggested order for later, not a plan: Batch 2's top five first, then the rest of both batches alternating REALISTIC and ANIMATED.
 
 1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
