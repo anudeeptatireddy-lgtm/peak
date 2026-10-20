@@ -10,7 +10,6 @@ const ROUTES = [
   '/ship',
   '/words',
   '/drops',
-  '/about',
   '/rss.xml',
 ];
 

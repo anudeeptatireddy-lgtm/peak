@@ -16,6 +16,13 @@ export default defineConfig({
   markdown: { smartypants: false },
   integrations: [
     mdx(),
-    ...(sitemapOn ? [sitemap({ filter: (page) => !page.includes('/dev/') })] : []),
+    ...(sitemapOn
+      ? [
+          sitemap({
+            // /about is hidden until the owner's details arrive (DECISIONS, 2026-10-20): drop it from here too.
+            filter: (page) => !page.includes('/dev/') && !/\/about\/?$/.test(page),
+          }),
+        ]
+      : []),
   ],
 });

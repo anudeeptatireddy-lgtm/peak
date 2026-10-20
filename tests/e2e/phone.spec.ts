@@ -10,7 +10,7 @@ const SCENE_SLUGS = readdirSync(SCENES_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory() && existsSync(join(SCENES_DIR, d.name, 'index.ts')))
   .map((d) => d.name);
 
-const PAGES = ['/', '/gallery', '/tour', '/start', '/fix', '/ship', '/words', '/drops', '/about'];
+const PAGES = ['/', '/gallery', '/tour', '/start', '/fix', '/ship', '/words', '/drops'];
 const PEEK = 72;
 
 test.beforeEach(({}, info) => {

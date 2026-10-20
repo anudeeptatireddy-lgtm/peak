@@ -11,7 +11,6 @@ const ROUTES = [
   '/words',
   '/drops',
   '/drops/hello-peak',
-  '/about',
   '/scenes/particles',
   '/scenes/tilt',
   '/scenes/countdown',
