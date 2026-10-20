@@ -14312,6 +14312,480 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Soap Film
+
+## What I want
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+## Look
+- Colors ("Abyss" palette): background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) showing a dark room. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.36, width × 0.9 ÷ letter count ÷ 0.6). Each letter is a thin wire frame (the outline of the letter) with a soap film stretched across the inside of the letter, like a bubble wand in the shape of the name.
+- A fresh film is 600nm thick on average: it is 600 × (0.85 at the top of a letter to 1.15 at its bottom) × (1 plus smooth random patches of up to 12%, patches 5 cells across), plus a thicker edge where the film meets the wire: +220nm × e^(−distance in cells ÷ 2.5).
+- The film's refractive index is 1.33.
+- The film mirrors a bright window with a cross of dark bars (brightness 9 × 0.6) in a dim room (brightness 0.25). The window is a soft rectangle 1.1 wide and 0.64 tall in reflection-direction units (edge softness 0.14, bars 0.05 wide), centered 0.14 from the middle at the window angle below.
+- The wire is dark metal 3px thick (the ground color 0.3 of the way to the text color), drawn on top of the film, rounded by its own soft edge (normal strength 3) with a highlight toward the window (strength 0.9, sharpness 24).
+- The film drains downward inside each letter: every frame, each film cell passes 90 × 1 × (its thickness ÷ 600)² nanometers per second to the cell below it (never below 18nm, and at most half of what it has above that), so the top thins first, toward black, and the bottom gets thicker. When a letter's average thickness falls below 55nm its film breaks by itself, the same way a pop works.
+- The film flows in slow swirls: the thickness is carried along a velocity field made of three drifting waves, each a unit-strength flow across its own direction, 0.5 × 4 cells per second. Waves: wavelength 38 cells at 20°, drifting 0.6 radians per second from phase 0.4; wavelength 24 cells at 115°, drifting 0.45 radians per second from phase 2.1; wavelength 17 cells at 205°, drifting 0.35 radians per second from phase 4.3. Carry the thickness by looking back along the velocity (bilinear), only inside the film.
+- After a letter pops it stays empty for 0.7 seconds; then a new, fresh film slides across it from left to right over 2 seconds.
+- The cursor is a breath (on touch, a dragging finger): within a soft round area of radius 10% of the screen width the film bulges toward you (up to 1 of a full tilt × 1, easing in over 0.25 seconds) and is pushed outward and around (28 cells per second × 1, weighted (1 − (distance ÷ radius)²)²). A breath at 600 pixels per second or faster blows at full strength; a still breath blows at 0.35 of it.
+- Blowing builds pressure on a letter: while the breath covers it, its pressure rises by 6 × the breath strength × the blow strength × the share of the breath's area that is over that letter (divided by 0.4, at most 1), per second, and fades at 1 per second. When a letter's pressure passes 0.9 ÷ 0.5 (pop sensitivity; never pops at 0) it pops: its film disappears and 12 droplets fly out from random points on it. A pop plays a short pop sound if sound is on.
+- Droplets have a radius of 5px × a random 0.6 to 1.4, are thrown out at random angles at up to 260 px per second, fall at 900 px per second squared, wobble (radius changing by ±12%) at 11 radians per second, live 1.4 seconds and fade over the last 30% of it (at most 32 at once). Each looks like a water bead: a bright rim (brightness 0.7, sharpness 4), a glint toward the window (strength 1.3, sharpness 30) and it darkens what is behind it by up to 0.3.
+- The window's center sits at 60° around the film (0° right, 90° down), 0.14 from the middle in reflection-direction units.
+- Color strength 1: mix between the film's gray (its luminance) and its color by 1.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 180-cell-wide film grid and 12 wavelengths; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and every other wavelength. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Start a fresh film, run the drain and swirl for 14 seconds in steps of 0.1 seconds, bulge the film under a breath at (62% of the width, 55% of the height), draw one frame, and stop.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger blows only while dragging after a short press and hold.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`soap prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Soap Film
+
+A close-up of soap films that look real. The name is made of letter-shaped wire frames, each holding a film with true thin-film colors, bright where it mirrors a window and black where it has drained thin at the top. My cursor is a breath: the film bulges and swirls, and if I blow too hard a letter pops into flying droplets, then a fresh film slides across it.
+
+Colors: background #021B2E, text #DDF7FF, secondary text #93BFD3, accents #00E6D2, #8B7DFF, #FF5FC8. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the films on the CPU in a grid of square cells (180 cells across at full quality). For each cell keep: the film thickness in nanometers, a bulge from 0 to 1, whether film is there, and which letter it belongs to (by the letter's horizontal extent). Upload the grid every frame as an RGBA texture with linear filtering (red: thickness ÷ 1500 × 255; green: the bulge × 0.5 + 0.5, times 255; blue: 255 where film is). Also draw the letters once on a 2D canvas 0.75 of the screen size on a black background: fill them red, then stroke their outline in green with the wire width; upload it as a second texture (red: where a film may be; green: the wire).
+- Color from thin-film interference. For each pixel: view vector V = normalize(−x, y, 1.4) where x runs across the screen in screen heights from the center and y runs up; film normal N = normalize(−dBulge/dx × 1.4, dBulge/dy × 1.4, 1) from the bulge differences between neighboring cells; cosI = N·V (at least 0.05); sinT² = (1 − cosI²) ÷ n²; cosT = sqrt(1 − sinT²). Fresnel reflectance R = R0 + (1 − R0) × (1 − cosI)^5 with R0 = ((n − 1) ÷ (n + 1))².
+- For 12 wavelengths λ evenly spaced from 400 to 700nm (the middle of each slice): phase δ = 4π × n × thickness × cosT ÷ λ and reflected intensity I = clamp(2 × R × (1 − cos δ), 0, 1) (the reflection off the front surface flips phase, the back one does not, so a film of zero thickness is black). Sum I × the CIE 1931 color matching functions (x̄, ȳ, z̄) over the wavelengths, times the slice width ÷ 106.86. The functions are the Wyman 2013 multi-lobe fit, each lobe being weight × e^(−½((λ − center) ÷ width)²) with the left width below the center and the right width above: x̄ = 1.056 at 599.8nm (widths 37.9 below and 31 above), 0.362 at 442nm (widths 16 below and 26.7 above), -0.065 at 501.1nm (widths 20.4 below and 26.2 above); ȳ = 0.821 at 568.8nm (widths 46.9 below and 40.5 above), 0.286 at 530.9nm (widths 16.3 below and 31.1 above); z̄ = 1.217 at 437nm (widths 11.8 below and 36 above), 0.681 at 459nm (widths 26 below and 13.8 above). Convert XYZ to linear sRGB with the matrix [3.2406, -1.5372, -0.4986, -0.9689, 1.8758, 0.0415, 0.0557, -0.204, 1.057] (row by row).
+- Lighting: the film mirrors direction r = reflect(−V, N) (use only its x and y), so the window slides across the film as the view angle and the bulge change. Light(r) = room 0.25 + window 9 × the reflection setting inside the window. Film color = (the interference color + 0.006 gray, mixed with its own gray by the color strength) × Light × 0.85 × the film's coverage. The scene behind the film is the ground color × 0.5 (in linear light) darkened by 0.45 × the squared distance from the center. Add the film color to it.
+- The wire, drawn over the film: its color is the ground color 0.3 of the way to the text color, shaded by a normal made from the wire mask's own gradient (strength 3): 0.25 + 0.75 × N·L, where L points at the window, plus a highlight ((N·H) raised to 24) × 0.9. Droplets are drawn last (a loop over at most 32).
+- Finish: tone map each channel with 1 − e^(−1.1 × value), apply gamma 1 ÷ 2.2, and add a tiny random dither of one 8-bit step. Do all shading in linear light (convert hex colors with gamma 2.2).
+- Imperfection: the film is never even: it starts thicker toward the wire, a little thicker at the bottom of each letter, and patchy; the drain stretches and layers the colors; swirls marble them; droplets wobble. If WebGL is unavailable, fill the canvas with the ground color, draw each letter filled with a vertical gradient from near black at the top through the three accent colors to the lightest accent at the bottom, and outline it with the wire.
+
+- Name: "Your brand"
+- Film thickness: 600nm
+- Window reflection: 0.6
+- Drainage speed: 1×
+- Breath strength: 1
+- Pop sensitivity: 0.5
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`splitflap prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Split-flap board
 
@@ -16887,6 +17361,486 @@ Colors: background #1E1412, text #F1E6DC, secondary text #BFAEA1, accents #FF3B1
 - Row 1: "smooth"
 - Drift speed: 1
 - Scroll boost: 0.8
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Velvet Brush
+
+## What I want
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+## Look
+- Colors ("Cherry Cola" palette): background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+## How it moves
+- A full-screen WebGL canvas (100svh, at least 540px) of crushed velvet. The name "Your brand" is drawn in Anybody weight 900, centered, at font size min(height × 0.32, width × 0.9 ÷ letter count ÷ 0.6), into a hidden mask. It is never drawn on screen: inside the mask the pile lies the opposite way to the rest of the cloth, so the name appears only as a shift in sheen.
+- Pile length 0.5: it multiplies how far the fibers tilt the shaded surface.
+- Sheen strength 0.6: it multiplies the whole fiber highlight, the rim sheen and the specks.
+- The lamp sits at 45° around the screen (0° right, 90° bottom) and 40° above the cloth, so its unit direction from the surface is (cos(45°) × cos(40°), sin(45°) × cos(40°), sin(40°)) with y pointing down the screen.
+- Every fiber slowly returns to its resting lean: each frame it moves 3 ÷ 10 (relax time in seconds) of the remaining way per second, so a stroke is mostly gone after about 10 seconds, and the dent fades at the same rate.
+- Moving the cursor brushes the pile with a soft round brush whose radius is 7% of the screen width. The fibers under it turn to lie along the stroke direction, fastest at the brush center and fading smoothly to nothing at its edge (weight (1 − (distance ÷ radius)²)²). Slow strokes brush lightly; a stroke at 800 pixels per second or faster brushes fully. On touch, the finger brushes while dragging (after a press and hold).
+- Fast strokes press a dent into the pile that makes it darker and less shiny. Dent strength 0.4: a full dent darkens the cloth by 0.45 × 0.4 and removes 0.5 of the sheen.
+- Fiber size 1.5px: in the shader the screen is cut into square fiber cells of 1.5 CSS pixels, and each cell gets its own random turn and brightness from a hash of its cell coordinates.
+- Fiber randomness 0.6: each fiber's lean turns by a random amount up to 1.2 radians × 0.6 × half, and its brightness varies by up to 0.5 × 0.6 × half around 1. About 0.3% of fibers catch the light as bright specks (brightness 1.2 × sheen × the highlight).
+- Crush 0.5: smooth value noise (4 octaves, each twice as fine and half as strong) with a patch size of 22 fibers turns the pile by (noise − 0.5) × 1 radians × 0.5 from place to place. The resting field in the simulation also varies: the rest direction turns by up to 70° × 0.5 and the rest lean changes by up to 40% × 0.5, in patches 9 cells across.
+- Sheen sharpness 4: the fiber highlight is (sin of the angle between the fiber direction and the half-vector between lamp and viewer) raised to the power 4.
+- Ambient light 0.12.
+- Quality auto: full draws at the screen's pixel density (capped at 2) with a 220-cell-wide fiber grid and the finest fiber layer; balanced draws at 70% of that with a 70% grid; phone at 50% with a 50% grid and no finest fiber layer. Auto starts balanced on phones (under 700px wide) and in gallery previews, full elsewhere, and drops one tier if the smoothed frame time stays above 0.03 seconds for 1.5 seconds.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Reduced-motion still frame: no animation. Run a scripted brush stroke once, through the points (12% of the width, 78% of the height), (38% of the width, 30% of the height), (66% of the width, 66% of the height), (92% of the width, 24% of the height) at 1600 px per second with 0.016 second steps, draw one frame, and stop. The name is visible as a shift in sheen.
+
+## How people interact
+- The stage has touch-action: pan-y, so vertical swipes still scroll; a finger brushes only while dragging after a short press and hold.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`velvet prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Velvet Brush
+
+The whole screen is crushed velvet that looks like real cloth filmed under one lamp. Moving my cursor brushes the pile, leaving lighter and darker trails where the fibers flip. My name is already brushed the other way inside the pile, so it shows up only as a change in sheen. Strokes slowly relax back to rest.
+
+Colors: background #2A0A0E, text #FFF1E6, secondary text #E3B5AC, accents #E8203A, #FFB38A, #FFE9C7. Font: "Anybody" from Google Fonts.
+
+Shading recipe:
+- Draw one WebGL 1 canvas that fills the screen; a single full-screen fragment shader paints every pixel. Simulate the pile on the CPU in a grid of square cells (220 cells across at full quality). Each cell holds a lean vector (x, y), each of length 0 to 1 (0 = fibers standing, 1 = lying flat), and a dent amount from 0 to 1. Upload the grid every frame as an RGBA texture (red and green: the lean vector as (value × 0.5 + 0.5) × 255; blue: the dent × 255) and sample it with linear filtering.
+- Resting field: the pile lies at 100° (0° right, 90° down) with a lean of 0.7, varied by smooth value noise so it looks crushed (see the Crushed look setting). The hidden name mask is drawn on a 2D canvas the size of the grid; inside it (blended by the mask's antialiased alpha) the resting direction is turned 180°, so the name is already brushed the other way.
+- Brush: along each cursor stroke place stamps every 0.35 × the brush radius. For every cell within the radius, move its lean vector toward (stroke direction × 1) by 0.6 × the brush weight × the stroke strength (speed ÷ 800 px per second, at most 1), and add to the dent by the weight × the strength × 0.5 (at most 1).
+- Relax: each frame move every cell's lean toward its resting vector, and its dent toward 0, by 1 − e^(−3 × dt ÷ relax time).
+- Shading, per pixel, in linear light (convert hex colors with gamma 2.2; convert back at the end). Take the lamp vector with its y flipped to point up the screen, and the cell's lean vector L (y flipped the same way), turn it by a random angle per fiber cell and by crush noise, then: surface normal N = normalize(L × 2.2 × pile length, 1); fiber direction T = normalize(L × pile length × 3, 1); view V = (0, 0, 1); half-vector H = normalize(lamp + V).
+- Layers: body = the first accent color × 0.3, times ambient + wrap diffuse × (1 − ambient), where wrap diffuse = clamp((N·lamp + 0.5) ÷ (1 + 0.5), 0, 1); times a per-fiber brightness. Sheen color = the first accent color 0.18 of the way to white. Sheen = sheen setting × (0.25 + 0.75 × min(1, lean length × pile length ÷ 0.7)) × (the fiber highlight × 1 + rim × 0.6), where the fiber highlight = (sqrt(1 − (T·H)²) raised to sheen sharpness) × smoothstep(0, 0.5, N·lamp + 0.4) and rim = (1 − N·V) raised to 2.5. Add sheen color × (sheen + specks).
+- Imperfection: every fiber cell (of the fiber size, in CSS pixels) gets two random numbers from a hash of its coordinates: one turns its lean, the other changes its brightness; a few fibers become bright specks. Crush: four octaves of value noise at a patch size of 22 fiber cells turn the lean from place to place. Dent: multiply the color by 1 − 0.45 × dent × the dent setting and the sheen by 1 − 0.5 × dent.
+- Lamp falloff: multiply the color by mix(0.7, 1, the pixel's position along the lamp's screen direction, from 0 at the far side to 1 at the near side). Finally multiply by exposure 1 and apply gamma 1 ÷ 2.2. Use only the palette's colors; the name never appears as a color.
+- Quality tiers (see the Quality setting): scale the canvas and the grid together, and drop the finest fiber layer on the lightest tier. If WebGL is unavailable, fill the canvas with the body color and draw a few soft diagonal bands of the sheen color, with the name as a band of the opposite diagonal.
+
+- Name: "Your brand"
+- Pile length: 0.5
+- Sheen: 0.6
+- Relax time: 10s
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

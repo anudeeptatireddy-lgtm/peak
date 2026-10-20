@@ -45,7 +45,10 @@ describe.each(SCENE_SLUGS)('%s prompt', (slug) => {
     const theme = getWorld(scene.meta.world);
     for (const target of TARGETS) {
       const text = buildPrompt({ scene, params, theme, options: { detail: 'quick', target } });
-      expect(wordCount(text)).toBeLessThan(150);
+      // REALISTIC scenes are exempt (PRD §8.8, §10.6): their Quick prompt keeps the shading recipe.
+      if (scene.meta.realistic) {
+        for (const line of scene.meta.lookLines) expect(text).toContain(line);
+      } else expect(wordCount(text)).toBeLessThan(150);
     }
   });
 });
@@ -82,7 +85,7 @@ describe('Cycle worlds in prompts', () => {
       expect(quick).toContain(
         `Crossfade every 8 seconds between backgrounds ${loop.map((t) => t.ground).join(', ')}.`,
       );
-      expect(wordCount(quick)).toBeLessThan(150);
+      if (!scene.meta.realistic) expect(wordCount(quick)).toBeLessThan(150);
     },
   );
 

@@ -122,6 +122,8 @@ function quick(input: PromptInput, o: PromptOptions): string {
     '',
     `Colors: ${paletteLine(theme)}. Font: "Anybody" from Google Fonts.`,
     ...cycle,
+    // REALISTIC scenes (PRD §8.8) keep the full shading recipe even in the Quick prompt.
+    ...(m.realistic ? ['', 'Shading recipe:', ...m.lookLines.map(bullet), ''] : []),
     ...picked.map((p) => bullet(`${p.label}: ${formatValue(p, params[p.id])}`)),
     '',
     QUICK_TARGET[o.target],

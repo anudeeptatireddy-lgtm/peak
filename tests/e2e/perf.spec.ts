@@ -11,13 +11,14 @@ const slugs = readdirSync('src/scenes', { withFileTypes: true })
 
 test.describe('frame time budget', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'timings are measured in Chromium');
-  test.setTimeout(60_000);
+  test.setTimeout(90_000);
   for (const slug of slugs) {
     test(`${slug}: scripting under 8 ms per frame at defaults`, async ({ page }) => {
       await page.goto(`/scenes/${slug}`);
       await expect
         .poll(() => page.evaluate(() => (window as any).__peak.scheduler().frameMs.length), {
-          timeout: 20000,
+          // Software-rendered WebGL scenes need time to reach 90 frames (the quality governor settles first).
+          timeout: 60_000,
         })
         .toBeGreaterThan(90);
       const ms = await page.evaluate(() => (window as any).__peak.scheduler().frameMs as number[]);

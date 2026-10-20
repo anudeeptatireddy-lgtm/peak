@@ -4,7 +4,7 @@ Everything is committed and pushed to `main`; pushing deploys to Vercel (https:/
 
 ## Exact step
 
-Waves 1 to 9 are built and the site **launched on 2026-10-18** (step 9.7: `noindex` removed, robots open, sitemap on, at the owner's "go now"). Left from Wave 9: 9.8 (share previews and Lighthouse) and 9.9 (final deploy and report), both launch steps, **on hold until the owner says**. The Tour mounting bug is fixed (see DECISIONS). On 2026-10-20 the owner set a **Realism standard** (PRD §8.8) and 16 new scenes (SCENES 54 to 69). The docs are updated; **nothing is built: waiting for the owner's OK to the token estimate** (DECISIONS, 2026-10-20). Plan: Wave 10 in `docs/PLAN.md` = realism kit, then the pilot (`velvet`, `soap`) with side-by-sides, then the owner's verdict. The other 14 scenes are a "Drops backlog" (one per week via `/new-scene`), not a wave.
+Waves 1 to 9 are built; the site launched on 2026-10-18. 9.8 and 9.9 are on hold (owner's instruction). **Wave 10 pilot round 1 is built on the branch `realism-pilot` (not on `main`)**: the realism kit, `velvet` (#55) and `soap` (#56). No reference photos yet, so no §8.8 side-by-side and **no prompt tests** (owner's rule: only after the owner approves the look). Next: the owner films the references (list in DECISIONS, 2026-10-20), I make `reference-vs-ours.png` side-by-sides, the owner judges, at most one more round, then prompt tests for the pilots only if approved. The other 14 new scenes are a Drops backlog (one per week via `/new-scene`).
 
 The project folder is `~/peak`.
 

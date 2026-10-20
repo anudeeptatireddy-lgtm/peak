@@ -76,6 +76,11 @@ export interface SceneMeta {
    */
   blends?: false;
   /**
+   * true: a REALISTIC scene (PRD §8.8). Its Quick prompt keeps the full shading recipe (the look
+   * lines) and is exempt from the 150-word limit.
+   */
+  realistic?: true;
+  /**
    * true: the stage holds real controls or live text (buttons, a countdown's live region),
    * so it is not hidden from assistive technology like a decorative stage is.
    */

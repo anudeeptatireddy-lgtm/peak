@@ -18,7 +18,16 @@ const drewSomething = (page: Page) =>
     const stage = document.querySelector('[data-stage]')!;
     const canvas = stage.querySelector('canvas');
     if (!canvas) return stage.textContent!.trim().length > 0;
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      // A WebGL scene (opaque canvas): it drew something when its pixels are not all one color.
+      const gl = canvas.getContext('webgl')!;
+      const px = new Uint8Array(canvas.width * canvas.height * 4);
+      gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      for (let i = 4; i < px.length; i += 4 * 97)
+        if (px[i] !== px[0] || px[i + 1] !== px[1] || px[i + 2] !== px[2]) return true;
+      return false;
+    }
     const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
     for (let i = 3; i < data.length; i += 4 * 97) if (data[i]! > 0) return true;
     return false;
@@ -30,7 +39,10 @@ for (const slug of SCENES) {
       const errors = collectErrors(page);
       await page.goto(`/dev/scenes?s=${slug}`);
       await expect
-        .poll(() => page.evaluate(() => (window as any).__peak?.scheduler().frames ?? 0))
+        .poll(() => page.evaluate(() => (window as any).__peak?.scheduler().frames ?? 0), {
+          // Generous for WebGL scenes: headless Chrome draws them in software, a few frames a second.
+          timeout: 30_000,
+        })
         .toBeGreaterThan(10);
       await page.mouse.move(200, 300);
       await page.mouse.move(260, 320, { steps: 5 });

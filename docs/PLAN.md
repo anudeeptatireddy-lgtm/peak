@@ -359,12 +359,12 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 
 - [x] **10.0 Tour bug.** Done 2026-10-18: diagnosed (layout settled after load, nothing pruned), fixed, stress tests added, 60 of 60 passing (3 tests, both browser projects, 10 runs in a row); limits unchanged.
 - [ ] **10.0b Wave 9 leftovers.** 9.8 (share previews and Lighthouse) and 9.9 (final deploy and report) are both launch steps. The site is already live because the owner said "go now" on 2026-10-18 (step 9.7). **On hold until the owner says to finish them.**
-- [ ] **10.1 Realism kit** · PRD §8.8
+- [x] **10.1 Realism kit** · PRD §8.8
   - Do: `src/kits/gl.ts` (a tiny WebGL helper: compile and link shaders, a full-screen pass, textures and framebuffers, loss-of-context handling), a `quality` tier (full, balanced, phone; phones get balanced; drops a tier when frames run long), a Canvas 2D / still-frame fallback hook, and a script that renders `reference-vs-ours.png` (our still next to a reference image at the same crop) into the git-ignored `reference/realism/<slug>/`.
   - Done when: unit tests for the helper's pure parts; a demo shader runs in `/dev/scenes`; the fallback shows the still frame when WebGL is off (e2e); no new dependency; `git check-ignore reference/realism/x` confirms the ignore rule.
 - [ ] **10.2 Ask the owner for reference media** for `velvet` and `soap` (what to film: DECISIONS 2026-10-20). Keep working while waiting, but the side-by-side needs them.
-- [ ] **10.3 Pilot `velvet`** (SCENES #55) to the realism standard: module, shader with fiber-direction sheen, params, prompt with the shading recipe (Quick keeps the full recipe), follow-ups, How it works, still, phone tier, schema tests, `reference-vs-ours.png` (not committed). At most two rounds against the reference. **No prompt test yet.**
-- [ ] **10.4 Pilot `soap`** (SCENES #56), same standard (thin-film interference from thickness, drainage, breath, pop). **No prompt test yet.**
+- [x] **10.3 Pilot `velvet`** (round 1 built; waiting for the owner's reference) (SCENES #55) to the realism standard: module, shader with fiber-direction sheen, params, prompt with the shading recipe (Quick keeps the full recipe), follow-ups, How it works, still, phone tier, schema tests, `reference-vs-ours.png` (not committed). At most two rounds against the reference. **No prompt test yet.**
+- [x] **10.4 Pilot `soap`** (round 1 built; waiting for the owner's reference) (SCENES #56), same standard (thin-film interference from thickness, drainage, breath, pop). **No prompt test yet.**
 - [ ] **Checkpoint 10 (Owner): judge the two side-by-sides.** If either still looks fake after two rounds, it is cut and the owner is told. Wait for the verdict.
 - [ ] **10.5 Prompt tests for the two pilots, only after the owner approves their look** (per-scene estimate in DECISIONS). No other new prompt tests without the owner's OK.
 - [ ] **10.6 Re-check the existing REALISTIC scenes** that actually exist (`latte`, `fogged`, `tailor`) against §8.8 with reference media: list any that look cartoony with a fix plan. Do not rebuild without the owner's OK.
