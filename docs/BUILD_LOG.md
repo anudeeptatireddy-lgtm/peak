@@ -15,5 +15,8 @@ One line per scene built from the backlog: scene, live link, tokens used, proble
 | 2026-10-21 | `clockwork` (66) | https://peak-teal.vercel.app/scenes/clockwork | approx 6% of the meter (chunk 3) | Spicy: prompt test waits for the owner's OK (about 0.1 to 0.15M). |
 | 2026-10-21 | `infinitezoom` (89) | https://peak-teal.vercel.app/scenes/infinitezoom | approx 3% of the meter (32% → 35%) | Spicy: prompt test waits for the owner's OK. One tuning round (skylight too big). |
 | 2026-10-21 | `torchmap` (84, ⚠) | https://peak-teal.vercel.app/scenes/torchmap | approx 4% of the meter (35% → 39%) | None; flash test added and passing. |
+| 2026-10-21 | `doubling` (85) | https://peak-teal.vercel.app/scenes/doubling | approx 4% of the meter (39% → 43%, including the full suite) | Counter overlapped the stage buttons on phones; moved down. |
 
 **Summary after 9 scenes (2026-10-21):** three chunks used about 13%, 12% and 19% of the 5-hour meter (about 15% per chunk, 5% per scene). In tokens of new work, roughly 30k to 60k per scene; the estimate was 60k to 100k per Medium scene, so all nine stayed within it.
+
+**Summary after 12 scenes (2026-10-21; the 3 built one at a time):** `infinitezoom`, `torchmap` and `doubling` used about 3%, 4% and 4% of the 5-hour meter (11% for the three, about 3.7% per scene, including docs, live checks and one full suite), compared with about 5% per scene in chunks 1 to 3. Since the meter started at 10% in this session: 33% for 12 scenes' worth of work here (3 built in chunk 3, 9 released, 3 more built), about 2.8% per scene. In tokens this is roughly 30k to 40k of new work per scene, within the 60k to 100k estimate (Spicy 110k to 150k). Full suite green apart from the known-flaky `flow` parity, which passed alone.

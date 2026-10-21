@@ -3416,6 +3416,330 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Doubling
+
+## What I want
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+## Look
+- Colors ("Golden Hour" palette): background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 55% of the height, font size = height × 0.4, shrunk if needed so it is at most 86% of the width. Sample it on a grid of coin slots: columns 1.08 coin widths apart and rows one coin thickness apart; keep slots whose pixel alpha is above 128. If there are more slots than 2^doublings, shrink the font by √(target ÷ slots) × 0.97 and sample again (up to 8 times).
+- Coins are 12px wide and 0.32 × 12px thick. Draw each coin as an edge (a rectangle one thickness tall plus the bottom half-ellipse, in accent 1 mixed 35% toward the text color) under a top face (an ellipse 12px wide and 0.42 × 12px tall, in accent 1). Batch all edges into one path and all faces into another, drawing coins from the bottom of each stack up. A line in the line color marks the table one thickness under the lowest coin.
+- Above the stacks, centered at 30% of the height, show the counter as money ("$1", "$2", … "$1,024"): the value is round(2^s) where s is the current step (easing smoothly as the steps play), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 7% of the height.
+- There are 10 doublings (8 on screens under 700px wide), steps 0 to 10. With M slots in the name, step k shows c(k) = max(1, round(M^(k ÷ 10))) coins: one coin at step 0, all M at the end. Order the slots by how far up their column they are ((level + 0.5) ÷ column height), then by column, so the first c coins in that order are spread across the columns in proportion to their heights. At step k < 10, those first c(k) coins stand in their columns stacked up from the table (a bar chart shaped like the name); at the last step every coin sits on its own slot. Coin i of step k + 1 splits off coin floor(i × c(k) ÷ c(k + 1)) of step k.
+- The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
+- Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
+- Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
+- Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`doubling prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Doubling
+
+A single coin on a table. Each scroll step splits every coin in two, with a little spin, and the coins slide into neat stacks that wobble and settle. The stack heights form a rising chart, and at the last step they become the silhouette of a name. A counter above eases between the numbers.
+
+Colors: background #FFE8CC, text #3A1A0A, secondary text #7A4A2A, accents #FF8A3D, #D9467A, #7B5CD6. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Coin size: 12px
+- Doublings: 10
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`drop prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Ink-ball pile
 

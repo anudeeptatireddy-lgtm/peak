@@ -68,6 +68,7 @@ export const CATALOG_ORDER = [
   'resonanceplate',
   'infinitezoom',
   'torchmap',
+  'doubling',
 ] as const;
 
 export function catalogNumber(slug: string): number {

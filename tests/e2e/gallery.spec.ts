@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const COUNT = 64;
+const COUNT = 65;
 
 test.describe('gallery', () => {
   test('shows every scene in its own world, with the featured ones first', async ({ page }) => {
