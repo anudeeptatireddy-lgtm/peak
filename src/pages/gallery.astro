@@ -350,6 +350,8 @@ const slugOf = (t: string) =>
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+    /* Short titles ("Flock") still give a full-size tap target. */
+    min-width: 44px;
     color: var(--ink);
   }
   .line {
