@@ -14096,6 +14096,348 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Peekaboo
+
+## What I want
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+## Look
+- Colors ("Matcha" palette): background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Peekaboo", drawn once the Anybody font has loaded: weight 900, centered, baseline at 62% of the height, font size = height × 0.36, shrunk if needed so it is at most 84% of the width. Letter i is filled with accent (i mod 3), kept at contrast 3 or more against the background, and drawn after the animals so it hides them. Place letters by measuring each prefix, so spacing matches the whole word.
+- Use 8 animals (5 on screens under 700px wide). Animal k hides behind letter floor(k × letters ÷ animals) (spaces skipped), spread across it if several share one. Its head is a circle of radius min(0.26 × font size, 0.42 × the letter's width, 0.42 × the letter's ink height above the baseline), with ears by kind (k mod 3): two round ears, two pointy triangles, or two long upright ovals (each 0.42 × radius, at 0.62 × radius either side of the top). Eyes: two circles of 0.24 × radius in the surface color, 0.4 × radius apart, with pupils half their size in the text color. A small nose (0.1 × radius) in the text color and two cheeks (0.14 × radius) in accent 2 at half opacity.
+- Each animal's fur is the soft text color mixed 60% (in OKLab) toward accent ((k + 1) mod 3), so it differs from the letter in front of it.
+- Each head moves on a spring toward its spot: speed += (spot − position) × stiffness × f, speed ×= (0.62 + 0.5 × 0.3)^f, position += speed × f, with stiffness = 0.14 × (1 ± up to 30%, per animal). Squash and stretch with the vertical speed: sq = clamp(speed × 0.05 × 0.6, −0.35, 0.35); draw the head 1 + sq wide and 1 − sq tall.
+- Each frame the pupils move 0.12 of the way (as 1 − (1 − 0.12)^f) toward pointing at the cursor: an offset of 0.45 × the eye radius in its direction.
+- An animal hides (its spot moves behind the middle of its letter) whenever the cursor is within 150px of its peek spot or its letter. Once the cursor has been farther away for 1s × (1 ± up to 40%, per animal), it peeks out again: half the animals over the top (head center 0.35 radii above the letter's own top), the others round the side away from the cursor (head center 0.45 radii past the letter's edge, at its middle). On touch screens a tap counts as the cursor for 1.5s.
+- The peek delay is 1s.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then the pupils look toward the tilt: gamma ÷ 30 sideways and (beta − 45) ÷ 30 up or down, each clamped to −1…1.
+- After 2s without the pointer, an imaginary cursor wanders the stage (x = center + 42% of the width × sin(2π × t ÷ 9), y = center + 42% of the height × sin(2π × 1.7 × t ÷ 9)) and the animals react to it.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the letters and animals again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the animals are the same every visit.
+- Reduced-motion still frame: every animal peeking out, looking straight ahead.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`peekaboo prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Peekaboo
+
+Big chunky letters spell a name, with little original animals (simple round heads with round, pointy or long ears) hiding behind them. Their eyes follow the cursor with a slight lag; when the cursor gets close they duck behind the letters with a quick squash, then peek out the other side once it moves away, each with its own timing.
+
+Colors: background #ECF1DC, text #1D3321, secondary text #47604B, accents #3F8A22, #D98A1F, #D0473F. Font: "Anybody" from Google Fonts.
+- Name: "Peekaboo"
+- Animals: 8
+- Bounce: 0.5
+- Shyness distance: 150px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`pendulum prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Pendulum Field
 

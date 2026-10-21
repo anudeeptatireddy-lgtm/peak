@@ -16,6 +16,7 @@ One line per scene built from the backlog: scene, live link, tokens used, proble
 | 2026-10-21 | `infinitezoom` (89) | https://peak-teal.vercel.app/scenes/infinitezoom | approx 3% of the meter (32% → 35%) | Spicy: prompt test waits for the owner's OK. One tuning round (skylight too big). |
 | 2026-10-21 | `torchmap` (84, ⚠) | https://peak-teal.vercel.app/scenes/torchmap | approx 4% of the meter (35% → 39%) | None; flash test added and passing. |
 | 2026-10-21 | `doubling` (85) | https://peak-teal.vercel.app/scenes/doubling | approx 4% of the meter (39% → 43%, including the full suite) | Counter overlapped the stage buttons on phones; moved down. |
+| 2026-10-21 | `peekaboo` (86) | https://peak-teal.vercel.app/scenes/peekaboo | approx 4% of the meter (43% → 47%) | Heads used capital height on lowercase letters; fixed. |
 
 **Summary after 9 scenes (2026-10-21):** three chunks used about 13%, 12% and 19% of the 5-hour meter (about 15% per chunk, 5% per scene). In tokens of new work, roughly 30k to 60k per scene; the estimate was 60k to 100k per Medium scene, so all nine stayed within it.
 

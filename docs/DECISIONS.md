@@ -552,3 +552,9 @@ Only the pilot up to the verdict is asked for now. If a pilot scene still looks 
 - **Tuning (one round):** the counter moved from 12% to 30% of the height, because on phones it sat under the stage's Pause and Restart buttons.
 - **Tags:** Finance becomes a gallery chip (its first scene); no older scene clearly fits. Tokens: meter 39% → 43% (approx, including this round's full suite).
 - **Full suite (every 3 scenes):** green apart from `flow` desktop parity (ink difference 0.0208 against 0.02), which passed when rerun alone; nothing here touches `flow`.
+
+## 2026-10-21: `peekaboo` (#86), live
+- **Original animals:** simple round heads with one of three ear shapes (round, pointy, long ovals), big eyes, a small nose and cheeks; no known characters. Fur is the soft text color mixed toward the next accent, so each animal differs from the letter in front of it. Default name "Peekaboo" (shows lowercase letters, where the hiding matters most).
+- **Hiding:** animals are drawn before the letters, so a letter hides whatever is behind it. Each animal springs between a peek spot (over the top, or round the side away from the cursor) and a hiding spot behind its letter's middle, with squash from its speed and its own timing and stiffness. Long and pointy ears may still poke up while hiding, which reads as hiding.
+- **Phones:** a tap counts as the cursor for 1.5 seconds (nearby animals duck); tilt after "Use motion" moves the pupils. Idle: an imaginary visitor wanders past.
+- **Tuning (one round):** heads now hide and peek against each letter's real height (its measured ink ascent), not the capital height, so lowercase letters work. Kids becomes a gallery chip (its first scene); no older scene clearly fits. Tokens: meter 43% → 47% (approx).

@@ -380,7 +380,7 @@ Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, S
 - [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21; live 2026-10-21.
 - [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21; live 2026-10-21. `resonanceplate` is Spicy: prompt test waits for the owner's OK.
 - [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21; live 2026-10-21. `clockwork` is Spicy: prompt test waits for the owner's OK.
-- **Remaining ANIMATED, in this order (numbered list below):** `peekaboo` (86), `gatherround` (87), `epicycles` (67), `tokenstream` (88), `clayframes` (68), `stringart` (69).
+- **Remaining ANIMATED, in this order (numbered list below):** `gatherround` (87), `epicycles` (67), `tokenstream` (88), `clayframes` (68), `stringart` (69).
 
 1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
@@ -394,7 +394,7 @@ Then, alternating (R = REALISTIC, A = ANIMATED):
 10. [ ] R `shoreline` (70) · 11. [x] A `platformarrival` (81) · 12. [ ] R `raking` (61) · 13. [x] A `doorwave` (82)
 14. [ ] R `growthrings` (77) · 15. [x] A `anamorphic` (63) · 16. [ ] R `inkbloom` (57) · 17. [x] A `torchmap` (84, ⚠ flash test)
 18. [ ] R `startrails` (78) · 19. [x] A `domino` (64) · 20. [ ] R `goldleaf` (58) · 21. [x] A `doubling` (85)
-22. [ ] R `pinwall` (79) · 23. [x] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [ ] A `peekaboo` (86)
+22. [ ] R `pinwall` (79) · 23. [x] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [x] A `peekaboo` (86)
 26. [ ] R `ceilingstars` (74) · 27. [x] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [ ] A `gatherround` (87)
 30. [ ] R `thinice` (76) · 31. [ ] A `epicycles` (67) · 32. [ ] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
 
