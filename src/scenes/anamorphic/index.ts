@@ -90,10 +90,13 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
     phase = new Float32Array(count);
     corners = new Uint8Array(count);
     for (let i = 0; i < count; i++) {
-      sx[i] = pts[2 * i]! - c.w * 0.5 + (rand() - 0.5) * gap * 0.5;
-      sy[i] = pts[2 * i + 1]! - c.h * 0.5 + (rand() - 0.5) * gap * 0.5;
+      sx[i] = pts[2 * i]! - c.w * 0.5 + (rand() - 0.5) * gap * FIXED.JITTER;
+      sy[i] = pts[2 * i + 1]! - c.h * 0.5 + (rand() - 0.5) * gap * FIXED.JITTER;
       sz[i] = Math.max(-FIXED.NEAR_LIMIT * focal, (rand() * 2 - 1) * n('depth') * side);
-      size[i] = n('shardSize') * (FIXED.SHARD_MIN + rand() * (1 - FIXED.SHARD_MIN));
+      // Shards never reach much past their grid cell, so the letter edges stay crisp.
+      size[i] =
+        Math.min(n('shardSize'), gap * FIXED.GAP_FIT) *
+        (FIXED.SHARD_MIN + rand() * (1 - FIXED.SHARD_MIN));
       turn[i] = rand() * SHARED.TAU;
       phase[i] = rand() * SHARED.TAU;
       const shape = String(p.shape);

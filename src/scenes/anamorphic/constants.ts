@@ -7,6 +7,10 @@ export const FIXED = {
   MAX_GAP: 80,
   /** A pixel counts as part of the letters above this alpha. */
   ALPHA_CUTOFF: 128,
+  /** Points move by up to half this share of the grid gap, so shards look scattered. */
+  JITTER: 0.25,
+  /** A shard reaches at most this share of the grid gap from its point. */
+  GAP_FIT: 0.8,
   /** Focal length of the camera as a share of the shorter screen side, at perspective 1. */
   FOCAL: 1.2,
   /** Shards never come closer to the camera than this share of the focal length. */
@@ -42,6 +46,9 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   START_GAP: 'Where the sampling search starts; the shard count decides the real spacing.',
   MAX_GAP: 'Ends the sampling search for very long names; never reached at normal sizes.',
   ALPHA_CUTOFF: 'Half opacity: the edge of the anti-aliased letters.',
+  JITTER: 'A little scatter without blurring the letter edges (was 0.5; letters read soft).',
+  GAP_FIT:
+    'Shards just overlap their neighbors without spilling past thin strokes (letters read soft when shards were about three gaps wide).',
   FOCAL: 'A natural lens at perspective 1; the Perspective slider scales it.',
   NEAR_LIMIT: 'Keeps every shard in front of the camera, so none flips or blows up.',
   PITCH_SHARE: 'Screens are wider than tall, so the vertical orbit is gentler.',

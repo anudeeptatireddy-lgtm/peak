@@ -30,3 +30,5 @@ One line per scene built from the backlog: scene, live link, tokens used, proble
 **Summary after 15 scenes (2026-10-21):** `peekaboo`, `gatherround` and `epicycles` used about 4%, 3% and 4% of the 5-hour meter (11% for the three, about 3.7% per scene, including docs, live checks and one full suite), the same as the previous three. Six scenes built one at a time so far: 22% of the meter, about 3.7% per scene. In tokens this is roughly 30k to 40k of new work per scene, within the 60k to 100k estimate (Spicy 110k to 150k). This session's context is at 47%.
 
 **Summary after 18 scenes (2026-10-21, fresh session):** `tokenstream`, `clayframes` and `stringart` used about 6%, 3% and 5% of the 5-hour meter (14% for the three, about 4.7% per scene, including reading the docs and templates once and one round of fixes each). The full suite and `npm run check` ran after `stringart`. In tokens this is roughly 30k to 50k of new work per scene, within the 60k to 100k estimate. All ANIMATED backlog scenes are now live.
+
+**`anamorphic` fix (2026-10-21):** shards capped at 0.8 × the sampling gap and 560 by default; about 2% of the meter.

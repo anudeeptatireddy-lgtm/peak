@@ -23,7 +23,7 @@ export const params: Param[] = [
     default: 'Your brand',
     key: true,
     phrase: (v: string, all) =>
-      `The name is "${v}". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight ${all.weight}, centered, font size = height × ${all.textHeight}, shrunk if needed so it is at most ${pct(Number(all.fitWidth))} of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.`,
+      `The name is "${v}". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight ${all.weight}, centered, font size = height × ${all.textHeight}, shrunk if needed so it is at most ${pct(Number(all.fitWidth))} of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.`,
   },
   {
     kind: 'slider',
@@ -32,9 +32,9 @@ export const params: Param[] = [
     help: 'How many shards float. The name needs enough to read.',
     group: 'Look',
     min: 40,
-    max: 600,
+    max: 900,
     step: 10,
-    default: 320,
+    default: 560,
     key: true,
     phrase: (v: number, all) =>
       `Use at most ${v} shards (${all.shardsSmall} on screens under 700px wide).`,
@@ -52,7 +52,7 @@ export const params: Param[] = [
     unit: 'px',
     key: true,
     phrase: (v: number, all) =>
-      `Each shard is ${SHAPES[String(all.shape)]}, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of ${v}px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.`,
+      `Each shard is ${SHAPES[String(all.shape)]}, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of ${v}px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.`,
   },
   {
     kind: 'select',
@@ -183,7 +183,7 @@ export const params: Param[] = [
     min: 20,
     max: 400,
     step: 10,
-    default: 160,
+    default: 280,
     phrase: (v: number) => `${v} shards.`,
     phraseIn: 'shards',
   },

@@ -75,9 +75,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -119,9 +119,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -163,9 +163,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -207,9 +207,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -251,9 +251,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -295,9 +295,9 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
 
 ## How it moves
-- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
-- Use at most 320 shards (160 on screens under 700px wide).
-- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to an eighth of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 560 shards (280 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of the smaller of 14px and 0.8 × the grid gap, as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
 - Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
 - Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
 - The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
@@ -333,7 +333,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
@@ -349,7 +349,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
@@ -365,7 +365,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
@@ -381,7 +381,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
@@ -397,7 +397,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
@@ -413,7 +413,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 
 Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
 - Name: "Your brand"
-- Shards: 320
+- Shards: 560
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
