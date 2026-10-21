@@ -6,7 +6,7 @@ import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { createPointer } from '../../engine/pointer';
 import { ease, frameFactor } from '../../engine/time';
-import { smoothstep } from '../../kits/easing';
+import { smoothstep, springStep } from '../../kits/easing';
 import { seededRandom } from '../../kits/field';
 import { samplePointsUnder, textMask } from '../../kits/text';
 import type { Theme } from '../../theme/worlds';
@@ -49,6 +49,10 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
   let aimU = 0;
   let aimV = 0;
   let camU = 0;
+  /** Camera speed while snapping back, and seconds since the pointer last moved. */
+  let velU = 0;
+  let velV = 0;
+  let rest = 0;
   let camV = 0;
   let quiet = 0;
   let idleT = 0;
@@ -229,22 +233,39 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       ptr.sync();
       ptr.takeTaps();
       let input = false;
+      let moved = false;
       if (ptr.active && ptr.pointerType === 'mouse' && c.w) {
+        moved = Math.hypot(ptr.x - ptr.px, ptr.y - ptr.py) > FIXED.STILL_PX;
         aimU = clamp1((ptr.x / c.w - 0.5) * 2);
         aimV = clamp1((ptr.y / c.h - 0.5) * 2);
         input = true;
       } else if (ptr.down && c.w) {
         aimU = clamp1(aimU + ((ptr.x - ptr.px) / c.w) * 2);
         if (ptr.dragging) aimV = clamp1(aimV + ((ptr.y - ptr.py) / c.h) * 2);
-        input = true;
+        input = moved = true;
       } else if (gyroOn && gyroFresh) {
         aimU = gyroU;
         aimV = gyroV;
         gyroFresh = false;
-        input = true;
+        input = moved = true;
       }
       quiet = input ? 0 : quiet + dt;
-      if (quiet > n('idleWait')) {
+      rest = moved ? 0 : rest + dt;
+      // Snap back: a resting or absent pointer lets the camera spring home.
+      const snapping = !!p.snapBack && rest > n('snapDelay');
+      const idleAfter = p.snapBack ? n('snapDelay') + n('idleWait') : n('idleWait');
+      if (snapping && quiet <= idleAfter) {
+        aimU = aimV = 0;
+        const u = { x: camU, v: velU };
+        const w = { x: camV, v: velV };
+        springStep(u, 0, n('snapSpeed'), n('snapBounce'), f);
+        springStep(w, 0, n('snapSpeed'), n('snapBounce'), f);
+        [camU, velU, camV, velV] = [u.x, u.v, w.x, w.v];
+        draw(camU, camV, time);
+        return;
+      }
+      velU = velV = 0;
+      if (quiet > idleAfter) {
         idleT += dt;
         const a = (SHARED.TAU * idleT) / n('idlePeriod');
         aimU = Math.sin(a);
@@ -273,7 +294,8 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       if (stillShown) draw(0, 0, 0);
     },
     restart() {
-      camU = camV = aimU = aimV = 0;
+      camU = camV = aimU = aimV = velU = velV = 0;
+      rest = 0;
       quiet = idleT = time = 0;
     },
     destroy() {

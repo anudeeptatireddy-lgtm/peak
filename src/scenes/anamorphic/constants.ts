@@ -11,6 +11,8 @@ export const FIXED = {
   JITTER: 0.25,
   /** A shard reaches at most this share of the grid gap from its point. */
   GAP_FIT: 0.8,
+  /** A mouse that moves less than this many px in a frame counts as resting (snap back). */
+  STILL_PX: 0.5,
   /** Focal length of the camera as a share of the shorter screen side, at perspective 1. */
   FOCAL: 1.2,
   /** Shards never come closer to the camera than this share of the focal length. */
@@ -49,6 +51,7 @@ export const FIXED_REASONS: Record<keyof typeof FIXED, string> = {
   JITTER: 'A little scatter without blurring the letter edges (was 0.5; letters read soft).',
   GAP_FIT:
     'Shards just overlap their neighbors without spilling past thin strokes (letters read soft when shards were about three gaps wide).',
+  STILL_PX: 'Ignores sub-pixel jitter from layout, so a resting mouse really rests.',
   FOCAL: 'A natural lens at perspective 1; the Perspective slider scales it.',
   NEAR_LIMIT: 'Keeps every shard in front of the camera, so none flips or blows up.',
   PITCH_SHARE: 'Screens are wider than tall, so the vertical orbit is gentler.',

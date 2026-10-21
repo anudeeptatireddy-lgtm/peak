@@ -84,6 +84,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -128,6 +129,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -172,6 +174,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -216,6 +219,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -260,6 +264,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -304,6 +309,7 @@ Flat-colored shards floating in 3D space in front of the camera. Moving the curs
 - Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
 - The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
 - Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- Snap back: once the pointer has not moved (by more than 0.5px a frame) for 0.5s (resting on the canvas, gone, or no touch or tilt), drop the aim and pull the camera back to the sweet spot with a spring on u and v separately: speed += (0 − camera) × 0.08 × f, speed × 0.8^f, camera += speed × f, so it overshoots a little and settles. Any pointer movement takes over again. The idle drift then waits its own wait after the snap starts.
 - On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
 - When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
@@ -337,6 +343,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 Add it to my existing project as a component that fits its framework; tell me which files changed.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -353,6 +360,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 Add it to my existing project as a component that fits its framework; tell me which files changed.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -369,6 +377,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 One index.html file, CSS and JS inline, no libraries.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -385,6 +394,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 One index.html file, CSS and JS inline, no libraries.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -401,6 +411,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
@@ -417,6 +428,7 @@ Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71C
 - Shard size: 14px
 - Depth spread: 0.6
 - Orbit range: 30°
+- Snap back: on
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."

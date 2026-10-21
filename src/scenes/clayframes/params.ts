@@ -2,9 +2,6 @@ import type { Param } from '../types';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
 
-const fmt = (v: number, d = 3) => String(Number(v.toFixed(d)));
-const pct = (v: number) => `${fmt(v * 100, 1)}%`;
-
 export const params: Param[] = [
   /* ---------- Look ---------- */
   {
