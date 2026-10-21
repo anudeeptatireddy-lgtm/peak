@@ -78,3 +78,4 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 84 | `torchmap` | pending | n/a | **Pending** (live) | Medium scene (⚠, flash test in `tests/unit/flash.test.ts`): prompt test optional, not scheduled. |
 | 85 | `doubling` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
 | 86 | `peekaboo` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
+| 87 | `gatherround` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |

@@ -7898,6 +7898,348 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Gather Round
+
+## What I want
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+## Look
+- Colors ("Aurora" palette): background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 56% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than people. Each point, moved by a random amount of up to (1 − tightness) × half the grid gap, is one person's spot.
+- Use at most 800 people (300 on screens under 700px wide). Shuffle them (seeded) into an arrival order, and give each a start point just outside a random edge (24px out).
+- Seen from above, each person is shoulders (an ellipse 4px across its half-width and 0.6 of that deep, turned across their walking direction, swaying ±0.28 radians once per 9px walked) with a head on top (a circle 0.55 × 4px, set 0.12 × 4px ahead) in the soft text color. Shoulders use accent (i mod 3) in one of 3 tints, mixed up to 0.6 × 45% toward the surface color. Each person's speed is (1 + 0.6 × (random − 0.5)) × the walking speed, and their path bends by (random − 0.5) × 2 × 0.6 × 0.9 radians, straightening within 220px of their spot.
+- Above the crowd, centered at 17% of the height, the counter shows how many people are standing within 0.6 grid gaps of their spot, as words ("312 standing together"), in the text color (contrast at least 4.5 with the background), Anybody weight 700, font size 5% of the height.
+- Draw the plaza paving: a grid of 56px squares in the line color, 1px wide.
+- Walking speed is 1 × 1.1px per frame. Each frame a person's velocity moves 12% (as 1 − 0.88^f) toward their wanted velocity: toward their spot (or, if they have been sent away, their start point) at their speed, slowed in proportion within 3 grid gaps of it, along their bent path.
+- Formation tightness is 0.7.
+- People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
+- A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
+- Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`gatherround prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Gather Round
+
+An empty plaza seen from above. A few small figures walk in; as I scroll, more arrive from every edge, each finding a spot, stepping around each other, until together they spell a name. A counter shows how many are standing together.
+
+Colors: background #06161A, text #E8FFF8, secondary text #9CC9BE, accents #3DF5A8, #6C7BFF, #E66CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Crowd size: 800
+- Variety: 0.6
+- Walking speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`glitch prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Glitch
 

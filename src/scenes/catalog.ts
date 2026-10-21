@@ -70,6 +70,7 @@ export const CATALOG_ORDER = [
   'torchmap',
   'doubling',
   'peekaboo',
+  'gatherround',
 ] as const;
 
 export function catalogNumber(slug: string): number {
