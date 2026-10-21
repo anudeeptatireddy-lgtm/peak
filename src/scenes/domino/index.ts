@@ -1,6 +1,7 @@
 // `domino`: Domino Run (SCENES.md #64). Dominoes stand along the traced letter
 // outlines; a front moved by scroll (or a flick, or the idle run) topples them.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -42,7 +43,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let lastScroll: number | null = null;
@@ -239,6 +245,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       }
     },
     destroy() {
+      sweep.destroy();
       ptr.destroy();
       removeSource();
       inner?.el.remove();

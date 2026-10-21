@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { leanParams } from '../cursor-params';
 import { FIXED } from './constants';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
@@ -137,4 +138,5 @@ export const params: Param[] = [
     phrase: (v: number) => `Ink shrink ${v}.`,
     phraseIn: 'layers',
   },
+  ...leanParams,
 ];

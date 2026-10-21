@@ -2,6 +2,7 @@
 // in from random edges in a shuffled order, steering toward their spot along bent paths
 // and pushing apart through a spatial hash; scrolling sets how many are on their way.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -37,7 +38,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let stillShown = false;
@@ -351,6 +357,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       for (let i = 0; i < count; i++) spawn(i);
     },
     destroy() {
+      sweep.destroy();
       ptr.destroy();
       removeSource();
       inner?.el.remove();

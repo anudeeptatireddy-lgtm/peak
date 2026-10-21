@@ -1,6 +1,7 @@
 // `splitflap`: Split-flap board (SCENES.md #11). A DOM scene: each tile has a
 // static top and bottom half plus two flaps that turn in 3D.
 
+import { cursorLean } from '../../kits/cursor';
 import { createPointer } from '../../engine/pointer';
 import { quadIn, quadOut } from '../../kits/easing';
 import { SHARED } from '../shared';
@@ -33,6 +34,8 @@ const HALF = `${SHARED.PERCENT / 2}%`;
 
 function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   const ptr = createPointer(host);
 
@@ -251,12 +254,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       size();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       ptr.sync();
       if (ptr.takeTaps().length) show(msg + 1, time);
       step(time);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       const text = messages[0]!;
       const chars = [...text];
@@ -294,6 +299,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       show(0, time);
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       wrap.remove();
       tiles = [];

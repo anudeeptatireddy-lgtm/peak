@@ -2,6 +2,7 @@
 // driven by the animation clock) over a canvas for the celebration, which reuses the
 // confetti scene's burst kit.
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas, type CanvasHandle } from '../../engine/canvas';
 import { frameFactor } from '../../engine/time';
 import { Burst, type BurstOptions } from '../../kits/burst';
@@ -50,6 +51,8 @@ const half = (top: boolean) => {
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   // The confetti canvas only exists once there is something to celebrate.
@@ -302,6 +305,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       c?.fit();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       tick(true);
       if (c && burst.pieces.length) {
@@ -326,6 +330,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       }
     },
     still() {
+      lean.reset();
       tick(false);
     },
     setParams(next) {
@@ -348,6 +353,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       tick(false);
     },
     destroy() {
+      lean.destroy();
       c?.destroy();
       wrap.remove();
       cards = [];

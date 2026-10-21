@@ -1,6 +1,7 @@
 // `fireworks`: Fireworks ⚠ (SCENES.md #29). The simulation lives in show.ts;
 // this file wires the pointer and draws: soft local glows, rockets, then sparks.
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import type { Theme } from '../../theme/worlds';
@@ -16,6 +17,8 @@ const STILL_SHAPES: BurstShape[] = ['sphere', 'ring', 'willow'];
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
@@ -120,12 +123,14 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       still = null;
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       ptr.sync();
       for (const tap of ptr.takeTaps()) show.tap(tap.x, tap.y);
       show.step(dt, c.w, c.h, options());
       draw(show);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       still ??= makeStill();
       draw(still);
@@ -141,6 +146,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       show = new Show();
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       c.destroy();
       show = new Show();

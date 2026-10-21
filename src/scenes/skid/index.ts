@@ -1,6 +1,7 @@
 // `skid`: Skidding headline (SCENES.md #6). Letters are laid out with the text
 // kit; the skid follows easing-kit curves; scrolling drives peel-outs.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -69,7 +70,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
 
   let letters: Letter[] = [];
@@ -348,6 +354,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       entrance(time);
     },
     destroy() {
+      sweep.destroy();
       removeSource();
       inner?.el.remove();
       ptr.destroy();

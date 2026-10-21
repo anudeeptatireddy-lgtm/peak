@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { leanParams } from '../cursor-params';
 import { FIXED } from './constants';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
@@ -121,4 +122,5 @@ export const params: Param[] = [
         ? `When the time left first reaches zero while the page is open, fire one burst of ${FIXED.BURST.count} confetti pieces upward from the bottom center (at ${FIXED.BURST_Y * 100}% of the height) over the digits: spread ${FIXED.BURST.spread}°, speed ${FIXED.BURST.speed} plus up to ${FIXED.BURST.speedRange}, size ${FIXED.BURST.size}px, spin ±${FIXED.BURST.spin}, flutter ${FIXED.BURST.flutter}, gravity ${FIXED.BURST.gravity}, drag ${FIXED.BURST.drag}, wobble ${FIXED.BURST.wobble}, ribbons ${FIXED.BURST.ribbon} × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.`
         : 'No confetti at zero.',
   },
+  ...leanParams,
 ];

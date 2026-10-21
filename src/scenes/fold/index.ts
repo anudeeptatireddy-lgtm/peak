@@ -1,6 +1,7 @@
 // `fold`: Paper fold (SCENES.md #43). A sheet cut into panels, each hinged to the one
 // before it with CSS 3D; scroll distance sets how folded the whole chain is.
 
+import { cursorSweep } from '../../kits/cursor';
 import { innerScroller } from '../../engine/inner-scroll';
 import { createScrollSource } from '../../engine/scroll';
 import { frameFactor } from '../../engine/time';
@@ -40,7 +41,12 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
 
   interface Panel {
     el: HTMLDivElement;
@@ -196,6 +202,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       place();
     },
     destroy() {
+      sweep.destroy();
       inner?.el.remove();
       wrap.remove();
       panels = [];

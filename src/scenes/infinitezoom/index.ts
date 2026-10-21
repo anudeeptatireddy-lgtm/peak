@@ -3,6 +3,7 @@
 // (shrink, turn, move). Level k is drawn under M^(k − z) around M's fixed point F, so
 // zooming one whole level lands every level exactly on the next one out: no seam.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -48,7 +49,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let stillShown = false;
@@ -283,6 +289,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       target = zoom = quiet = 0;
     },
     destroy() {
+      sweep.destroy();
       ptr.destroy();
       removeSource();
       inner?.el.remove();

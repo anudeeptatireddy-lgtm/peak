@@ -1,6 +1,7 @@
 // `morph`: Shape morph (SCENES.md #39). Every shape has the same number of points; a
 // morph slides each point to its twin in the next shape, eased, in up to three inks.
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import { backOut, clamp01, cubicInOut, expoOut, lerp, type Ease } from '../../kits/easing';
@@ -17,6 +18,8 @@ const EASES: Record<string, Ease> = { smooth: cubicInOut, bouncy: backOut, snapp
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
@@ -81,6 +84,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       render();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       ptr.sync();
       if (ptr.takeTaps().length) skip();
       clock += dt;
@@ -92,6 +96,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       render();
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       draw(() => FIXED.STILL_PROGRESS);
     },
@@ -115,6 +120,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       clock = 0;
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       c.destroy();
     },

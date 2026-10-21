@@ -1,6 +1,7 @@
 // `confetti`: Celebration burst (SCENES.md #24). A DOM message over a canvas of
 // confetti from the shared burst kit (also used by `countdown`).
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
@@ -16,6 +17,8 @@ import { followUps } from './prompt';
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
@@ -87,6 +90,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       c.fit();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       ptr.sync();
       for (const tap of ptr.takeTaps()) burst.fire(tap.x, tap.y, options(), SHARED.INKS);
@@ -98,6 +102,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       draw();
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       const keep = burst.pieces;
       burst.pieces = [];
@@ -118,6 +123,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       nextAuto = time;
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       c.destroy();
       wrap.remove();

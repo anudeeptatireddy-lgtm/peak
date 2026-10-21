@@ -1,6 +1,7 @@
 // `typewriter`: Typewriter (SCENES.md #10). A DOM scene: every character is
 // built up front and hidden, and typing reveals them one key at a time.
 
+import { cursorLean } from '../../kits/cursor';
 import { createPointer } from '../../engine/pointer';
 import { SHARED } from '../shared';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
@@ -13,6 +14,8 @@ type Phase = 'delay' | 'typing' | 'pause' | 'slam' | 'done';
 
 function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   const ptr = createPointer(host);
 
@@ -230,12 +233,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       /* CSS sizes everything */
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       ptr.sync();
       if (ptr.takeTaps().length) reset(time);
       advance(time);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       typeAll();
     },
@@ -254,6 +259,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       reset(time);
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       wrap.remove();
       lines = [];

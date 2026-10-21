@@ -1844,6 +1844,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -1888,6 +1889,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -1932,6 +1934,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -1976,6 +1979,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -2020,6 +2024,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -2064,6 +2069,7 @@ A front view of a staircase that comes down toward me. Each letter of a name is 
 - Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
 - Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
 - After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
 - Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
@@ -2204,6 +2210,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2241,6 +2248,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2278,6 +2286,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2315,6 +2324,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2352,6 +2362,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2389,6 +2400,7 @@ A big message in the middle of the screen. Clicking fires confetti from the clic
 - A burst adds 220 pieces at one point. For each, call Math.random() in this order: angle = −90° + (random − 0.5) × 120°, speed = 12 + random × 16 px per frame (so velocity = speed in that direction), spin = (random − 0.5) × 2 × 0.15 radians per frame, flutter phase = random × 2π, shape (one random pick among the allowed shapes), color = accent floor(random × 3).
 - Each frame, for every piece: vertical velocity += 0.5 × f; velocity ×= 0.97^f; phase += 0.18 × f; x += (vx + sin(phase) × 1.2) × f; y += vy × f; angle += spin × f. Pieces are removed once they are below the bottom edge.
 - An automatic burst fires when the animation starts and then every 4s, from (width × (0.2 + random × (1 − 2 × 0.2)), height × 0.88) (Math.random() for x first). A click or tap (on release) fires a burst from that point.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: one burst from the middle of the bottom edge area (width ÷ 2, auto burst height), frozen 40 frames after it fired.
 
@@ -2511,6 +2523,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -2548,6 +2561,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -2585,6 +2599,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -2622,6 +2637,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -2659,6 +2675,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -2696,6 +2713,7 @@ A countdown with the days, hours, minutes and seconds flipping like an airport b
 - When a digit changes it animates for 0.5s with progress p from 0 to 1 (driven by the animation clock, so it freezes when paused). Flip: each card is two halves. The top half shows the new digit, the bottom half the old one. A flap hinged on the middle line shows the old digit's top half turning down about the x axis from 0° to −90° while p < 0.5 (then it disappears), and then the new digit's bottom half turning down from 90° to 0° while p ≥ 0.5; at p = 1 the bottom half becomes the new digit. Use perspective 8em on the card and hide back faces.
 - The countdown target is 7 days after the page loads, in the visitor's local time. Time left = target − now (the real clock), split into days, hours (0–23), minutes (0–59) and seconds (0–59), updated every second.
 - When the time left first reaches zero while the page is open, fire one burst of 220 confetti pieces upward from the bottom center (at 85% of the height) over the digits: spread 120°, speed 12 plus up to 16, size 9px, spin ±0.15, flutter 0.18, gravity 0.5, drag 0.97, wobble 1.2, ribbons 2.6 × as long as wide, a mix of squares, ribbons and circles in the three accent colors, on a canvas behind the digits. Pieces tumble like cards (width follows cos of a phase) and are removed when they fall below the screen.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the digits showing the time left right now, with no animation and no confetti.
 
@@ -3119,6 +3137,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3160,6 +3179,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3201,6 +3221,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3242,6 +3263,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3283,6 +3305,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3324,6 +3347,7 @@ Dominoes, seen from above, standing in a winding path along the outlines of the 
 - The lean angle is 0.7 × 35°.
 - A domino can't go past flat or below standing: at flat its velocity becomes −velocity × 0.3 (a small bounce); at standing it stops.
 - Scrolling moves the front: front += (scroll change in px) ÷ 5, kept between 0 and the domino count + 1; on touch screens a sideways drag does the same (right is forward). On the scene's own page the scroll is an invisible endless scroll area over the canvas. A click or tap within one domino size of a standing domino flicks it: the front jumps to it (if it is behind) and then runs on by itself at 40 × topple speed dominoes per second to the end; scrolling back stops the run. After 2s without input the chain runs by itself the same way, waits 2.5s at the end, then the front slides back to 0 at 4 × the run speed and it starts again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the dominoes again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).
@@ -3802,6 +3826,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -3842,6 +3867,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -3882,6 +3908,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -3922,6 +3949,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -3962,6 +3990,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -4002,6 +4031,7 @@ A single coin on a table. Each scroll step splits every coin in two, with a litt
 - The current step s moves toward the target step at 1 ÷ 0.4 steps a second. Between steps k and k + 1 (u = s − k, eased with smoothstep), each coin slides from its parent's place to its own, lifted by 0.06 × height × sin(π × u), its face turning 1 times (width × max(0.12, |cos(π × 1 × u)|)).
 - Each time a step lands, kick a sway spring (speed += 1; each frame speed += −sway × 0.12 × f, speed ×= 0.9^f, sway += speed × f). A coin at height y above the table moves sideways by 0.5 × 0.35 × coin width × sway × (y ÷ the tallest stack's height).
 - Scrolling moves a target by (scroll change in px) ÷ 160, clamped to 0…doublings; the target step is its whole part. On touch screens a sideways drag does the same (dragging right doubles). After 1.5s without input the target steps up by one every 0.9s to the end, waits 3s, then goes back to 0 and starts again. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the coins again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads.
 - Reduced-motion still frame: the last step, every coin on its spot forming the name, no wobble, the counter at its final number.
@@ -6377,6 +6407,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -6419,6 +6450,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -6461,6 +6493,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -6503,6 +6536,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -6545,6 +6579,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -6587,6 +6622,7 @@ Fireworks across the whole screen. Tapping launches a rocket that climbs to wher
 - A click or tap (on release) queues a rocket aimed at that point (at most 3 waiting; more are ignored). A queued rocket launches once 0.35s have passed since the last launch. When the queue is empty and 3s have passed since the last launch (the first time: 0.4s after the start), queue an automatic rocket: x = (0.15 + random × (1 − 2 × 0.15)) × width, then y = (0.15 + random × (0.45 − 0.15)) × height.
 - A rocket starts at the bottom edge below its target and its height follows an ease-out cubic (1 − (1 − u)³) from the bottom to the target, u = its age ÷ 1.1s capped at 1. Its color is one of the three accents (one Math.random() call at launch: floor(random × 3)). When it arrives it bursts there in its color, but never within 0.35s of the previous burst: until then it waits at the top.
 - For 0.5s after it bursts, a burst lights up only the area around itself: a radial gradient circle of radius 90px from its color to transparent, at opacity 0.22 × (1 − age ÷ 0.5). Draw glows first, then rockets, then sparks (each burst as one path at its opacity), all with the blend mode above.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Each frame, in this order: queue an automatic rocket if one is due, launch a queued rocket if allowed, move rockets and burst the ones that arrived, move sparks, draw.
 - Safety: at most 3 bursts start in any one second, however fast I tap; nothing lights up the whole screen and the background never flashes.
@@ -7974,6 +8010,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8009,6 +8046,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8044,6 +8082,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8079,6 +8118,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8114,6 +8154,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8149,6 +8190,7 @@ A sheet of paper with a headline on it, cut into panels that fold and unfold lik
 - Fold style "accordion", with a fold amount F from 0 (flat) to 1 (fully folded) and θ = F × 150°. Panels sit side by side with vertical creases and zigzag: the first panel is turned about the vertical axis by +θ ÷ 2 around its left edge, and each next panel is hinged at the previous panel's right edge and turned by −θ, then +θ, then −θ and so on, so the sheet folds like an accordion. Keep the folding sheet centered: the sheet's visible length along the fold direction is its full length × cos(θ ÷ 2) for the two zigzag styles (full length × 1 for the fan), so shift the sheet to keep that centered in the section.
 - Crease shading 0.5: every panel gets an overlay, in the main text color on panels that tilt toward the viewer and in the surface color on panels that tilt away (all panels the same color when flat), at opacity 0.5 × |sin(its angle)|, ×0.5 on the light ones.
 - The fold follows how far the visitor has scrolled: u = (scroll distance ÷ (2 × the section height)) mod 1. The target fold amount is |2u − 1|: fully folded at u = 0, flat at u = 0.5, folded again at u = 1. Each frame the fold amount eases toward the target: F += (target − F) × (1 − (1 − 0.15)^f). On a page too short to scroll, give the section its own invisible endless scroller that recenters itself, and read its position.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Reduced-motion still frame: the sheet half folded (fold amount 0.5), nothing moving.
 
@@ -8622,6 +8664,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -8664,6 +8707,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -8706,6 +8750,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -8748,6 +8793,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -8790,6 +8836,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -8832,6 +8879,7 @@ An empty plaza seen from above. A few small figures walk in; as I scroll, more a
 - Formation tightness is 0.7.
 - People closer than 2.1 × 4px push apart: each is moved away from the other by 1 × 0.6px × (1 − distance ÷ that radius) per frame. Use a spatial hash so only nearby people are checked.
 - A number A counts how many people are on their way (at least 6). Scrolling changes it by (scroll change in px) ÷ 1500 × the crowd; on touch screens a sideways drag does the same. People in the arrival order below A head for their spots; the rest walk back out and vanish at their start points. After 1.5s without input, A rises by itself to the whole crowd over 14s, waits 4s, falls back over the same time, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Lay out the spots again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the crowd is the same every visit.
 - Reduced-motion still frame: the whole crowd standing on their spots, forming the name, with the counter at its full number.
@@ -9916,6 +9964,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -9956,6 +10005,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -9996,6 +10046,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -10036,6 +10087,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -10076,6 +10128,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -10116,6 +10169,7 @@ A flat-illustrated city seen from above, where the rooftops spell a name. One bu
 - Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
 - A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
 - Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
 - Reduced-motion still frame: the top-level view (zoom 0).
@@ -10870,6 +10924,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -10910,6 +10965,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -10950,6 +11006,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -10990,6 +11047,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -11030,6 +11088,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -11070,6 +11129,7 @@ Bold words sit on a strict grid and change on a steady beat: one scales up, one 
 - A "turn" move turns the word a quarter turn (to 90°, or back to 0° if it is already turned).
 - On every beat (60 ÷ 96 seconds apart, from when the animation starts), make one move from the repeating pattern scale, turn, swap, block, scale, block, turn, swap (minus any moves that are switched off), on cell (beat number × 5) mod the number of cells. A "scale" move grows the word to 1.4× and back within one beat (scale = 1 + (1.4 − 1) × sin(π × progress)). A "swap" move trades the cell's place with the cell (cell + 1 + beat mod (cells − 1)) mod cells, both sliding to their new places. Moves other than scale take 0.5 of a beat.
 - Moves ease with ease-out-back (snappy: they overshoot a little and settle).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Beats use t.
 - Recompute cell sizes and word sizes on every resize and once the Anybody font has finished loading.
 - Reduced-motion still frame: the poster after the first four beats, every move finished.
@@ -11509,6 +11569,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -11545,6 +11606,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -11581,6 +11643,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -11617,6 +11680,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -11653,6 +11717,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -11689,6 +11754,7 @@ A lava lamp: soft blobs of wax that rise from the bottom, cool and sink, stretch
 - Glowing edge: first draw a skirt, the second accent color at threshold × 0.45 and 0.55 opacity with the blend mode above, under the body; then after the body draw a core, the third accent color at threshold × 2.4 and 0.5 opacity.
 - Each blob has a heat from 0 (cold) to 1 (hot). Each frame, with f and dt as above: if the blob's y is in the bottom 20% of the screen, heat += 0.6 × dt (hot wax); in the top 25%, heat −= 0.6 × 1 × dt; everywhere heat −= 0.05 × dt; clamp heat to 0 to 1. Then vy −= (heat − 0.5) × 0.12 × 0.5 × f (hot rises, cold sinks) and vx += sin(t × 0.3 + a phase of 2π × i ÷ blob count) × 0.02 × 0.5 × f; multiply both velocities by 0.985^f; move x += vx × f, y += vy × f. Blobs stay inside the screen (their edge never leaves it, and a blob hitting a side or the floor or ceiling loses its velocity in that direction).
 - A click or tap warms the lamp: every blob's heat += 0.6 (up to 1), and each blob in the lower half of the screen gets vy −= 0.6 × 4.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: run the simulation 240 frames at f = 1 and dt = 1/60 from the starting layout and draw it, so blobs are mid-rise.
 
@@ -12142,6 +12208,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -12175,6 +12242,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -12208,6 +12276,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -12241,6 +12310,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -12274,6 +12344,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -12307,6 +12378,7 @@ A pack of six small, original loading animations made with plain CSS only: a dot
 
 ## How it moves
 - A full-screen section (100svh, at least 540px) with six small loading animations in a grid under one big featured one (Self-drawing ring). Grid: 3 columns of two rows (2 columns of three on screens under 700px wide); every cell is a real button at least 44px tall with a 2px border in the line color (the featured one's border in the main text color, aria-pressed true), with the loader centered. Clicking a cell makes it the featured one, shown 2.5 × bigger in the middle above the grid. Use plain CSS keyframes only (no JavaScript animation, no libraries) so each loader can be copied into any site. Every loader is 48px square, its lines are 4px thick, its loops take (loop seconds ÷ 1). Loop seconds: dot chase 1.2, bouncing trio 0.9, ring 1.6, stacking bars 1, morphing square 1.8, orbiting pair 1.4. Colors: the three accents in turn: dots, bars and orbit pieces take the first, second and third accent by their position (the orbit pair uses the first and second); the ring uses the first, the bounce balls the second, the morphing square the third. The loaders: (1) Dot chase: three dots, each 48px × 0.25, 12% of the size apart, each scales 0.4 to 1 and back and fades 0.4 to 1 over the loop, each starting an eighth of the loop after the one before. (2) Bouncing trio: three balls of 0.26 × the size, bottom-aligned, 10% of the size apart, each squashes (scale 1.25 wide by 0.75 tall) on the ground and rises half the size while stretching to 0.9 by 1.1, ease-in-out, 0.15 of a loop apart. (3) Ring: an SVG circle (viewBox 100, radius 50 minus half the stroke, stroke width 4 × 100 ÷ 48, round caps, pathLength 100) that draws itself (stroke-dashoffset 100 to 0 in the first half of the loop, then 0 to −100 so it erases from the start) while the whole SVG turns once every 1.4 loops. (4) Stacking bars: five bars, each 4px wide (at least 10% of the size) and as tall as the size, 8% apart, bottom-aligned, scaling in height from 0.2 to 1 and back, each starting a tenth of a loop after the one before. (5) Morphing square: a square outline (70% of the size, border 4px) whose corner radius goes 12% to 50% to 12% while it turns 360° and shrinks to 0.8 at the middle. (6) Orbiting pair: two dots of 0.22 × the size at the top and bottom of a faint circle (the same border thickness, 20% opacity) that turns once per loop.
+- The picture does not tilt toward the mouse.
 - Under reduced motion every loader stays still, paused halfway through its loop.
 - Reduced-motion still frame: every loader at 0.5 of its loop.
 
@@ -13781,6 +13853,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -13821,6 +13894,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -13861,6 +13935,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -13901,6 +13976,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -13941,6 +14017,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -13981,6 +14058,7 @@ A big shape in the middle of the page that smoothly melts into the next shape (c
 - Draw the shape with 3 ink layers: layer L (0, 1, 2) is filled with the L-th accent color at 0.85 opacity using the blend mode above, and starts L × 0.12 of the morph time after the first, so its progress is p = clamp((seconds since the morph began − L × 0.12 × morph time) ÷ morph time, 0, 1); the morph is over when the last layer reaches 1. Each layer is a closed path through its 120 points, drawn 0.08 × L smaller (scale 1 − L × 0.08) so the inks show as rings.
 - Wait 1s on each shape, then morph to the next over 1.2s: every point moves from its place in the old shape to the same-numbered point of the new shape by lerp(old, new, e), e = the bouncy curve applied to the progress p (0 to 1).
 - Bouncy easing is ease-out back with overshoot 1.70158: 1 + 2.70158 × (p − 1)³ + 1.70158 × (p − 1)², so the shape overshoots the next one and settles back like jelly (e goes above 1).
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run (the sum of dt).
 - Reduced-motion still frame: the first shape 50% of the way into the second, with all inks at the same progress (no lag).
 
@@ -15853,6 +15931,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -15896,6 +15975,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -15939,6 +16019,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -15982,6 +16063,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -16025,6 +16107,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -16068,6 +16151,7 @@ The view from a train window: flat, layered landscapes in bold travel-poster col
 - The platform is centered at x = width ÷ 2 + 3 × width × r × |r| with r = 1 − arrival, so it glides in from the right and eases to a stop; it is width × 1.6 long. Draw it from 0.68 × height to the bottom in the surface color with a safety line along its top edge (0.08 of its depth) in accent 3. Above it a 10px canopy beam at 0.16 × height spans the platform, with 10px pillars every 0.45 × width down to the platform, in the soft text color.
 - The sign hangs from the middle of the beam on two short chains (0.6 × font size) and swings: its angle springs toward clamp(−20 × the change in arrival velocity per frame, ±0.35 rad) with velocity = (velocity + (target − angle) × 0.08 × f) × 0.9^f. The board is accent 1 with the name centered on it in the text color (raised to 4.5:1 contrast with the board if needed).
 - Scrolling down moves the goal toward the stop: goal += (scroll change in px) ÷ 900, kept between 0 and 1; scrolling up sends the train off again. Dragging sideways does the same (right is toward the stop). On the scene's own page the scroll is an invisible endless scroll area over the canvas. After 1.5s without input the train runs a demo: it arrives, waits 2.5s once settled (within 0.02 of its goal), leaves, cruises 2.5s, and arrives again.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05. The train starts at full speed (arrival 0, goal 0).
 - Measure the sign again on every resize and once more when the Anybody font has finished loading; the sign is not drawn before the font loads.
 - Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.
@@ -17828,6 +17912,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -17867,6 +17952,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -17906,6 +17992,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -17945,6 +18032,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -17984,6 +18072,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -18023,6 +18112,7 @@ Three lines of text that flicker through random characters and then resolve, let
 - Decoding a line that starts at time t0: character j of the line (counting from 0, spaces included) scrambles from t0 until t0 + 1.2s + j × 40ms, then shows its real character for good. Spaces never scramble.
 - Line i (0, 1, 2) starts decoding 0.25s × i after the animation starts; before that it shows nothing (its characters are blank, but still take up their space). After that, a line decodes again whenever the pointer enters it (pointerenter, which also covers a tap), if its last decode has finished.
 - A scrambling character changes every 50ms: whenever floor((t − t0) × 1000 ÷ 50) differs from its last value (including the first frame), pick a new character with one Math.random() call: charset[floor(random × charset length)].
+- The picture does not tilt toward the mouse.
 - Build each line as one block holding a visually hidden copy of the whole line (for screen readers) and, marked aria-hidden, one inline-block span per character. Each span is an inline-grid (justify-items: center) holding two layers in the same grid cell (grid-area 1 / 1): the real character with visibility: hidden, which fixes the span’s width, and the character currently shown. So nothing shifts while the line scrambles.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Start times use t.
 - Each frame, update lines in order and characters left to right (this fixes the order of the Math.random() calls).
@@ -18160,6 +18250,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18200,6 +18291,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18240,6 +18332,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18280,6 +18373,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18320,6 +18414,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18360,6 +18455,7 @@ A line of words sits calmly. When I click a word, it cracks along jagged lines i
 - After 2s, the shards fly home: each frame, position and angle move 0.12 × f of the way to home (angle 0). When every shard is within 0.5px and 0.01 radians, the word is whole again and its cracks shimmer: draw every crack (all shard edges at home) in the second accent color, fading from opacity 0.8 to 0 over 0.7s.
 - Draw each shard by clipping to its polygon (moved to its position and turned by its angle) and drawing its word inside, so it carries its piece of the letters; then outline it in the second accent color at opacity 0.6 × |sin(angle × 2)| (a glint as it turns).
 - Reduced-motion still frame: the line whole, with the first word's cracks (made as above, as if clicked at its center) drawn as hairlines in the secondary text color at opacity 0.8 ÷ 2.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - A click or tap (on release) inside a whole word’s box shatters that word; clicks on broken words do nothing.
 - Lay the line out again (all words whole) on every resize and once the Anybody font has finished loading.
@@ -18823,6 +18919,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -18867,6 +18964,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -18911,6 +19009,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -18955,6 +19054,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -18999,6 +19099,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -19043,6 +19144,7 @@ A big headline whose letters drive in one by one from off-screen like cars, over
 - Parked letters idle with an engine shake: move letter i up and down by 0.8px × sin(t × 38 + i × 1.7), t in seconds.
 - Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it: velocity += (raw − velocity) × 0.2. When it goes above 4 (scrolling down) while the letters are in, they peel out to the right, rightmost first, 60ms apart: each accelerates from rest by 1.2px per frame² × f, leaning back (counterclockwise) by 12° × min(1, its speed ÷ entry speed) ÷ 2, and leaves no marks. When it goes below −4 (scrolling up) while they are out or leaving, the entrance plays again.
 - Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running 160px back from its parked center, at opacity 0.15.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5); t = seconds the loop has run.
 - The first entrance starts when the letters are first laid out (once the Anybody font has loaded), at that moment’s t, not at page load. It plays again on a click or tap (on release) and when scrolling up brings the letters back, restarting every letter from the left; old marks and smoke stay until they fade. Handle clicks at the start of a frame, right after t += dt, so a replay starts at that frame’s t.
 - Lay the letters out again on every resize and once the Anybody font has finished loading.
@@ -19516,6 +19618,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -19556,6 +19659,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -19596,6 +19700,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -19636,6 +19741,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -19676,6 +19782,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -19716,6 +19823,7 @@ A board of split-flap tiles, like an old airport departures board. Each tile fli
 - When every tile has landed, the message stays 5s, then the board flips to the next message (looping). A click or tap skips to the next message right away.
 - Tile width = min(3.6rem, 90% of the section width ÷ (tiles + (tiles − 1) × 0.08)); tile height = 1.5 × the width; tiles sit in one row, 0.08 × the tile width apart, centered in a full-screen section (100svh, at least 540px).
 - A tile is a rounded rectangle (radius 0.1 × its width) in the surface color; its character is Anybody weight 700, font size 0.54 × the tile height, centered, in the main text color, with line-height equal to the tile height. Each half is an element with overflow: hidden showing the top or bottom half of the character, and a 0.025 × tile height line in the background color separates the halves.
+- The picture does not tilt toward the mouse.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Flip times use t; a tile that falls behind does several flips in one frame.
 - The first message starts flipping in when the animation starts. Recompute tile sizes on every resize.
 - Reduced-motion still frame: the first message, every flap at rest.
@@ -20834,6 +20942,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -20878,6 +20987,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -20922,6 +21032,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -20966,6 +21077,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -21010,6 +21122,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -21054,6 +21167,7 @@ A sentence with a name in it types in, then splits into colored chunks like an A
 - Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
 - Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
 - A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
 - Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
 - Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
@@ -22474,6 +22588,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22514,6 +22629,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22554,6 +22670,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22594,6 +22711,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22634,6 +22752,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22674,6 +22793,7 @@ Lines that type out key by key, like on an old typewriter. Each strike leaves a 
 - After the last key of a line, wait 0.3s, then the carriage slams: for 0.35s the whole block shifts by 0.6 × 14px × e^(−age × 6 ÷ 0.35) × sin(age × 34) horizontally (age in seconds), and the next line starts typing when the slam ends.
 - When everything is typed it stays; a click or tap clears the text and types it all again.
 - A cursor (a bar 0.08em wide and 1em tall, in the first accent color, just after the last typed character) stays solid while typing and blinks once everything is typed: visible while floor(t ÷ 0.53) is even. Reduced-motion still frame: all lines typed (with their ink and specks), the cursor solid.
+- The picture does not tilt toward the mouse.
 - Build every character up front as a span with visibility: hidden; typing a key makes its span visible.
 - When a key lands, make its Math.random() calls in this order: the three ink values, the splatter check, the speck count and each speck’s three values, then the wait before the next key.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt). Key times use t.
@@ -22792,6 +22912,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.
@@ -22833,6 +22954,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.
@@ -22874,6 +22996,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.
@@ -22915,6 +23038,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.
@@ -22956,6 +23080,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.
@@ -22997,6 +23122,7 @@ Three rows of huge repeating text that drift in alternating directions. When I s
 - Each row has an offset that starts at random × 400 px (rows in order, one random number each). Every frame, offset += 1 × (1 + |scroll velocity| × boost) × dt × 60 × scroll direction × row direction (rows 1 and 3: +1, row 2: −1). Draw each row's track at translateX(−(offset mod group width)) so it wraps seamlessly.
 - Scroll boost is 0.8. Scroll velocity: each frame take the change in scroll position ÷ max(dt × 60, 0.25), clamp it to ±140, and smooth it with velocity += (raw − velocity) × 0.2. Scroll direction is +1 or −1 and only changes when |raw| > 0.4; it starts at +1.
 - The whole stack leans with skewX(−scroll velocity × 0.5 degrees), never more than 18 degrees either way.
+- The mouse position does not drive the scene; only scrolling does.
 - Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; t = seconds the loop has run (the sum of dt).
 - Measure the rows again (and rebuild their repeats) on every resize and once the font has loaded.
 - Reduced-motion still frame: the rows in place, with no lean.

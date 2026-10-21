@@ -1,6 +1,7 @@
 // `lava`: Lava lamp (SCENES.md #42). Blobs with a heat rise when hot and sink when cold;
 // they are drawn as metaballs (summed fields, thresholded) on a coarse grid.
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { createPointer } from '../../engine/pointer';
 import { frameFactor } from '../../engine/time';
@@ -29,6 +30,8 @@ interface Blob {
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
@@ -132,6 +135,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       draw();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       const f = frameFactor(dt);
       ptr.sync();
       for (const _tap of ptr.takeTaps()) {
@@ -144,6 +148,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       draw();
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       build();
       for (let i = 0; i < FIXED.STILL_FRAMES; i++) step(1 / SHARED.FPS, 1);
@@ -164,6 +169,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       build();
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       renderer.destroy();
       c.destroy();

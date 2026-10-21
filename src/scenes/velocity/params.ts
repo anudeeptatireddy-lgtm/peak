@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { sweepParams } from '../cursor-params';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16). Defaults are
 // the exact constants of reference/peak-prototype.html; the parity test proves it.
@@ -400,4 +401,5 @@ export const params: Param[] = [
     phrase: (v: number) => `Threshold ${v}.`,
     phraseIn: 'boost',
   },
+  ...sweepParams(2000),
 ];

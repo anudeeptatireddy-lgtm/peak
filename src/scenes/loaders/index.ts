@@ -1,6 +1,7 @@
 // `loaders`: Loading pack (SCENES.md #50). Six small loops in plain CSS keyframes
 // (see styles.ts), so each can be copied into any site. A click features one.
 
+import { cursorLean } from '../../kits/cursor';
 import { createPointer } from '../../engine/pointer';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
 import { FIXED } from './constants';
@@ -11,6 +12,8 @@ import { loaderCss, ringSvg } from './styles';
 
 function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   const ptr = createPointer(host);
   const ac = new AbortController();
@@ -91,12 +94,14 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
     resize() {
       /* CSS sizes everything */
     },
-    update() {
+    update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       ptr.sync();
       ptr.takeTaps();
       stillClass(false);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       stillClass(true);
     },
@@ -111,6 +116,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       build();
     },
     destroy() {
+      lean.destroy();
       ac.abort();
       ptr.destroy();
       wrap.remove();

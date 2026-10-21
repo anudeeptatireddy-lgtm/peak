@@ -2,6 +2,7 @@
 // span that holds its real character invisibly (so widths never change) with the
 // shown character laid on top.
 
+import { cursorLean } from '../../kits/cursor';
 import { ensureContrast } from '../../theme/color';
 import type { Theme } from '../../theme/worlds';
 import type { Params, SceneContext, SceneInstance, SceneModule } from '../types';
@@ -26,6 +27,8 @@ interface Line {
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   let theme: Theme = ctx.theme;
   let inks: string[] = [];
   let time = 0;
@@ -174,6 +177,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       /* CSS sizes everything */
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       if (p.trigger === 'loop' && lines.length && lines.every((l) => time >= doneAt(l))) {
         loopAt ??= time + Number(p.loopPause);
@@ -182,6 +186,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       render(time, true);
     },
     still() {
+      lean.reset();
       render(time, false);
     },
     setParams(next) {
@@ -204,6 +209,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       startAll(time);
     },
     destroy() {
+      lean.destroy();
       ac.abort();
       wrap.remove();
       lines = [];

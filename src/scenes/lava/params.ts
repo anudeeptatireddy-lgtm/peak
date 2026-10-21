@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { leanParams } from '../cursor-params';
 import { FIXED } from './constants';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
@@ -156,4 +157,5 @@ export const params: Param[] = [
     phrase: (v: number) =>
       `A click or tap warms the lamp: every blob's heat += ${v} (up to 1), and each blob in the lower half of the screen gets vy −= ${v} × ${FIXED.KICK}.`,
   },
+  ...leanParams,
 ];

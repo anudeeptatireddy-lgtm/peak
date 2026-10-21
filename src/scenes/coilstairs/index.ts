@@ -2,6 +2,7 @@
 // coils that tumbles forward down a front-view staircase, top coils first; one progress
 // value P (scroll, a sideways drag, or the idle walk) drives every letter.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -54,7 +55,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let stillShown = false;
@@ -306,6 +312,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       for (const L of letters) [L.squash, L.v, L.step] = [0, 0, 0];
     },
     destroy() {
+      sweep.destroy();
       ptr.destroy();
       removeSource();
       inner?.el.remove();

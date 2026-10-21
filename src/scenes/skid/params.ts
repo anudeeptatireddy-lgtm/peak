@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { sweepParams } from '../cursor-params';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
 
@@ -434,4 +435,5 @@ export const params: Param[] = [
     phrase: (v: number, all) =>
       `Reduced-motion still frame: the letters parked (no shake), each with its two tire marks running ${all.brakeDist}px back from its parked center, at opacity ${v}.`,
   },
+  ...sweepParams(3000),
 ];

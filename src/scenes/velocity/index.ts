@@ -2,6 +2,7 @@
 // On a page that doesn't scroll much (scene pages, the dev viewer), the host sets
 // data-inner-scroll and the scene provides its own endless scroll area (PRD §8 note).
 
+import { cursorSweep } from '../../kits/cursor';
 import { addScrollSource } from '../../engine/scheduler';
 import { innerScroller } from '../../engine/inner-scroll';
 import { createScrollSource } from '../../engine/scroll';
@@ -99,7 +100,12 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const tune = () =>
     (source.velocity.tuning = {
       maxSpeed: Number(p.maxScroll),
@@ -174,6 +180,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       source.velocity.reset(source.read());
     },
     destroy() {
+      sweep.destroy();
       removeSource();
       inner?.el.remove();
       wrap.remove();

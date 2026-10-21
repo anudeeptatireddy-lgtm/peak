@@ -1,6 +1,7 @@
 // `shatter`: Shattering words (SCENES.md #13). Each word's box is cut into
 // convex shards by repeated straight cracks; shards clip and carry the word.
 
+import { cursorLean } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { createPointer } from '../../engine/pointer';
@@ -101,6 +102,8 @@ function fracture(box: Word['box'], count: number): Pt[][] {
 
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   let theme: Theme = ctx.theme;
   const c = createCanvas(host);
@@ -265,6 +268,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       layout();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       ptr.sync();
       for (const tap of ptr.takeTaps()) {
@@ -310,6 +314,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       draw(false);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       const first = words[0];
       if (first && first.state === 'whole') first.shards = shardsFor(first);
@@ -329,6 +334,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       for (const w of words) w.state = 'whole';
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       c.destroy();
       label.remove();

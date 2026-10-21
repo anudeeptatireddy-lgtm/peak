@@ -3,6 +3,7 @@
 // on the table, and the last step puts every coin on its own slot. Each coin of step
 // k + 1 splits off a coin of step k, spinning as it slides; landings sway the stacks.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -35,7 +36,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let stillShown = false;
@@ -276,6 +282,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       goal = cur = landed = sway = swayV = quiet = idleT = held = 0;
     },
     destroy() {
+      sweep.destroy();
       ptr.destroy();
       removeSource();
       inner?.el.remove();

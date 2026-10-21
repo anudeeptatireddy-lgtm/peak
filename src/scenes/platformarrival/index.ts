@@ -1,6 +1,7 @@
 // `platformarrival`: Platform Arrival (SCENES.md #81). Layered landscapes race past
 // a train window; scrolling springs the train into a station whose sign shows NAME.
 
+import { cursorSweep } from '../../kits/cursor';
 import { createCanvas } from '../../engine/canvas';
 import { fontsReady } from '../../engine/fonts';
 import { innerScroller } from '../../engine/inner-scroll';
@@ -35,7 +36,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
           high: FIXED.RECENTER_HIGH,
         })
       : null;
-  const source = inner ? inner.source : createScrollSource();
+  // Follow cursor: a sideways mouse sweep counts as scrolling (off by default).
+  const sweep = cursorSweep(host, inner ? inner.source : createScrollSource(), {
+    on: () => !!p.cursor,
+    px: () => Number(p.cursorSweep),
+  });
+  const source = sweep.source;
   const removeSource = addScrollSource(source);
   let fontsOk = false;
   let alive = true;
@@ -290,6 +296,7 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       quiet = 0;
     },
     destroy() {
+      sweep.destroy();
       alive = false;
       ptr.destroy();
       removeSource();

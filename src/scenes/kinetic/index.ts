@@ -1,6 +1,7 @@
 // `kinetic`: Kinetic poster (SCENES.md #12). A DOM grid driven by a beat clock;
 // every move is a transform eased with the easing kit.
 
+import { cursorLean } from '../../kits/cursor';
 import { createPointer } from '../../engine/pointer';
 import { backOut, cubicInOut, linear, type Ease } from '../../kits/easing';
 import { SHARED } from '../shared';
@@ -34,6 +35,8 @@ const tween = (v: number): Tween => ({ from: v, to: v, start: -Infinity });
 
 function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneInstance {
   let p = { ...initial };
+  // Follow cursor: the whole picture tilts toward the mouse (off by default).
+  const lean = cursorLean(host);
   const n = (id: string) => Number(p[id]);
   const ptr = createPointer(host);
 
@@ -206,6 +209,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       else size();
     },
     update(dt) {
+      lean.update(dt, !!p.cursor, Number(p.cursorLean));
       time += dt;
       ptr.sync();
       if (ptr.takeTaps().length) {
@@ -219,6 +223,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       render(time);
     },
     still() {
+      lean.reset();
       ptr.takeTaps();
       build();
       for (let b = 0; b < FIXED.STILL_BEATS; b++) act(b, 0);
@@ -248,6 +253,7 @@ function create(host: HTMLElement, initial: Params, _ctx: SceneContext): SceneIn
       nextBeat = Math.ceil(time / beatLen());
     },
     destroy() {
+      lean.destroy();
       ptr.destroy();
       wrap.remove();
       cells = [];

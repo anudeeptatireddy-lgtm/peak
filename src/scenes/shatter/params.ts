@@ -1,4 +1,5 @@
 import type { Param } from '../types';
+import { leanParams } from '../cursor-params';
 
 // Every number that shapes this scene is a param (owner, 2026-10-16).
 
@@ -240,4 +241,5 @@ export const params: Param[] = [
     phrase: (v: string) => `Stretch ${v}.`,
     phraseIn: 'text',
   },
+  ...leanParams,
 ];
