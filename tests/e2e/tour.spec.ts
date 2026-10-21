@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { getWorld } from '../../src/theme/worlds';
 
-const COUNT = 66;
+const COUNT = 67;
 const ground = (page: Page) =>
   page.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--ground').trim(),

@@ -764,6 +764,360 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Clay Frames
+
+## What I want
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+## Look
+- Colors ("Lava Lamp" palette): background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 850, centered at 55% of the height, font size 120px, shrunk if needed so it is at most 90% of the width. Trace its outlines (marching squares at alpha 128), simplify them to within 0.6px and resample every 3px. A loop inside another loop is a hole in it; each outer loop with its holes is one clay piece, numbered left to right.
+- Clay piece k is accent (k mod 3) + 1, mixed toward the next accent by 0.3 × a seeded random amount, filled with the even-odd rule so holes stay open.
+- Every frame, each outline point moves along its normal by 0.5 × 2.2% of the letter size × (sin(s ÷ 26 + a) + 0.5 sin(s ÷ 13 + b)) ÷ 1.5, where s is the distance along its loop in px and a, b are new random phases for every loop and frame, so the clay boils like stop motion.
+- Clay grain: specks scattered (seeded) over a 4px grid of letter pixels, 3 per 1,000 px² at full texture × 0.5, each a 1.6px dot at opacity 0.5 × 0.35, alternating the light and shade inks; specks stay put.
+- Light comes from the top left. The shade ink is whichever of the background and text colors is darker, the light ink the other. Let o = 0.6 × 3% of the letter size. Under the letters, fill them shifted by (o, o) in the shade ink at opacity 0.6 × 0.35. Clipped to the letters, stroke the outlines shifted by (o, o) with a 2o-wide line in the light ink at opacity 0.6 × 0.5, and shifted by (−o, −o) in the shade ink at opacity 0.6 × 0.4.
+- Before filling, stroke each piece's outline in its own color with a line 0.4 × 3% of the letter size wide at opacity 0.35, for a soft rim.
+- The picture only changes 12 times a second: keep a clock, and redraw only when 1 ÷ 12 s has passed since the last frame; in between, leave the canvas as it is.
+- A print's depth is 1 − smoothstep(0, 10, its age in seconds); prints at depth 0 are removed, and at most 40 are kept (oldest first out).
+- Clicking or tapping presses a thumbprint 36px wide (radius r = 36 ÷ 2, height 0.78 × the width, at a random angle); pressing and dragging (on touch screens after a short hold) leaves one every 1.2 r of movement; a hovering mouse presses at depth 0.3 without leaving a print. After 3s without input, an invisible finger presses a print at a random point on the letters every 1.5s. Clipped to the letters, a print is a darker ellipse in the shade ink at opacity depth × 0.28, 6 fingerprint ridges (concentric ellipses) at opacity depth × 0.3, and a lit rim (the lower-right half of its edge) in the light ink at opacity depth × 0.45.
+- Each print pushes outline points within 1.3 r of it straight away from its center by depth × 0.6 × 0.45 r × (1 − distance ÷ 1.3 r)², so the clay squishes.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05.
+- Trace the outlines again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator for colors, grain and the idle finger.
+- Reduced-motion still frame: one frame with two thumbprints, at 30% and 72% of the way along the name.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens tap to press, or press and hold, then drag.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clayframes prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Clay Frames
+
+A name made of colorful clay, shown at a choppy stop-motion frame rate with outlines that wobble a little every frame. Pressing leaves thumbprints with fingerprint ridges that squish the letters, and the prints slowly relax away.
+
+Colors: background #240B1C, text #FFEDE3, secondary text #E0AFA0, accents #FF5A1F, #FF2E88, #FFC23D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 120px
+- Outline jitter: 0.5
+- Frame rate: 12
+- Squish amount: 0.6
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Clockwork
 

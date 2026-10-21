@@ -73,6 +73,7 @@ export const CATALOG_ORDER = [
   'gatherround',
   'epicycles',
   'tokenstream',
+  'clayframes',
 ] as const;
 
 export function catalogNumber(slug: string): number {

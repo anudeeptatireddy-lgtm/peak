@@ -20,6 +20,7 @@ One line per scene built from the backlog: scene, live link, tokens used, proble
 | 2026-10-21 | `gatherround` (87) | https://peak-teal.vercel.app/scenes/gatherround | approx 3% of the meter (47% → 50%) | None (drops and home specs flaky once under load; passed on rerun). |
 | 2026-10-21 | `epicycles` (67) | https://peak-teal.vercel.app/scenes/epicycles | approx 4% of the meter (50% → 54%, including the full suite) | Full suite slow and flaky under load; fixed a real gallery tap-target issue it showed. |
 | 2026-10-21 | `tokenstream` (88) | https://peak-teal.vercel.app/scenes/tokenstream | approx 6% of the meter (57% → 63%, including reading the docs and templates in a fresh session) | Docked chips overlapped and the phone sentence was tiny; fixed (two lines under 20px). Stage was blank before the sentence typed; now starts typed. |
+| 2026-10-21 | `clayframes` (68) | https://peak-teal.vercel.app/scenes/clayframes | approx 3% of the meter (63% → 66%) | None. |
 
 **Summary after 9 scenes (2026-10-21):** three chunks used about 13%, 12% and 19% of the 5-hour meter (about 15% per chunk, 5% per scene). In tokens of new work, roughly 30k to 60k per scene; the estimate was 60k to 100k per Medium scene, so all nine stayed within it.
 

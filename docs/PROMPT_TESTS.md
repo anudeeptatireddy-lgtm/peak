@@ -81,3 +81,4 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 87 | `gatherround` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
 | 67 | `epicycles` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
 | 88 | `tokenstream` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
+| 68 | `clayframes` | pending | n/a | **Pending** (live) | Medium scene: prompt test optional, not scheduled. |
