@@ -378,8 +378,8 @@ Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, S
 **Building the backlog (owner, 2026-10-21; replaces "Batch 2 is an idea bank"):** the ANIMATED scenes from Batch 1 and Batch 2 are built in chunks of 3 with the lean scene process (DECISIONS, 2026-10-21), each new scene marked `unreleased` until the owner releases it as a weekly drop. After each chunk: full suite, commit, push, HANDOFF, a short report, then wait for the owner's OK. REALISTIC scenes wait for the owner's reference clips; `wafershine` stays OK'd for after the pilot. Batch 3 stays an idea bank.
 
 - [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21, unreleased.
-- [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21, unreleased; `resonanceplate` is Spicy and needs a prompt test (estimate in PROMPT_TESTS) before release. Waiting for the owner's OK for chunk 3.
-- [ ] **Chunk 3 (proposed, needs OK):** `anamorphic` (63), `coilstairs` (65), `clockwork` (66)
+- [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21, unreleased; `resonanceplate` is Spicy and needs a prompt test (estimate in PROMPT_TESTS) before release.
+- [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21, unreleased; `clockwork` is Spicy and needs a prompt test (estimate in PROMPT_TESTS) before release. Waiting for the owner's OK for chunk 4.
 - [ ] **Chunk 4 (proposed):** `epicycles` (67), `clayframes` (68), `stringart` (69)
 - [ ] **Chunk 5 (proposed):** `torchmap` (84, ⚠), `doubling` (85), `peekaboo` (86)
 - [ ] **Chunk 6 (proposed):** `gatherround` (87), `tokenstream` (88), `infinitezoom` (89)

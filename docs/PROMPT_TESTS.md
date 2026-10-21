@@ -71,3 +71,6 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 81 | `platformarrival` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
 | 82 | `doorwave` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
 | 83 | `resonanceplate` | pending | n/a | **Pending** (unreleased) | **Spicy**: needs a prompt test before release. Estimate about 0.1 to 0.15M tokens (one fresh agent build plus the parity run); waiting for the owner's OK. |
+| 63 | `anamorphic` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 65 | `coilstairs` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
+| 66 | `clockwork` | pending | n/a | **Pending** (unreleased) | **Spicy**: needs a prompt test before release. Estimate about 0.1 to 0.15M tokens (one fresh agent build plus the parity run); waiting for the owner's OK. |

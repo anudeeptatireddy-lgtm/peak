@@ -62,6 +62,366 @@ One index.html file, CSS and JS inline, no libraries.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Anamorphic
+
+## What I want
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels, with the origin at the center of the canvas.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered, font size = height × 0.3, shrunk if needed so it is at most 80% of the width. Sample its pixels on a square grid (row by row from the top-left) and keep points whose alpha is above 128; start the grid 3px apart and widen it 1px at a time until there are no more points than shards. Move each point by a random amount of up to a quarter of the grid gap in x and y. Each point is where one shard appears from the sweet spot.
+- Use at most 320 shards (160 on screens under 700px wide).
+- Each shard is a triangle or a four-sided piece, alternating from shard to shard, lying flat in a plane facing the sweet-spot camera: its corners sit at evenly spaced angles around its point, starting from a random turn, at a random distance between 60% and 100% of 14px as seen from the sweet spot (in 3D, multiply those offsets by (F + z) ÷ F, the same as the point). Project every corner through the camera and fill the shape.
+- Shard i is filled with accent (i mod 3), batching one path per accent, using the blend mode above.
+- Give each shard a random depth z = (random × 2 − 1) × 0.6 × the shorter screen side, but never less than −0.6 × F. To keep it on the name from the sweet spot, its 3D position is (sx × (F + z) ÷ F, sy × (F + z) ÷ F, z), where (sx, sy) is its point relative to the center.
+- The camera's focal length is F = the shorter screen side × 1.2 ÷ 1. A 3D point (x, y, z) is drawn at the center + (x, y) × F ÷ (F + z).
+- Each shard floats along its own line of sight: its depth becomes z + 0.3 × 40px × sin(2π × 0.3 × time + a random phase), recomputing its 3D position from that depth, so from the sweet spot it never seems to move.
+- The camera is aimed by two numbers u and v from −1 to 1. Rotate every 3D point by yaw = u × 30° around the vertical axis, then by pitch = v × 30° × 0.6 around the horizontal axis, then project it. With the mouse over the canvas, u = (x ÷ width − 0.5) × 2 and v = (y ÷ height − 0.5) × 2, so the sweet spot is the middle of the screen. On touch screens a drag moves u and v by the drag distance ÷ (half the width or height), clamped to −1…1.
+- Near the sweet spot the camera is pulled in: with r = √(u² + v²), multiply both by smoothstep(0, 0.3, r). Each frame the drawn camera moves toward that aim by 1 − (1 − 0.08)^f.
+- On devices that report orientation, show a small "Use motion" button at the bottom. Tapping it asks for permission (iOS requires this to come from a tap), then u = gamma ÷ 30 and v = (beta − 45) ÷ 30, clamped to −1…1.
+- When nothing has moved the camera for 2s (the mouse is off the canvas and nobody is touching or tilting), it drifts by itself on a figure eight: u = sin(2π × s ÷ 14), v = sin(2 × 2π × s ÷ 14), where s counts seconds of drifting. That path crosses the sweet spot twice per loop.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the shards again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`anamorphic prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Anamorphic
+
+Flat-colored shards floating in 3D space in front of the camera. Moving the cursor (or tilting a phone) orbits the view, and the shards drift apart in depth. At one exact viewpoint, the middle of the screen, they line up and spell a name, and the camera gently snaps into that view when it gets close.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Shards: 320
+- Shard size: 14px
+- Depth spread: 0.6
+- Orbit range: 30°
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`blackhole prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Black hole
 
@@ -404,6 +764,354 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Clockwork
+
+## What I want
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+## Look
+- Colors ("Blueprint" palette): background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand", in the text color, Anybody weight 800, centered, font size = height × 0.22, shrunk if needed so it is at most 78% of the width. Place the letters by measuring each prefix of the name, so the spacing matches the whole word. Draw them on top of the gears, one fillText per letter.
+- Build a chain of 14 gears (8 on screens under 700px wide). Gear 0 sits at the origin; each next gear k sits at distance r(k−1) + r(k) from the previous one, at angle φ(k) = (random × 2 − 1) × 50°, so the chain zigzags left to right. Then scale the whole chain (the module m, below) so it is 115% of the name's width but at most 80% of the screen height, and center it on the screen.
+- Gear k has T(k) = max(6, round(20 × (1 + 0.45 × (random × 2 − 1)))) teeth and pitch radius r(k) = T(k) × m ÷ 2. Draw it as one closed path: for each tooth j, centered at angle a + 2π × j ÷ T, go from the root circle (r − 1.25m) at −30% of a tooth's angle, to the tip circle (r + m) at −0.15 of a tooth's angle, across the tip, and back down to the root at +30%. Cut out an axle hole of radius 0.16 × r (even-odd fill).
+- Gear k is filled with the soft text color mixed 50% toward accent (k mod 3) in OKLab, at opacity 0.55, one path per color.
+- The mainspring holds energy from 0 to 1. 1 times a second, if it holds at least 0.04, the escapement ticks: take 0.04, and move gear 0's target angle on by one tooth (2π ÷ T(0)). Each frame gear 0's angle moves toward its target by 1 − (1 − 0.35)^f. Draw the escapement above gear 0: a pivot at 1.45 × r(0) above its center, and an anchor of two short pallets (0.45 × r(0) apart and long) that rocks ±12°, switching side on every tick, in the text color with 2px lines.
+- Gear angles follow exactly: with u = (φ(k) − a(k−1)) × T(k−1) ÷ 2π, a(k) = φ(k) + π − (0.5 − u) × 2π ÷ T(k), so each gear turns the other way at T(k−1) ÷ T(k) of its neighbor's speed and its teeth always fall into the gaps. Each gear also has a wobble spring kicked by 1 on every tick (each frame speed += −wobble × 0.25 × f, speed ×= 0.78^f, wobble += speed × f), drawn as an extra 0.2 × 0.35 × wobble of one tooth's angle.
+- A build count B starts at 0; each tick adds 1 × 0.25, up to the number of letters, and the drawn count eases toward it the same way gear 0 does. Letter i is b = clamp(B − i, 0, 1) built: it hangs turned by (1 − smoothstep(0, 1, b)) × its scatter angle (a random ±1.2 radians) around the center of the gear nearest to it, at opacity 0.25 + 0.75 × b. When the whole name is built, wait 3s, then B falls back to 0 at 3 letters a second and the build starts over.
+- Moving the mouse over the canvas winds the spring: energy += (distance moved ÷ the shorter screen side) × 1 × 1.5, up to 1; on touch screens only drags wind it. Clicking or tapping makes one tick at once, even with no energy. After 2s without movement the spring winds itself at 0.08 a second. Draw the spring as a spiral in the center of gear 0, from its axle to 55% of its radius, with 1.5 + 4 × energy turns, in the text color with 2px lines.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the gears and letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads. Use a seeded random number generator so the layout is the same every visit.
+- Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`clockwork prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Clockwork
+
+A chain of meshing gears behind a name, like the inside of a watch. Moving the cursor winds a mainspring; an escapement then ticks the gears forward one tooth at a time, and each tick swings the letters of the name a little further into place until it is complete.
+
+Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3FF, #FFD447, #FF7A59. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Gears: 14
+- Teeth per gear: 20
+- Tick rate: 1/s
+- Letter build speed: 1×
+- Wind speed: 1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`cloth prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Tearable cloth
 
@@ -741,6 +1449,372 @@ Colors: background #0B2A5B, text #F0F6FF, secondary text #A9C3EA, accents #7FD3F
 - Gravity: 0.25
 - Breeze: 0.2
 - Tear resistance: 3
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Coil Stairs
+
+## What I want
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+## Look
+- Colors ("Dreamhouse" palette): background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw each letter at weight 800 on its own hidden canvas, trace its outline (marching squares at alpha 128, simplified to within 0.8px) and keep the loops relative to the letter's baseline center. Space the letters by their real advance widths, as the font would set the whole word.
+- Letters on the bottom step are 110px, shrunk if needed so the name is at most 80% of the width.
+- Each letter is a stack of 12 coils (8 on screens under 700px wide). Coil j (0 at the front) is the letter's outline, raised by j × 2.5px × (1 + squash) × the step's scale. Stroke coil 0 at full strength and the rest, behind it, at opacity 0.45, in the letter's accent (letter i uses accent i mod 3), one path per accent and layer.
+- Coils are 2.5px lines with round joins.
+- Draw a staircase of 6 steps seen from the front (4 on screens under 700px wide), coming down toward the viewer: step k (0 at the top) has its edge at y_k = y_0 + k × step height, and everything on it is scaled by 1 ÷ (1 + (steps − k) × 0.05), so far steps look smaller. Each step is a band 30% of the step height deep on top (background mixed 10% toward the text color) and a front face down to the next step (mixed 20%), reaching 8% of the name's width past either end. Center the whole staircase and letters on the screen.
+- The step height is 60px, shrunk if needed so the stairs plus a letter fit in 86% of the screen height.
+- Each letter has a squash spring (rest 0, never below −0.9). Whenever it reaches a new step, add −0.5 to its speed; each frame speed += −squash × 0.15 × f, speed ×= 0.82^f, squash += speed × f.
+- One number P (in steps) drives everything. Letter i is at q = clamp(P − i × 0.4, 0, steps): on step floor(q), flipping toward the next step by φ = q − floor(q) (the last letter is done at P = steps + (letters − 1) × 0.4). Within a flip, coil j at t = j ÷ (coils − 1) is at s = smoothstep(0, 1, φ × (1 + 0.7) − (1 − t) × 0.7), so the top coils go first. A coil at s sits at the slot on its step moved toward the slot on the next step by s, lifted by 1.2 × step height × sin(π × s), scaled between the two steps' scales, and turned forward head over heels: its outline's height (measured from the letter's middle) is multiplied by cos(2π × s).
+- Scrolling moves P by (scroll change in px) ÷ 120, clamped to the start and end; on touch screens a sideways drag does the same (dragging right moves down). On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Clicking or tapping within one letter height of a letter adds 0.8 to its squash speed, so its coils stretch up and wobble.
+- After 1.5s without scrolling or dragging, P moves by itself at 1.5 steps a second: down to the end, a rest of 2.5s, back up to the start, another rest, and again.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Lay out the stairs and trace the letters again on every resize and once more when the Anybody font has finished loading; letters are not drawn before the font loads.
+- Reduced-motion still frame: every letter landed on the bottom step, coils relaxed.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`coilstairs prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Coil Stairs
+
+A front view of a staircase that comes down toward me. Each letter of a name is a coiled spring made of letter-shaped wire rings. As I scroll, the letters tumble down the stairs one after another, each flip arcing up and over onto the next step, and land on the bottom step with a springy squash and wobble.
+
+Colors: background #FFE3F1, text #4A0532, secondary text #8A2B66, accents #FF1F8E, #1FA9DB, #FFC21A. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Letter size: 110px
+- Coils per letter: 12
+- Stairs: 6
+- Landing bounce: 0.5
+- Stagger: 0.4
 
 One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
