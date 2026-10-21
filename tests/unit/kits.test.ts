@@ -24,7 +24,9 @@ import { metaballField } from '../../src/kits/render';
 import {
   alphaChannel,
   letterBoxes,
+  groupHoles,
   loopArea,
+  pointInLoop,
   samplePoints,
   samplePointsUnder,
   simplifyLoop,
@@ -474,5 +476,25 @@ describe('render kit', () => {
       times.push(performance.now() - t0);
     }
     expect(best(times)).toBeLessThan(2);
+  });
+});
+
+describe('groupHoles', () => {
+  const square = (x: number, y: number, size: number) => [
+    { x, y },
+    { x: x + size, y },
+    { x: x + size, y: y + size },
+    { x, y: y + size },
+  ];
+  it('puts a loop inside another into it as a hole, and sorts pieces left to right', () => {
+    const o = square(20, 0, 10);
+    const hole = square(23, 3, 4);
+    const i = square(0, 0, 5);
+    expect(pointInLoop({ x: 25, y: 5 }, o)).toBe(true);
+    expect(pointInLoop({ x: 5, y: 5 }, o)).toBe(false);
+    const pieces = groupHoles([hole, o, i]);
+    expect(pieces.map((p) => p.outer)).toEqual([i, o]);
+    expect(pieces[1]!.holes).toEqual([hole]);
+    expect(pieces[0]!.holes).toEqual([]);
   });
 });

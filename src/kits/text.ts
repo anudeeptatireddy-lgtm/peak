@@ -313,6 +313,46 @@ export function loopArea(loop: Pt[]): number {
   return s / 2;
 }
 
+/** Whether a point is inside a closed loop (even-odd ray test). */
+export function pointInLoop(pt: Pt, loop: Pt[]): boolean {
+  let hit = false;
+  for (let i = 0, j = loop.length - 1; i < loop.length; j = i++) {
+    const a = loop[i]!;
+    const b = loop[j]!;
+    if (a.y > pt.y !== b.y > pt.y && pt.x < ((b.x - a.x) * (pt.y - a.y)) / (b.y - a.y) + a.x)
+      hit = !hit;
+  }
+  return hit;
+}
+
+/**
+ * Groups traced loops into solid pieces: each outer loop with the holes inside it
+ * (a loop inside a bigger outer loop is its hole). Pieces are sorted left to right.
+ * Used by clayframes and stringart.
+ */
+export function groupHoles(loops: Pt[][]): { outer: Pt[]; holes: Pt[][] }[] {
+  const order = loops
+    .map((loop, i) => ({ loop, i, area: Math.abs(loopArea(loop)) }))
+    .sort((a, b) => b.area - a.area);
+  const owner = order.map(() => -1);
+  order.forEach((o, i) => {
+    for (let j = i - 1; j >= 0; j--)
+      if (owner[j]! < 0 && pointInLoop(o.loop[0]!, order[j]!.loop)) {
+        owner[i] = j;
+        break;
+      }
+  });
+  const left = (l: Pt[]) => Math.min(...l.map((q) => q.x));
+  return order
+    .map((o, i) => ({ o, i }))
+    .filter(({ i }) => owner[i]! < 0)
+    .map(({ o, i }) => ({
+      outer: o.loop,
+      holes: order.filter((_, k) => owner[k] === i).map((h) => h.loop),
+    }))
+    .sort((a, b) => left(a.outer) - left(b.outer));
+}
+
 /** Runs `fn` once the font is ready (or the wait timed out), unless cancelled first. */
 export function whenFontReady(fn: () => void): () => void {
   let live = true;

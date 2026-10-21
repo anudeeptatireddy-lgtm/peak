@@ -74,6 +74,7 @@ export const CATALOG_ORDER = [
   'epicycles',
   'tokenstream',
   'clayframes',
+  'stringart',
 ] as const;
 
 export function catalogNumber(slug: string): number {

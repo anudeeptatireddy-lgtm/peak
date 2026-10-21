@@ -33,6 +33,21 @@ Saved in the repo, committed: `docs/prompt-tests/<scene>/side-by-side-desktop.pn
 - Fail (real behavior difference): `smoke`. The plume phrase is fixed; a retest needs the owner's OK (about 150k tokens).
 - Untested by rule: see `docs/PROMPT_TESTS.md`.
 
+## Flaky tests to investigate
+
+These 10 passed only on a retry in the full suite after `epicycles` (28.7 minutes, machine load average about 7). They were not changed or skipped. Guesses at the cause:
+
+- **desktop prompt parity, `flow`:** ink difference lands just over the 0.02 limit (0.0208 seen); the font-load reset in `flow` restarts its particles at a slightly different frame under load.
+- **desktop prompt parity, `fogged`:** the fog builds over time, so a late first frame under load leaves a different amount of fog when the picture is taken.
+- **desktop prompt parity, `moire`:** fine line patterns turn a one-frame timing shift into a big pixel difference.
+- **desktop prompt parity, `skid`:** the car's path depends on the first frames' timing; a slow start shifts the tire marks.
+- **mobile prototype parity, `flow`:** same font-load reset as above, against the prototype page.
+- **mobile prototype parity, `warp`:** `warp` also resets when the web font loads; under load that lands on a different frame than the prototype.
+- **mobile prototype parity, `pluck`:** the string's spring is sensitive to when the first touch lands relative to the fake clock.
+- **mobile phone, /gallery fits and is easy to tap:** short gallery titles were under 44px wide once the web font loaded (timing-dependent); fixed with `min-width: 44px` on `.title a`, so this one should be gone.
+- **mobile phone, scene `scramble` fits:** probably measured before the web font finished loading, when the letters are a different width.
+- **mobile prompt parity, `echo`:** the trail fades frame by frame, so one late frame changes how faint the oldest copies are.
+
 ## Known bugs and loose ends
 
 - **Font-load reset in older scenes.** Some scenes before Wave 5 also reset when the web font loads; `flow` and `warp` do, and their prompts say so. Others, such as `ripple` and `sand`, haven't been checked. Audit this in 9.3 (performance pass). Don't change `flow` or `warp` without redoing their prompt tests.

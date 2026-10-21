@@ -9,7 +9,7 @@ import { smoothstep } from '../../kits/easing';
 import { seededRandom } from '../../kits/field';
 import {
   alphaChannel,
-  loopArea,
+  groupHoles,
   samplePoints,
   simplifyLoop,
   textMask,
@@ -86,17 +86,6 @@ function resample(loop: Pt[], step: number): Loop {
   return out;
 }
 
-function inside(pt: Pt, loop: Pt[]): boolean {
-  let hit = false;
-  for (let i = 0, j = loop.length - 1; i < loop.length; j = i++) {
-    const a = loop[i]!;
-    const b = loop[j]!;
-    if (a.y > pt.y !== b.y > pt.y && pt.x < ((b.x - a.x) * (pt.y - a.y)) / (b.y - a.y) + a.x)
-      hit = !hit;
-  }
-  return hit;
-}
-
 function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneInstance {
   let p = { ...initial };
   const n = (id: string) => Number(p[id]);
@@ -137,28 +126,12 @@ function create(host: HTMLElement, initial: Params, ctx: SceneContext): SceneIns
       centerY: FIXED.NAME_Y,
     });
     letterSize = size;
-    const raw = traceContours(alphaChannel(data, w, h), w, h, FIXED.ALPHA_CUTOFF)
+    const loops = traceContours(alphaChannel(data, w, h), w, h, FIXED.ALPHA_CUTOFF)
       .map((l) => simplifyLoop(l, FIXED.SIMPLIFY))
-      .filter((l) => l.length > 2)
-      .sort((a, b) => Math.abs(loopArea(b)) - Math.abs(loopArea(a)));
-    // A loop inside a bigger outer loop is a hole in it.
-    const owner = raw.map(() => -1);
-    raw.forEach((loop, i) => {
-      for (let j = i - 1; j >= 0; j--)
-        if (owner[j] < 0 && inside(loop[0]!, raw[j]!)) {
-          owner[i] = j;
-          break;
-        }
-    });
+      .filter((l) => l.length > 2);
     const rand = seededRandom(FIXED.SEED);
-    const outers = raw
-      .map((loop, i) => ({ loop, i }))
-      .filter((o) => owner[o.i]! < 0)
-      .sort((a, b) => Math.min(...a.loop.map((q) => q.x)) - Math.min(...b.loop.map((q) => q.x)));
-    pieces = outers.map((o, k) => ({
-      loops: [o.loop, ...raw.filter((_, i) => owner[i] === o.i)].map((l) =>
-        resample(l, FIXED.RESAMPLE),
-      ),
+    pieces = groupHoles(loops).map((g, k) => ({
+      loops: [g.outer, ...g.holes].map((l) => resample(l, FIXED.RESAMPLE)),
       accent: k % SHARED.INKS,
       mix: rand(),
     }));

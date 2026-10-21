@@ -19808,6 +19808,348 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: String Art
+
+## What I want
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+## Look
+- Colors ("Newsprint" palette): background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C.
+- Where accent colors overlap, multiply them like ink on paper (canvas globalCompositeOperation "multiply").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 800, centered, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Trace its outlines (marching squares at alpha 128, simplified to within 0.6px).
+- Hammer about 180 nails (120 on screens under 700px wide) evenly along the outlines, each outline getting its share by length and at least 3. Draw each nail as a 2px dot in the soft text color.
+- Plan a route of about 1200 threads (700 on small screens). Group the outlines into letters (a loop inside a bigger loop is its hole, and its nails belong to that letter) and give each letter threads in proportion to its area. Mark which 3px grid cells are inside the letters. Letter by letter, left to right, start at the letter's first nail and greedily: try 40 random nails of the same letter (seeded) and pick the one whose straight line from the current nail scores best, where each inside cell it crosses adds 1 ÷ (1 + times already crossed) and each outside cell subtracts 2.5; count those cells as crossed once more and move on. The hop from one letter to the next is not drawn.
+- Threads are 1px lines at opacity 0.45, stroked 64 to a path so crossings between batches darken and the letters build up by density.
+- The thread color is the text color mixed 50% toward accent 1 (in OKLab); the racing tip is a 5px dot in accent 2.
+- A count D of drawn threads moves along the route; the thread from the last full nail runs a fraction of the way to the next, ending at the tip. Scrolling changes D by (scroll change in px) ÷ 3000 × the thread count; a sideways drag does the same. After 1s without input, D grows by itself at 1 × 120 threads a second; once complete it rests 5s, unwinds 4 times as fast, and starts again.
+- Each thread has a bow b (px, at its middle, across the thread) and a speed u: per frame u += (−0.5 × 0.08 × b − 0.05 × u) × f, then b += u × f, with |b| at most 30px. A bowed thread is drawn as a quadratic curve through its middle at 2b off the straight line; under 0.05px it is drawn straight.
+- Whenever the pointer's path since the last frame crosses a drawn thread, that thread's u changes by 1 × 3px per frame toward the side the pointer moved to.
+- Scroll 3000px for the whole piece. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Place the nails and plan the route again on every resize, on any change to the name, nails, threads or search, and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the piece is the same every visit.
+- Reduced-motion still frame: the finished piece with every thread at rest.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`stringart prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: String Art
+
+Nails around the outlines of a name, and a single thread racing from nail to nail in straight lines, building the name by density as I scroll. Moving the pointer across the threads plucks them, and they vibrate and settle.
+
+Colors: background #ECECEA, text #111111, secondary text #4A4A4A, accents #E3001B, #111111, #8C8C8C. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Nails: 180
+- Thread count: 1200
+- Draw speed: 1×
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`tailor prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Tailor's cut
 
