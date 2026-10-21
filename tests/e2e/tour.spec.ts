@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 import { getWorld } from '../../src/theme/worlds';
 
-const COUNT = 50;
+const COUNT = 59;
 const ground = (page: Page) =>
   page.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--ground').trim(),
@@ -13,7 +13,7 @@ const settle = (page: Page) =>
 
 test.describe('tour', () => {
   test.setTimeout(240_000);
-  test('has all 50 scenes, a counter, and no console errors', async ({ page }) => {
+  test('has every Tour scene, a counter, and no console errors', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));

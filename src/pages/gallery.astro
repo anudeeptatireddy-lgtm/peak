@@ -44,8 +44,18 @@ const FILTERS = [
   'Headlines',
   'Just for fun',
   'Brands',
+  // Batch 2 tags join as their first scene ships (SCENES, Batch 2 note).
+  'Tech & AI',
+  'Travel',
+  'Real estate',
+  'Wellness',
 ];
-const slugOf = (t: string) => t.toLowerCase().replace(/\s+/g, '-');
+// URL-safe: "Tech & AI" becomes tech-and-ai.
+const slugOf = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-');
 ---
 
 <Base title="Gallery" description="Every animation, each in its own color world.">

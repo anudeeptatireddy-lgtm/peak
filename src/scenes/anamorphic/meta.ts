@@ -32,5 +32,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: the camera exactly at the sweet spot and no floating, so the name is fully aligned.',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

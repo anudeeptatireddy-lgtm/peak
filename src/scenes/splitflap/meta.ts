@@ -5,7 +5,7 @@ export const meta: SceneMeta = {
   title: 'Split-flap board',
   summary: 'A departures board whose tiles clatter through the alphabet into each message.',
   useCase: 'An event schedule, a departures-board headline or a launch announcement.',
-  tags: ['Events', 'Headlines'],
+  tags: ['Events', 'Headlines', 'Travel'],
   difficulty: 'Medium',
   minutes: 20,
   world: 'blueprint',

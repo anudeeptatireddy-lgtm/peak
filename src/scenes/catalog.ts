@@ -56,6 +56,16 @@ export const CATALOG_ORDER = [
   'fogged',
   'tailor',
   'latte',
+  // Backlog scenes (SCENES 62 and up), released as they are built (owner, 2026-10-21).
+  'pendulum',
+  'anamorphic',
+  'domino',
+  'coilstairs',
+  'clockwork',
+  'signalpaths',
+  'platformarrival',
+  'doorwave',
+  'resonanceplate',
 ] as const;
 
 export function catalogNumber(slug: string): number {

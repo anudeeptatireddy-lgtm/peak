@@ -5,7 +5,7 @@ export const meta: SceneMeta = {
   title: 'Domino Run',
   summary: 'Dominoes trace your name; scroll and they topple one after another to print it.',
   useCase: 'A launch, countdown or storytelling intro.',
-  tags: ['Intros'],
+  tags: ['Intros', 'Events'],
   difficulty: 'Medium',
   minutes: 40,
   world: 'matcha',
@@ -32,5 +32,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: the front halfway along the chain, every domino at its target angle (half toppled, the name half printed).',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

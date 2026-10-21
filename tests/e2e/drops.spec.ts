@@ -18,7 +18,11 @@ test('drops: list, detail page and RSS feed', async ({ page, request }) => {
 });
 
 test('home: shows the latest drop and no stand-in notes', async ({ page }) => {
+  // The newest drop is the first one listed on /drops.
+  await page.goto('/drops');
+  const latest = (await page.locator('main li a[href^="/drops/"]').first().textContent())!.trim();
+  expect(latest.length).toBeGreaterThan(0);
   await page.goto('/');
-  await expect(page.locator('#latest-drop')).toContainText('Hello, peak');
+  await expect(page.locator('#latest-drop')).toContainText(latest);
   await expect(page.locator('body')).not.toContainText('Stand-in');
 });

@@ -5,7 +5,7 @@ export const meta: SceneMeta = {
   title: 'Decoding text',
   summary: 'Lines flicker through random characters, then lock into place letter by letter.',
   useCase: 'A portfolio title or a "hacker" reveal.',
-  tags: ['Portfolio', 'Headlines'],
+  tags: ['Portfolio', 'Headlines', 'Tech & AI'],
   difficulty: 'Easy',
   minutes: 10,
   world: 'arcade',

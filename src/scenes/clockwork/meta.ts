@@ -32,5 +32,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: every letter in place, the gears at rest, the spring half wound.',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

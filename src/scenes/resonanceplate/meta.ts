@@ -6,7 +6,7 @@ export const meta: SceneMeta = {
   summary:
     'Sand on a vibrating plate dances into patterns as you tune it, and one pitch spells your name.',
   useCase: 'A wellness, sound bath, music or meditation intro.',
-  tags: ['Intros', 'Cursor'],
+  tags: ['Wellness', 'Backgrounds'],
   difficulty: 'Spicy',
   minutes: 75,
   world: 'glacier',
@@ -33,5 +33,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: the pitch at the name, and every grain placed at a random spot where the field is below 0.02 (on the letters).',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

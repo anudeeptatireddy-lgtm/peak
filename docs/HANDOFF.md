@@ -1,10 +1,10 @@
-# Handoff: 2026-10-21 (backlog chunk 3 built, unreleased; waiting for the owner's OK for chunk 4)
+# Handoff: 2026-10-21 (nine backlog scenes live; building the rest one scene at a time)
 
 Everything is committed and pushed to `main`; pushing deploys to Vercel (https://peak-teal.vercel.app, live and open to search engines since 2026-10-18).
 
 ## Exact step
 
-**Backlog, chunk 3 done (2026-10-21):** `anamorphic`, `coilstairs` and `clockwork` are built on `main` with the lean scene process and marked `unreleased`, like chunks 1 and 2 (`signalpaths`, `domino`, `pendulum`, `platformarrival`, `doorwave`, `resonanceplate`). Try them at `/scenes/<slug>`; they are not in the gallery, Tour, word bank or sitemap. `clockwork` and `resonanceplate` are Spicy, so each needs a prompt test before release (about 0.1 to 0.15M tokens each; owner's OK first). `anamorphic`'s letters are still a little soft at the default shard size (DECISIONS, chunk 3). **Next:** wait for the owner's OK, then chunk 4 (`epicycles`, `clayframes`, `stringart`, proposed in PLAN) **in a fresh session**. Releasing a scene as a drop: steps in DECISIONS (2026-10-21, "Unreleased flag").
+**Backlog (2026-10-21):** the nine scenes from chunks 1 to 3 are **live**: `pendulum`, `anamorphic`, `domino`, `coilstairs`, `clockwork`, `signalpaths`, `platformarrival`, `doorwave`, `resonanceplate` are in the gallery (62 scenes), the Tour (59) and the sitemap, each with a drop on /drops and in RSS. New gallery chips: Tech & AI, Travel, Real estate, Wellness. **New way of working (owner):** one session builds the remaining ANIMATED scenes one at a time, live on build, without waiting between scenes; rules, test cadence and stop rules in DECISIONS (2026-10-21, "Scenes go live on build") and PLAN. Log: `docs/BUILD_LOG.md`. **Next:** `infinitezoom` (89), then `torchmap` (84, ⚠ flash test), `doubling`, `peekaboo`, `gatherround`, `epicycles`, `tokenstream`, `clayframes`, `stringart`. Waiting on the owner: prompt tests for the Spicy `resonanceplate` and `clockwork` (about 0.1 to 0.15M each); `anamorphic`'s letters are still a little soft at the default shard size.
 
 Earlier state:
 

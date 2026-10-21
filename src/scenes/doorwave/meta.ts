@@ -6,7 +6,7 @@ export const meta: SceneMeta = {
   summary:
     'Doors on an isometric block swing open around your cursor, and lit rooms spell your name.',
   useCase: 'A real estate, property, rental or coworking intro.',
-  tags: ['Intros', 'Cursor'],
+  tags: ['Real estate', 'Intros'],
   difficulty: 'Medium',
   minutes: 50,
   world: 'dreamhouse',
@@ -33,5 +33,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: the cursor point in the middle of the middle floor, every door at its target, and every letter door open (the whole name visible).',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

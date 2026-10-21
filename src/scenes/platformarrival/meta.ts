@@ -5,7 +5,7 @@ export const meta: SceneMeta = {
   title: 'Platform Arrival',
   summary: 'The view from a train window slows into a station whose sign shows your name.',
   useCase: 'A travel, rail, booking or tourism intro.',
-  tags: ['Intros', 'Scroll'],
+  tags: ['Travel', 'Intros'],
   difficulty: 'Medium',
   minutes: 45,
   world: 'cherry',
@@ -32,5 +32,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: stopped at the platform (arrival 1), the sign hanging straight in the middle, no streaks.',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

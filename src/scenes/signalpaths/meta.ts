@@ -5,7 +5,7 @@ export const meta: SceneMeta = {
   title: 'Signal Paths',
   summary: 'Your cursor fires signals through a network; the paths it uses most learn your name.',
   useCase: 'AI startups, data tools and developer platforms.',
-  tags: ['Backgrounds', 'Intros'],
+  tags: ['Tech & AI', 'Backgrounds'],
   difficulty: 'Medium',
   minutes: 40,
   world: 'aurora',
@@ -33,5 +33,4 @@ export const meta: SceneMeta = {
     'Reduced-motion still frame: every name connection at full strength, every other connection at zero, no signals.',
   ],
   interactionLines: ['The canvas has touch-action: pan-y, so vertical swipes still scroll.'],
-  unreleased: true,
 };

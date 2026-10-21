@@ -375,29 +375,27 @@ Three of the 24 candidates in `docs/INDUSTRY_HEROES.md`, built after Wave 7. Gal
 ## Drops backlog (after launch; one per week through `/new-scene`)
 Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, SCENES 70 to 89; owner added 2026-10-20). **Not a wave, and nothing here delays the current work, which stays in this order:** the Tour fix (done), Wave 9 up to launch (done up to launch; 9.7 happened on 2026-10-18 and 9.8 and 9.9 are on hold), the realism pilot (`velvet` and `soap`, waiting for the owner's references and verdict), then launch. After that the owner (or the weekly task) picks one scene a week and runs `/new-scene`; each ships as a drop (PRD §14: a content entry in `src/content/drops/`). **Before building any backlog scene I give the owner its token estimate and wait for the OK.** Each realistic scene also needs its reference (asked for only when it is next), a §8.8 side-by-side and the owner's verdict, and is released only if the pilot passes. Prompt tests are opt-in per scene, with an estimate first.
 
-**Building the backlog (owner, 2026-10-21; replaces "Batch 2 is an idea bank"):** the ANIMATED scenes from Batch 1 and Batch 2 are built in chunks of 3 with the lean scene process (DECISIONS, 2026-10-21), each new scene marked `unreleased` until the owner releases it as a weekly drop. After each chunk: full suite, commit, push, HANDOFF, a short report, then wait for the owner's OK. REALISTIC scenes wait for the owner's reference clips; `wafershine` stays OK'd for after the pilot. Batch 3 stays an idea bank.
+**Building the backlog (owner, 2026-10-21; replaces "Batch 2 is an idea bank" and the earlier chunk-by-chunk OKs):** the remaining ANIMATED scenes from Batch 1 and Batch 2 are built by one session, one scene at a time, in the numbered order below, without waiting for the owner between scenes. Each scene meets the full definition of done and **goes live as soon as its tests pass**: in the gallery, Tour and sitemap with its use-case tags, plus a drop in `src/content/drops/` (shown on /drops and in RSS). After each scene: that scene's tests plus the home and gallery checks, commit, push, check it on the live site, update HANDOFF and add one line to `docs/BUILD_LOG.md`. Every 3 scenes: `npm run check`, the full `npm run test:e2e` and a BUILD_LOG summary. **Stop and wait for the owner** if a scene costs more than 1.5× its estimate, a test can't pass without loosening it, something needs money or a new package, or anything would change the plan; at the usage limit, stop at a clean point with HANDOFF current. Spicy scenes' prompt tests still need the owner's OK and an estimate. REALISTIC scenes wait for the owner's reference clips; `wafershine` stays OK'd for after the pilot. Batch 3 stays an idea bank. The `unreleased` flag stays available but is not used for these.
 
-- [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21, unreleased.
-- [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21, unreleased; `resonanceplate` is Spicy and needs a prompt test (estimate in PROMPT_TESTS) before release.
-- [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21, unreleased; `clockwork` is Spicy and needs a prompt test (estimate in PROMPT_TESTS) before release. Waiting for the owner's OK for chunk 4.
-- [ ] **Chunk 4 (proposed):** `epicycles` (67), `clayframes` (68), `stringart` (69)
-- [ ] **Chunk 5 (proposed):** `torchmap` (84, ⚠), `doubling` (85), `peekaboo` (86)
-- [ ] **Chunk 6 (proposed):** `gatherround` (87), `tokenstream` (88), `infinitezoom` (89)
+- [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21; live 2026-10-21.
+- [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21; live 2026-10-21. `resonanceplate` is Spicy: prompt test waits for the owner's OK.
+- [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21; live 2026-10-21. `clockwork` is Spicy: prompt test waits for the owner's OK.
+- **Remaining ANIMATED, in this order (numbered list below):** `infinitezoom` (89), `torchmap` (84, ⚠), `doubling` (85), `peekaboo` (86), `gatherround` (87), `epicycles` (67), `tokenstream` (88), `clayframes` (68), `stringart` (69).
 
 1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
 3. [ ] `rakedgarden` (73, REALISTIC)
-4. [ ] `resonanceplate` (83, ANIMATED)
+4. [x] `resonanceplate` (83, ANIMATED)
 5. [ ] `infinitezoom` (89, ANIMATED)
 
 Then, alternating (R = REALISTIC, A = ANIMATED):
 
-6. [ ] R `slatted` (54) · 7. [ ] A `signalpaths` (80) · 8. [ ] R `duskfacade` (71) · 9. [ ] A `pendulum` (62)
-10. [ ] R `shoreline` (70) · 11. [ ] A `platformarrival` (81) · 12. [ ] R `raking` (61) · 13. [ ] A `doorwave` (82)
-14. [ ] R `growthrings` (77) · 15. [ ] A `anamorphic` (63) · 16. [ ] R `inkbloom` (57) · 17. [ ] A `torchmap` (84, ⚠ flash test)
-18. [ ] R `startrails` (78) · 19. [ ] A `domino` (64) · 20. [ ] R `goldleaf` (58) · 21. [ ] A `doubling` (85)
-22. [ ] R `pinwall` (79) · 23. [ ] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [ ] A `peekaboo` (86)
-26. [ ] R `ceilingstars` (74) · 27. [ ] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [ ] A `gatherround` (87)
+6. [ ] R `slatted` (54) · 7. [x] A `signalpaths` (80) · 8. [ ] R `duskfacade` (71) · 9. [x] A `pendulum` (62)
+10. [ ] R `shoreline` (70) · 11. [x] A `platformarrival` (81) · 12. [ ] R `raking` (61) · 13. [x] A `doorwave` (82)
+14. [ ] R `growthrings` (77) · 15. [x] A `anamorphic` (63) · 16. [ ] R `inkbloom` (57) · 17. [ ] A `torchmap` (84, ⚠ flash test)
+18. [ ] R `startrails` (78) · 19. [x] A `domino` (64) · 20. [ ] R `goldleaf` (58) · 21. [ ] A `doubling` (85)
+22. [ ] R `pinwall` (79) · 23. [x] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [ ] A `peekaboo` (86)
+26. [ ] R `ceilingstars` (74) · 27. [x] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [ ] A `gatherround` (87)
 30. [ ] R `thinice` (76) · 31. [ ] A `epicycles` (67) · 32. [ ] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
 
 **Batch 3 (SCENES 90 to 100; owner added 2026-10-21) is also an idea bank:** nothing is scheduled without the owner's OK and a token estimate. Listed in no particular order: R `sequinflip` (90), R `flakecoat` (91), R `rubbing` (92), R `glassswirl` (93, Spicy), R `hairshine` (94), A `laserchase` (95), A `cheesepull` (96), A `scrubwave` (97), A `curveshot` (98), A `riffle` (99), A `shadefan` (100). Its new tags (Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive) follow the same rule as below.

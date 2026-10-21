@@ -6,7 +6,7 @@ export const meta: SceneMeta = {
   title: 'Glitch',
   summary: 'A headline tears into slices and splits into three ink channels, then snaps clean.',
   useCase: 'A tech, music or portfolio headline with an edge.',
-  tags: ['Headlines', 'Portfolio'],
+  tags: ['Headlines', 'Portfolio', 'Tech & AI'],
   difficulty: 'Spicy',
   minutes: 20,
   world: 'vapor',

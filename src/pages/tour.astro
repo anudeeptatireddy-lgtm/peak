@@ -1,5 +1,6 @@
 ---
-// Tour (PRD §6.7 item 2): the first 50 scenes back to back, each full-screen, with the colors
+// Tour (PRD §6.7 item 2): every released scene back to back (except the gallery-only
+// industry heroes), each full-screen, with the colors
 // blending between every one. Shuffle order, Reset order and Autoplay (steps 8.3 and 8.4).
 // Only the scenes near the viewport are mounted, never more than two run at once.
 import Base from '../layouts/Base.astro';
@@ -7,7 +8,9 @@ import { CATALOG_ORDER } from '../scenes/catalog';
 import { tourWorlds } from '../theme/tour';
 import type { SceneMeta } from '../scenes/types';
 
-const TOUR_COUNT = 50;
+// Industry heroes 51 to 53 are gallery-only (owner, 2026-10-17); backlog scenes join the Tour
+// as they are released (owner, 2026-10-21; replaces "the Tour stays the first 50").
+const GALLERY_ONLY = new Set(['fogged', 'tailor', 'latte']);
 const metas = Object.values(
   import.meta.glob<{ meta: SceneMeta }>('../scenes/*/meta.ts', { eager: true }),
 )
@@ -15,7 +18,7 @@ const metas = Object.values(
   // Unreleased scenes stay hidden until their weekly drop (SceneMeta.unreleased).
   .filter((m) => !m.unreleased);
 const bySlug = new Map(metas.map((m) => [m.slug, m]));
-const order = CATALOG_ORDER.slice(0, TOUR_COUNT).filter((s) => bySlug.has(s));
+const order = CATALOG_ORDER.filter((s) => !GALLERY_ONLY.has(s) && bySlug.has(s));
 const worlds = tourWorlds(order.map((s) => bySlug.get(s)!.world));
 const items = order.map((slug, i) => ({ meta: bySlug.get(slug)!, world: worlds[i]! }));
 const catalog = items.map((i) => i.meta.slug);
