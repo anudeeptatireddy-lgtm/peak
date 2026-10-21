@@ -380,13 +380,13 @@ Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, S
 - [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21; live 2026-10-21.
 - [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21; live 2026-10-21. `resonanceplate` is Spicy: prompt test waits for the owner's OK.
 - [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21; live 2026-10-21. `clockwork` is Spicy: prompt test waits for the owner's OK.
-- **Remaining ANIMATED, in this order (numbered list below):** `infinitezoom` (89), `torchmap` (84, ⚠), `doubling` (85), `peekaboo` (86), `gatherround` (87), `epicycles` (67), `tokenstream` (88), `clayframes` (68), `stringart` (69).
+- **Remaining ANIMATED, in this order (numbered list below):** `torchmap` (84, ⚠), `doubling` (85), `peekaboo` (86), `gatherround` (87), `epicycles` (67), `tokenstream` (88), `clayframes` (68), `stringart` (69).
 
 1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
 3. [ ] `rakedgarden` (73, REALISTIC)
 4. [x] `resonanceplate` (83, ANIMATED)
-5. [ ] `infinitezoom` (89, ANIMATED)
+5. [x] `infinitezoom` (89, ANIMATED). Live 2026-10-21.
 
 Then, alternating (R = REALISTIC, A = ANIMATED):
 

@@ -13,5 +13,6 @@ One line per scene built from the backlog: scene, live link, tokens used, proble
 | 2026-10-21 | `anamorphic` (63) | https://peak-teal.vercel.app/scenes/anamorphic | approx 6% of the meter (chunk 3: 10% → 29%) | Letters still a little soft at the default shard size. |
 | 2026-10-21 | `coilstairs` (65) | https://peak-teal.vercel.app/scenes/coilstairs | approx 6% of the meter (chunk 3) | None. |
 | 2026-10-21 | `clockwork` (66) | https://peak-teal.vercel.app/scenes/clockwork | approx 6% of the meter (chunk 3) | Spicy: prompt test waits for the owner's OK (about 0.1 to 0.15M). |
+| 2026-10-21 | `infinitezoom` (89) | https://peak-teal.vercel.app/scenes/infinitezoom | approx 3% of the meter (32% → 35%) | Spicy: prompt test waits for the owner's OK. One tuning round (skylight too big). |
 
 **Summary after 9 scenes (2026-10-21):** three chunks used about 13%, 12% and 19% of the 5-hour meter (about 15% per chunk, 5% per scene). In tokens of new work, roughly 30k to 60k per scene; the estimate was 60k to 100k per Medium scene, so all nine stayed within it.

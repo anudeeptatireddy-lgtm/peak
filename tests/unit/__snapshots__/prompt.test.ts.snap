@@ -8528,6 +8528,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Infinite Zoom
+
+## What I want
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+## Look
+- Colors ("Vapor Mall" palette): background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF.
+- Draw accent colors normally on top of each other: no blending or mix-blend-mode where they overlap, in this palette or any other.
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled with the background color every frame (it has to be opaque so the inner pictures match the outer city). Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the stage: weight 900, centered at 40% of the height, font size = height × 0.36, shrunk if needed so it is at most 86% of the width. Split the stage into square blocks of 14px; a block whose center pixel has alpha above 128 gets a name building.
+- Each building is a square 80% of its block, centered in it. Name buildings use accent 1, 2 or 3 for the left, middle and right third of the stage. Other blocks get a filler building (55% of a block, the soft text color mixed 55% toward the background) with chance 0.3. A building gets a roof hatch (a square inset 28% on each side, in the surface color) with chance 0.6. Under every building draw its shadow: the same square moved 18% of a block down and right, in the text color at opacity 0.18. Streets: a line every 4 blocks across and down the whole stage, in the line color, 1px wide.
+- The skylight sits at (50%, 80%) of the stage, point T. The picture inside it is the whole stage moved by one transform M: shrink by 6 around the stage center C, turn by 10°, and move C onto T. In complex numbers, with q = e^(i × rotation) ÷ 6, M(x) = T + q × (x − C). Around the picture, draw the skylight (the picture's rectangle grown 1.1×, in the surface color) and around that the skylight's building (grown 1.2× again, in accent 1); leave out any city buildings that would touch it. Frame the picture with a line 2 × the line weight wide, in the text color.
+- The turn per level is 10°. The camera zooms toward the one point M leaves in place, F = (T − q × C) ÷ (1 − q).
+- Fill the canvas with the background color, then draw levels k = 0 to 4 (3 on screens under 700px wide), outermost first, plus level 4 + 1 at opacity z so nothing pops in. Level k is the city drawn under the transform x → F + q^e × (x − F) with e = k − z (so the canvas transform has scale |q|^e and turn e × rotation): fill its stage rectangle with the background color, then the shadows, streets, buildings, hatches, the skylight building and the picture frame. z is the zoom's fractional part, so at z = 1 every level sits exactly where the next one out was at z = 0, and the loop has no seam.
+- A target zoom Z (in levels, unbounded) moves by 1 × (scroll change in px) ÷ 800; on touch screens a sideways drag does the same (dragging left zooms in). After 1.5s without input, Z grows by 1 × 0.12 levels a second. The drawn zoom eases toward Z by 1 − (1 − 0.08)^f each frame, and z is its fractional part.
+- Scrolling down 800px zooms in one level and scrolling up zooms out. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Build the city once in screen coordinates (as cached Path2D objects, one per color), again on every resize and once more when the Anybody font has finished loading. Every level reuses the same paths under a different canvas transform. Use a seeded random number generator so the city is the same every visit.
+- Reduced-motion still frame: the top-level view (zoom 0).
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`infinitezoom prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Infinite Zoom
+
+A flat-illustrated city seen from above, where the rooftops spell a name. One building has a skylight with a picture on the room’s wall that shows the same city again, smaller and slightly rotated. Scrolling zooms into that picture forever, rotating a little as it goes, with no visible seam where the loop repeats.
+
+Colors: background #F6E8FF, text #2B1240, secondary text #6A4C86, accents #FF71CE, #01CDFE, #B967FF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Detail: 0.6
+- Level scale: 6
+- Loop depth: 4
+- Zoom speed: 1
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`jelly prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Jelly cards
 
