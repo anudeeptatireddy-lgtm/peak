@@ -380,7 +380,7 @@ Batch 1 (the fourteen new scenes, SCENES 54 and 57 to 69) and Batch 2 (twenty, S
 - [x] **Chunk 1:** `signalpaths` (80), `domino` (64), `pendulum` (62). Built 2026-10-21; live 2026-10-21.
 - [x] **Chunk 2:** `platformarrival` (81), `doorwave` (82), `resonanceplate` (83). Built 2026-10-21; live 2026-10-21. `resonanceplate` is Spicy: prompt test waits for the owner's OK.
 - [x] **Chunk 3:** `anamorphic` (63), `coilstairs` (65), `clockwork` (66). Built 2026-10-21; live 2026-10-21. `clockwork` is Spicy: prompt test waits for the owner's OK.
-- **Remaining ANIMATED, in this order (numbered list below):** `tokenstream` (88), `clayframes` (68), `stringart` (69).
+- **Remaining ANIMATED, in this order (numbered list below):** `clayframes` (68), `stringart` (69).
 
 1. [ ] `wafershine` (75, REALISTIC, ⚠ flash test). **Owner OK'd 2026-10-20** (estimate 0.4 to 0.55M), to build after the pilot and launch. Ask the owner for the CD or DVD reference video when it is next.
 2. [ ] `microprint` (72, REALISTIC)
@@ -396,7 +396,7 @@ Then, alternating (R = REALISTIC, A = ANIMATED):
 18. [ ] R `startrails` (78) · 19. [x] A `domino` (64) · 20. [ ] R `goldleaf` (58) · 21. [x] A `doubling` (85)
 22. [ ] R `pinwall` (79) · 23. [x] A `coilstairs` (65) · 24. [ ] R `fizz` (59) · 25. [x] A `peekaboo` (86)
 26. [ ] R `ceilingstars` (74) · 27. [x] A `clockwork` (66) · 28. [ ] R `snowledge` (60) · 29. [x] A `gatherround` (87)
-30. [ ] R `thinice` (76) · 31. [x] A `epicycles` (67) · 32. [ ] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
+30. [ ] R `thinice` (76) · 31. [x] A `epicycles` (67) · 32. [x] A `tokenstream` (88) · 33. [ ] A `clayframes` (68) · 34. [ ] A `stringart` (69)
 
 **Batch 3 (SCENES 90 to 100; owner added 2026-10-21) is also an idea bank:** nothing is scheduled without the owner's OK and a token estimate. Listed in no particular order: R `sequinflip` (90), R `flakecoat` (91), R `rubbing` (92), R `glassswirl` (93, Spicy), R `hairshine` (94), A `laserchase` (95), A `cheesepull` (96), A `scrubwave` (97), A `curveshot` (98), A `riffle` (99), A `shadefan` (100). Its new tags (Fashion, Beauty, Food & drink, Music, Sports, Education, Pets, Automotive) follow the same rule as below.
 

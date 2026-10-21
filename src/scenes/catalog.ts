@@ -72,6 +72,7 @@ export const CATALOG_ORDER = [
   'peekaboo',
   'gatherround',
   'epicycles',
+  'tokenstream',
 ] as const;
 
 export function catalogNumber(slug: string): number {

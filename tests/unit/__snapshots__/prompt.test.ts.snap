@@ -20102,6 +20102,354 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Token Stream
+
+## What I want
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+## Look
+- Colors ("Neon Arcade" palette): background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), transparent over the background and cleared every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, the finished name is set in Anybody weight 750, centered at 60% of the height, font size = height × 0.14, shrunk if needed so the docked chips are at most 86% of the width. Each name chunk docks where its letters sit in that line, moved right by (2 × 0.18 + 0.05) × the font size for every chunk before it, so the chips sit side by side with thin seams.
+- The sentence (the "hello" one) reads "Say hello to NAME, made for you.", with the name in place of NAME, set in Anybody weight 600, centered at 24% of the height, at the largest font size (up to 6% of the height) where the whole line, gaps included, is at most 92% of the width. If that is under 20px, break the line before the word start nearest its middle and fit the longer of the two lines instead; the lines sit 1.15 chip heights apart.
+- Split the sentence into chunks the way a language model splits text into tokens: each word (and each punctuation mark on its own) is cut into pieces of at most 3 letters from the left. The name's own chunks are the ones that will dock.
+- Chunk i keeps one color the whole way: accent (i mod 3) + 1, mixed 25% toward the background, drawn as a chip 1.35 font sizes tall with 0.18 font sizes of padding each side and corners rounded by 0.25 of its height; its text is the text color, adjusted until it has a contrast of at least 4.5 with the chip.
+- Thin 1px lines in the soft text color at opacity 0.4 link related chunks: each chunk to the next piece of the same word, plus 12 extra seeded links from a name chunk to a random other chunk. Each is a curve bowing upward by 35% of its length, drawn behind the chips; they fade in as the sentence splits and stay to the end.
+- The stack (column) is centered at 55% of the height: one column centered half a bar’s room (0.3 + 2.4 chip heights) left of the middle, so chips and bars together are centered, chips 1.15 chip heights apart, using a font small enough that the column is at most 50% of the height (and at most 1.1 × the sentence size).
+- High quality: each chip has a shadow, the same rounded shape in the line color, 0.12 chip heights lower.
+- Stage 4, weighing: every 0.8s two random chips in the stack swap places (seeded). Each chip eases toward its slot by 1 − e^(−dt × 4 ÷ 0.8) per frame and swings sideways by 0.35 × the height it still has to travel, so chips pass beside each other. Each chip shows a weight bar to its right (0.3 chip heights away, 0.22 thick, up to 2.4 chip heights long, in its color): weights start at 0.5 and over the stage rise to 0.9 for the name's chunks and sink to 0.2 for the rest, wobbling by ±0.12 at 1.7 cycles a second; bars fade in over the stage's first half and out as docking runs.
+- Stage 5, docking: each name chunk moves from its stack slot to its place in the finished name, growing to the name's font size, with back-out easing 1 + (s + 1)(t − 1)³ + s(t − 1)², s = 0.2 × 8.5, so it snaps in and settles. The other chunks fade out and sink 1.5 chip heights.
+- Stage 3, stacking: every chunk flies from the sentence to its slot in the stack, shrinking or growing to the stack's font size, with cubic in-out easing. In stages 3 and 5 chunk i of n starts at (i ÷ (n − 1)) × 0.5 of the stage and takes the rest (1 − 0.5), a stagger.
+- A progress P from 0 to 1 plays five equal stages: 1, the sentence types in letter by letter as plain text; 2, gaps of 0.4 × the font size open between chunks and the chips fade in behind them; 3, stacking; 4, weighing; 5, docking. P starts (and restarts) at 0.2, with the sentence already typed. Scrolling changes P by (scroll change in px) ÷ 2400; a sideways drag does the same. After 1.5s without input, P plays by itself to 1 over 12s, holds 3s, plays back to 0 at the same pace, and repeats. On the scene's own page the scroll is an invisible endless scroll area over the canvas, so the page itself doesn't move.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Measure the chunks again on every resize and once more when the Anybody font has finished loading; nothing is drawn before the font loads. Use a seeded random number generator so the links and the shuffle are the same every visit.
+- Reduced-motion still frame: the finished name, made of its colored chunks, with its link lines.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`tokenstream prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Token Stream
+
+A sentence with a name in it types in, then splits into colored chunks like an AI model’s tokens. As I scroll, the chunks fly into a stack, swap places while little bars weigh them, and the name’s chunks snap into the finished name with a small overshoot. Thin lines link related chunks.
+
+Colors: background #1B0A33, text #FFF0FB, secondary text #CDB0EA, accents #FF2E97, #00D9FF, #FFE14D. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Chunk size: 3
+- Snap overshoot: 0.2
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Torch Map
 
