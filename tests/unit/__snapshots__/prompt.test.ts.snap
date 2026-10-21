@@ -18758,6 +18758,342 @@ One React component file, no extra libraries, with a usage example.
 Keep it smooth, accessible, and respectful of reduced motion."
 `;
 
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-existing-new 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+First, look at my project's files and figure out what framework and styling it uses. Add this as a component that fits how the project is already built. Don't change unrelated files. When you finish, tell me which files you added or changed and how to put the component on a page.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-new-experienced 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-new-new 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+Create a single index.html file with all CSS and JavaScript inline, ready to open by double-clicking it. Don't use any libraries or build tools.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-react-experienced 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+Keep the explanation short: list the files and the key parameters I can tweak."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > detailed-react-new 1`] = `
+"# Build: Torch Map
+
+## What I want
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+## Look
+- Colors ("Toxic" palette): background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF.
+- Where accent colors overlap, add them so they glow (canvas globalCompositeOperation "lighter").
+- Font: "Anybody" from Google Fonts (variable width 50–150, weight 100–900), loaded with https://fonts.googleapis.com/css2?family=Anybody:ital,wdth,wght@0,50..150,100..900;1,50..150,100..900&display=swap, with a system sans-serif fallback.
+- A full-screen canvas (100svh, at least 540px), filled every frame. Size it for devicePixelRatio (capped at 2) and do all math in CSS pixels. The fog color is whichever of the background and text colors is darker; the map is the surface color.
+
+## How it moves
+- The name is "Your brand". Once the Anybody font has loaded, draw it on a hidden canvas the size of the map: weight 900, centered, font size = screen height × 0.34, shrunk if needed so it is at most 140% of the screen width. Split the map into square cells of 14px; each cell whose center pixel has alpha above 128 gets a stone tile: a square 86% of the cell, centered, in the soft text color mixed 35% toward the map color.
+- The map is 2 screens wide (at most 2 on screens under 700px wide) and one screen tall, filled with the surface color. Scatter one feature per 9000 square px (seeded), each 0.8 to 2.6 tile sizes across and kept 1.5 tile sizes clear of the stones: a tree (a circle in accent 1), a rock (a square in the soft text color) or a pond (an ellipse in accent 3), each mixed 55% toward the map color. The view's left edge eases toward (pointer x ÷ width) × (map width − width) with 1 − (1 − 0.06)^f per frame, so moving toward an edge slides the map.
+- Cover the map with a fog grid of 10px cells, drawn by writing each cell's opacity into a small image and scaling it up with smoothing, so the edges are soft. A cell's opacity is 0.92 × (1 − light) × (1 − explored × (1 − 0.5)), where light is the torch's current light on it and explored is the most light it has ever had.
+- Explored places keep 50% of the fog (memory dimness 0.5).
+- The torch follows the mouse (on touch screens, a finger held down). Its radius is 140px × flicker; a cell at distance d gets light 1 − smoothstep(r × (1 − 0.5), r, d). Draw the torch's warm light as a radial gradient of accent 2 at opacity 0.22 fading to transparent at the radius, over the map and under the fog.
+- Flicker = 1 + 0.5 × 0.08 × (0.6 × sin(2π × 1.2 × t) + 0.4 × sin(2π × 1.2 × 0.62 × t + 1)), so the radius changes by at most 8% and brightens at most 1.2 times a second (flash safety: never more than 3).
+- When every stone has been found (a stone is found once its cell's explored value passes 0.6), celebrate without flashing: found stones glow in accent 1 drawn over the fog at opacity 0.55 × smoothstep(0, 2.5, seconds since), and 24 sparks (2.5px dots in accent 2) rise 24px a second from random stones, each living 3 seconds with opacity sin(π × age ÷ 3) × glow. After 6s the fog creeps back (explored values fall by dt ÷ 4) and the hunt starts again.
+- After 1.5s without the pointer on the map, the torch explores by itself: it travels along the name at 220px a second (from the left end to the right end, then starting over), weaving up and down by 35% of the name's height, 3 times per 1000px.
+- Run one requestAnimationFrame loop. dt = seconds since the last frame, clamped to 0.05; f = min(dt × 60, 2.5).
+- Draw the map once into a hidden canvas, again on every resize and once more when the Anybody font has finished loading. Use a seeded random number generator so the map is the same every visit.
+- Reduced-motion still frame: the map fully explored (every cell at its remembered dimness), the name revealed and glowing, no flicker and no sparks.
+
+## How people interact
+- The canvas has touch-action: pan-y, so vertical swipes still scroll; on touch screens the torch follows a finger that is held down.
+
+## Where this goes
+Write this as a single React component file (.jsx, or .tsx if my project uses TypeScript) with no extra libraries. Include a short usage example.
+
+## Rules
+- Smooth on a mid-range laptop and a phone: one requestAnimationFrame loop, batched canvas drawing, devicePixelRatio capped at 2, pause when off-screen.
+- Respect prefers-reduced-motion: start paused and show a meaningful still frame, with a visible Play/Pause button.
+- Accessible: real buttons, visible keyboard focus, text contrast of at least 4.5:1, decorative canvases hidden from screen readers.
+- Works on touch screens without blocking vertical scrolling.
+
+## When you're done
+I'm new to coding. When you're done: 1) tell me in simple steps how to open the page in my browser, 2) explain in two or three sentences how it works, 3) suggest three small changes I could ask you for next."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-existing-experienced 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-existing-new 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+Add it to my existing project as a component that fits its framework; tell me which files changed.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-new-experienced 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-new-new 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+One index.html file, CSS and JS inline, no libraries.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-react-experienced 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
+exports[`torchmap prompt > is deterministic and matches its snapshots > quick-react-new 1`] = `
+"# Build: Torch Map
+
+A stylized top-down map hidden under dark fog. My cursor carries a torch that clears the fog around it with a soft, gently flickering edge, and explored areas stay dimly revealed. A name is laid out on the map as a path of stone tiles, uncovered piece by piece, and when the last tile is found the stones glow up slowly and a few sparks drift up, with nothing flashing.
+
+Colors: background #10140A, text #F1FFD9, secondary text #B5C99A, accents #B6FF1A, #FF6A00, #9B5CFF. Font: "Anybody" from Google Fonts.
+- Name: "Your brand"
+- Map size: 2
+- Fog thickness: 0.92
+- Torch radius: 140px
+
+One React component file, no extra libraries, with a usage example.
+Keep it smooth, accessible, and respectful of reduced motion."
+`;
+
 exports[`trail prompt > is deterministic and matches its snapshots > detailed-existing-experienced 1`] = `
 "# Build: Cursor trail
 

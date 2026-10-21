@@ -67,6 +67,7 @@ export const CATALOG_ORDER = [
   'doorwave',
   'resonanceplate',
   'infinitezoom',
+  'torchmap',
 ] as const;
 
 export function catalogNumber(slug: string): number {

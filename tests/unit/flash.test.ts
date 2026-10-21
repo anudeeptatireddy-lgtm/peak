@@ -337,3 +337,42 @@ describe('glitch bursts (⚠)', () => {
     }
   });
 });
+
+describe('torchmap torch and celebration (⚠)', () => {
+  it('flickers at most 3 times a second, only slightly, and the celebration never jumps', async () => {
+    const { torchScale, glowLevel } = await import('../../src/scenes/torchmap/light');
+    const { FIXED } = await import('../../src/scenes/torchmap/constants');
+    const { params } = await import('../../src/scenes/torchmap/params');
+    const r = (id: string) => {
+      const p = params.find((q) => q.id === id)!;
+      if (p.kind !== 'slider') throw new Error(id);
+      return p;
+    };
+    const amount = r('flicker').max;
+    const rate = r('flickerRate').max;
+    // Five minutes at 240 fps: a brightening starts at each local low of the radius.
+    const starts: number[] = [];
+    let smallest = Infinity;
+    let largest = -Infinity;
+    let a = torchScale(0, amount, rate);
+    let b = torchScale(1 / 240, amount, rate);
+    for (let i = 2; i < 240 * 300; i++) {
+      const t = i / 240;
+      const c = torchScale(t, amount, rate);
+      if (b < a && b <= c) starts.push(t);
+      smallest = Math.min(smallest, c);
+      largest = Math.max(largest, c);
+      [a, b] = [b, c];
+    }
+    expect(starts.length).toBeGreaterThan(10);
+    expect(worstSecond(starts)).toBeLessThanOrEqual(3);
+    // Only a small change in size: never more than the cap either way.
+    expect(largest).toBeLessThanOrEqual(1 + FIXED.FLICKER_CAP + 1e-9);
+    expect(smallest).toBeGreaterThanOrEqual(1 - FIXED.FLICKER_CAP - 1e-9);
+    // The celebration glow rises slowly: no step bigger than a fifth in any third of a second.
+    for (let t = 0; t < 10; t += 1 / 240)
+      expect(glowLevel(t + 1 / 3, FIXED.GLOW_RISE) - glowLevel(t, FIXED.GLOW_RISE)).toBeLessThan(
+        0.25,
+      );
+  });
+});

@@ -75,3 +75,4 @@ Scenes are tested as their wave finishes. To save the owner's usage, each wave t
 | 65 | `coilstairs` | pending | n/a | **Pending** (unreleased) | Medium scene: same rule. |
 | 66 | `clockwork` | pending | n/a | **Pending** (unreleased) | **Spicy**: needs a prompt test before release. Estimate about 0.1 to 0.15M tokens (one fresh agent build plus the parity run); waiting for the owner's OK. |
 | 89 | `infinitezoom` | pending | n/a | **Pending** (live) | **Spicy**: needs a prompt test. Estimate about 0.1 to 0.15M tokens (one fresh agent build plus the parity run); waiting for the owner's OK. |
+| 84 | `torchmap` | pending | n/a | **Pending** (live) | Medium scene (⚠, flash test in `tests/unit/flash.test.ts`): prompt test optional, not scheduled. |
